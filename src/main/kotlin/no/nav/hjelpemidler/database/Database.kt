@@ -10,12 +10,17 @@ fun createDataSource(
     username: String,
     password: String,
     driverClassName: String = "org.postgresql.Driver",
-): DataSource = HikariDataSource(HikariConfig().apply {
-    this.jdbcUrl = jdbcUrl
-    this.username = username
-    this.password = password
-    this.driverClassName = driverClassName
-})
+    configure: (HikariConfig).() -> Unit = {},
+): DataSource = HikariDataSource(
+    HikariConfig()
+        .apply {
+            this.jdbcUrl = jdbcUrl
+            this.username = username
+            this.password = password
+            this.driverClassName = driverClassName
+        }
+        .apply(configure)
+)
 
 fun DataSource.flyway(block: Flyway.() -> Unit): DataSource = this.apply {
     Flyway
