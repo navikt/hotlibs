@@ -15,7 +15,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
 
     // Database
-    implementation("com.github.seratch:kotliquery:1.9.0")
+    api("com.github.seratch:kotliquery:1.9.0")
     implementation("com.zaxxer:HikariCP:5.0.1")
     implementation("org.postgresql:postgresql:42.5.1")
     implementation("org.flywaydb:flyway-core:9.10.0")
