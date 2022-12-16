@@ -2,13 +2,13 @@ package no.nav.hjelpemidler.database
 
 import org.postgresql.util.PGobject
 
-fun pgObjectOf(type: String, value: String): PGobject = PGobject().apply {
+fun pgObjectOf(type: String, value: String): Any = PGobject().apply {
     this.type = type
     this.value = value
 }
 
-fun <T> jsonOf(value: T): PGobject =
+fun <T> pgJsonOf(value: T): Any =
     pgObjectOf(type = "json", value = jsonMapper.writeValueAsString(value))
 
-fun <T> jsonbOf(value: T): PGobject =
+fun <T> pgJsonbOf(value: T): Any =
     pgObjectOf(type = "jsonb", value = jsonMapper.writeValueAsString(value))
