@@ -22,10 +22,11 @@ fun createDataSource(
         .apply(configure)
 )
 
-fun DataSource.flyway(block: Flyway.() -> Unit): DataSource = this.apply {
+fun DataSource.flyway(cleanDisabled: Boolean = true, block: Flyway.() -> Unit): DataSource = this.apply {
     Flyway
         .configure()
         .dataSource(this)
+        .cleanDisabled(cleanDisabled)
         .load()
         .apply(block)
 }
