@@ -31,7 +31,7 @@ fun <T> Session.queryPage(
     totalNumberOfItemsLabel: String = "total",
     mapper: ResultMapper<T>,
 ): Page<T> =
-    run(queryOf(sql, queryParameters, totalNumberOfItemsLabel).map(mapper).asPage(limit, offset))
+    run(queryOf(sql, queryParameters).map(mapper).asPage(limit, offset, totalNumberOfItemsLabel))
 
 fun Session.execute(
     @Language("PostgreSQL") sql: String,
@@ -51,8 +51,18 @@ fun Session.updateAndReturnGeneratedKey(
 ): UpdateResult =
     UpdateResult(rowCount = null, generatedId = run(queryOf(sql, queryParameters).asUpdateAndReturnGeneratedKey))
 
-internal fun <A> ResultQueryActionBuilder<A>.asPage(limit: Int, offset: Int): PageResultQueryAction<A> =
-    PageResultQueryAction(query, extractor, limit, offset)
+internal fun <A> ResultQueryActionBuilder<A>.asPage(
+    limit: Int,
+    offset: Int,
+    totalNumberOfItemsLabel: String = "total",
+): PageResultQueryAction<A> =
+    PageResultQueryAction(
+        query = query,
+        extractor = extractor,
+        limit = limit,
+        offset = offset,
+        totalNumberOfItemsLabel = totalNumberOfItemsLabel,
+    )
 
 internal fun <A> Session.run(action: PageResultQueryAction<A>): Page<A> =
     action.runWithSession(this)
