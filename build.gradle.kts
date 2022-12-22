@@ -22,11 +22,11 @@ dependencies {
     implementation(ktor("serialization-jackson"))
 
     // Ktor Client
+    api(ktor("client-core"))
+    api(ktor("client-cio"))
+    api(ktor("client-mock"))
     implementation(ktor("client-auth"))
-    implementation(ktor("client-cio"))
     implementation(ktor("client-content-negotiation"))
-    implementation(ktor("client-mock"))
-    implementation(ktor("client-encoding"))
 
     // Jackson
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
