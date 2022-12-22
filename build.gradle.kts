@@ -1,0 +1,45 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+val ktorVersion = "2.2.1"
+val jacksonVersion = "2.14.1"
+
+plugins {
+    kotlin("jvm") version "1.7.22"
+}
+
+group = "no.nav.hjelpemidler.http"
+version = "1.0-SNAPSHOT"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation(kotlin("stdlib-jdk8"))
+
+    // Ktor
+    fun ktor(name: String) = "io.ktor:ktor-$name:$ktorVersion"
+    implementation(ktor("serialization-jackson"))
+
+    // Ktor Client
+    implementation(ktor("client-auth"))
+    implementation(ktor("client-cio"))
+    implementation(ktor("client-content-negotiation"))
+    implementation(ktor("client-mock"))
+    implementation(ktor("client-encoding"))
+
+    // Jackson
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
+
+    // Testing
+    testImplementation(kotlin("test"))
+    testImplementation("io.mockk:mockk:1.13.3")
+}
+
+tasks.test {
+    useJUnitPlatform()
+}
+
+tasks.withType<KotlinCompile> {
+    kotlinOptions.jvmTarget = "17"
+}
