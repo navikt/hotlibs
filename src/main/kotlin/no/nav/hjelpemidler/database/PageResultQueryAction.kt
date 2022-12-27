@@ -4,6 +4,7 @@ import kotliquery.Query
 import kotliquery.Row
 import kotliquery.Session
 import kotliquery.action.QueryAction
+import kotlin.random.Random
 
 data class PageResultQueryAction<A>(
     val query: Query,
@@ -14,22 +15,22 @@ data class PageResultQueryAction<A>(
 ) : QueryAction<Page<A>> {
     override fun runWithSession(session: Session): Page<A> {
         var totalNumberOfItems = -1
+        val suffix = Random.nextInt(1000, 10000)
+        val limitLabel = "limit_$suffix"
+        val offsetLabel = "offset_$suffix"
         val items = session.list(
-            query.let {
-                Query(
-                    "${it.statement} limit :limit offset :offset",
-                    it.params,
-                    it.paramMap.plus(
-                        mapOf(
-                            "limit" to limit + 1, // fetch one more than limit to check for "hasMore"
-                            "offset" to offset,
-                        )
+            query.copy(
+                statement = "${query.statement}\nLIMIT :$limitLabel OFFSET :$offsetLabel",
+                paramMap = query.paramMap.plus(
+                    mapOf(
+                        limitLabel to limit + 1, // fetch one more than limit to check for "hasMore"
+                        offsetLabel to offset,
                     )
                 )
-            }
-        ) {
-            totalNumberOfItems = it.intOrNull(totalNumberOfItemsLabel) ?: -1
-            extractor(it)
+            )
+        ) { row ->
+            totalNumberOfItems = row.intOrNull(totalNumberOfItemsLabel) ?: -1
+            extractor(row)
         }
         return Page(
             items = items.take(limit),

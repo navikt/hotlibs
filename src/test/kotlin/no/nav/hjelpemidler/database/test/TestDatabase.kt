@@ -13,5 +13,5 @@ fun testDataSource(): DataSource = createDatabase(
     cleanDisabled = false,
 ).clean().migrate()
 
-fun <T> testTransaction(block: (Session) -> T): T =
-    transaction(dataSource = testDataSource(), block = block)
+fun <T> testTransaction(dataSource: DataSource = testDataSource(), block: (Session) -> T): T =
+    transaction(dataSource = dataSource, block = block)

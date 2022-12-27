@@ -51,6 +51,26 @@ fun Session.updateAndReturnGeneratedKey(
 ): UpdateResult =
     UpdateResult(rowCount = null, generatedId = run(queryOf(sql, queryParameters).asUpdateAndReturnGeneratedKey))
 
+fun Session.batch(
+    @Language("PostgreSQL") sql: String,
+    queryParameters: Collection<QueryParameters> = emptyList(),
+): List<Int> =
+    batchPreparedNamedStatement(sql, queryParameters)
+
+fun <T> Session.batch(
+    @Language("PostgreSQL") sql: String,
+    items: Collection<T> = emptyList(),
+    block: (T) -> QueryParameters,
+): List<Int> =
+    batch(sql, items.map(block))
+
+fun <T> Collection<T>.batch(
+    session: Session,
+    @Language("PostgreSQL") sql: String,
+    block: (T) -> QueryParameters,
+): List<Int> =
+    session.batch(sql, this.map(block))
+
 internal fun <A> ResultQueryActionBuilder<A>.asPage(
     limit: Int,
     offset: Int,

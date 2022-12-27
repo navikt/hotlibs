@@ -1,4 +1,4 @@
-CREATE TABLE test
+CREATE TABLE person
 (
     id   BIGSERIAL NOT NULL,
     name TEXT      NOT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE test
     PRIMARY KEY (id)
 );
 
-INSERT INTO test(name, age, data)
+INSERT INTO person(name, age, data)
 VALUES ('one', 10, '{ "value": "one" }' FORMAT JSON),
        ('two', 15, '{ "value": "two" }' FORMAT JSON),
        ('three', 20, '{ "value": "three" }' FORMAT JSON),
