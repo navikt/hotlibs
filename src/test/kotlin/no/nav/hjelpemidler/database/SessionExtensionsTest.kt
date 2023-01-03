@@ -100,26 +100,28 @@ internal class SessionExtensionsTest {
             val id: Long = -1,
             val name: String,
             val age: Int,
+            val gender: Gender,
             val data: Map<String, Any?>,
         )
 
         val items = listOf(
-            Person(name = "x1", age = 1, data = mapOf("value" to "t1")),
-            Person(name = "x2", age = 2, data = mapOf("value" to "t2")),
-            Person(name = "x3", age = 3, data = mapOf("value" to "t3")),
+            Person(name = "x1", age = 1, gender = Gender.FEMALE, data = mapOf("value" to "t1")),
+            Person(name = "x2", age = 2, gender = Gender.FEMALE, data = mapOf("value" to "t2")),
+            Person(name = "x3", age = 3, gender = Gender.MALE, data = mapOf("value" to "t3")),
         )
 
         val result1 = testTransaction(dataSource = dataSource) { tx ->
             tx.batch(
                 sql = """
-                    INSERT INTO person(name, age, data)
-                    VALUES (:name, :age, :data FORMAT JSON)
+                    INSERT INTO person(name, age, gender, data)
+                    VALUES (:name, :age, :gender, :data FORMAT JSON)
                 """.trimIndent(),
                 items = items
             ) {
                 mapOf(
                     "name" to it.name,
                     "age" to it.age,
+                    "gender" to it.gender.name,
                     "data" to jsonMapper.writeValueAsString(it.data),
                 )
             }
@@ -131,13 +133,14 @@ internal class SessionExtensionsTest {
             items.batch(
                 session = tx,
                 sql = """
-                    INSERT INTO person(name, age, data)
-                    VALUES (:name, :age, :data FORMAT JSON)
+                    INSERT INTO person(name, age, gender, data)
+                    VALUES (:name, :age, :gender, :data FORMAT JSON)
                 """.trimIndent(),
             ) {
                 mapOf(
                     "name" to it.name,
                     "age" to it.age,
+                    "gender" to it.gender.name,
                     "data" to jsonMapper.writeValueAsString(it.data),
                 )
             }
@@ -151,6 +154,7 @@ internal class SessionExtensionsTest {
                     id = it.long("id"),
                     name = it.string("name"),
                     age = it.int("age"),
+                    gender = it.enum("gender"),
                     data = it.json("data"),
                 )
             }
@@ -158,4 +162,8 @@ internal class SessionExtensionsTest {
 
         savedItems.size shouldBe 6
     }
+}
+
+enum class Gender {
+    MALE, FEMALE
 }
