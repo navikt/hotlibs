@@ -12,10 +12,10 @@ import no.nav.hjelpemidler.http.test.shouldBe
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 
-class OpenIDClientTest {
+class DefaultOpenIDClientTest {
     @Test
     fun `client credentials grant`() {
-        val client = createClient {
+        val client = createTestClient {
             respondJson(
                 """
                 {
@@ -37,7 +37,7 @@ class OpenIDClientTest {
 
     @Test
     fun `on behalf of grant`() {
-        val client = createClient {
+        val client = createTestClient {
             respondJson(
                 """
                 {
@@ -63,7 +63,7 @@ class OpenIDClientTest {
 
     @Test
     fun `grant feiler`() {
-        val client = createClient {
+        val client = createTestClient {
             respondJson(
                 """
                 {
@@ -89,9 +89,9 @@ class OpenIDClientTest {
         println(error.message)
     }
 
-    private fun createClient(handler: suspend MockRequestHandleScope.(HttpRequestData) -> HttpResponseData) =
-        OpenIDClient(
-            configuration = OpenIDConfiguration(
+    private fun createTestClient(handler: suspend MockRequestHandleScope.(HttpRequestData) -> HttpResponseData) =
+        DefaultOpenIDClient(
+            configuration = DefaultOpenIDConfiguration(
                 tokenEndpoint = "https://issuer/token",
                 clientId = "clientId",
                 clientSecret = "clientSecret"

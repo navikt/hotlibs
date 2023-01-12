@@ -4,7 +4,7 @@ val ktorVersion = "2.2.1"
 val jacksonVersion = "2.14.1"
 
 plugins {
-    kotlin("jvm") version "1.7.22"
+    kotlin("jvm") version "1.8.0"
 }
 
 group = "no.nav.hjelpemidler.http"
@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
+    implementation(kotlin("stdlib"))
 
     // Ktor
     fun ktor(name: String) = "io.ktor:ktor-$name:$ktorVersion"
