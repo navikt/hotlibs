@@ -1,6 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val ktorVersion = "2.2.1"
+val ktorVersion = "2.2.2"
 val jacksonVersion = "2.14.1"
 
 plugins {

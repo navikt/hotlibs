@@ -1,7 +1,7 @@
 package no.nav.hjelpemidler.http.openid
 
 import io.mockk.every
-import io.mockk.mockkStatic
+import io.mockk.mockkObject
 import no.nav.hjelpemidler.http.test.shouldBe
 import java.time.LocalDate
 import java.time.Month
@@ -19,9 +19,9 @@ class TokenSetTest {
 
     @BeforeTest
     fun setUp() {
-        mockkStatic(::now)
+        mockkObject(Helper)
         every {
-            now()
+            Helper.now()
         } returns at
     }
 

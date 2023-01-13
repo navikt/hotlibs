@@ -20,10 +20,10 @@ data class TokenSet(
     @JsonAnySetter @get:JsonAnyGetter val other: Map<String, Any> = linkedMapOf(),
 ) {
     @JsonIgnore
-    val expiresAt: Instant = now().plus(expiresIn.seconds.toJavaDuration())
+    val expiresAt: Instant = Helper.now().plus(expiresIn.seconds.toJavaDuration())
 
     @JsonIgnore
-    fun isExpired(at: Instant = now(), leeway: Duration = Duration.ZERO): Boolean =
+    fun isExpired(at: Instant = Helper.now(), leeway: Duration = Duration.ZERO): Boolean =
         expiresAt
             .minus(leeway.toJavaDuration())
             .run {
@@ -34,5 +34,3 @@ data class TokenSet(
     fun toBearerTokens(): BearerTokens =
         BearerTokens(accessToken, refreshToken ?: "")
 }
-
-internal fun now(): Instant = Instant.now()
