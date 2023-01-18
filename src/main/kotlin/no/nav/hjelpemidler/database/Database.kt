@@ -8,6 +8,7 @@ import javax.sql.DataSource
 interface Database : DataSource {
     fun clean(): Database
     fun migrate(): Database
+    fun repair(): Database
 }
 
 fun createDatabase(
@@ -41,6 +42,11 @@ fun createDatabase(
 
         override fun migrate(): Database {
             flyway.migrate()
+            return this
+        }
+
+        override fun repair(): Database {
+            flyway.repair()
             return this
         }
     }

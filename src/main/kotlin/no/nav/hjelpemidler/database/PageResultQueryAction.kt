@@ -23,7 +23,7 @@ data class PageResultQueryAction<A>(
                 statement = "${query.statement}\nLIMIT :$limitLabel OFFSET :$offsetLabel",
                 paramMap = query.paramMap.plus(
                     mapOf(
-                        limitLabel to limit + 1, // fetch one more than limit to check for "hasMore"
+                        limitLabel to limit + 1, // hent limit + 1 for å sjekke "hasMore"
                         offsetLabel to offset,
                     )
                 )

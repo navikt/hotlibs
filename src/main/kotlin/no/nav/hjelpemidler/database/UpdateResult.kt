@@ -1,10 +1,8 @@
 package no.nav.hjelpemidler.database
 
-data class UpdateResult(
-    val rowCount: Int? = null,
-    val generatedId: Long? = null,
-) {
-    fun validate() = check(rowCount != 0) {
-        "rowCount var 0"
-    }
+data class UpdateResult(val actualRowCount: Int? = null) {
+    fun expect(expectedRowCount: Int = 1) =
+        check(actualRowCount == expectedRowCount) {
+            "$actualRowCount != $expectedRowCount"
+        }
 }

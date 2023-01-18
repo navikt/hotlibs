@@ -15,4 +15,7 @@ class TestJsonMapper : JsonMapper {
 
     override fun <T> readValue(src: ByteArray?, valueTypeRef: TypeReference<T>): T =
         wrapped.readValue(src, valueTypeRef)
+
+    override fun <T> convertValue(fromValue: Any?, toValueTypeRef: TypeReference<T>): T =
+        wrapped.convertValue(fromValue, toValueTypeRef)
 }

@@ -10,8 +10,16 @@ CREATE TABLE person
 );
 
 INSERT INTO person(name, age, gender, data)
-VALUES ('one', 10, 'MALE', '{ "value": "one" }' FORMAT JSON),
-       ('two', 15, 'FEMALE', '{ "value": "two" }' FORMAT JSON),
-       ('three', 20, 'FEMALE', '{ "value": "three" }' FORMAT JSON),
-       ('four', 25, 'MALE', '{ "value": "four" }' FORMAT JSON),
-       ('five', 30, 'FEMALE', '{ "value": "five" }' FORMAT JSON);
+VALUES ('one', 10, 'MALE', '{ "value": "one" }'),
+       ('two', 15, 'FEMALE', '{ "value": "two" }'),
+       ('three', 20, 'FEMALE', '{ "value": "three" }'),
+       ('four', 25, 'MALE', '{ "value": "four" }'),
+       ('five', 30, 'FEMALE', '{ "value": "five" }');
+
+CREATE TABLE json
+(
+    id   BIGSERIAL NOT NULL,
+    data JSONB     NULL,
+
+    PRIMARY KEY (id)
+);

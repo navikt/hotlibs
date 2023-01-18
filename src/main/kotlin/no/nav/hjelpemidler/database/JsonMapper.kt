@@ -7,6 +7,7 @@ interface JsonMapper {
     fun <T> writeValueAsString(value: T): String
     fun <T> readValue(content: String?, valueTypeRef: TypeReference<T>): T
     fun <T> readValue(src: ByteArray?, valueTypeRef: TypeReference<T>): T
+    fun <T> convertValue(fromValue: Any?, toValueTypeRef: TypeReference<T>): T
 }
 
 val jsonMapper: JsonMapper = ServiceLoader.load(JsonMapper::class.java).first()

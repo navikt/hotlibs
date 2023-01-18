@@ -14,14 +14,23 @@ fun <T> Session.query(
     queryParameters: QueryParameters = emptyMap(),
     mapper: ResultMapper<T>,
 ): T? =
-    run(queryOf(sql, queryParameters).map(mapper).asSingle)
+    single(queryOf(sql, queryParameters), mapper)
+
+fun <T> Session.single(
+    @Language("PostgreSQL") sql: String,
+    queryParameters: QueryParameters = emptyMap(),
+    mapper: ResultMapper<T>,
+): T =
+    checkNotNull(query(sql, queryParameters, mapper)) {
+        "Forventet en verdi, men var null"
+    }
 
 fun <T> Session.queryList(
     @Language("PostgreSQL") sql: String,
     queryParameters: QueryParameters = emptyMap(),
     mapper: ResultMapper<T>,
 ): List<T> =
-    run(queryOf(sql, queryParameters).map(mapper).asList)
+    list(queryOf(sql, queryParameters), mapper)
 
 fun <T> Session.queryPage(
     @Language("PostgreSQL") sql: String,
@@ -37,25 +46,33 @@ fun Session.execute(
     @Language("PostgreSQL") sql: String,
     queryParameters: QueryParameters = emptyMap(),
 ): Boolean =
-    run(queryOf(sql, queryParameters).asExecute)
+    execute(queryOf(sql, queryParameters))
 
 fun Session.update(
     @Language("PostgreSQL") sql: String,
     queryParameters: QueryParameters = emptyMap(),
 ): UpdateResult =
-    UpdateResult(rowCount = run(queryOf(sql, queryParameters).asUpdate), generatedId = null)
+    UpdateResult(actualRowCount = update(queryOf(sql, queryParameters)))
 
 fun Session.updateAndReturnGeneratedKey(
     @Language("PostgreSQL") sql: String,
     queryParameters: QueryParameters = emptyMap(),
-): UpdateResult =
-    UpdateResult(rowCount = null, generatedId = run(queryOf(sql, queryParameters).asUpdateAndReturnGeneratedKey))
+): Long =
+    checkNotNull(updateAndReturnGeneratedKey(queryOf(sql, queryParameters))) {
+        "Forventet en generert nøkkel, men var null"
+    }
 
 fun Session.batch(
     @Language("PostgreSQL") sql: String,
     queryParameters: Collection<QueryParameters> = emptyList(),
 ): List<Int> =
     batchPreparedNamedStatement(sql, queryParameters)
+
+fun Session.batchAndReturnGeneratedKeys(
+    @Language("PostgreSQL") sql: String,
+    queryParameters: Collection<QueryParameters> = emptyList(),
+): List<Long> =
+    batchPreparedNamedStatementAndReturnGeneratedKeys(sql, queryParameters)
 
 fun <T> Session.batch(
     @Language("PostgreSQL") sql: String,
@@ -69,7 +86,7 @@ fun <T> Collection<T>.batch(
     @Language("PostgreSQL") sql: String,
     block: (T) -> QueryParameters,
 ): List<Int> =
-    session.batch(sql, this.map(block))
+    session.batch(sql, map(block))
 
 internal fun <A> ResultQueryActionBuilder<A>.asPage(
     limit: Int,
