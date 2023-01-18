@@ -166,7 +166,7 @@ internal class SessionExtensionsTest : AbstractDatabaseTest() {
 
     @Test
     fun `lagrer og henter null fra JSON-kolonne`() {
-        val id = testTransaction { tx ->
+        val id = testTransaction(returnGeneratedKey = true) { tx ->
             tx.updateAndReturnGeneratedKey("INSERT INTO json(data) VALUES (NULL)")
         }
         assertNotNull(id)
@@ -180,6 +180,16 @@ internal class SessionExtensionsTest : AbstractDatabaseTest() {
         }
         json["id"] shouldBe id
         json["data"] shouldBe null
+    }
+
+    @Test
+    fun `setter inn rad med query`() {
+        val id = testTransaction { tx ->
+            tx.query("INSERT INTO json(data) VALUES (NULL) RETURNING id") {
+                it.long("id")
+            }
+        }
+        assertNotNull(id)
     }
 }
 

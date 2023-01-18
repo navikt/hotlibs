@@ -38,6 +38,10 @@ abstract class AbstractDatabaseTest {
         database.clean()
     }
 
-    fun <T> testTransaction(dataSource: DataSource = database, block: (Session) -> T): T =
-        transaction(dataSource = dataSource, block = block)
+    fun <T> testTransaction(
+        dataSource: DataSource = database,
+        returnGeneratedKey: Boolean = false,
+        block: (Session) -> T,
+    ): T =
+        transaction(dataSource = dataSource, returnGeneratedKey = returnGeneratedKey, block = block)
 }
