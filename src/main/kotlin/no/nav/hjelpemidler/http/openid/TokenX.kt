@@ -2,6 +2,7 @@ package no.nav.hjelpemidler.http.openid
 
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.cio.CIO
+import no.nav.hjelpemidler.http.EnvironmentVariable
 
 object TokenXEnvironmentVariable {
     val TOKEN_X_WELL_KNOWN_URL by EnvironmentVariable
