@@ -14,7 +14,8 @@ fun slackEnvironmentConfiguration(): SlackConfiguration = DefaultSlackConfigurat
 
 /**
  * Creates the default slack client
- * @param configuration Specifies the webhook to use when sending messages to Slack. As a default the webhook is extracted from the env-var SLACK_HOOK (envFrom: hm-slack-hook)
+ * @param configuration Specifies the webhook to use when sending messages to Slack. As a default the webhook is extracted
+ *        from the env-var SLACK_HOOK (envFrom: hm-slack-hook)
  * @throws Exception
  */
 fun slack(
