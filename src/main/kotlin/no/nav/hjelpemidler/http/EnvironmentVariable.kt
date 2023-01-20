@@ -1,4 +1,4 @@
-package no.nav.hjelpemidler.http.openid
+package no.nav.hjelpemidler.http
 
 import kotlin.reflect.KProperty
 
