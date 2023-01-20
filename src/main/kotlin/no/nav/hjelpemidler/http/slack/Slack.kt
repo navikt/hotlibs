@@ -5,6 +5,7 @@ import io.ktor.client.engine.cio.CIO
 import no.nav.hjelpemidler.http.EnvironmentVariable
 
 object SlackEnvironmentVariable {
+    // The Slack-webhook is extracted from the environment variable SLACK_HOOK (envFrom: hm-slack-hook)
     val SLACK_HOOK by EnvironmentVariable
 }
 
