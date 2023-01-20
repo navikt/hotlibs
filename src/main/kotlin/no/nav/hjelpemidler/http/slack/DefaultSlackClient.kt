@@ -6,6 +6,8 @@ import io.ktor.client.engine.cio.CIO
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import no.nav.hjelpemidler.http.createHttpClient
 
 internal class DefaultSlackClient(
@@ -36,7 +38,7 @@ internal class DefaultSlackClient(
 
         // Issue webhook
         client.post(configuration.slackWebHook) {
-            header("Content-Type", "application/json")
+            contentType(ContentType.Application.Json)
             setBody(values)
         }
     }
