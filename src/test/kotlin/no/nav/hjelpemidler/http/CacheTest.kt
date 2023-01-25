@@ -1,4 +1,4 @@
-package no.nav.hjelpemidler.http.openid
+package no.nav.hjelpemidler.http
 
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -9,8 +9,8 @@ import kotlin.test.Test
 
 class CacheTest {
     private val key = "test"
-    private val predicate = mockk<CachePredicate<String, String>>()
-    private val block = mockk<CacheUpdater<String, String>>()
+    private val predicate = mockk<suspend (key: String, value: String) -> Boolean>()
+    private val block = mockk<suspend (key: String, value: String?) -> String>()
 
     @Test
     fun `oppdaterer cache hvis ingen verdi fra før`() {
@@ -23,7 +23,7 @@ class CacheTest {
         coEvery { block.invoke(key, null) } returns "newValue"
 
         val value = runBlocking {
-            cache.putIf(key, predicate, block)
+            cache.computeIf(key, predicate, block)
         }
 
         coVerify(exactly = 0) { predicate.invoke(any(), any()) }
@@ -43,7 +43,7 @@ class CacheTest {
         coEvery { block.invoke(key, "oldValue") } returns "newValue"
 
         val value = runBlocking {
-            cache.putIf(key, predicate, block)
+            cache.computeIf(key, predicate, block)
         }
 
         coVerify(exactly = 1) { predicate.invoke(any(), any()) }
@@ -63,12 +63,35 @@ class CacheTest {
         coEvery { block.invoke(key, "oldValue") } returns "newValue"
 
         val value = runBlocking {
-            cache.putIf(key, predicate, block)
+            cache.computeIf(key, predicate, block)
         }
 
         coVerify(exactly = 1) { predicate.invoke(any(), any()) }
         coVerify(exactly = 1) { block.invoke(any(), any()) }
 
         value shouldBe "newValue"
+    }
+
+    @Test
+    fun `null i cache`() {
+        val cache = Cache<String, String?>()
+
+        val value1 = runBlocking {
+            cache.computeIfAbsent("test1") { _ ->
+                null
+            }
+        }
+
+        value1 shouldBe null
+        cache["test1"] shouldBe null
+
+        val value2 = runBlocking {
+            cache.computeIfAbsent("test2") { key ->
+                key.uppercase()
+            }
+        }
+
+        value2 shouldBe "TEST2"
+        cache["test2"] shouldBe "TEST2"
     }
 }
