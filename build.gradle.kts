@@ -1,10 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val ktorVersion = "2.2.2"
-val jacksonVersion = "2.14.1"
+val ktorVersion = "2.2.3"
+val jacksonVersion = "2.14.2"
 
 plugins {
-    kotlin("jvm") version "1.8.0"
+    kotlin("jvm") version "1.8.10"
 }
 
 group = "no.nav.hjelpemidler.http"
@@ -33,7 +33,7 @@ dependencies {
 
     // Testing
     testImplementation(kotlin("test"))
-    testImplementation("io.mockk:mockk:1.13.3")
+    testImplementation("io.mockk:mockk:1.13.4")
 }
 
 tasks.test {
