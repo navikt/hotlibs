@@ -2,7 +2,6 @@ package no.nav.hjelpemidler.database
 
 import kotliquery.Row
 import kotliquery.Session
-import kotliquery.action.ResultQueryActionBuilder
 import kotliquery.queryOf
 import org.intellij.lang.annotations.Language
 
@@ -16,7 +15,7 @@ fun <T> Session.query(
 ): T? =
     single(queryOf(sql, queryParameters), mapper)
 
-fun <T> Session.single(
+fun <T : Any> Session.single(
     @Language("PostgreSQL") sql: String,
     queryParameters: QueryParameters = emptyMap(),
     mapper: ResultMapper<T>,
@@ -25,22 +24,45 @@ fun <T> Session.single(
         "Forventet en verdi, men var null"
     }
 
-fun <T> Session.queryList(
+fun <T : Any> Session.queryList(
     @Language("PostgreSQL") sql: String,
     queryParameters: QueryParameters = emptyMap(),
     mapper: ResultMapper<T>,
 ): List<T> =
     list(queryOf(sql, queryParameters), mapper)
 
-fun <T> Session.queryPage(
+fun <T : Any> Session.queryPage(
     @Language("PostgreSQL") sql: String,
     queryParameters: QueryParameters = emptyMap(),
     limit: Int,
     offset: Int,
     totalNumberOfItemsLabel: String = "total",
     mapper: ResultMapper<T>,
-): Page<T> =
-    run(queryOf(sql, queryParameters).map(mapper).asPage(limit, offset, totalNumberOfItemsLabel))
+): Page<T> {
+    val limitParameter = prefix("limit")
+    val offsetParameter = prefix("offset")
+    var totalNumberOfItems = -1
+    val items = list(
+        queryOf(
+            statement = """
+                $sql
+                LIMIT :$limitParameter
+                OFFSET :$offsetParameter
+            """.trimIndent(),
+            paramMap = queryParameters + mapOf(
+                limitParameter to limit + 1, // hent limit + 1 for å sjekke "hasMore"
+                offsetParameter to offset,
+            )
+        )
+    ) { row ->
+        totalNumberOfItems = row.intOrNull(totalNumberOfItemsLabel) ?: -1
+        mapper(row)
+    }
+    return Page(
+        items = items.take(limit),
+        total = totalNumberOfItems,
+    )
+}
 
 fun Session.execute(
     @Language("PostgreSQL") sql: String,
@@ -74,32 +96,16 @@ fun Session.batchAndReturnGeneratedKeys(
 ): List<Long> =
     batchPreparedNamedStatementAndReturnGeneratedKeys(sql, queryParameters)
 
-fun <T> Session.batch(
+fun <T : Any> Session.batch(
     @Language("PostgreSQL") sql: String,
     items: Collection<T> = emptyList(),
     block: (T) -> QueryParameters,
 ): List<Int> =
     batch(sql, items.map(block))
 
-fun <T> Collection<T>.batch(
-    session: Session,
+fun <T : Any> Collection<T>.batch(
+    tx: Session,
     @Language("PostgreSQL") sql: String,
     block: (T) -> QueryParameters,
 ): List<Int> =
-    session.batch(sql, map(block))
-
-internal fun <A> ResultQueryActionBuilder<A>.asPage(
-    limit: Int,
-    offset: Int,
-    totalNumberOfItemsLabel: String = "total",
-): PageResultQueryAction<A> =
-    PageResultQueryAction(
-        query = query,
-        extractor = extractor,
-        limit = limit,
-        offset = offset,
-        totalNumberOfItemsLabel = totalNumberOfItemsLabel,
-    )
-
-internal fun <A> Session.run(action: PageResultQueryAction<A>): Page<A> =
-    action.runWithSession(this)
+    tx.batch(sql, map(block))

@@ -1,6 +1,8 @@
 package no.nav.hjelpemidler.database
 
 import no.nav.hjelpemidler.database.test.AbstractDatabaseTest
+import no.nav.hjelpemidler.database.test.Test1Entity
+import no.nav.hjelpemidler.database.test.TestEnum
 import no.nav.hjelpemidler.database.test.shouldBe
 import org.junit.jupiter.api.assertDoesNotThrow
 import kotlin.test.Test
@@ -8,34 +10,21 @@ import kotlin.test.assertNotNull
 
 internal class SessionExtensionsTest : AbstractDatabaseTest() {
     @Test
-    fun `henter alle rader`() {
-        val rows = testTransaction { tx ->
-            tx.queryList(sql = "SELECT * FROM person WHERE TRUE") {
+    fun `henter alle innslag som map`() {
+        val result = testTransaction { tx ->
+            tx.queryList(sql = "SELECT * FROM test_1 WHERE TRUE") {
                 it.toMap()
             }
         }
 
-        rows.size shouldBe 5
+        result.size shouldBe 5
     }
 
     @Test
-    fun `henter alle rader med reflection`() {
-        val rows = testTransaction { tx ->
-            tx.queryList(sql = "SELECT * FROM person WHERE TRUE LIMIT 1") {
-                it.to<Person>()
-            }
-        }
-
-        rows.size shouldBe 1
-    }
-
-
-    @Test
-    fun `henter alle rader som page`() {
-        val page = testTransaction { tx ->
+    fun `henter side`() {
+        val result = testTransaction { tx ->
             tx.queryPage(
-                sql = "SELECT *, COUNT(*) OVER() AS total FROM person WHERE TRUE",
-                queryParameters = emptyMap(),
+                sql = "SELECT *, COUNT(1) OVER() AS total FROM test_1 WHERE TRUE",
                 limit = 2,
                 offset = 0
             ) {
@@ -43,46 +32,46 @@ internal class SessionExtensionsTest : AbstractDatabaseTest() {
             }
         }
 
-        page.size shouldBe 2
-        page.total shouldBe 5
+        result.size shouldBe 2
+        result.total shouldBe 5
     }
 
     @Test
-    fun `henter første rad`() {
-        val row = testTransaction { tx ->
+    fun `henter innslag`() {
+        val result = testTransaction { tx ->
             tx.single(
-                sql = "SELECT * FROM person WHERE name = :name",
-                queryParameters = mapOf("name" to "one")
+                sql = "SELECT * FROM test_1 WHERE string = :string",
+                queryParameters = mapOf("string" to "string2")
             ) {
                 it.toMap()
             }
         }
 
-        assertNotNull(row)
-        row["name"] shouldBe "one"
+        assertNotNull(result)
+        result["string"] shouldBe "string2"
     }
 
     @Test
     fun `henter json`() {
-        val row = testTransaction { tx ->
+        val result = testTransaction { tx ->
             tx.query(
-                sql = "SELECT * FROM person WHERE name = :name",
-                queryParameters = mapOf("name" to "two")
+                sql = "SELECT * FROM test_1 WHERE string = :string",
+                queryParameters = mapOf("string" to "string2")
             ) {
-                it.json<Map<String, Any?>>("data")
+                it.json<Map<String, Any?>>("data_1")
             }
         }
 
-        assertNotNull(row)
-        row["value"] shouldBe "two"
+        assertNotNull(result)
+        result["key"] shouldBe "value2"
     }
 
     @Test
-    fun `oppdaterer rad`() {
+    fun `oppdaterer innslag`() {
         val result = testTransaction { tx ->
             tx.update(
-                sql = "UPDATE person SET age = 50 WHERE name = :name",
-                queryParameters = mapOf("name" to "three")
+                sql = "UPDATE test_1 SET integer = 50 WHERE string = :string",
+                queryParameters = mapOf("string" to "string3")
             )
         }
 
@@ -92,11 +81,11 @@ internal class SessionExtensionsTest : AbstractDatabaseTest() {
     }
 
     @Test
-    fun `sletter rad`() {
+    fun `sletter innslag`() {
         val result = testTransaction { tx ->
             tx.execute(
-                sql = "DELETE FROM person WHERE name = :name",
-                queryParameters = mapOf("name" to "four")
+                sql = "DELETE FROM test_1 WHERE string = :string",
+                queryParameters = mapOf("string" to "string4")
             )
         }
 
@@ -104,26 +93,26 @@ internal class SessionExtensionsTest : AbstractDatabaseTest() {
     }
 
     @Test
-    fun `batch insert`() {
+    fun `setter inn flere innslag`() {
         val items = listOf(
-            Person(name = "x1", age = 1, gender = Gender.FEMALE, data = mapOf("value" to "t1")),
-            Person(name = "x2", age = 2, gender = Gender.FEMALE, data = mapOf("value" to "t2")),
-            Person(name = "x3", age = 3, gender = Gender.MALE, data = mapOf("value" to "t3")),
+            Test1Entity(string = "x1", integer = 1, enum = TestEnum.A, data1 = mapOf("key" to "t1")),
+            Test1Entity(string = "x2", integer = 2, enum = TestEnum.B, data1 = mapOf("key" to "t2")),
+            Test1Entity(string = "x3", integer = 3, enum = TestEnum.C, data1 = mapOf("key" to "t3")),
         )
 
         val result1 = testTransaction { tx ->
             tx.batch(
                 sql = """
-                    INSERT INTO person(name, age, gender, data)
-                    VALUES (:name, :age, :gender, :data)
+                    INSERT INTO test_1(string, integer, enum, data_1)
+                    VALUES (:string, :integer, :enum, :data1)
                 """.trimIndent(),
                 items = items
             ) {
                 mapOf(
-                    "name" to it.name,
-                    "age" to it.age,
-                    "gender" to it.gender.name,
-                    "data" to pgJsonbOf(it.data),
+                    "string" to it.string,
+                    "integer" to it.integer,
+                    "enum" to it.enum.name,
+                    "data1" to pgJsonbOf(it.data1),
                 )
             }
         }
@@ -132,17 +121,17 @@ internal class SessionExtensionsTest : AbstractDatabaseTest() {
 
         val result2 = testTransaction { tx ->
             items.batch(
-                session = tx,
+                tx = tx,
                 sql = """
-                    INSERT INTO person(name, age, gender, data)
-                    VALUES (:name, :age, :gender, :data)
+                    INSERT INTO test_1(string, integer, enum, data_1)
+                    VALUES (:string, :integer, :enum, :data1)
                 """.trimIndent(),
             ) {
                 mapOf(
-                    "name" to it.name,
-                    "age" to it.age,
-                    "gender" to it.gender.name,
-                    "data" to pgJsonbOf(it.data),
+                    "string" to it.string,
+                    "integer" to it.integer,
+                    "enum" to it.enum.name,
+                    "data1" to pgJsonbOf(it.data1),
                 )
             }
         }
@@ -150,13 +139,13 @@ internal class SessionExtensionsTest : AbstractDatabaseTest() {
         result2.size shouldBe 3
 
         val savedItems = testTransaction { tx ->
-            tx.queryList("SELECT * FROM person WHERE name LIKE 'x%'") {
-                Person(
+            tx.queryList("SELECT * FROM test_1 WHERE string LIKE 'x%'") {
+                Test1Entity(
                     id = it.long("id"),
-                    name = it.string("name"),
-                    age = it.int("age"),
-                    gender = it.enum("gender"),
-                    data = it.json("data"),
+                    string = it.string("string"),
+                    integer = it.int("integer"),
+                    enum = it.enum("enum"),
+                    data1 = it.json("data_1"),
                 )
             }
         }
@@ -165,50 +154,42 @@ internal class SessionExtensionsTest : AbstractDatabaseTest() {
     }
 
     @Test
-    fun `lagrer og henter null fra JSON-kolonne`() {
+    fun `setter inn og henter null`() {
         val id = testTransaction(returnGeneratedKey = true) { tx ->
-            tx.updateAndReturnGeneratedKey("INSERT INTO json(data) VALUES (NULL)")
+            tx.updateAndReturnGeneratedKey(
+                sql = """
+                    INSERT INTO test_1(string, integer, enum, data_1, data_2)
+                    VALUES ('test', 1, 'A', '{}', NULL)
+                    RETURNING id
+                """.trimIndent()
+            )
         }
         assertNotNull(id)
-        val json = testTransaction { tx ->
-            tx.single("SELECT id, data FROM json") {
+        val result = testTransaction { tx ->
+            tx.single("SELECT id, data_2 FROM test_1 WHERE id = :id", mapOf("id" to id)) {
                 mapOf(
                     "id" to it.long("id"),
-                    "data" to it.jsonOrNull("data"),
+                    "data2" to it.jsonOrNull("data_2"),
                 )
             }
         }
-        json["id"] shouldBe id
-        json["data"] shouldBe null
+        result["id"] shouldBe id
+        result["data2"] shouldBe null
     }
 
     @Test
-    fun `setter inn rad med query`() {
+    fun `setter inn innslag og svarer med id`() {
         val id = testTransaction { tx ->
-            tx.query("INSERT INTO json(data) VALUES (NULL) RETURNING id") {
+            tx.query(
+                sql = """
+                    INSERT INTO test_1(string, integer, enum, data_1, data_2)
+                    VALUES ('test', 1, 'A', '{}', NULL)
+                    RETURNING id
+                """.trimIndent()
+            ) {
                 it.long("id")
             }
         }
         assertNotNull(id)
     }
-}
-
-data class Person(
-    @Column("id")
-    val id: Long = -1,
-    @Column("name")
-    val name: String,
-    @Column("age")
-    val age: Int,
-    @Column("gender")
-    val gender: Gender,
-    @Column("data")
-    val data: Map<String, Any?>,
-) {
-    val foo: String = "foo"
-    val bar: String get() = "bar"
-}
-
-enum class Gender {
-    MALE, FEMALE
 }

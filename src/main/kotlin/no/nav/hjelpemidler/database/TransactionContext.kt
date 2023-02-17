@@ -1,4 +1,3 @@
 package no.nav.hjelpemidler.database
 
-interface TransactionContext {
-}
+interface TransactionContext

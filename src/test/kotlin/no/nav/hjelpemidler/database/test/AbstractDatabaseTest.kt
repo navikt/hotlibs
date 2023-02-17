@@ -1,6 +1,6 @@
 package no.nav.hjelpemidler.database.test
 
-import kotliquery.Session
+import kotliquery.TransactionalSession
 import no.nav.hjelpemidler.database.Database
 import no.nav.hjelpemidler.database.createDatabase
 import no.nav.hjelpemidler.database.transaction
@@ -28,6 +28,8 @@ abstract class AbstractDatabaseTest {
             )
     }
 
+    val storeContext = TestStoreContext(database)
+
     @BeforeTest
     fun beforeTest() {
         database.migrate()
@@ -41,7 +43,11 @@ abstract class AbstractDatabaseTest {
     fun <T> testTransaction(
         dataSource: DataSource = database,
         returnGeneratedKey: Boolean = false,
-        block: (Session) -> T,
+        block: (TransactionalSession) -> T,
     ): T =
-        transaction(dataSource = dataSource, returnGeneratedKey = returnGeneratedKey, block = block)
+        transaction(
+            dataSource = dataSource,
+            returnGeneratedKey = returnGeneratedKey,
+            block = block,
+        )
 }

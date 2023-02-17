@@ -1,6 +1,6 @@
 package no.nav.hjelpemidler.database
 
-import kotliquery.Session
+import kotliquery.TransactionalSession
 import kotliquery.sessionOf
 import javax.sql.DataSource
 
@@ -9,7 +9,7 @@ fun <T> transaction(
     returnGeneratedKey: Boolean = false,
     strict: Boolean = true,
     queryTimeout: Int? = null,
-    block: (Session) -> T,
+    block: (TransactionalSession) -> T,
 ): T =
     sessionOf(
         dataSource = dataSource,
@@ -18,4 +18,20 @@ fun <T> transaction(
         queryTimeout = queryTimeout
     ).use { session ->
         session.transaction(block)
+    }
+
+fun <T, X : TransactionContext> transaction(
+    storeContext: StoreContext<X>,
+    returnGeneratedKey: Boolean = false,
+    strict: Boolean = true,
+    queryTimeout: Int? = null,
+    block: (X) -> T,
+): T =
+    transaction(
+        dataSource = storeContext.dataSource,
+        returnGeneratedKey = returnGeneratedKey,
+        strict = strict,
+        queryTimeout = queryTimeout,
+    ) { tx ->
+        block(storeContext.transactionContext(tx))
     }

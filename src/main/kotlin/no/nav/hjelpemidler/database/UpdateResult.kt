@@ -5,4 +5,7 @@ data class UpdateResult(val actualRowCount: Int? = null) {
         check(actualRowCount == expectedRowCount) {
             "$actualRowCount != $expectedRowCount"
         }
+
+    operator fun plus(other: UpdateResult): UpdateResult =
+        UpdateResult(0)
 }

@@ -3,9 +3,6 @@ package no.nav.hjelpemidler.database
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import kotliquery.Row
 import java.sql.Types
-import kotlin.reflect.full.findAnnotation
-import kotlin.reflect.full.primaryConstructor
-import kotlin.reflect.full.valueParameters
 
 inline fun <reified T> Row.json(columnLabel: String): T =
     jsonMapper.readValue(string(columnLabel), jacksonTypeRef())
@@ -28,21 +25,21 @@ fun Row.toMap(): Map<String, Any?> {
     }
 }
 
-inline fun <reified T : Any> Row.to(): T {
-    check(T::class.isData)
-    val constructor = checkNotNull(T::class.primaryConstructor)
+inline fun <reified T : Any> Row.receive(): T {
+    val schema = T::class.schema()
     val metaData = checkNotNull(metaDataOrNull())
     val columnTypeByColumnLabel = (1..metaData.columnCount).associate { columnIndex ->
         metaData.getColumnLabel(columnIndex) to metaData.getColumnType(columnIndex)
     }
-    val fromValue = constructor.valueParameters.associate { parameter ->
-        val columnLabel = when (val column = parameter.findAnnotation<Column>()) {
-            null -> checkNotNull(parameter.name)
-            else -> column.name
-        }
-        columnLabel to when (columnTypeByColumnLabel[columnLabel]) {
-            Types.OTHER -> jsonOrNull(columnLabel)
-            else -> anyOrNull(columnLabel)
+    val columnTypeNameByColumnLabel = (1..metaData.columnCount).associate { columnIndex ->
+        metaData.getColumnLabel(columnIndex) to metaData.getColumnTypeName(columnIndex)
+    }
+    val fromValue = schema.columns.associate { column ->
+        val columnType = columnTypeByColumnLabel[column.columnName]
+        val columnTypeName = columnTypeNameByColumnLabel[column.columnName]
+        column.parameterName to when (columnType) {
+            Types.OTHER -> jsonOrNull(column.columnAlias)
+            else -> anyOrNull(column.columnAlias)
         }
     }
     return jsonMapper.convertValue(fromValue, jacksonTypeRef())
