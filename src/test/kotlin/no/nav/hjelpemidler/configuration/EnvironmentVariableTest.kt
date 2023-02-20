@@ -9,5 +9,6 @@ class EnvironmentVariableTest {
     fun `skal lese konfigurasjon fra properties`() {
         val configuration = azureADEnvironmentConfiguration()
         configuration.tokenEndpoint shouldBe "http://azure/token"
+        NaisEnvironmentVariable.NAIS_CLUSTER_NAME shouldBe "local"
     }
 }
