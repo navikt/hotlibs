@@ -1,4 +1,4 @@
-package no.nav.hjelpemidler.http
+package no.nav.hjelpemidler.cache
 
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -9,8 +9,8 @@ import kotlin.test.Test
 
 class CacheTest {
     private val key = "test"
-    private val predicate = mockk<suspend (key: String, value: String) -> Boolean>()
-    private val block = mockk<suspend (key: String, value: String?) -> String>()
+    private val predicate = mockk<suspend (key: String, oldValue: String) -> Boolean>()
+    private val block = mockk<suspend (key: String, oldValue: String?) -> String>()
 
     @Test
     fun `oppdaterer cache hvis ingen verdi fra før`() {

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy
 import com.fasterxml.jackson.databind.annotation.JsonNaming
-import io.ktor.client.plugins.auth.providers.BearerTokens
 import java.time.Instant
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -29,8 +28,4 @@ data class TokenSet(
             .run {
                 this == at || isBefore(at)
             }
-
-    @JsonIgnore
-    fun toBearerTokens(): BearerTokens =
-        BearerTokens(accessToken, refreshToken ?: "")
 }

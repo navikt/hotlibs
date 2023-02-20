@@ -2,13 +2,13 @@ package no.nav.hjelpemidler.http.openid
 
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.cio.CIO
-import no.nav.hjelpemidler.http.EnvironmentVariable
+import no.nav.hjelpemidler.configuration.EnvironmentVariable
 
 object AzureADEnvironmentVariable {
     val AZURE_APP_CLIENT_ID by EnvironmentVariable
     val AZURE_APP_CLIENT_SECRET by EnvironmentVariable
-    val AZURE_APP_JWKS by EnvironmentVariable
     val AZURE_APP_JWK by EnvironmentVariable
+    val AZURE_APP_JWKS by EnvironmentVariable
     val AZURE_APP_PRE_AUTHORIZED_APPS by EnvironmentVariable
     val AZURE_APP_TENANT_ID by EnvironmentVariable
     val AZURE_APP_WELL_KNOWN_URL by EnvironmentVariable

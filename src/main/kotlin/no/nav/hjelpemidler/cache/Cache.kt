@@ -1,4 +1,4 @@
-package no.nav.hjelpemidler.http
+package no.nav.hjelpemidler.cache
 
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -27,8 +27,8 @@ class Cache<K : Any, V> internal constructor(
 
     suspend fun computeIf(
         key: K,
-        predicate: suspend (key: K, value: V) -> Boolean,
-        block: suspend (key: K, value: V?) -> V,
+        predicate: suspend (key: K, oldValue: V) -> Boolean,
+        block: suspend (key: K, oldValue: V?) -> V,
     ): V = mutex.withLock(cache) {
         val oldValue = cache[key]
         when {

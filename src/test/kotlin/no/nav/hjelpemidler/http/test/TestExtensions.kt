@@ -15,8 +15,11 @@ import org.intellij.lang.annotations.Language
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 
-infix fun <T> T.shouldBe(expected: T) = assertEquals(expected, this)
-infix fun <T> T.shouldNotBe(illegal: T) = assertNotEquals(illegal, this)
+infix fun <T> T.shouldBe(expected: T): Unit =
+    assertEquals(expected, this)
+
+infix fun <T> T.shouldNotBe(illegal: T): Unit =
+    assertNotEquals(illegal, this)
 
 val jsonMapper: JsonMapper = jacksonMapperBuilder()
     .addModule(JavaTimeModule())
