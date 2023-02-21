@@ -1,26 +1,13 @@
 package no.nav.hjelpemidler.configuration
 
+import org.slf4j.LoggerFactory
 import java.util.Properties
 
-class Configuration private constructor(
+private val log = LoggerFactory.getLogger(Configuration::class.java)
+
+class Configuration internal constructor(
     private val properties: Map<String, String>,
 ) : Map<String, String> by properties {
-    constructor(properties: Properties) : this(
-        properties = properties
-            .mapKeys {
-                it.key.toString()
-            }
-            .mapValues {
-                it.value.toString()
-            }
-    )
-
-    constructor(location: String) : this(
-        properties = Properties().apply {
-            Configuration::class.java.getResourceAsStream(location)?.use(::load)
-        }
-    )
-
     override fun equals(other: Any?): Boolean =
         properties == other
 
@@ -31,11 +18,20 @@ class Configuration private constructor(
         properties.toString()
 
     companion object {
-        fun load(location: String): Lazy<Configuration> = lazy {
-            Configuration(location)
+        val current by lazy {
+            load()
         }
 
-        fun load(environment: Environment = Environment.current()): Lazy<Configuration> =
-            load("/$environment.properties")
+        fun load(environment: Environment = Environment.current()): Configuration {
+            val location = "/$environment.properties"
+            log.info("Leser konfigurasjon fra: '$location'")
+            val properties = Properties()
+                .apply {
+                    Configuration::class.java.getResourceAsStream(location)?.use(::load)
+                }
+                .mapKeys { it.key.toString() }
+                .mapValues { it.value.toString() }
+            return Configuration(System.getenv() + properties)
+        }
     }
 }
