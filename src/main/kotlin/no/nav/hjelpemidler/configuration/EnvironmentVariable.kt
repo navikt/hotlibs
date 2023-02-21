@@ -3,8 +3,7 @@ package no.nav.hjelpemidler.configuration
 import kotlin.reflect.KProperty
 
 object EnvironmentVariable {
-    private val cluster = System.getenv("NAIS_CLUSTER_NAME") ?: "local"
-    private val fallback by Configuration.load("/$cluster.properties")
+    private val fallback by Configuration.load()
 
     operator fun get(name: String): String? =
         System.getenv(name) ?: fallback[name]

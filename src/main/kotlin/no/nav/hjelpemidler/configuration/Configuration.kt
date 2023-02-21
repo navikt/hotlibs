@@ -34,5 +34,8 @@ class Configuration private constructor(
         fun load(location: String): Lazy<Configuration> = lazy {
             Configuration(location)
         }
+
+        fun load(environment: Environment = Environment.current()): Lazy<Configuration> =
+            load("/$environment.properties")
     }
 }
