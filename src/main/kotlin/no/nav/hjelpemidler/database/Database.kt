@@ -51,3 +51,12 @@ fun createDatabase(
         }
     }
 }
+
+fun createDatabase(configuration: DatabaseConfiguration): Database =
+    createDatabase(
+        jdbcUrl = configuration.jdbcUrl,
+        username = configuration.username,
+        password = configuration.password,
+        driverClassName = configuration.driverClassName,
+        cleanDisabled = configuration.cleanDisabled
+    )
