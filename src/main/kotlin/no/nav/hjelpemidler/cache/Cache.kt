@@ -8,6 +8,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.future.future
 import kotlinx.coroutines.supervisorScope
+import kotlin.time.Duration
+import kotlin.time.toJavaDuration
+
+fun <K : Any, V : Any> Caffeine<K, V>.expireAfterWrite(duration: Duration): Caffeine<K, V> =
+    expireAfterWrite(duration.toJavaDuration())
+
+fun <K : Any, V : Any> Caffeine<K, V>.expireAfterAccess(duration: Duration): Caffeine<K, V> =
+    expireAfterAccess(duration.toJavaDuration())
+
+fun <K : Any, V : Any> Caffeine<K, V>.refreshAfterWrite(duration: Duration): Caffeine<K, V> =
+    refreshAfterWrite(duration.toJavaDuration())
 
 typealias CacheConfigurer<K, V> =
         Caffeine<K, V>.() -> Caffeine<K, V>
