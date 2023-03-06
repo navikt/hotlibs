@@ -1,44 +1,64 @@
 package no.nav.hjelpemidler.cache
 
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
+import com.github.benmanes.caffeine.cache.AsyncCache
+import com.github.benmanes.caffeine.cache.Cache
+import com.github.benmanes.caffeine.cache.Caffeine
+import com.github.benmanes.caffeine.cache.LoadingCache
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.future.await
+import kotlinx.coroutines.future.future
+import kotlinx.coroutines.supervisorScope
 
-class Cache<K : Any, V> internal constructor(
-    private val cache: MutableMap<K, V>,
-) : Map<K, V> by cache {
-    constructor() : this(mutableMapOf())
+typealias CacheConfigurer<K, V> =
+        Caffeine<K, V>.() -> Caffeine<K, V>
 
-    private val mutex = Mutex()
+@Suppress("UNCHECKED_CAST")
+internal fun <K : Any, V : Any> caffeine(): Caffeine<K, V> =
+    Caffeine.newBuilder() as Caffeine<K, V>
 
-    suspend fun computeIfAbsent(
-        key: K,
-        block: suspend (key: K) -> V,
-    ): V = mutex.withLock(cache) {
-        when (val oldValue = cache[key]) {
-            null -> {
-                val newValue = block(key)
-                cache[key] = newValue
-                newValue
+fun <K : Any, V : Any> createCache(
+    configuration: CacheConfigurer<K, V> = { this },
+): Cache<K, V> =
+    caffeine<K, V>()
+        .run(configuration)
+        .build()
+
+fun <K : Any, V : Any> createLoadingCache(
+    configuration: CacheConfigurer<K, V> = { this },
+    loader: (K) -> V,
+): LoadingCache<K, V> =
+    caffeine<K, V>()
+        .run(configuration)
+        .build(loader)
+
+fun <K : Any, V : Any> createAsyncCache(
+    configuration: CacheConfigurer<K, V> = { this },
+): AsyncCache<K, V> =
+    caffeine<K, V>()
+        .run(configuration)
+        .buildAsync()
+
+fun <K : Any, V : Any> createAsyncLoadingCache(
+    coroutineScope: CoroutineScope,
+    configuration: CacheConfigurer<K, V> = { this },
+    loader: suspend (K) -> V,
+): AsyncCache<K, V> =
+    caffeine<K, V>()
+        .run(configuration)
+        .buildAsync { key, _ ->
+            coroutineScope.future {
+                loader(key)
             }
-
-            else -> oldValue
         }
-    }
 
-    suspend fun computeIf(
-        key: K,
-        predicate: suspend (key: K, oldValue: V) -> Boolean,
-        block: suspend (key: K, oldValue: V?) -> V,
-    ): V = mutex.withLock(cache) {
-        val oldValue = cache[key]
-        when {
-            oldValue == null || predicate(key, oldValue) -> {
-                val newValue = block(key, oldValue)
-                cache[key] = newValue
-                newValue
+suspend fun <K : Any, V> AsyncCache<K, V>.getIfPresentAsync(key: K): V? =
+    getIfPresent(key)?.await()
+
+suspend fun <K : Any, V> AsyncCache<K, V>.getAsync(key: K, loader: suspend (K) -> V): V =
+    supervisorScope {
+        get(key) { key, _ ->
+            future {
+                loader(key)
             }
-
-            else -> oldValue
-        }
+        }.await()
     }
-}

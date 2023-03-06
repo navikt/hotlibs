@@ -22,7 +22,7 @@ class Configuration internal constructor(
             load()
         }
 
-        fun load(environment: Environment = Environment.current()): Configuration {
+        fun load(environment: Environment = Environment.current): Configuration {
             val location = "/$environment.properties"
             log.info("Leser konfigurasjon fra: '$location'")
             val properties = Properties()

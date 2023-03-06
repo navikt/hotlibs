@@ -5,7 +5,6 @@ import io.ktor.client.engine.mock.MockRequestHandleScope
 import io.ktor.client.request.HttpRequestData
 import io.ktor.client.request.HttpResponseData
 import io.ktor.http.HttpStatusCode
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import no.nav.hjelpemidler.http.test.respondJson
 import no.nav.hjelpemidler.http.test.shouldBe
@@ -21,18 +20,18 @@ class DefaultOpenIDClientTest {
                 {
                   "token_type": "Bearer",
                   "expires_in": 3599,
-                  "access_token": "hemmelig"
+                  "access_token": "token"
                 }
                 """.trimIndent()
             )
         }
-        val tokenSet = runBlocking(Dispatchers.IO) {
+        val tokenSet = runBlocking {
             client.grant(scope = "test")
         }
 
         tokenSet.tokenType shouldBe "Bearer"
         tokenSet.expiresIn shouldBe 3599
-        tokenSet.accessToken shouldBe "hemmelig"
+        tokenSet.accessToken shouldBe "token"
     }
 
     @Test
@@ -45,20 +44,18 @@ class DefaultOpenIDClientTest {
                   "scope": "https://graph.microsoft.com/user.read",
                   "expires_in": 3269,
                   "ext_expires_in": 0,
-                  "access_token": "hemmelig1",
-                  "refresh_token": "hemmelig2"
+                  "access_token": "token"
                 }
                 """.trimIndent()
             )
         }
-        val tokenSet = runBlocking(Dispatchers.IO) {
+        val tokenSet = runBlocking {
             client.grant(scope = "test", onBehalfOf = "test")
         }
 
         tokenSet.tokenType shouldBe "Bearer"
         tokenSet.expiresIn shouldBe 3269
-        tokenSet.accessToken shouldBe "hemmelig1"
-        tokenSet.refreshToken shouldBe "hemmelig2"
+        tokenSet.accessToken shouldBe "token"
     }
 
     @Test
@@ -80,16 +77,14 @@ class DefaultOpenIDClientTest {
             )
         }
 
-        val error = assertThrows<OpenIDClientException> {
-            runBlocking(Dispatchers.IO) {
+        assertThrows<OpenIDClientException> {
+            runBlocking {
                 client.grant(scope = "invalid")
             }
         }
-
-        println(error.message)
     }
 
-    private fun createTestClient(handler: suspend MockRequestHandleScope.(HttpRequestData) -> HttpResponseData) =
+    private fun createTestClient(handler: suspend MockRequestHandleScope.(HttpRequestData) -> HttpResponseData): OpenIDClient =
         DefaultOpenIDClient(
             configuration = DefaultOpenIDConfiguration(
                 tokenEndpoint = "https://issuer/token",

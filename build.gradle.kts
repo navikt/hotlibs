@@ -1,7 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val ktorVersion = "2.2.3"
+val coroutinesVersion = "1.6.4"
+val ktorVersion = "2.2.4"
 val jacksonVersion = "2.14.2"
+val caffeineVersion = "3.1.4"
 val slf4jVersion = "2.0.6"
 
 plugins {
@@ -18,6 +20,11 @@ repositories {
 dependencies {
     implementation(kotlin("stdlib"))
 
+    // Kotlinx
+    fun kotlinx(name: String) = "org.jetbrains.kotlinx:kotlinx-$name"
+    api(kotlinx("coroutines-core:$coroutinesVersion"))
+    implementation(kotlinx("coroutines-jdk8:$coroutinesVersion"))
+
     // Ktor
     fun ktor(name: String) = "io.ktor:ktor-$name:$ktorVersion"
     implementation(ktor("serialization-jackson"))
@@ -30,6 +37,12 @@ dependencies {
 
     // Jackson
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
+
+    // JWT
+    implementation("com.auth0:java-jwt:4.3.0")
+
+    // Cache
+    api("com.github.ben-manes.caffeine:caffeine:$caffeineVersion")
 
     // Logging
     implementation("org.slf4j:slf4j-api:$slf4jVersion")

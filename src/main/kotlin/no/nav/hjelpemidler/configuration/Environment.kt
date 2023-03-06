@@ -8,12 +8,13 @@ interface Environment {
                 setOf(*FssEnvironment.values()) +
                 setOf(*GcpEnvironment.values())
 
-        fun current(): Environment {
-            val cluster = System.getenv("NAIS_CLUSTER_NAME")
-            return all.find {
-                it.cluster == cluster
-            } ?: LocalEnvironment
-        }
+        val current: Environment =
+            run {
+                val cluster = System.getenv("NAIS_CLUSTER_NAME")
+                all.find {
+                    it.cluster == cluster
+                } ?: LocalEnvironment
+            }
     }
 }
 

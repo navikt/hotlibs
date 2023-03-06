@@ -5,27 +5,42 @@ import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy
 import com.fasterxml.jackson.databind.annotation.JsonNaming
+import no.nav.hjelpemidler.time.minus
+import no.nav.hjelpemidler.time.now
+import no.nav.hjelpemidler.time.plus
 import java.time.Instant
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
-import kotlin.time.toJavaDuration
 
 @JsonNaming(SnakeCaseStrategy::class)
 data class TokenSet(
     val tokenType: String,
     val expiresIn: Long,
     val accessToken: String,
-    val refreshToken: String? = null,
     @JsonAnySetter @get:JsonAnyGetter val other: Map<String, Any> = linkedMapOf(),
 ) {
     @JsonIgnore
-    val expiresAt: Instant = Helper.now().plus(expiresIn.seconds.toJavaDuration())
+    val expiresInDuration = expiresIn.seconds
 
     @JsonIgnore
-    fun isExpired(at: Instant = Helper.now(), leeway: Duration = Duration.ZERO): Boolean =
-        expiresAt
-            .minus(leeway.toJavaDuration())
-            .run {
-                this == at || isBefore(at)
-            }
+    val expiresAt: Instant = now() + expiresInDuration
+
+    @JsonIgnore
+    fun expiresIn(leeway: Duration = TokenExpiry.LEEWAY): Duration =
+        expiresInDuration - leeway
+
+    @JsonIgnore
+    fun isExpired(at: Instant = now(), leeway: Duration = TokenExpiry.LEEWAY): Boolean =
+        (expiresAt - leeway).let {
+            it == at || it.isBefore(at)
+        }
+
+    companion object {
+        fun bearer(expiresIn: Duration, accessToken: String): TokenSet =
+            TokenSet(
+                tokenType = "Bearer",
+                expiresIn = expiresIn.inWholeSeconds,
+                accessToken = accessToken,
+            )
+    }
 }

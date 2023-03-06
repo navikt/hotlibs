@@ -2,6 +2,8 @@ package no.nav.hjelpemidler.http.openid
 
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.cio.CIO
+import io.ktor.http.Parameters
+import no.nav.hjelpemidler.cache.CacheConfigurer
 import no.nav.hjelpemidler.configuration.EnvironmentVariable
 
 object TokenXEnvironmentVariable {
@@ -22,4 +24,10 @@ fun tokenXEnvironmentConfiguration(): OpenIDConfiguration = DefaultOpenIDConfigu
 fun tokenXClient(
     configuration: OpenIDConfiguration = tokenXEnvironmentConfiguration(),
     engine: HttpClientEngine = CIO.create(),
-): OpenIDClient = DefaultOpenIDClient(configuration = configuration, engine = engine)
+    cacheConfiguration: CacheConfigurer<Parameters, TokenSet>? = null,
+): OpenIDClient =
+    createOpenIDClient(
+        configuration = configuration,
+        engine = engine,
+        cacheConfiguration = cacheConfiguration,
+    )

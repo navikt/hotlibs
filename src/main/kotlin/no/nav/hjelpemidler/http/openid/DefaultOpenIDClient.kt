@@ -10,6 +10,9 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.Parameters
 import io.ktor.http.ParametersBuilder
 import no.nav.hjelpemidler.http.createHttpClient
+import org.slf4j.LoggerFactory
+
+private val log = LoggerFactory.getLogger(DefaultOpenIDClient::class.java)
 
 internal class DefaultOpenIDClient(
     private val configuration: OpenIDConfiguration,

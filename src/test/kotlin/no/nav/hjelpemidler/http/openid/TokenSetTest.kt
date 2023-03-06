@@ -1,8 +1,10 @@
 package no.nav.hjelpemidler.http.openid
 
 import io.mockk.every
-import io.mockk.mockkObject
+import io.mockk.mockkStatic
+import no.nav.hjelpemidler.http.test.createJWT
 import no.nav.hjelpemidler.http.test.shouldBe
+import no.nav.hjelpemidler.time.now
 import java.time.LocalDate
 import java.time.Month
 import java.time.ZoneId
@@ -19,9 +21,9 @@ class TokenSetTest {
 
     @BeforeTest
     fun setUp() {
-        mockkObject(Helper)
+        mockkStatic(::now)
         every {
-            Helper.now()
+            now()
         } returns at
     }
 
@@ -49,9 +51,9 @@ class TokenSetTest {
         tokenSet.isExpired(at = at, leeway = 1.seconds) shouldBe false
     }
 
-    private fun tokenSetThat(expiresIn: Duration) = TokenSet(
-        tokenType = "Bearer",
-        expiresIn = expiresIn.inWholeSeconds,
-        accessToken = "hemmelig",
-    )
+    private fun tokenSetThat(expiresIn: Duration): TokenSet =
+        TokenSet.bearer(
+            expiresIn = expiresIn,
+            accessToken = createJWT(),
+        )
 }
