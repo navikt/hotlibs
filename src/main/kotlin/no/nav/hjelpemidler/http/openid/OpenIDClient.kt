@@ -1,5 +1,6 @@
 package no.nav.hjelpemidler.http.openid
 
+import com.auth0.jwt.interfaces.DecodedJWT
 import io.ktor.http.ParametersBuilder
 
 interface OpenIDClient {
@@ -14,6 +15,13 @@ interface OpenIDClient {
         grantType(GrantType.JWT_BEARER)
         scope(scope)
         assertion(onBehalfOf)
+        requestedTokenUse("on_behalf_of")
+    }
+
+    suspend fun grant(scope: String, onBehalfOf: DecodedJWT): TokenSet = grant {
+        grantType(GrantType.JWT_BEARER)
+        scope(scope)
+        assertion(onBehalfOf.token)
         requestedTokenUse("on_behalf_of")
     }
 
