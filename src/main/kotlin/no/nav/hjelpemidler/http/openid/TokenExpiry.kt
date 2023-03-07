@@ -16,7 +16,5 @@ class TokenExpiry<K : Any>(private val leeway: Duration = LEEWAY) : Expiry<K, To
 
     companion object {
         val LEEWAY: Duration = 1.minutes
-        fun <K : Any> default(): TokenExpiry<K> =
-            TokenExpiry(leeway = LEEWAY)
     }
 }

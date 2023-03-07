@@ -60,7 +60,7 @@ class CachedOpenIDClientTest {
             ),
             engine = MockEngine {
                 handler(this, it)
-            }
+            },
         ) {
             tokenExpiry()
         }
