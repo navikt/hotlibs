@@ -10,21 +10,28 @@ import kotlinx.coroutines.supervisorScope
 import kotlin.time.Duration
 import kotlin.time.toJavaDuration
 
-private fun <T, K : Any, V : Any> Caffeine<K, V>.setIf(value: T?, block: (T) -> Caffeine<K, V>): Caffeine<K, V> =
+private fun <T> Caffeine<Any, Any>.setIf(
+    value: T?,
+    block: (T) -> Caffeine<Any, Any>,
+): Caffeine<Any, Any> =
     when (value) {
         null -> this
         else -> block(value)
     }
 
-private fun <K : Any, V : Any> Caffeine<K, V>.setIf(value: Boolean, block: () -> Caffeine<K, V>): Caffeine<K, V> =
+private fun Caffeine<Any, Any>.setIf(
+    value: Boolean,
+    block: () -> Caffeine<Any, Any>,
+): Caffeine<Any, Any> =
     when (value) {
         false -> this
         else -> block()
     }
 
-@Suppress("UNCHECKED_CAST")
-fun <K : Any, V : Any> Caffeine<Any, Any>.configure(configurer: CacheConfiguration<K, V>.() -> Unit): Caffeine<K, V> {
-    val configuration = CacheConfiguration<K, V>().apply(configurer)
+fun Caffeine<Any, Any>.configure(
+    configurer: CacheConfiguration.() -> Unit,
+): Caffeine<Any, Any> {
+    val configuration = CacheConfiguration().apply(configurer)
     return this
         .setIf(configuration.initialCapacity, ::initialCapacity)
         .setIf(configuration.maximumSize, ::maximumSize)
@@ -32,13 +39,10 @@ fun <K : Any, V : Any> Caffeine<Any, Any>.configure(configurer: CacheConfigurati
         .setIf(configuration.weakKeys, ::weakKeys)
         .setIf(configuration.weakValues, ::weakValues)
         .setIf(configuration.softValues, ::softValues)
-        .setIf(configuration.expireAfter) {
-            expireAfter(it) as Caffeine<Any, Any>
-        }
         .setIf(configuration.expireAfterWrite, ::expireAfterWrite)
         .setIf(configuration.expireAfterAccess, ::expireAfterAccess)
         .setIf(configuration.refreshAfterWrite, ::refreshAfterWrite)
-        .setIf(configuration.recordStats, ::recordStats) as Caffeine<K, V>
+        .setIf(configuration.recordStats, ::recordStats)
 }
 
 fun <K : Any, V : Any> Caffeine<K, V>.expireAfterWrite(

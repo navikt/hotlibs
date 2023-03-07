@@ -15,9 +15,9 @@ import kotlin.time.Duration.Companion.seconds
 class TokenExpiryTest {
     private val key = "key"
     private val loader = mockk<(String) -> TokenSet>()
-    private val cache = createCache<String, TokenSet> {
-        expireAfter = TokenExpiry(leeway = 0.seconds)
-    }.build(loader)
+    private val cache = createCache()
+        .expireAfter(TokenExpiry(leeway = 0.seconds))
+        .build(loader)
 
     @BeforeTest
     fun setUp() {

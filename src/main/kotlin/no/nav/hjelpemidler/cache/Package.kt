@@ -2,7 +2,7 @@ package no.nav.hjelpemidler.cache
 
 import com.github.benmanes.caffeine.cache.Caffeine
 
-fun <K : Any, V : Any> createCache(
-    configurer: CacheConfiguration<K, V>.() -> Unit = {},
-): Caffeine<K, V> =
+fun createCache(
+    configurer: CacheConfiguration.() -> Unit = {},
+): Caffeine<Any, Any> =
     Caffeine.newBuilder().configure(configurer)

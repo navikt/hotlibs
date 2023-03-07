@@ -9,6 +9,7 @@ import no.nav.hjelpemidler.http.test.notSameAs
 import no.nav.hjelpemidler.http.test.respondJson
 import no.nav.hjelpemidler.http.test.sameAs
 import kotlin.test.Test
+import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.minutes
 
 class CachedOpenIDClientTest {
@@ -51,7 +52,9 @@ class CachedOpenIDClientTest {
         }
     }
 
-    private fun createTestClient(handler: suspend MockRequestHandleScope.(HttpRequestData) -> HttpResponseData): OpenIDClient =
+    private fun createTestClient(
+        handler: suspend MockRequestHandleScope.(HttpRequestData) -> HttpResponseData,
+    ): OpenIDClient =
         createOpenIDClient(
             configuration = DefaultOpenIDConfiguration(
                 tokenEndpoint = "https://issuer/token",
@@ -61,7 +64,10 @@ class CachedOpenIDClientTest {
             engine = MockEngine {
                 handler(this, it)
             },
-        ) {
-            tokenExpiry()
+            expiry = TokenExpiry(),
+        ).also {
+            assertTrue {
+                it is CachedOpenIDClient
+            }
         }
 }
