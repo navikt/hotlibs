@@ -10,7 +10,6 @@ import mu.KotlinLogging
 import no.nav.hjelpemidler.cache.CacheConfiguration
 import no.nav.hjelpemidler.cache.createCache
 import no.nav.hjelpemidler.cache.getAsync
-import org.slf4j.LoggerFactory
 
 private val log = KotlinLogging.logger {}
 
@@ -27,10 +26,18 @@ internal class CachedOpenIDClient(
     )
     private val cache: AsyncCache<Parameters, TokenSet> = createCache(cacheConfigurer)
         .expireAfter(expiry)
+        .removalListener<Parameters, TokenSet> { parameters, tokenSet, cause ->
+            log.debug {
+                "TokenSet ble fjernet fra cache, scope: ${parameters?.scope}, expiresAt: ${tokenSet?.expiresAt}, cause: $cause"
+            }
+        }
         .buildAsync()
 
-    override suspend fun grant(builder: ParametersBuilder.() -> Unit): TokenSet =
-        cache.getAsync(Parameters.build(builder)) { _ ->
+    override suspend fun grant(builder: ParametersBuilder.() -> Unit): TokenSet {
+        val formParameters = Parameters.build(builder)
+        return cache.getAsync(formParameters) { _ ->
+            log.debug { "Cache miss, henter nytt token, scope: ${formParameters.scope}" }
             client.grant(builder)
         }
+    }
 }

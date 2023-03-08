@@ -23,19 +23,25 @@ internal class DefaultOpenIDClient(
     }
 
     override suspend fun grant(builder: ParametersBuilder.() -> Unit): TokenSet {
+        val formParameters = Parameters.build {
+            clientId(configuration.clientId)
+            clientSecret(checkNotNull(configuration.clientSecret) {
+                "Mangler verdi for 'clientSecret'"
+            })
+            builder()
+        }
+        log.debug { "Henter token, scope: ${formParameters.scope}" }
         val response = client
-            .submitForm(
-                url = configuration.tokenEndpoint,
-                formParameters = Parameters.build {
-                    clientId(configuration.clientId)
-                    clientSecret(checkNotNull(configuration.clientSecret) {
-                        "Mangler verdi for 'clientSecret'"
-                    })
-                    builder()
-                },
-            )
+            .submitForm(url = configuration.tokenEndpoint, formParameters = formParameters)
         return when (response.status) {
-            HttpStatusCode.OK -> response.body()
+            HttpStatusCode.OK -> {
+                val tokenSet = response.body<TokenSet>()
+                log.debug {
+                    "Hentet token, scope: ${formParameters.scope}, expiresAt: ${tokenSet.expiresAt}"
+                }
+                tokenSet
+            }
+
             HttpStatusCode.BadRequest -> openIDError("Ugyldig forespørsel, status: '${response.status}', body: '${response.body<Map<String, Any?>>()}'")
             else -> openIDError("Noe gikk galt, status: '${response.status}', body: '${response.bodyAsText()}'")
         }
