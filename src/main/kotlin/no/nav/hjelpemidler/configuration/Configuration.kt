@@ -1,9 +1,9 @@
 package no.nav.hjelpemidler.configuration
 
-import org.slf4j.LoggerFactory
+import mu.KotlinLogging
 import java.util.Properties
 
-private val log = LoggerFactory.getLogger(Configuration::class.java)
+private val log = KotlinLogging.logger {}
 
 class Configuration internal constructor(
     private val properties: Map<String, String>,
@@ -24,7 +24,9 @@ class Configuration internal constructor(
 
         fun load(environment: Environment = Environment.current): Configuration {
             val location = "/$environment.properties"
-            log.info("Leser konfigurasjon fra: '$location'")
+            log.info {
+                "Leser konfigurasjon fra: '$location'"
+            }
             val properties = Properties()
                 .apply {
                     Configuration::class.java.getResourceAsStream(location)?.use(::load)

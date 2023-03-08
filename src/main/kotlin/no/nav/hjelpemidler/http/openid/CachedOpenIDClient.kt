@@ -6,9 +6,13 @@ import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.cio.CIO
 import io.ktor.http.Parameters
 import io.ktor.http.ParametersBuilder
+import mu.KotlinLogging
 import no.nav.hjelpemidler.cache.CacheConfiguration
 import no.nav.hjelpemidler.cache.createCache
 import no.nav.hjelpemidler.cache.getAsync
+import org.slf4j.LoggerFactory
+
+private val log = KotlinLogging.logger {}
 
 internal class CachedOpenIDClient(
     configuration: OpenIDConfiguration,

@@ -3,8 +3,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 val coroutinesVersion = "1.6.4"
 val ktorVersion = "2.2.4"
 val jacksonVersion = "2.14.2"
+val javaJwtVersion = "4.3.0"
 val caffeineVersion = "3.1.4"
-val slf4jVersion = "2.0.6"
+val kotlinLoggingVersion = "3.0.5"
+val slf4jVersion = "2.0.3"
 
 plugins {
     kotlin("jvm") version "1.8.10"
@@ -39,13 +41,13 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
 
     // JWT
-    implementation("com.auth0:java-jwt:4.3.0")
+    implementation("com.auth0:java-jwt:$javaJwtVersion")
 
     // Cache
     api("com.github.ben-manes.caffeine:caffeine:$caffeineVersion")
 
     // Logging
-    implementation("org.slf4j:slf4j-api:$slf4jVersion")
+    implementation("io.github.microutils:kotlin-logging:$kotlinLoggingVersion")
 
     // Testing
     testImplementation(kotlin("test"))

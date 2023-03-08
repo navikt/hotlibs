@@ -18,12 +18,8 @@ interface OpenIDClient {
         requestedTokenUse("on_behalf_of")
     }
 
-    suspend fun grant(scope: String, onBehalfOf: DecodedJWT): TokenSet = grant {
-        grantType(GrantType.JWT_BEARER)
-        scope(scope)
-        assertion(onBehalfOf.token)
-        requestedTokenUse("on_behalf_of")
-    }
+    suspend fun grant(scope: String, onBehalfOf: DecodedJWT): TokenSet =
+        grant(scope = scope, onBehalfOf = onBehalfOf.token)
 
     fun ParametersBuilder.grantType(value: String) = append("grant_type", value)
     fun ParametersBuilder.clientId(value: String) = append("client_id", value)
