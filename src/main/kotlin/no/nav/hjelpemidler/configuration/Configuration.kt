@@ -2,12 +2,13 @@ package no.nav.hjelpemidler.configuration
 
 import mu.KotlinLogging
 import java.util.Properties
+import java.util.SortedMap
 
 private val log = KotlinLogging.logger {}
 
 class Configuration internal constructor(
-    private val properties: Map<String, String>,
-) : Map<String, String> by properties {
+    private val properties: SortedMap<String, String>,
+) : SortedMap<String, String> by properties {
     override fun equals(other: Any?): Boolean =
         properties == other
 
@@ -33,7 +34,7 @@ class Configuration internal constructor(
                 }
                 .mapKeys { it.key.toString() }
                 .mapValues { it.value.toString() }
-            return Configuration(System.getenv() + properties)
+            return Configuration((System.getenv() + properties).toSortedMap())
         }
     }
 }
