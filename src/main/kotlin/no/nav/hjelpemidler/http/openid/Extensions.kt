@@ -12,5 +12,8 @@ fun HttpMessageBuilder.bearerAuth(tokenSet: TokenSet): Unit =
 fun Caffeine<Any, Any>.tokenExpiry(leeway: Duration = TokenExpiry.LEEWAY): Caffeine<Any, TokenSet> =
     expireAfter(TokenExpiry(leeway = leeway))
 
+internal val Parameters.grantType
+    get() = get("grant_type")
+
 internal val Parameters.scope
     get() = get("scope")

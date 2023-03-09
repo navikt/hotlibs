@@ -5,11 +5,11 @@ import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.request.forms.submitForm
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.Parameters
 import io.ktor.http.ParametersBuilder
 import mu.KotlinLogging
+import mu.withLoggingContext
 import no.nav.hjelpemidler.http.createHttpClient
 
 private val log = KotlinLogging.logger {}
@@ -30,20 +30,25 @@ internal class DefaultOpenIDClient(
             })
             builder()
         }
-        log.debug { "Henter token, scope: ${formParameters.scope}" }
-        val response = client
-            .submitForm(url = configuration.tokenEndpoint, formParameters = formParameters)
-        return when (response.status) {
-            HttpStatusCode.OK -> {
-                val tokenSet = response.body<TokenSet>()
-                log.debug {
-                    "Hentet token, scope: ${formParameters.scope}, expiresAt: ${tokenSet.expiresAt}"
+        return withLoggingContext(
+            "grantType" to formParameters.grantType,
+            "scope" to formParameters.scope,
+        ) {
+            log.debug { "Henter token" }
+            val response = client
+                .submitForm(url = configuration.tokenEndpoint, formParameters = formParameters)
+            when (response.status) {
+                HttpStatusCode.OK -> {
+                    val tokenSet = response.body<TokenSet>()
+                    log.debug {
+                        "Hentet token, expiresAt: ${tokenSet.expiresAt}"
+                    }
+                    tokenSet
                 }
-                tokenSet
-            }
 
-            HttpStatusCode.BadRequest -> openIDError("Ugyldig forespørsel, status: '${response.status}', body: '${response.body<Map<String, Any?>>()}'")
-            else -> openIDError("Noe gikk galt, status: '${response.status}', body: '${response.bodyAsText()}'")
+                HttpStatusCode.BadRequest -> openIDError(formParameters, "Ugyldig forespørsel", response)
+                else -> openIDError(formParameters, "Noe gikk galt", response)
+            }
         }
     }
 }

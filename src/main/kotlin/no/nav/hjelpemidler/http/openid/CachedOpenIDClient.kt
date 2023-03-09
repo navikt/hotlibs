@@ -7,6 +7,7 @@ import io.ktor.client.engine.cio.CIO
 import io.ktor.http.Parameters
 import io.ktor.http.ParametersBuilder
 import mu.KotlinLogging
+import mu.withLoggingContext
 import no.nav.hjelpemidler.cache.CacheConfiguration
 import no.nav.hjelpemidler.cache.createCache
 import no.nav.hjelpemidler.cache.getAsync
@@ -27,8 +28,14 @@ internal class CachedOpenIDClient(
     private val cache: AsyncCache<Parameters, TokenSet> = createCache(cacheConfigurer)
         .expireAfter(expiry)
         .removalListener<Parameters, TokenSet> { parameters, tokenSet, cause ->
-            log.debug {
-                "TokenSet ble fjernet fra cache, scope: ${parameters?.scope}, expiresAt: ${tokenSet?.expiresAt}, cause: $cause"
+            withLoggingContext(
+                "scope" to parameters?.scope,
+                "expiresAt" to tokenSet?.expiresAt?.toString(),
+                "cause" to cause.toString(),
+            ) {
+                log.debug {
+                    "TokenSet ble fjernet fra cache"
+                }
             }
         }
         .buildAsync()
@@ -36,7 +43,7 @@ internal class CachedOpenIDClient(
     override suspend fun grant(builder: ParametersBuilder.() -> Unit): TokenSet {
         val formParameters = Parameters.build(builder)
         return cache.getAsync(formParameters) { _ ->
-            log.debug { "Cache miss, henter nytt token, scope: ${formParameters.scope}" }
+            log.debug { "Cache miss, henter nytt token, scope: '${formParameters.scope}'" }
             client.grant(builder)
         }
     }
