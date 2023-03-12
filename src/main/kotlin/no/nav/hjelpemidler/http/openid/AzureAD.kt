@@ -28,6 +28,6 @@ fun azureADClient(
     block: OpenIDClientConfiguration.() -> Unit = {},
 ): OpenIDClient =
     createOpenIDClient(engine = engine) {
-        azureAD()
+        azureADEnvironmentConfiguration()
         block()
     }

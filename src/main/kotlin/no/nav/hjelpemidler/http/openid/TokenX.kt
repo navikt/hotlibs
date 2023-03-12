@@ -24,6 +24,6 @@ fun tokenXClient(
     block: OpenIDClientConfiguration.() -> Unit = {},
 ): OpenIDClient =
     createOpenIDClient(engine = engine) {
-        tokenX()
+        tokenXEnvironmentConfiguration()
         block()
     }

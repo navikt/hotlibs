@@ -13,23 +13,11 @@ class OpenIDPluginConfiguration {
     fun client(block: OpenIDClientConfiguration.() -> Unit) {
         clientConfiguration.apply(block)
     }
-
-    fun azureAD(block: OpenIDClientConfiguration.() -> Unit) =
-        client {
-            azureAD()
-            block()
-        }
-
-    fun tokenX(block: OpenIDClientConfiguration.() -> Unit) =
-        client {
-            tokenX()
-            block()
-        }
 }
 
 val OpenIDPlugin = createClientPlugin("OpenIDPlugin", ::OpenIDPluginConfiguration) {
-    val engine = client.engine
     val scope = pluginConfig.scope
+    val engine = client.engine
     val client = when (val client = pluginConfig.client) {
         null -> createOpenIDClient(
             engine = engine,
@@ -51,5 +39,25 @@ val OpenIDPlugin = createClientPlugin("OpenIDPlugin", ::OpenIDPluginConfiguratio
 fun HttpClientConfig<*>.openID(block: OpenIDPluginConfiguration.() -> Unit) {
     install(OpenIDPlugin) {
         block()
+    }
+}
+
+fun HttpClientConfig<*>.azureAD(scope: String, block: OpenIDClientConfiguration.() -> Unit) {
+    install(OpenIDPlugin) {
+        this.scope = scope
+        client {
+            azureADEnvironmentConfiguration()
+            block()
+        }
+    }
+}
+
+fun HttpClientConfig<*>.tokenX(scope: String, block: OpenIDClientConfiguration.() -> Unit) {
+    install(OpenIDPlugin) {
+        this.scope = scope
+        client {
+            tokenXEnvironmentConfiguration()
+            block()
+        }
     }
 }
