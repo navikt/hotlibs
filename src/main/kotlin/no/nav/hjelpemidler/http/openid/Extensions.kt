@@ -9,7 +9,7 @@ import kotlin.time.Duration
 fun HttpMessageBuilder.bearerAuth(tokenSet: TokenSet): Unit =
     bearerAuth(tokenSet.accessToken)
 
-fun Caffeine<Any, Any>.tokenExpiry(leeway: Duration = TokenExpiry.LEEWAY): Caffeine<Any, TokenSet> =
+fun Caffeine<Any, Any>.untilTokenExpiry(leeway: Duration = TokenExpiry.LEEWAY): Caffeine<Any, TokenSet> =
     expireAfter(TokenExpiry(leeway = leeway))
 
 internal val Parameters.grantType

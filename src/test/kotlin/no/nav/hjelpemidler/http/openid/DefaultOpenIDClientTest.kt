@@ -10,6 +10,7 @@ import no.nav.hjelpemidler.http.test.respondJson
 import no.nav.hjelpemidler.http.test.shouldBe
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
+import kotlin.test.assertTrue
 
 class DefaultOpenIDClientTest {
     @Test
@@ -84,15 +85,20 @@ class DefaultOpenIDClientTest {
         }
     }
 
-    private fun createTestClient(handler: suspend MockRequestHandleScope.(HttpRequestData) -> HttpResponseData): OpenIDClient =
-        DefaultOpenIDClient(
-            configuration = DefaultOpenIDConfiguration(
-                tokenEndpoint = "https://issuer/token",
-                clientId = "clientId",
-                clientSecret = "clientSecret"
-            ),
+    private fun createTestClient(
+        handler: suspend MockRequestHandleScope.(HttpRequestData) -> HttpResponseData,
+    ): OpenIDClient =
+        createOpenIDClient(
             engine = MockEngine {
                 handler(this, it)
             }
-        )
+        ) {
+            tokenEndpoint = "https://issuer/token"
+            clientId = "clientId"
+            clientSecret = "clientSecret"
+        }.also {
+            assertTrue {
+                it is DefaultOpenIDClient
+            }
+        }
 }

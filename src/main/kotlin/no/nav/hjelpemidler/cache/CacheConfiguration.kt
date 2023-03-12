@@ -1,9 +1,8 @@
 package no.nav.hjelpemidler.cache
 
-import com.github.benmanes.caffeine.cache.Expiry
 import kotlin.time.Duration
 
-class CacheConfiguration {
+open class CacheConfiguration internal constructor() {
     var initialCapacity: Int? = null
     var maximumSize: Long? = null
     var maximumWeight: Long? = null
@@ -14,4 +13,8 @@ class CacheConfiguration {
     var expireAfterAccess: Duration? = null
     var refreshAfterWrite: Duration? = null
     var recordStats: Boolean = false
+
+    override fun toString(): String {
+        return "CacheConfiguration(initialCapacity=$initialCapacity, maximumSize=$maximumSize, maximumWeight=$maximumWeight, weakKeys=$weakKeys, weakValues=$weakValues, softValues=$softValues, expireAfterWrite=$expireAfterWrite, expireAfterAccess=$expireAfterAccess, refreshAfterWrite=$refreshAfterWrite, recordStats=$recordStats)"
+    }
 }

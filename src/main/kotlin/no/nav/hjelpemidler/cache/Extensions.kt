@@ -28,11 +28,8 @@ private fun Caffeine<Any, Any>.setIf(
         else -> block()
     }
 
-fun Caffeine<Any, Any>.configure(
-    configurer: CacheConfiguration.() -> Unit,
-): Caffeine<Any, Any> {
-    val configuration = CacheConfiguration().apply(configurer)
-    return this
+internal fun Caffeine<Any, Any>.configure(configuration: CacheConfiguration): Caffeine<Any, Any> =
+    this
         .setIf(configuration.initialCapacity, ::initialCapacity)
         .setIf(configuration.maximumSize, ::maximumSize)
         .setIf(configuration.maximumWeight, ::maximumWeight)
@@ -43,7 +40,9 @@ fun Caffeine<Any, Any>.configure(
         .setIf(configuration.expireAfterAccess, ::expireAfterAccess)
         .setIf(configuration.refreshAfterWrite, ::refreshAfterWrite)
         .setIf(configuration.recordStats, ::recordStats)
-}
+
+fun Caffeine<Any, Any>.configure(block: CacheConfiguration.() -> Unit): Caffeine<Any, Any> =
+    configure(CacheConfiguration().apply(block))
 
 fun <K : Any, V : Any> Caffeine<K, V>.expireAfterWrite(
     duration: Duration,

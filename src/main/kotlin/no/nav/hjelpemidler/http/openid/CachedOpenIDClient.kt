@@ -1,31 +1,32 @@
 package no.nav.hjelpemidler.http.openid
 
 import com.github.benmanes.caffeine.cache.AsyncCache
-import com.github.benmanes.caffeine.cache.Expiry
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.cio.CIO
 import io.ktor.http.Parameters
 import io.ktor.http.ParametersBuilder
 import mu.KotlinLogging
 import mu.withLoggingContext
-import no.nav.hjelpemidler.cache.CacheConfiguration
 import no.nav.hjelpemidler.cache.createCache
 import no.nav.hjelpemidler.cache.getAsync
 
 private val log = KotlinLogging.logger {}
 
 internal class CachedOpenIDClient(
-    configuration: OpenIDConfiguration,
+    configuration: OpenIDClientConfiguration,
     engine: HttpClientEngine = CIO.create(),
-    expiry: Expiry<Parameters, TokenSet> = TokenExpiry(),
-    cacheConfigurer: CacheConfiguration.() -> Unit = {
-    },
 ) : OpenIDClient {
     private val client: OpenIDClient = DefaultOpenIDClient(
         configuration = configuration,
         engine = engine,
     )
-    private val cache: AsyncCache<Parameters, TokenSet> = createCache(cacheConfigurer)
+    private val cacheConfiguration = requireNotNull(configuration.cacheConfiguration) {
+        "configuration.cacheConfiguration var null"
+    }
+    private val expiry = requireNotNull(cacheConfiguration.expiry) {
+        "configuration.cacheConfiguration.expiry var null"
+    }
+    private val cache: AsyncCache<Parameters, TokenSet> = createCache(cacheConfiguration)
         .expireAfter(expiry)
         .removalListener<Parameters, TokenSet> { parameters, tokenSet, cause ->
             withLoggingContext(

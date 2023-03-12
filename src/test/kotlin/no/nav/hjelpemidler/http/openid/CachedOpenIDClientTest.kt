@@ -56,16 +56,19 @@ class CachedOpenIDClientTest {
         handler: suspend MockRequestHandleScope.(HttpRequestData) -> HttpResponseData,
     ): OpenIDClient =
         createOpenIDClient(
-            configuration = DefaultOpenIDConfiguration(
-                tokenEndpoint = "https://issuer/token",
-                clientId = "clientId",
-                clientSecret = "clientSecret"
-            ),
             engine = MockEngine {
                 handler(this, it)
             },
-            expiry = TokenExpiry(),
-        ).also {
+        ) {
+            tokenEndpoint = "https://issuer/token"
+            clientId = "clientId"
+            clientSecret = "clientSecret"
+
+            cache {
+                untilTokenExpiry()
+                maximumSize = 10
+            }
+        }.also {
             assertTrue {
                 it is CachedOpenIDClient
             }

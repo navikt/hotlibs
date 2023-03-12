@@ -15,7 +15,7 @@ import no.nav.hjelpemidler.http.createHttpClient
 private val log = KotlinLogging.logger {}
 
 internal class DefaultOpenIDClient(
-    private val configuration: OpenIDConfiguration,
+    private val configuration: OpenIDClientConfiguration,
     engine: HttpClientEngine = CIO.create(),
 ) : OpenIDClient {
     private val client: HttpClient = createHttpClient(engine = engine) {

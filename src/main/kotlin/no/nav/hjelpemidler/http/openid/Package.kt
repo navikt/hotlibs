@@ -1,29 +1,21 @@
 package no.nav.hjelpemidler.http.openid
 
-import com.github.benmanes.caffeine.cache.Expiry
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.cio.CIO
-import io.ktor.http.Parameters
-import no.nav.hjelpemidler.cache.CacheConfiguration
 
-internal val DEFAULT_CACHE_CONFIGURER: CacheConfiguration.() -> Unit = {}
+internal fun createOpenIDClient(
+    engine: HttpClientEngine = CIO.create(),
+    configuration: OpenIDClientConfiguration,
+): OpenIDClient = when (configuration.cacheConfiguration) {
+    null -> DefaultOpenIDClient(configuration, engine = engine)
+    else -> CachedOpenIDClient(configuration, engine = engine)
+}
 
 fun createOpenIDClient(
-    configuration: OpenIDConfiguration,
     engine: HttpClientEngine = CIO.create(),
-    expiry: Expiry<Parameters, TokenSet>? = null,
-    cacheConfigurer: CacheConfiguration.() -> Unit = DEFAULT_CACHE_CONFIGURER,
+    block: OpenIDClientConfiguration.() -> Unit = {},
 ): OpenIDClient =
-    when (expiry) {
-        null -> DefaultOpenIDClient(
-            configuration = configuration,
-            engine = engine
-        )
-
-        else -> CachedOpenIDClient(
-            configuration = configuration,
-            engine = engine,
-            expiry = expiry,
-            cacheConfigurer = cacheConfigurer,
-        )
-    }
+    createOpenIDClient(
+        engine = engine,
+        configuration = OpenIDClientConfiguration().apply(block),
+    )

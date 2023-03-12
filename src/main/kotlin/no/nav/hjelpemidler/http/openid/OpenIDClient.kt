@@ -3,7 +3,7 @@ package no.nav.hjelpemidler.http.openid
 import com.auth0.jwt.interfaces.DecodedJWT
 import io.ktor.http.ParametersBuilder
 
-interface OpenIDClient {
+sealed interface OpenIDClient {
     suspend fun grant(builder: ParametersBuilder.() -> Unit): TokenSet
 
     suspend fun grant(scope: String): TokenSet = grant {

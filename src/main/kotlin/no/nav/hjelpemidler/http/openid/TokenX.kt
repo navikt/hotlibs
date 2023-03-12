@@ -1,10 +1,7 @@
 package no.nav.hjelpemidler.http.openid
 
-import com.github.benmanes.caffeine.cache.Expiry
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.cio.CIO
-import io.ktor.http.Parameters
-import no.nav.hjelpemidler.cache.CacheConfiguration
 import no.nav.hjelpemidler.configuration.EnvironmentVariable
 
 object TokenXEnvironmentVariable {
@@ -23,14 +20,10 @@ fun tokenXEnvironmentConfiguration(): OpenIDConfiguration = DefaultOpenIDConfigu
 )
 
 fun tokenXClient(
-    configuration: OpenIDConfiguration = tokenXEnvironmentConfiguration(),
     engine: HttpClientEngine = CIO.create(),
-    expiry: Expiry<Parameters, TokenSet>? = null,
-    cacheConfigurer: CacheConfiguration.() -> Unit = DEFAULT_CACHE_CONFIGURER,
+    block: OpenIDClientConfiguration.() -> Unit = {},
 ): OpenIDClient =
-    createOpenIDClient(
-        configuration = configuration,
-        engine = engine,
-        expiry = expiry,
-        cacheConfigurer = cacheConfigurer,
-    )
+    createOpenIDClient(engine = engine) {
+        tokenX()
+        block()
+    }
