@@ -4,7 +4,7 @@ import com.github.benmanes.caffeine.cache.Expiry
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 
-class TokenExpiry<K : Any>(private val leeway: Duration = LEEWAY) : Expiry<K, TokenSet> {
+class TokenExpiry<K : Any>(private val leeway: Duration = DEFAULT_LEEWAY) : Expiry<K, TokenSet> {
     override fun expireAfterCreate(key: K, value: TokenSet, currentTime: Long): Long =
         value.expiresIn(leeway = leeway).inWholeNanoseconds
 
@@ -15,6 +15,6 @@ class TokenExpiry<K : Any>(private val leeway: Duration = LEEWAY) : Expiry<K, To
         currentDuration
 
     companion object {
-        val LEEWAY: Duration = 1.minutes
+        val DEFAULT_LEEWAY: Duration = 1.minutes
     }
 }

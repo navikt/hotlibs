@@ -4,13 +4,12 @@ import com.github.benmanes.caffeine.cache.Expiry
 import io.ktor.http.Parameters
 import no.nav.hjelpemidler.cache.CacheConfiguration
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 class OpenIDClientConfiguration internal constructor() {
     var tokenEndpoint: String = ""
     var clientId: String = ""
     var clientSecret: String? = null
-    var cacheConfiguration: OpenIDClientCacheConfiguration? = null
-        private set
 
     fun azureAD() {
         tokenEndpoint = AzureADEnvironmentVariable.AZURE_OPENID_CONFIG_TOKEN_ENDPOINT
@@ -24,19 +23,20 @@ class OpenIDClientConfiguration internal constructor() {
         clientSecret = null
     }
 
+    internal val cacheConfiguration: CacheConfiguration = CacheConfiguration()
+    internal var expiry: Expiry<Parameters, TokenSet> = IMMEDIATELY
+    internal val cache: Boolean get() = expiry !== IMMEDIATELY
+
     fun cache(
-        leeway: Duration = TokenExpiry.LEEWAY,
-        block: OpenIDClientCacheConfiguration.() -> Unit = {},
+        leeway: Duration = TokenExpiry.DEFAULT_LEEWAY,
+        expiry: Expiry<Parameters, TokenSet> = TokenExpiry(leeway),
+        block: CacheConfiguration.() -> Unit = {},
     ) {
-        cacheConfiguration = OpenIDClientCacheConfiguration(leeway).apply(block)
+        this.expiry = expiry
+        cacheConfiguration.apply(block)
     }
-}
 
-class OpenIDClientCacheConfiguration internal constructor(leeway: Duration = TokenExpiry.LEEWAY) :
-    CacheConfiguration() {
-    var expiry: Expiry<Parameters, TokenSet> = TokenExpiry(leeway)
-
-    fun untilTokenExpiry(leeway: Duration = TokenExpiry.LEEWAY) {
-        expiry = TokenExpiry(leeway)
+    companion object {
+        internal val IMMEDIATELY: Expiry<Parameters, TokenSet> = TokenExpiry(0.seconds)
     }
 }

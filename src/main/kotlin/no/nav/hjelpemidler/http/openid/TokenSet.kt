@@ -26,11 +26,11 @@ data class TokenSet(
     val expiresAt: Instant = now() + expiresInDuration
 
     @JsonIgnore
-    fun expiresIn(leeway: Duration = TokenExpiry.LEEWAY): Duration =
+    fun expiresIn(leeway: Duration = TokenExpiry.DEFAULT_LEEWAY): Duration =
         expiresInDuration - leeway
 
     @JsonIgnore
-    fun isExpired(at: Instant = now(), leeway: Duration = TokenExpiry.LEEWAY): Boolean =
+    fun isExpired(at: Instant = now(), leeway: Duration = TokenExpiry.DEFAULT_LEEWAY): Boolean =
         (expiresAt - leeway).let {
             it == at || it.isBefore(at)
         }

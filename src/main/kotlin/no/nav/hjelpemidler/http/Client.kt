@@ -1,6 +1,7 @@
 package no.nav.hjelpemidler.http
 
 import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import io.ktor.client.HttpClient
@@ -15,12 +16,17 @@ fun createHttpClient(
     block: HttpClientConfig<*>.() -> Unit = {},
 ): HttpClient =
     HttpClient(engine = engine) {
-        install(ContentNegotiation) {
-            jackson {
-                registerModule(JavaTimeModule())
-                disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-                disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-            }
-        }
+        jackson()
         block()
     }
+
+fun HttpClientConfig<*>.jackson(block: ObjectMapper.() -> Unit = {}) {
+    install(ContentNegotiation) {
+        jackson {
+            registerModule(JavaTimeModule())
+            disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+            disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            block()
+        }
+    }
+}

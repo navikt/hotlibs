@@ -20,14 +20,8 @@ internal class CachedOpenIDClient(
         configuration = configuration,
         engine = engine,
     )
-    private val cacheConfiguration = requireNotNull(configuration.cacheConfiguration) {
-        "configuration.cacheConfiguration var null"
-    }
-    private val expiry = requireNotNull(cacheConfiguration.expiry) {
-        "configuration.cacheConfiguration.expiry var null"
-    }
-    private val cache: AsyncCache<Parameters, TokenSet> = createCache(cacheConfiguration)
-        .expireAfter(expiry)
+    private val cache: AsyncCache<Parameters, TokenSet> = createCache(configuration.cacheConfiguration)
+        .expireAfter(configuration.expiry)
         .removalListener<Parameters, TokenSet> { parameters, tokenSet, cause ->
             withLoggingContext(
                 "scope" to parameters?.scope,

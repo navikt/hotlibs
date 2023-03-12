@@ -65,7 +65,6 @@ class CachedOpenIDClientTest {
             clientSecret = "clientSecret"
 
             cache {
-                untilTokenExpiry()
                 maximumSize = 10
             }
         }.also {
