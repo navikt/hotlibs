@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 val coroutinesVersion = "1.6.4"
 val ktorVersion = "2.2.4"
 val jacksonVersion = "2.14.2"
-val javaJwtVersion = "4.3.0"
+val javaJwtVersion = "3.19.3" // følger ktor-server-auth-jwt
 val caffeineVersion = "3.1.4"
 val kotlinLoggingVersion = "3.0.5"
 val slf4jVersion = "2.0.3"

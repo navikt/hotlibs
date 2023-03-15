@@ -4,21 +4,9 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
-import io.ktor.client.engine.HttpClientEngine
-import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.jackson.jackson
-
-fun createHttpClient(
-    engine: HttpClientEngine = CIO.create(),
-    block: HttpClientConfig<*>.() -> Unit = {},
-): HttpClient =
-    HttpClient(engine = engine) {
-        jackson()
-        block()
-    }
 
 fun HttpClientConfig<*>.jackson(block: ObjectMapper.() -> Unit = {}) {
     install(ContentNegotiation) {

@@ -2,7 +2,6 @@ package no.nav.hjelpemidler.http.openid
 
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.plugins.api.createClientPlugin
-import kotlinx.coroutines.currentCoroutineContext
 
 class OpenIDPluginConfiguration {
     var scope: String = ""
@@ -13,6 +12,8 @@ class OpenIDPluginConfiguration {
     fun client(block: OpenIDClientConfiguration.() -> Unit) {
         clientConfiguration.apply(block)
     }
+
+    var accessTokenProvider: suspend () -> String? = { null }
 }
 
 val OpenIDPlugin = createClientPlugin("OpenIDPlugin", ::OpenIDPluginConfiguration) {
@@ -26,9 +27,9 @@ val OpenIDPlugin = createClientPlugin("OpenIDPlugin", ::OpenIDPluginConfiguratio
 
         else -> client
     }
+    val accessTokenProvider = pluginConfig.accessTokenProvider
     onRequest { request, _ ->
-        val openIDContext = currentCoroutineContext().openIDContext()
-        val tokenSet = when (val accessToken = openIDContext.accessToken) {
+        val tokenSet = when (val accessToken: String? = accessTokenProvider()) {
             null -> client.grant(scope = scope)
             else -> client.grant(scope = scope, onBehalfOf = accessToken)
         }

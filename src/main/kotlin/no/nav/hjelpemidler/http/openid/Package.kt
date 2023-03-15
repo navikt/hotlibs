@@ -13,11 +13,14 @@ internal fun createOpenIDClient(
     configuration: OpenIDClientConfiguration,
 ): OpenIDClient = when {
     configuration.expiry === EXPIRE_IMMEDIATELY -> DefaultOpenIDClient(
-        configuration,
-        engine = engine
+        configuration = configuration,
+        engine = engine,
     )
 
-    else -> CachedOpenIDClient(configuration, engine = engine)
+    else -> CachedOpenIDClient(
+        configuration = configuration,
+        engine = engine,
+    )
 }
 
 fun createOpenIDClient(
