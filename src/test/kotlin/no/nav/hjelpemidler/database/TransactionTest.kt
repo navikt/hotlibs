@@ -10,6 +10,6 @@ class TransactionTest : AbstractDatabaseTest() {
         val result = transaction(storeContext) { ctx ->
             ctx.testStore.hent(1)
         }
-        result["id"] shouldBe 1
+        result["id"] shouldBe 1L
     }
 }

@@ -13,16 +13,17 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib"))
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     runtimeOnly(kotlin("reflect"))
 
     // Database
     api("com.github.seratch:kotliquery:1.9.0")
     implementation("com.zaxxer:HikariCP:5.0.1")
-    implementation("org.postgresql:postgresql:42.5.1")
-    implementation("org.flywaydb:flyway-core:9.11.0")
+    implementation("org.postgresql:postgresql:42.5.4")
+    implementation("org.flywaydb:flyway-core:9.15.2")
 
     // Jackson
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.1")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.2")
 
     // Testing
     testImplementation(kotlin("test"))

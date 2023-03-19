@@ -1,8 +1,9 @@
 package no.nav.hjelpemidler.database.test
 
 import kotliquery.TransactionalSession
-import no.nav.hjelpemidler.database.Database
-import no.nav.hjelpemidler.database.createDatabase
+import no.nav.hjelpemidler.database.Migrator
+import no.nav.hjelpemidler.database.createDataSource
+import no.nav.hjelpemidler.database.createMigrator
 import no.nav.hjelpemidler.database.transaction
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.containers.wait.strategy.Wait
@@ -19,29 +20,35 @@ abstract class AbstractDatabaseTest {
                     it.start()
                 }
 
-        val database: Database =
-            createDatabase(
-                jdbcUrl = container.jdbcUrl,
-                username = container.username,
-                password = container.password,
-                cleanDisabled = false,
-            )
+        val dataSource: DataSource =
+            createDataSource {
+                driverClassName = container.driverClassName
+                jdbcUrl = container.jdbcUrl
+                username = container.username
+                password = container.password
+                connectionInitSql = "SET TIMEZONE TO 'UTC'"
+            }
+
+        val migrator: Migrator =
+            createMigrator(dataSource) {
+                isCleanDisabled = false
+            }
     }
 
-    val storeContext = TestStoreContext(database)
+    val storeContext = TestStoreContext(dataSource)
 
     @BeforeTest
     fun beforeTest() {
-        database.migrate()
+        migrator.migrate()
     }
 
     @AfterTest
     fun afterTest() {
-        database.clean()
+        migrator.clean()
     }
 
     fun <T> testTransaction(
-        dataSource: DataSource = database,
+        dataSource: DataSource = AbstractDatabaseTest.dataSource,
         returnGeneratedKey: Boolean = false,
         block: (TransactionalSession) -> T,
     ): T =

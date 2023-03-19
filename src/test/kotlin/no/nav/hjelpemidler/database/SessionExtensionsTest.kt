@@ -120,8 +120,8 @@ internal class SessionExtensionsTest : AbstractDatabaseTest() {
         result1.size shouldBe 3
 
         val result2 = testTransaction { tx ->
-            items.batch(
-                tx = tx,
+            tx.batch(
+                items = items,
                 sql = """
                     INSERT INTO test_1(string, integer, enum, data_1)
                     VALUES (:string, :integer, :enum, :data1)

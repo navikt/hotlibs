@@ -20,9 +20,7 @@ fun <T : Any> Session.single(
     queryParameters: QueryParameters = emptyMap(),
     mapper: ResultMapper<T>,
 ): T =
-    checkNotNull(query(sql, queryParameters, mapper)) {
-        "Forventet en verdi, men var null"
-    }
+    query(sql, queryParameters, mapper) ?: throw NoSuchElementException("Forventet en verdi, men var null")
 
 fun <T : Any> Session.queryList(
     @Language("PostgreSQL") sql: String,
@@ -39,8 +37,8 @@ fun <T : Any> Session.queryPage(
     totalNumberOfItemsLabel: String = "total",
     mapper: ResultMapper<T>,
 ): Page<T> {
-    val limitParameter = prefix("limit")
-    val offsetParameter = prefix("offset")
+    val limitParameter = "no_nav_hjelpemidler_database_limit"
+    val offsetParameter = "no_nav_hjelpemidler_database_offset"
     var totalNumberOfItems = -1
     val items = list(
         queryOf(
@@ -102,10 +100,3 @@ fun <T : Any> Session.batch(
     block: (T) -> QueryParameters,
 ): List<Int> =
     batch(sql, items.map(block))
-
-fun <T : Any> Collection<T>.batch(
-    tx: Session,
-    @Language("PostgreSQL") sql: String,
-    block: (T) -> QueryParameters,
-): List<Int> =
-    tx.batch(sql, map(block))
