@@ -18,9 +18,9 @@ dependencies {
 
     // Database
     api("com.github.seratch:kotliquery:1.9.0")
-    implementation("com.zaxxer:HikariCP:5.0.1")
+    api("com.zaxxer:HikariCP:5.0.1")
+    api("org.flywaydb:flyway-core:9.15.2")
     implementation("org.postgresql:postgresql:42.5.4")
-    implementation("org.flywaydb:flyway-core:9.15.2")
 
     // Jackson
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.2")

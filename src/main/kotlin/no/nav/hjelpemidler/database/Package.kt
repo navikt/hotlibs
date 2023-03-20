@@ -1,17 +1,16 @@
 package no.nav.hjelpemidler.database
 
-import com.zaxxer.hikari.HikariDataSource
 import org.flywaydb.core.Flyway
 import org.flywaydb.core.api.configuration.ClassicConfiguration
 import javax.sql.DataSource
 
-fun createDataSource(block: DataSourceConfiguration.() -> Unit = {}): DataSource =
-    HikariDataSource(DataSourceConfiguration().apply(block))
+fun createDataSource(block: DataSourceConfiguration.() -> Unit = {}): DataSource {
+    val configuration = DataSourceConfiguration().apply(block)
+    return configuration.toDataSource()
+}
 
-fun createMigrator(dataSource: DataSource, block: ClassicConfiguration.() -> Unit = {}): Migrator =
-    FlywayMigrator(
-        Flyway.configure()
-            .configuration(ClassicConfiguration().apply(block))
-            .dataSource(dataSource)
-            .load()
-    )
+fun createFlyway(dataSource: DataSource, block: ClassicConfiguration.() -> Unit = {}): Flyway =
+    Flyway.configure()
+        .configuration(ClassicConfiguration().apply(block))
+        .dataSource(dataSource)
+        .load()

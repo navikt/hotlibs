@@ -1,10 +1,10 @@
 package no.nav.hjelpemidler.database.test
 
 import kotliquery.TransactionalSession
-import no.nav.hjelpemidler.database.Migrator
 import no.nav.hjelpemidler.database.createDataSource
-import no.nav.hjelpemidler.database.createMigrator
+import no.nav.hjelpemidler.database.createFlyway
 import no.nav.hjelpemidler.database.transaction
+import org.flywaydb.core.Flyway
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.containers.wait.strategy.Wait
 import javax.sql.DataSource
@@ -22,15 +22,15 @@ abstract class AbstractDatabaseTest {
 
         val dataSource: DataSource =
             createDataSource {
-                driverClassName = container.driverClassName
-                jdbcUrl = container.jdbcUrl
+                hostname = container.host
+                port = container.getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT)
+                database = container.databaseName
                 username = container.username
                 password = container.password
-                connectionInitSql = "SET TIMEZONE TO 'UTC'"
             }
 
-        val migrator: Migrator =
-            createMigrator(dataSource) {
+        val flyway: Flyway =
+            createFlyway(dataSource) {
                 isCleanDisabled = false
             }
     }
@@ -39,12 +39,12 @@ abstract class AbstractDatabaseTest {
 
     @BeforeTest
     fun beforeTest() {
-        migrator.migrate()
+        flyway.migrate()
     }
 
     @AfterTest
     fun afterTest() {
-        migrator.clean()
+        flyway.clean()
     }
 
     fun <T> testTransaction(
