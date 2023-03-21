@@ -10,6 +10,7 @@ import org.testcontainers.containers.wait.strategy.Wait
 import javax.sql.DataSource
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
+import kotlin.time.Duration.Companion.minutes
 
 abstract class AbstractDatabaseTest {
     private companion object {
@@ -23,10 +24,14 @@ abstract class AbstractDatabaseTest {
         val dataSource: DataSource =
             createDataSource {
                 hostname = container.host
-                port = container.getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT)
+                mappedPort(container::getMappedPort)
                 database = container.databaseName
                 username = container.username
                 password = container.password
+
+                hikari {
+                    connectionTimeout = 1.minutes.inWholeMilliseconds
+                }
             }
 
         val flyway: Flyway =
