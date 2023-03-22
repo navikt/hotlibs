@@ -11,7 +11,7 @@ suspend fun <T> transaction(
     queryTimeout: Int? = null,
     block: (TransactionalSession) -> T,
 ): T =
-    withDataSourceContext {
+    withDatabaseContext {
         sessionOf(
             dataSource = dataSource,
             returnGeneratedKey = returnGeneratedKey,
@@ -22,7 +22,7 @@ suspend fun <T> transaction(
         }
     }
 
-suspend fun <T, X : TransactionContext> transaction(
+suspend fun <T, X : Any> transaction(
     storeContext: StoreContext<X>,
     returnGeneratedKey: Boolean = false,
     strict: Boolean = true,

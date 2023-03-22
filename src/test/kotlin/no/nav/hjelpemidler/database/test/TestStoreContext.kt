@@ -3,7 +3,6 @@ package no.nav.hjelpemidler.database.test
 import kotliquery.TransactionalSession
 import no.nav.hjelpemidler.database.Store
 import no.nav.hjelpemidler.database.StoreContext
-import no.nav.hjelpemidler.database.TransactionContext
 import no.nav.hjelpemidler.database.single
 import no.nav.hjelpemidler.database.toMap
 import javax.sql.DataSource
@@ -21,7 +20,7 @@ class TestStore(private val tx: TransactionalSession) : Store {
     }
 }
 
-interface TestTransactionContext : TransactionContext {
+interface TestTransactionContext {
     val testStore: TestStore
 }
 

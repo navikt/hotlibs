@@ -6,7 +6,7 @@ import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.withContext
 
 @OptIn(DelicateCoroutinesApi::class)
-val DataSourceContext = newSingleThreadContext("DataSourceContext")
+val DatabaseContext = newSingleThreadContext("DatabaseThread")
 
-suspend fun <T> withDataSourceContext(block: suspend CoroutineScope.() -> T): T =
-    withContext(context = DataSourceContext, block = block)
+suspend fun <T> withDatabaseContext(block: suspend CoroutineScope.() -> T): T =
+    withContext(context = DatabaseContext, block = block)
