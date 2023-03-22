@@ -7,7 +7,10 @@ import javax.sql.DataSource
 fun createDataSource(block: DataSourceConfiguration.() -> Unit = {}): DataSource =
     DataSourceConfiguration().apply(block).toDataSource()
 
-fun createFlyway(dataSource: DataSource, block: ClassicConfiguration.() -> Unit = {}): Flyway =
+fun createFlyway(
+    dataSource: DataSource,
+    block: ClassicConfiguration.() -> Unit = {},
+): Flyway =
     Flyway.configure()
         .configuration(ClassicConfiguration().apply(block))
         .dataSource(dataSource)

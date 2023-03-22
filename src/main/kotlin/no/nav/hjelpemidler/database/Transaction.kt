@@ -4,23 +4,25 @@ import kotliquery.TransactionalSession
 import kotliquery.sessionOf
 import javax.sql.DataSource
 
-fun <T> transaction(
+suspend fun <T> transaction(
     dataSource: DataSource,
     returnGeneratedKey: Boolean = false,
     strict: Boolean = true,
     queryTimeout: Int? = null,
     block: (TransactionalSession) -> T,
 ): T =
-    sessionOf(
-        dataSource = dataSource,
-        returnGeneratedKey = returnGeneratedKey,
-        strict = strict,
-        queryTimeout = queryTimeout
-    ).use { session ->
-        session.transaction(block)
+    withDataSourceContext {
+        sessionOf(
+            dataSource = dataSource,
+            returnGeneratedKey = returnGeneratedKey,
+            strict = strict,
+            queryTimeout = queryTimeout
+        ).use { session ->
+            session.transaction(block)
+        }
     }
 
-fun <T, X : TransactionContext> transaction(
+suspend fun <T, X : TransactionContext> transaction(
     storeContext: StoreContext<X>,
     returnGeneratedKey: Boolean = false,
     strict: Boolean = true,

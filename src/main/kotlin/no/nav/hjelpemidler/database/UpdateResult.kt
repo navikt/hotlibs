@@ -7,5 +7,12 @@ data class UpdateResult(val actualRowCount: Int? = null) {
         }
 
     operator fun plus(other: UpdateResult): UpdateResult =
-        UpdateResult(0)
+        UpdateResult(this.actualRowCount + other.actualRowCount)
+
+    private operator fun Int?.plus(other: Int?): Int? =
+        when {
+            this == null -> other
+            other == null -> this
+            else -> this + other
+        }
 }
