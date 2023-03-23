@@ -1,6 +1,5 @@
 package no.nav.hjelpemidler.database.test
 
-import kotlinx.coroutines.runBlocking
 import kotliquery.TransactionalSession
 import no.nav.hjelpemidler.database.createDataSource
 import no.nav.hjelpemidler.database.createFlyway
@@ -53,16 +52,14 @@ abstract class AbstractDatabaseTest {
         flyway.clean()
     }
 
-    fun <T> testTransaction(
+    suspend fun <T> testTransaction(
         dataSource: DataSource = AbstractDatabaseTest.dataSource,
         returnGeneratedKey: Boolean = false,
-        block: (TransactionalSession) -> T,
+        block: suspend (TransactionalSession) -> T,
     ): T =
-        runBlocking {
-            transaction(
-                dataSource = dataSource,
-                returnGeneratedKey = returnGeneratedKey,
-                block = block,
-            )
-        }
+        transaction(
+            dataSource = dataSource,
+            returnGeneratedKey = returnGeneratedKey,
+            block = block,
+        )
 }

@@ -1,5 +1,6 @@
 package no.nav.hjelpemidler.database
 
+import kotlinx.coroutines.test.runTest
 import no.nav.hjelpemidler.database.test.AbstractDatabaseTest
 import no.nav.hjelpemidler.database.test.Test1Entity
 import no.nav.hjelpemidler.database.test.TestEnum
@@ -10,7 +11,7 @@ import kotlin.test.assertNotNull
 
 internal class SessionExtensionsTest : AbstractDatabaseTest() {
     @Test
-    fun `henter alle innslag som map`() {
+    fun `henter alle innslag som map`() = runTest {
         val result = testTransaction { tx ->
             tx.queryList(sql = "SELECT * FROM test_1 WHERE TRUE") {
                 it.toMap()
@@ -21,7 +22,7 @@ internal class SessionExtensionsTest : AbstractDatabaseTest() {
     }
 
     @Test
-    fun `henter side`() {
+    fun `henter side`() = runTest {
         val result = testTransaction { tx ->
             tx.queryPage(
                 sql = "SELECT *, COUNT(1) OVER() AS total FROM test_1 WHERE TRUE",
@@ -37,7 +38,7 @@ internal class SessionExtensionsTest : AbstractDatabaseTest() {
     }
 
     @Test
-    fun `henter innslag`() {
+    fun `henter innslag`() = runTest {
         val result = testTransaction { tx ->
             tx.single(
                 sql = "SELECT * FROM test_1 WHERE string = :string",
@@ -52,7 +53,7 @@ internal class SessionExtensionsTest : AbstractDatabaseTest() {
     }
 
     @Test
-    fun `henter json`() {
+    fun `henter json`() = runTest {
         val result = testTransaction { tx ->
             tx.query(
                 sql = "SELECT * FROM test_1 WHERE string = :string",
@@ -67,7 +68,7 @@ internal class SessionExtensionsTest : AbstractDatabaseTest() {
     }
 
     @Test
-    fun `oppdaterer innslag`() {
+    fun `oppdaterer innslag`() = runTest {
         val result = testTransaction { tx ->
             tx.update(
                 sql = "UPDATE test_1 SET integer = 50 WHERE string = :string",
@@ -81,7 +82,7 @@ internal class SessionExtensionsTest : AbstractDatabaseTest() {
     }
 
     @Test
-    fun `sletter innslag`() {
+    fun `sletter innslag`() = runTest {
         val result = testTransaction { tx ->
             tx.execute(
                 sql = "DELETE FROM test_1 WHERE string = :string",
@@ -93,7 +94,7 @@ internal class SessionExtensionsTest : AbstractDatabaseTest() {
     }
 
     @Test
-    fun `setter inn flere innslag`() {
+    fun `setter inn flere innslag`() = runTest {
         val items = listOf(
             Test1Entity(string = "x1", integer = 1, enum = TestEnum.A, data1 = mapOf("key" to "t1")),
             Test1Entity(string = "x2", integer = 2, enum = TestEnum.B, data1 = mapOf("key" to "t2")),
@@ -154,7 +155,7 @@ internal class SessionExtensionsTest : AbstractDatabaseTest() {
     }
 
     @Test
-    fun `setter inn og henter null`() {
+    fun `setter inn og henter null`() = runTest {
         val id = testTransaction(returnGeneratedKey = true) { tx ->
             tx.updateAndReturnGeneratedKey(
                 sql = """
@@ -178,7 +179,7 @@ internal class SessionExtensionsTest : AbstractDatabaseTest() {
     }
 
     @Test
-    fun `setter inn innslag og svarer med id`() {
+    fun `setter inn innslag og svarer med id`() = runTest {
         val id = testTransaction { tx ->
             tx.query(
                 sql = """

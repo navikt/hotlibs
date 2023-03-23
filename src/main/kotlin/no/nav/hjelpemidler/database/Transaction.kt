@@ -4,12 +4,12 @@ import kotliquery.TransactionalSession
 import kotliquery.sessionOf
 import javax.sql.DataSource
 
-suspend fun <T> transaction(
+suspend inline fun <T> transaction(
     dataSource: DataSource,
     returnGeneratedKey: Boolean = false,
     strict: Boolean = true,
     queryTimeout: Int? = null,
-    block: (TransactionalSession) -> T,
+    crossinline block: suspend (TransactionalSession) -> T,
 ): T =
     withDatabaseContext {
         sessionOf(
@@ -18,16 +18,18 @@ suspend fun <T> transaction(
             strict = strict,
             queryTimeout = queryTimeout
         ).use { session ->
-            session.transaction(block)
+            session.transaction { tx ->
+                block(tx)
+            }
         }
     }
 
-suspend fun <T, X : Any> transaction(
+suspend inline fun <T, X : Any> transaction(
     storeContext: StoreContext<X>,
     returnGeneratedKey: Boolean = false,
     strict: Boolean = true,
     queryTimeout: Int? = null,
-    block: (X) -> T,
+    crossinline block: suspend (X) -> T,
 ): T =
     transaction(
         dataSource = storeContext.dataSource,
