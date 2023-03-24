@@ -10,6 +10,7 @@ fun createHttpClient(
     block: HttpClientConfig<*>.() -> Unit = {},
 ): HttpClient =
     HttpClient(engine = engine) {
+        expectSuccess = false
         jackson()
         block()
     }

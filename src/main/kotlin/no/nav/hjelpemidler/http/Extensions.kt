@@ -6,9 +6,11 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.http.ContentType
+import io.ktor.serialization.jackson.JacksonConverter
 import io.ktor.serialization.jackson.jackson
 
-fun HttpClientConfig<*>.jackson(block: ObjectMapper.() -> Unit = {}) {
+fun HttpClientConfig<*>.jackson(block: ObjectMapper.() -> Unit = {}) =
     install(ContentNegotiation) {
         jackson {
             registerModule(JavaTimeModule())
@@ -17,4 +19,8 @@ fun HttpClientConfig<*>.jackson(block: ObjectMapper.() -> Unit = {}) {
             block()
         }
     }
-}
+
+fun HttpClientConfig<*>.jackson(objectMapper: ObjectMapper) =
+    install(ContentNegotiation) {
+        register(ContentType.Application.Json, JacksonConverter(objectMapper, true))
+    }
