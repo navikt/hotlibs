@@ -88,15 +88,22 @@ fun Session.batch(
 ): List<Int> =
     batchPreparedNamedStatement(sql, queryParameters)
 
-fun Session.batchAndReturnGeneratedKeys(
-    @Language("PostgreSQL") sql: String,
-    queryParameters: Collection<QueryParameters> = emptyList(),
-): List<Long> =
-    batchPreparedNamedStatementAndReturnGeneratedKeys(sql, queryParameters)
-
 fun <T : Any> Session.batch(
     @Language("PostgreSQL") sql: String,
     items: Collection<T> = emptyList(),
     block: (T) -> QueryParameters,
 ): List<Int> =
     batch(sql, items.map(block))
+
+fun Session.batchAndReturnGeneratedKeys(
+    @Language("PostgreSQL") sql: String,
+    queryParameters: Collection<QueryParameters> = emptyList(),
+): List<Long> =
+    batchPreparedNamedStatementAndReturnGeneratedKeys(sql, queryParameters)
+
+fun <T : Any> Session.batchAndReturnGeneratedKeys(
+    @Language("PostgreSQL") sql: String,
+    items: Collection<T> = emptyList(),
+    block: (T) -> QueryParameters,
+): List<Long> =
+    batchAndReturnGeneratedKeys(sql, items.map(block))

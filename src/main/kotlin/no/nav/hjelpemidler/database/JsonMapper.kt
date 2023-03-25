@@ -10,4 +10,4 @@ interface JsonMapper {
     fun <T> convertValue(fromValue: Any?, toValueTypeRef: TypeReference<T>): T
 }
 
-val jsonMapper: JsonMapper = ServiceLoader.load(JsonMapper::class.java).first()
+val jsonMapper: JsonMapper = ServiceLoader.load(JsonMapper::class.java).single()

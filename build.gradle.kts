@@ -2,6 +2,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val coroutinesVersion = "1.6.4"
 val slf4jVersion = "2.0.7"
+val kotestVersion = "5.5.5"
+val testcontainersVersion = "1.17.6"
 
 plugins {
     kotlin("jvm") version "1.8.10"
@@ -34,9 +36,9 @@ dependencies {
     // Testing
     testImplementation(kotlin("test"))
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
-    val testcontainersVersion = "1.17.6"
-    testImplementation("org.testcontainers:postgresql:$testcontainersVersion")
-    testImplementation("org.testcontainers:junit-jupiter:$testcontainersVersion")
+    testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
+    testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
+    testRuntimeOnly("org.testcontainers:postgresql:$testcontainersVersion")
     testRuntimeOnly("org.slf4j:slf4j-simple:$slf4jVersion")
 }
 

@@ -37,5 +37,5 @@ suspend inline fun <T, X : Any> transaction(
         strict = strict,
         queryTimeout = queryTimeout,
     ) { tx ->
-        block(storeContext.transactionContext(tx))
+        block(storeContext(tx))
     }
