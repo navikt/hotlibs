@@ -20,6 +20,7 @@ class DataSourceConfiguration internal constructor() : HikariConfig() {
 
     fun testcontainers(tag: String) {
         jdbcUrl = "jdbc:tc:postgresql:$tag:///${database ?: "test"}"
+        addDataSourceProperty("reWriteBatchedInserts", true)
     }
 
     internal fun toDataSource(): DataSource {

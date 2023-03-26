@@ -1,7 +1,6 @@
 package no.nav.hjelpemidler.database
 
 import io.kotest.assertions.throwables.shouldNotThrow
-import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.collections.shouldBeSameSizeAs
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.longs.shouldBePositive
@@ -38,7 +37,7 @@ internal class SessionExtensionsTest {
         shouldNotThrow<NoSuchElementException> {
             transaction(storeContext.dataSource) { tx ->
                 tx.single(sql = sql, queryParameters = queryParameters) { row ->
-                    row.toMap()
+                    row.long("id")
                 }
             }
         }
@@ -63,7 +62,7 @@ internal class SessionExtensionsTest {
 
     @Test
     fun `henter side`() = runTest {
-        val ids = lagreEntities(10)
+        val ids = lagreEntities(20)
         val result = transaction(storeContext.dataSource) { tx ->
             tx.queryPage(
                 sql = """
@@ -110,7 +109,7 @@ internal class SessionExtensionsTest {
             )
         }
 
-        shouldNotThrowAny {
+        shouldNotThrow<IllegalStateException> {
             result.expect(1)
         }
     }
