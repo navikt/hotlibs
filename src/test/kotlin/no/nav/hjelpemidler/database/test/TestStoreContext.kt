@@ -6,11 +6,12 @@ import no.nav.hjelpemidler.database.createDataSource
 import no.nav.hjelpemidler.database.migrate
 import javax.sql.DataSource
 
-val testDataSource: DataSource = createDataSource {
-    testcontainers("15-alpine")
-}.also {
-    it.migrate()
-}
+val testDataSource: DataSource =
+    createDataSource {
+        testcontainers("15-alpine")
+    }.also {
+        it.migrate()
+    }
 
 interface TestTransactionContext {
     val testStore: TestStore
