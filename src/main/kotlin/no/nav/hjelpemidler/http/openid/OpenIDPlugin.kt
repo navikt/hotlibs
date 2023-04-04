@@ -4,9 +4,8 @@ import io.ktor.client.HttpClientConfig
 import io.ktor.client.plugins.api.createClientPlugin
 
 class OpenIDPluginConfiguration {
-    var scope: String = ""
-    val client: OpenIDClient? = null
-
+    internal var scope: String = ""
+    internal var client: OpenIDClient? = null
     internal val clientConfiguration: OpenIDClientConfiguration = OpenIDClientConfiguration()
 
     fun client(block: OpenIDClientConfiguration.() -> Unit) {
@@ -37,15 +36,20 @@ val OpenIDPlugin = createClientPlugin("OpenIDPlugin", ::OpenIDPluginConfiguratio
     }
 }
 
-fun HttpClientConfig<*>.openID(block: OpenIDPluginConfiguration.() -> Unit) {
+fun HttpClientConfig<*>.openID(
+    scope: String,
+    client: OpenIDClient? = null,
+    block: OpenIDPluginConfiguration.() -> Unit,
+) {
     install(OpenIDPlugin) {
+        this.scope = scope
+        this.client = client
         block()
     }
 }
 
 fun HttpClientConfig<*>.azureAD(scope: String, block: OpenIDClientConfiguration.() -> Unit) {
-    install(OpenIDPlugin) {
-        this.scope = scope
+    openID(scope = scope) {
         client {
             azureADEnvironmentConfiguration()
             block()
@@ -54,8 +58,7 @@ fun HttpClientConfig<*>.azureAD(scope: String, block: OpenIDClientConfiguration.
 }
 
 fun HttpClientConfig<*>.tokenX(scope: String, block: OpenIDClientConfiguration.() -> Unit) {
-    install(OpenIDPlugin) {
-        this.scope = scope
+    openID(scope = scope) {
         client {
             tokenXEnvironmentConfiguration()
             block()

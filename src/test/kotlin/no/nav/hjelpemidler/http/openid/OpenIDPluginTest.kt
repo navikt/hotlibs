@@ -31,8 +31,7 @@ class OpenIDPluginTest {
             }
         }
         val client = createHttpClient(engine = engine) {
-            openID {
-                scope = "test"
+            openID(scope = "test") {
                 client {
                     tokenEndpoint = "https://issuer/token"
                     clientId = "clientId"
