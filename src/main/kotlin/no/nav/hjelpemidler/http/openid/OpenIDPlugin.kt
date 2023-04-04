@@ -39,7 +39,7 @@ val OpenIDPlugin = createClientPlugin("OpenIDPlugin", ::OpenIDPluginConfiguratio
 fun HttpClientConfig<*>.openID(
     scope: String,
     client: OpenIDClient? = null,
-    block: OpenIDPluginConfiguration.() -> Unit,
+    block: OpenIDPluginConfiguration.() -> Unit = {},
 ) {
     install(OpenIDPlugin) {
         this.scope = scope
@@ -48,7 +48,7 @@ fun HttpClientConfig<*>.openID(
     }
 }
 
-fun HttpClientConfig<*>.azureAD(scope: String, block: OpenIDClientConfiguration.() -> Unit) {
+fun HttpClientConfig<*>.azureAD(scope: String, block: OpenIDClientConfiguration.() -> Unit = {}) {
     openID(scope = scope) {
         client {
             azureADEnvironmentConfiguration()
@@ -57,7 +57,7 @@ fun HttpClientConfig<*>.azureAD(scope: String, block: OpenIDClientConfiguration.
     }
 }
 
-fun HttpClientConfig<*>.tokenX(scope: String, block: OpenIDClientConfiguration.() -> Unit) {
+fun HttpClientConfig<*>.tokenX(scope: String, block: OpenIDClientConfiguration.() -> Unit = {}) {
     openID(scope = scope) {
         client {
             tokenXEnvironmentConfiguration()
