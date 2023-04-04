@@ -4,12 +4,15 @@ val coroutinesVersion = "1.6.4"
 val ktorVersion = "2.2.4"
 val jacksonVersion = "2.14.2"
 val javaJwtVersion = "3.19.3" // følger ktor-server-auth-jwt
-val caffeineVersion = "3.1.4"
+val caffeineVersion = "3.1.5"
 val kotlinLoggingVersion = "3.0.5"
 val slf4jVersion = "2.0.3"
+val mockkVersion = "1.13.4"
+val kotestVersion = "5.5.5"
+val kotestAssertionsKtorVersion = "2.0.0"
 
 plugins {
-    kotlin("jvm") version "1.8.10"
+    kotlin("jvm") version "1.8.20"
 }
 
 group = "no.nav.hjelpemidler.http"
@@ -23,19 +26,15 @@ dependencies {
     implementation(kotlin("stdlib"))
 
     // Kotlinx
-    fun kotlinx(name: String) = "org.jetbrains.kotlinx:kotlinx-$name"
-    api(kotlinx("coroutines-core:$coroutinesVersion"))
-    implementation(kotlinx("coroutines-jdk8:$coroutinesVersion"))
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$coroutinesVersion")
 
     // Ktor
-    fun ktor(name: String) = "io.ktor:ktor-$name:$ktorVersion"
-    implementation(ktor("serialization-jackson"))
-
-    // Ktor Client
-    api(ktor("client-core"))
-    api(ktor("client-cio"))
-    api(ktor("client-mock"))
-    implementation(ktor("client-content-negotiation"))
+    api("io.ktor:ktor-client-core:$ktorVersion")
+    api("io.ktor:ktor-client-cio:$ktorVersion")
+    api("io.ktor:ktor-client-mock:$ktorVersion")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
 
     // Jackson
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
@@ -51,7 +50,10 @@ dependencies {
 
     // Testing
     testImplementation(kotlin("test"))
-    testImplementation("io.mockk:mockk:1.13.4")
+    testImplementation("io.mockk:mockk:$mockkVersion")
+    testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
+    testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
+    testImplementation("io.kotest.extensions:kotest-assertions-ktor:$kotestAssertionsKtorVersion")
     testRuntimeOnly("org.slf4j:slf4j-simple:$slf4jVersion")
 }
 

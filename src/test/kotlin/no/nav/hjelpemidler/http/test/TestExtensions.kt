@@ -15,22 +15,6 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
 import org.intellij.lang.annotations.Language
-import kotlin.test.assertEquals
-import kotlin.test.assertNotEquals
-import kotlin.test.assertNotSame
-import kotlin.test.assertSame
-
-infix fun <T> T.shouldBe(expected: T): Unit =
-    assertEquals(expected, this)
-
-infix fun <T> T.sameAs(expected: T): Unit =
-    assertSame(expected, this)
-
-infix fun <T> T.shouldNotBe(illegal: T): Unit =
-    assertNotEquals(illegal, this)
-
-infix fun <T> T.notSameAs(illegal: T): Unit =
-    assertNotSame(illegal, this)
 
 val jsonMapper: JsonMapper = jacksonMapperBuilder()
     .addModule(JavaTimeModule())

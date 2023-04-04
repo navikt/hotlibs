@@ -1,13 +1,13 @@
 package no.nav.hjelpemidler.http.openid
 
+import io.kotest.matchers.types.shouldBeSameInstanceAs
+import io.kotest.matchers.types.shouldNotBeSameInstanceAs
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockRequestHandleScope
 import io.ktor.client.request.HttpRequestData
 import io.ktor.client.request.HttpResponseData
 import kotlinx.coroutines.runBlocking
-import no.nav.hjelpemidler.http.test.notSameAs
 import no.nav.hjelpemidler.http.test.respondJson
-import no.nav.hjelpemidler.http.test.sameAs
 import kotlin.test.Test
 import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.minutes
@@ -22,7 +22,7 @@ class CachedOpenIDClientTest {
         runBlocking {
             val tokenSet1 = client.grant("test", "s1")
             val tokenSet2 = client.grant("test", "s1")
-            tokenSet1 sameAs tokenSet2
+            tokenSet1 shouldBeSameInstanceAs tokenSet2
         }
     }
 
@@ -35,7 +35,7 @@ class CachedOpenIDClientTest {
         runBlocking {
             val tokenSet1 = client.grant("test", "s1")
             val tokenSet2 = client.grant("test", "s2")
-            tokenSet1 notSameAs tokenSet2
+            tokenSet1 shouldNotBeSameInstanceAs tokenSet2
         }
     }
 
@@ -48,7 +48,7 @@ class CachedOpenIDClientTest {
         runBlocking {
             val tokenSet1 = client.grant("test", "s1")
             val tokenSet2 = client.grant("test", "s1")
-            tokenSet1 notSameAs tokenSet2
+            tokenSet1 shouldNotBeSameInstanceAs tokenSet2
         }
     }
 

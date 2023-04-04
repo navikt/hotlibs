@@ -1,11 +1,11 @@
 package no.nav.hjelpemidler.http.openid
 
+import io.kotest.matchers.types.shouldBeSameInstanceAs
+import io.kotest.matchers.types.shouldNotBeSameInstanceAs
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import no.nav.hjelpemidler.cache.createCache
-import no.nav.hjelpemidler.http.test.notSameAs
-import no.nav.hjelpemidler.http.test.sameAs
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.time.Duration
@@ -32,7 +32,7 @@ class TokenExpiryTest {
         cache.put(key, tokenSet1)
         val tokenSet2 = cache.get(key, loader)
 
-        tokenSet1 notSameAs tokenSet2
+        tokenSet1 shouldNotBeSameInstanceAs tokenSet2
 
         verify(exactly = 1) {
             loader(key)
@@ -45,7 +45,7 @@ class TokenExpiryTest {
         cache.put(key, tokenSet1)
         val tokenSet2 = cache.get(key, loader)
 
-        tokenSet1 sameAs tokenSet2
+        tokenSet1 shouldBeSameInstanceAs tokenSet2
 
         verify(exactly = 0) {
             loader(key)

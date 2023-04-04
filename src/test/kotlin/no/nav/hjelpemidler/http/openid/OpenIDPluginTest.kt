@@ -1,5 +1,7 @@
 package no.nav.hjelpemidler.http.openid
 
+import io.kotest.assertions.ktor.client.shouldHaveStatus
+import io.kotest.matchers.shouldBe
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respondError
 import io.ktor.client.engine.mock.respondOk
@@ -8,7 +10,6 @@ import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.runBlocking
 import no.nav.hjelpemidler.http.createHttpClient
 import no.nav.hjelpemidler.http.test.respondJson
-import no.nav.hjelpemidler.http.test.shouldBe
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.hours
 
@@ -45,6 +46,6 @@ class OpenIDPluginTest {
             client.get("/test") {
             }
         }
-        response.status shouldBe HttpStatusCode.OK
+        response shouldHaveStatus HttpStatusCode.OK
     }
 }

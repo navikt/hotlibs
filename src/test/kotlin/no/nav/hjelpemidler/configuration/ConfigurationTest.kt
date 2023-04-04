@@ -1,7 +1,7 @@
 package no.nav.hjelpemidler.configuration
 
-import no.nav.hjelpemidler.http.test.shouldBe
-import no.nav.hjelpemidler.http.test.shouldNotBe
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import kotlin.test.Test
 
 class ConfigurationTest {

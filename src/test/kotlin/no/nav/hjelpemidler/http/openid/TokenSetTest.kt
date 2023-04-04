@@ -1,9 +1,9 @@
 package no.nav.hjelpemidler.http.openid
 
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockkStatic
 import no.nav.hjelpemidler.http.test.createJWT
-import no.nav.hjelpemidler.http.test.shouldBe
 import no.nav.hjelpemidler.time.now
 import java.time.LocalDate
 import java.time.Month

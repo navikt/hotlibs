@@ -1,5 +1,6 @@
 package no.nav.hjelpemidler.http.openid
 
+import io.kotest.matchers.shouldBe
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockRequestHandleScope
 import io.ktor.client.request.HttpRequestData
@@ -7,7 +8,6 @@ import io.ktor.client.request.HttpResponseData
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.runBlocking
 import no.nav.hjelpemidler.http.test.respondJson
-import no.nav.hjelpemidler.http.test.shouldBe
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertTrue

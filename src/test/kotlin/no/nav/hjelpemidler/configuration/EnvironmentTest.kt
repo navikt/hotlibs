@@ -1,6 +1,6 @@
 package no.nav.hjelpemidler.configuration
 
-import no.nav.hjelpemidler.http.test.shouldBe
+import io.kotest.matchers.shouldBe
 import kotlin.test.Test
 
 class EnvironmentTest {
