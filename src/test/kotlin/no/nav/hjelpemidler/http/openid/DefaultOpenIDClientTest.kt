@@ -1,20 +1,20 @@
 package no.nav.hjelpemidler.http.openid
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockRequestHandleScope
 import io.ktor.client.request.HttpRequestData
 import io.ktor.client.request.HttpResponseData
 import io.ktor.http.HttpStatusCode
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import no.nav.hjelpemidler.http.test.respondJson
-import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
 class DefaultOpenIDClientTest {
     @Test
-    fun `client credentials grant`() {
+    fun `client credentials grant`() = runTest {
         val client = createTestClient {
             respondJson(
                 """
@@ -26,9 +26,8 @@ class DefaultOpenIDClientTest {
                 """.trimIndent()
             )
         }
-        val tokenSet = runBlocking {
-            client.grant(scope = "test")
-        }
+
+        val tokenSet = client.grant(scope = "test")
 
         tokenSet.tokenType shouldBe "Bearer"
         tokenSet.expiresIn shouldBe 3599
@@ -36,7 +35,7 @@ class DefaultOpenIDClientTest {
     }
 
     @Test
-    fun `on behalf of grant`() {
+    fun `on behalf of grant`() = runTest {
         val client = createTestClient {
             respondJson(
                 """
@@ -50,9 +49,8 @@ class DefaultOpenIDClientTest {
                 """.trimIndent()
             )
         }
-        val tokenSet = runBlocking {
-            client.grant(scope = "test", onBehalfOf = "test")
-        }
+
+        val tokenSet = client.grant(scope = "test", onBehalfOf = "test")
 
         tokenSet.tokenType shouldBe "Bearer"
         tokenSet.expiresIn shouldBe 3269
@@ -60,7 +58,7 @@ class DefaultOpenIDClientTest {
     }
 
     @Test
-    fun `grant feiler`() {
+    fun `grant feiler`() = runTest {
         val client = createTestClient {
             respondJson(
                 """
@@ -78,10 +76,8 @@ class DefaultOpenIDClientTest {
             )
         }
 
-        assertThrows<OpenIDClientException> {
-            runBlocking {
-                client.grant(scope = "invalid")
-            }
+        shouldThrow<OpenIDClientException> {
+            client.grant(scope = "invalid")
         }
     }
 

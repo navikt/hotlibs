@@ -6,7 +6,7 @@ import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockRequestHandleScope
 import io.ktor.client.request.HttpRequestData
 import io.ktor.client.request.HttpResponseData
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import no.nav.hjelpemidler.http.test.respondJson
 import kotlin.test.Test
 import kotlin.test.assertTrue
@@ -14,42 +14,42 @@ import kotlin.time.Duration.Companion.minutes
 
 class CachedOpenIDClientTest {
     @Test
-    fun `skal bruke token fra cache`() {
+    fun `skal bruke token fra cache`() = runTest {
         val tokenSet = TokenSet.bearer(expiresIn = 10.minutes, "token")
         val client = createTestClient {
             respondJson(tokenSet)
         }
-        runBlocking {
-            val tokenSet1 = client.grant("test", "s1")
-            val tokenSet2 = client.grant("test", "s1")
-            tokenSet1 shouldBeSameInstanceAs tokenSet2
-        }
+
+        val tokenSet1 = client.grant("test", "s1")
+        val tokenSet2 = client.grant("test", "s1")
+
+        tokenSet1 shouldBeSameInstanceAs tokenSet2
     }
 
     @Test
-    fun `skal ikke bruke token fra cache, ulike parametre`() {
+    fun `skal ikke bruke token fra cache, ulike parametre`() = runTest {
         val tokenSet = TokenSet.bearer(expiresIn = 10.minutes, "token")
         val client = createTestClient {
             respondJson(tokenSet)
         }
-        runBlocking {
-            val tokenSet1 = client.grant("test", "s1")
-            val tokenSet2 = client.grant("test", "s2")
-            tokenSet1 shouldNotBeSameInstanceAs tokenSet2
-        }
+
+        val tokenSet1 = client.grant("test", "s1")
+        val tokenSet2 = client.grant("test", "s2")
+
+        tokenSet1 shouldNotBeSameInstanceAs tokenSet2
     }
 
     @Test
-    fun `skal ikke bruke token fra cache, token utløpt`() {
+    fun `skal ikke bruke token fra cache, token utløpt`() = runTest {
         val tokenSet = TokenSet.bearer(expiresIn = 0.minutes, "token")
         val client = createTestClient {
             respondJson(tokenSet)
         }
-        runBlocking {
-            val tokenSet1 = client.grant("test", "s1")
-            val tokenSet2 = client.grant("test", "s1")
-            tokenSet1 shouldNotBeSameInstanceAs tokenSet2
-        }
+
+        val tokenSet1 = client.grant("test", "s1")
+        val tokenSet2 = client.grant("test", "s1")
+
+        tokenSet1 shouldNotBeSameInstanceAs tokenSet2
     }
 
     private fun createTestClient(
