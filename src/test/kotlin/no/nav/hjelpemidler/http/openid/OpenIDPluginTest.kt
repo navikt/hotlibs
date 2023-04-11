@@ -35,7 +35,7 @@ class OpenIDPluginTest {
         }
         val client = createHttpClient(engine) {
             openID(scope = "test") {
-                client {
+                openIDClient {
                     tokenEndpoint = "https://issuer/token"
                     clientId = "clientId"
                     clientSecret = "clientSecret"
@@ -57,7 +57,7 @@ class OpenIDPluginTest {
             respondOk("")
         }
         val client = createHttpClient(engine) {
-            openID(scope = "test", client = openIDClient)
+            openID(scope = "test", openIDClient = openIDClient)
         }
 
         coEvery {

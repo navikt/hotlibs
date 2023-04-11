@@ -4,33 +4,31 @@ import io.ktor.client.HttpClientConfig
 import io.ktor.client.plugins.api.createClientPlugin
 
 class OpenIDPluginConfiguration {
-    internal var scope: String = ""
-    internal var client: OpenIDClient? = null
-    internal val clientConfiguration: OpenIDClientConfiguration = OpenIDClientConfiguration()
+    var scope: String = ""
+    var openIDClient: OpenIDClient? = null
+    var onBehalfOfProvider: suspend () -> String? = { null }
 
-    fun client(block: OpenIDClientConfiguration.() -> Unit) {
-        clientConfiguration.apply(block)
+    internal val openIDClientConfiguration: OpenIDClientConfiguration = OpenIDClientConfiguration()
+    fun openIDClient(block: OpenIDClientConfiguration.() -> Unit) {
+        openIDClientConfiguration.apply(block)
     }
-
-    var accessTokenProvider: suspend () -> String? = { null }
 }
 
 val OpenIDPlugin = createClientPlugin("OpenIDPlugin", ::OpenIDPluginConfiguration) {
     val scope = pluginConfig.scope
-    val engine = client.engine
-    val client = when (val client = pluginConfig.client) {
+    val openIDClient = when (val openIDClient = pluginConfig.openIDClient) {
         null -> createOpenIDClient(
-            engine = engine,
-            configuration = pluginConfig.clientConfiguration,
+            engine = client.engine,
+            configuration = pluginConfig.openIDClientConfiguration,
         )
 
-        else -> client
+        else -> openIDClient
     }
-    val accessTokenProvider = pluginConfig.accessTokenProvider
+    val onBehalfOfProvider = pluginConfig.onBehalfOfProvider
     onRequest { request, _ ->
-        val tokenSet = when (val accessToken: String? = accessTokenProvider()) {
-            null -> client.grant(scope = scope)
-            else -> client.grant(scope = scope, onBehalfOf = accessToken)
+        val tokenSet = when (val accessToken: String? = onBehalfOfProvider()) {
+            null -> openIDClient.grant(scope = scope)
+            else -> openIDClient.grant(scope = scope, onBehalfOf = accessToken)
         }
         request.bearerAuth(tokenSet)
     }
@@ -38,19 +36,19 @@ val OpenIDPlugin = createClientPlugin("OpenIDPlugin", ::OpenIDPluginConfiguratio
 
 fun HttpClientConfig<*>.openID(
     scope: String,
-    client: OpenIDClient? = null,
+    openIDClient: OpenIDClient? = null,
     block: OpenIDPluginConfiguration.() -> Unit = {},
 ) {
     install(OpenIDPlugin) {
         this.scope = scope
-        this.client = client
+        this.openIDClient = openIDClient
         block()
     }
 }
 
 fun HttpClientConfig<*>.azureAD(scope: String, block: OpenIDClientConfiguration.() -> Unit = {}) {
     openID(scope = scope) {
-        client {
+        openIDClient {
             azureADEnvironmentConfiguration()
             block()
         }
@@ -59,7 +57,7 @@ fun HttpClientConfig<*>.azureAD(scope: String, block: OpenIDClientConfiguration.
 
 fun HttpClientConfig<*>.tokenX(scope: String, block: OpenIDClientConfiguration.() -> Unit = {}) {
     openID(scope = scope) {
-        client {
+        openIDClient {
             tokenXEnvironmentConfiguration()
             block()
         }

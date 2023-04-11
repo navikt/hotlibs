@@ -22,15 +22,14 @@ class OpenIDClientConfiguration internal constructor() {
         clientSecret = null
     }
 
-    internal val cacheConfiguration: CacheConfiguration = CacheConfiguration()
     internal var expiry: Expiry<Parameters, TokenSet> = EXPIRE_IMMEDIATELY
-
+    internal val cacheConfiguration: CacheConfiguration = CacheConfiguration()
     fun cache(
         leeway: Duration = TokenExpiry.DEFAULT_LEEWAY,
         expiry: Expiry<Parameters, TokenSet> = TokenExpiry(leeway),
         block: CacheConfiguration.() -> Unit = {},
     ) {
         this.expiry = expiry
-        cacheConfiguration.apply(block)
+        this.cacheConfiguration.apply(block)
     }
 }
