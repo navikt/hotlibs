@@ -22,9 +22,14 @@ class Configuration internal constructor(
 
         fun load(environment: Environment = Environment.current): Configuration {
             val location = "/$environment.properties"
-            log.info { "Leser konfigurasjon fra: '$location'" }
             val properties = Properties()
-                .apply { Configuration::class.java.getResourceAsStream(location)?.use(::load) }
+                .apply {
+                    Configuration::class.java.getResourceAsStream(location)
+                        .apply {
+                            if (this == null) log.info { "Leser konfigurasjon fra miljøvariabler" }
+                            else log.info { "Leser konfigurasjon fra miljøvariabler og: '$location'" }
+                        }?.use(::load)
+                }
                 .mapKeys { it.key.toString() }
                 .mapValues { it.value.toString() }
             return Configuration((System.getenv() + properties).toSortedMap())
