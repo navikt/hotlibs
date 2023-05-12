@@ -1,12 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val coroutinesVersion = "1.6.4"
+val coroutinesVersion = "1.7.0"
 val slf4jVersion = "2.0.7"
-val kotestVersion = "5.5.5"
-val testcontainersVersion = "1.17.6"
+val kotestVersion = "5.6.2"
+val testcontainersVersion = "1.18.1"
 
 plugins {
-    kotlin("jvm") version "1.8.10"
+    kotlin("jvm") version "1.8.20"
 }
 
 group = "no.nav.hjelpemidler.database"
@@ -27,11 +27,11 @@ dependencies {
     // Database
     api("com.github.seratch:kotliquery:1.9.0")
     api("com.zaxxer:HikariCP:5.0.1")
-    api("org.flywaydb:flyway-core:9.16.1")
+    api("org.flywaydb:flyway-core:9.17.0")
     implementation("org.postgresql:postgresql:42.6.0")
 
     // Jackson
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.2")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.0")
 
     // Testing
     testImplementation(kotlin("test"))
