@@ -7,8 +7,8 @@ import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.withContext
 
 @OptIn(DelicateCoroutinesApi::class)
-internal val databaseContext: ExecutorCoroutineDispatcher =
+val DatabaseContext: ExecutorCoroutineDispatcher =
     newSingleThreadContext("DatabaseThread")
 
 suspend fun <T> withDatabaseContext(block: suspend CoroutineScope.() -> T): T =
-    withContext(context = databaseContext, block = block)
+    withContext(context = DatabaseContext, block = block)
