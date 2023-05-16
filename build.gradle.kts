@@ -1,14 +1,14 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val coroutinesVersion = "1.6.4"
+val coroutinesVersion = "1.7.1"
 val ktorVersion = "2.3.0"
-val jacksonVersion = "2.14.2"
+val jacksonVersion = "2.15.0"
 val javaJwtVersion = "4.4.0" // følger ktor-server-auth-jwt
-val caffeineVersion = "3.1.5"
+val caffeineVersion = "3.1.6"
 val kotlinLoggingVersion = "3.0.5"
 val slf4jVersion = "2.0.3"
-val mockkVersion = "1.13.4"
-val kotestVersion = "5.5.5"
+val mockkVersion = "1.13.5"
+val kotestVersion = "5.6.2"
 val kotestAssertionsKtorVersion = "2.0.0"
 
 plugins {
@@ -47,6 +47,7 @@ dependencies {
 
     // Logging
     implementation("io.github.microutils:kotlin-logging:$kotlinLoggingVersion")
+    runtimeOnly("ch.qos.logback:logback-classic:1.4.7")
 
     // Testing
     testImplementation(kotlin("test"))
