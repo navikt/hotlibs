@@ -47,7 +47,6 @@ dependencies {
 
     // Logging
     implementation("io.github.microutils:kotlin-logging:$kotlinLoggingVersion")
-    runtimeOnly("ch.qos.logback:logback-classic:1.4.7")
 
     // Testing
     testImplementation(kotlin("test"))
