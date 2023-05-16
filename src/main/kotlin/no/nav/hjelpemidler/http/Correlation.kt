@@ -1,13 +1,18 @@
 package no.nav.hjelpemidler.http
 
 import io.ktor.client.request.header
+import io.ktor.http.HttpMessage
 import io.ktor.http.HttpMessageBuilder
 import mu.withLoggingContext
 import no.nav.hjelpemidler.configuration.NaisEnvironmentVariable
 import org.slf4j.MDC
 import java.util.UUID
 
-const val CORRELATION_ID_KEY = "CorrelationId"
+const val CORRELATION_ID_KEY = "correlationId"
+
+internal const val NAV_CONSUMER_ID_KEY = "Nav-Consumer-Id"
+internal const val NAV_CALL_ID_KEY = "Nav-CallId"
+internal const val NAV_CORRELATION_ID_KEY = "X-Correlation-ID"
 
 fun createCorrelationId(): String =
     UUID.randomUUID().toString()
@@ -16,13 +21,22 @@ fun currentCorrelationId(): String? =
     MDC.get(CORRELATION_ID_KEY)
 
 fun HttpMessageBuilder.navConsumerId(value: String = NaisEnvironmentVariable.NAIS_APP_NAME) =
-    header("Nav-Consumer-Id", value)
+    header(NAV_CONSUMER_ID_KEY, value)
 
 fun HttpMessageBuilder.navCallId(value: String) =
-    header("Nav-CallId", value)
+    header(NAV_CALL_ID_KEY, value)
 
 fun HttpMessageBuilder.navCorrelationId(value: String) =
-    header("X-Correlation-ID", value)
+    header(NAV_CORRELATION_ID_KEY, value)
+
+fun HttpMessage.navConsumerId(): String? =
+    headers[NAV_CONSUMER_ID_KEY]
+
+fun HttpMessage.navCallId(): String? =
+    headers[NAV_CALL_ID_KEY]
+
+fun HttpMessage.navCorrelationId(): String? =
+    headers[NAV_CORRELATION_ID_KEY]
 
 fun HttpMessageBuilder.correlationId(value: String = currentCorrelationId() ?: createCorrelationId()): String {
     navCallId(value)

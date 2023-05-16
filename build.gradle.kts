@@ -6,7 +6,7 @@ val jacksonVersion = "2.15.0"
 val javaJwtVersion = "4.4.0" // følger ktor-server-auth-jwt
 val caffeineVersion = "3.1.6"
 val kotlinLoggingVersion = "3.0.5"
-val slf4jVersion = "2.0.3"
+val logbackVersion = "1.4.7"
 val mockkVersion = "1.13.5"
 val kotestVersion = "5.6.2"
 val kotestAssertionsKtorVersion = "2.0.0"
@@ -54,7 +54,7 @@ dependencies {
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
     testImplementation("io.kotest.extensions:kotest-assertions-ktor:$kotestAssertionsKtorVersion")
-    testRuntimeOnly("org.slf4j:slf4j-simple:$slf4jVersion")
+    testRuntimeOnly("ch.qos.logback:logback-classic:$logbackVersion")
 }
 
 tasks.test {
