@@ -6,7 +6,9 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.Logging
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.serialization.jackson.JacksonConverter
 import io.ktor.serialization.jackson.jackson
 
@@ -23,4 +25,12 @@ fun HttpClientConfig<*>.jackson(block: ObjectMapper.() -> Unit = {}) =
 fun HttpClientConfig<*>.jackson(objectMapper: ObjectMapper) =
     install(ContentNegotiation) {
         register(ContentType.Application.Json, JacksonConverter(objectMapper, true))
+    }
+
+fun HttpClientConfig<*>.logging(configure: Logging.Config.() -> Unit = {}) =
+    install(Logging) {
+        configure()
+        sanitizeHeader { header ->
+            header == HttpHeaders.Authorization
+        }
     }

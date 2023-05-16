@@ -33,6 +33,7 @@ dependencies {
     api("io.ktor:ktor-client-core:$ktorVersion")
     api("io.ktor:ktor-client-cio:$ktorVersion")
     api("io.ktor:ktor-client-mock:$ktorVersion")
+    api("io.ktor:ktor-client-logging:$ktorVersion")
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
 
@@ -47,6 +48,7 @@ dependencies {
 
     // Logging
     implementation("io.github.microutils:kotlin-logging:$kotlinLoggingVersion")
+    implementation("io.ktor:ktor-client-logging-jvm:2.3.0")
 
     // Testing
     testImplementation(kotlin("test"))
