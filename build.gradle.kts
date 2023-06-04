@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val coroutinesVersion = "1.7.1"
-val ktorVersion = "2.3.0"
-val jacksonVersion = "2.15.0"
+val ktorVersion = "2.3.1"
+val jacksonVersion = "2.15.2"
 val javaJwtVersion = "4.4.0" // følger ktor-server-auth-jwt
 val caffeineVersion = "3.1.6"
 val kotlinLoggingVersion = "3.0.5"
@@ -12,7 +12,7 @@ val kotestVersion = "5.6.2"
 val kotestAssertionsKtorVersion = "2.0.0"
 
 plugins {
-    kotlin("jvm") version "1.8.20"
+    kotlin("jvm") version "1.8.21"
 }
 
 group = "no.nav.hjelpemidler.http"
