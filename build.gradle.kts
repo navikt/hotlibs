@@ -1,12 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val coroutinesVersion = "1.7.0"
+val coroutinesVersion = "1.7.1"
 val slf4jVersion = "2.0.7"
 val kotestVersion = "5.6.2"
-val testcontainersVersion = "1.18.1"
+val testcontainersVersion = "1.18.3"
 
 plugins {
-    kotlin("jvm") version "1.8.20"
+    kotlin("jvm") version "1.8.21"
 }
 
 group = "no.nav.hjelpemidler.database"
@@ -27,11 +27,11 @@ dependencies {
     // Database
     api("com.github.seratch:kotliquery:1.9.0")
     api("com.zaxxer:HikariCP:5.0.1")
-    api("org.flywaydb:flyway-core:9.17.0")
+    api("org.flywaydb:flyway-core:9.19.1")
     implementation("org.postgresql:postgresql:42.6.0")
 
     // Jackson
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.0")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.2")
 
     // Testing
     testImplementation(kotlin("test"))
@@ -48,12 +48,4 @@ tasks.test {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "17"
-}
-
-kotlin {
-    sourceSets {
-        test {
-            languageSettings.optIn("kotlinx.coroutines.ExperimentalCoroutinesApi")
-        }
-    }
 }

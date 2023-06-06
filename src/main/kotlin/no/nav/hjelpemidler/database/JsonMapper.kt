@@ -1,7 +1,6 @@
 package no.nav.hjelpemidler.database
 
 import com.fasterxml.jackson.core.type.TypeReference
-import java.util.ServiceLoader
 
 interface JsonMapper {
     fun <T> writeValueAsString(value: T): String
@@ -10,4 +9,4 @@ interface JsonMapper {
     fun <T> convertValue(fromValue: Any?, toValueTypeRef: TypeReference<T>): T
 }
 
-val jsonMapper: JsonMapper = ServiceLoader.load(JsonMapper::class.java).single()
+val jsonMapper: JsonMapper = loadService<JsonMapper>()
