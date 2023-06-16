@@ -1,0 +1,89 @@
+[versions]
+graphql = "6.5.2"
+jackson = "2.15.2"
+kafka = "3.4.0"
+kotlin = "1.8.22"
+ktor = "2.3.1"
+slf4j = "2.0.7"
+
+[plugins]
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
+graphql = { id = "com.expediagroup.graphql", version.ref = "graphql" }
+spotless = { id = "com.diffplug.spotless", version = "6.19.0" }
+
+[libraries]
+# Kotlin
+kotlin-bom = { group = "org.jetbrains.kotlin", name = "kotlin-bom", version.ref = "kotlin" }
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
+
+# Jackson
+jackson-bom = { group = "com.fasterxml.jackson", name = "jackson-bom", version.ref = "jackson" }
+jackson-databind = { group = "com.fasterxml.jackson.core", name = "jackson-databind", version.ref = "jackson" }
+jackson-dataformat-yaml = { group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-yaml", version.ref = "jackson" }
+jackson-datatype-jsr310 = { group = "com.fasterxml.jackson.datatype", name = "jackson-datatype-jsr310", version.ref = "jackson" }
+jackson-module-kotlin = { group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version.ref = "jackson" }
+
+# Ktor
+ktor-bom = { group = "io.ktor", name = "ktor-bom", version.ref = "ktor" }
+ktor-serialization-jackson = { group = "io.ktor", name = "ktor-serialization-jackson", version.ref = "ktor" }
+ktor-server-auth-jwt = { group = "io.ktor", name = "ktor-server-auth-jwt", version.ref = "ktor" }
+ktor-server-call-logging = { group = "io.ktor", name = "ktor-server-call-logging", version.ref = "ktor" }
+ktor-server-content-negotiation = { group = "io.ktor", name = "ktor-server-content-negotiation", version.ref = "ktor" }
+ktor-server-core = { group = "io.ktor", name = "ktor-server-core", version.ref = "ktor" }
+ktor-server-netty = { group = "io.ktor", name = "ktor-server-netty", version.ref = "ktor" }
+ktor-server-status-pages = { group = "io.ktor", name = "ktor-server-status-pages", version.ref = "ktor" }
+
+# Kafka
+kafka-clients = { group = "org.apache.kafka", name = "kafka-clients", version.ref = "kafka" }
+
+# Database
+hm-database = { group = "no.nav.hjelpemidler.database", name = "hm-database", version = "v0.0.21" }
+
+# HTTP
+hm-http = { group = "no.nav.hjelpemidler.http", name = "hm-http", version = "v0.0.37" }
+
+# GraphQL
+graphql-kotlin-ktor-client = { group = "com.expediagroup", name = "graphql-kotlin-ktor-client", version.ref = "graphql" }
+graphql-kotlin-client-jackson = { group = "com.expediagroup", name = "graphql-kotlin-client-jackson", version.ref = "graphql" }
+
+# Metrics
+influxdb-client-kotlin = { group = "com.influxdb", name = "influxdb-client-kotlin", version = "6.9.0" }
+micrometer-registry-prometheus = { group = "io.micrometer", name = "micrometer-registry-prometheus", version = "1.11.0" }
+
+# Logging
+slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
+kotlin-logging = { group = "io.github.microutils", name = "kotlin-logging", version = "3.0.5" }
+logback-classic = { group = "ch.qos.logback", name = "logback-classic", version = "1.4.8" }
+logback-syslog4j = { group = "com.papertrailapp", name = "logback-syslog4j", version = "1.0.0" }
+logstash-logback-encoder = { group = "net.logstash.logback", name = "logstash-logback-encoder", version = "7.3" }
+
+[bundles]
+jackson = [
+    "jackson-databind",
+    "jackson-dataformat-yaml",
+    "jackson-datatype-jsr310",
+    "jackson-module-kotlin",
+]
+ktor-server = [
+    "ktor-serialization-jackson",
+    "ktor-server-auth-jwt",
+    "ktor-server-call-logging",
+    "ktor-server-content-negotiation",
+    "ktor-server-core",
+    "ktor-server-netty",
+    "ktor-server-status-pages",
+]
+graphql-client = [
+    "graphql-kotlin-ktor-client",
+    "graphql-kotlin-client-jackson",
+]
+metrics = [
+    "influxdb-client-kotlin",
+    "micrometer-registry-prometheus",
+]
+logging-runtime = [
+    "logback-classic",
+    "logback-syslog4j",
+    "logstash-logback-encoder",
+]
