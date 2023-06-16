@@ -1,7 +1,7 @@
 plugins {
     `kotlin-dsl`
-    `version-catalog`
     `maven-publish`
+    `version-catalog`
 }
 
 repositories {
@@ -10,7 +10,7 @@ repositories {
 
 catalog {
     versionCatalog {
-        library("hm-katalog", "no.nav.hjelpemidler:hm-katalog:0.0.1")
+        from(files("./gradle/libs.versions.toml"))
     }
 }
 
@@ -23,6 +23,11 @@ publishing {
                 username = System.getenv("GITHUB_ACTOR")
                 password = System.getenv("GITHUB_TOKEN")
             }
+        }
+    }
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["versionCatalog"])
         }
     }
 }

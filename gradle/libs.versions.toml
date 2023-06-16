@@ -1,10 +1,13 @@
 [versions]
 graphql = "6.5.2"
 jackson = "2.15.2"
+junit = "5.9.3"
 kafka = "3.4.0"
+kotest = "5.6.2"
 kotlin = "1.8.22"
 ktor = "2.3.1"
 slf4j = "2.0.7"
+testcontainers = "1.18.3"
 
 [plugins]
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
@@ -16,6 +19,7 @@ spotless = { id = "com.diffplug.spotless", version = "6.19.0" }
 # Kotlin
 kotlin-bom = { group = "org.jetbrains.kotlin", name = "kotlin-bom", version.ref = "kotlin" }
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
+kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
 
 # Jackson
 jackson-bom = { group = "com.fasterxml.jackson", name = "jackson-bom", version.ref = "jackson" }
@@ -24,7 +28,7 @@ jackson-dataformat-yaml = { group = "com.fasterxml.jackson.dataformat", name = "
 jackson-datatype-jsr310 = { group = "com.fasterxml.jackson.datatype", name = "jackson-datatype-jsr310", version.ref = "jackson" }
 jackson-module-kotlin = { group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version.ref = "jackson" }
 
-# Ktor
+# Ktor Server
 ktor-bom = { group = "io.ktor", name = "ktor-bom", version.ref = "ktor" }
 ktor-serialization-jackson = { group = "io.ktor", name = "ktor-serialization-jackson", version.ref = "ktor" }
 ktor-server-auth-jwt = { group = "io.ktor", name = "ktor-server-auth-jwt", version.ref = "ktor" }
@@ -33,6 +37,7 @@ ktor-server-content-negotiation = { group = "io.ktor", name = "ktor-server-conte
 ktor-server-core = { group = "io.ktor", name = "ktor-server-core", version.ref = "ktor" }
 ktor-server-netty = { group = "io.ktor", name = "ktor-server-netty", version.ref = "ktor" }
 ktor-server-status-pages = { group = "io.ktor", name = "ktor-server-status-pages", version.ref = "ktor" }
+ktor-server-test-host = { group = "io.ktor", name = "ktor-server-test-host", version.ref = "ktor" }
 
 # Kafka
 kafka-clients = { group = "org.apache.kafka", name = "kafka-clients", version.ref = "kafka" }
@@ -58,6 +63,26 @@ logback-classic = { group = "ch.qos.logback", name = "logback-classic", version 
 logback-syslog4j = { group = "com.papertrailapp", name = "logback-syslog4j", version = "1.0.0" }
 logstash-logback-encoder = { group = "net.logstash.logback", name = "logstash-logback-encoder", version = "7.3" }
 
+# JUnit
+junit-jupiter-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit" }
+junit-jupiter-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junit" }
+junit-jupiter-params = { group = "org.junit.jupiter", name = "junit-jupiter-params", version.ref = "junit" }
+
+# Kotest
+kotest-assertions-core = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotest" }
+kotest-assertions-json = { group = "io.kotest", name = "kotest-assertions-json", version.ref = "kotest" }
+kotest-assertions-ktor = { group = "io.kotest.extensions", name = "kotest-assertions-ktor", version = "2.0.0" }
+kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest" }
+
+# MockK
+mockk = { group = "io.mockk", name = "mockk-jvm", version = "1.13.5" }
+
+# Nimbus
+nimbus-jose-jwt = { group = "com.nimbusds", name = "nimbus-jose-jwt", version = "9.31" }
+
+# Testcontainers
+testcontainers-postgresql = { group = "org.testcontainers", name = "postgresql", version.ref = "testcontainers" }
+
 [bundles]
 jackson = [
     "jackson-databind",
@@ -74,6 +99,20 @@ ktor-server = [
     "ktor-server-netty",
     "ktor-server-status-pages",
 ]
+ktor-server-test = [
+    "junit-jupiter-api",
+    "junit-jupiter-engine",
+    "junit-jupiter-params",
+    "kotest-assertions-core",
+    "kotest-assertions-json",
+    "kotest-assertions-ktor",
+    "kotest-runner-junit5",
+    "kotlin-test",
+    "ktor-server-test-host",
+    "mockk",
+    "nimbus-jose-jwt",
+    "testcontainers-postgresql",
+]
 graphql-client = [
     "graphql-kotlin-ktor-client",
     "graphql-kotlin-client-jackson",
@@ -86,4 +125,25 @@ logging-runtime = [
     "logback-classic",
     "logback-syslog4j",
     "logstash-logback-encoder",
+]
+junit = [
+    "junit-jupiter-api",
+    "junit-jupiter-engine",
+    "junit-jupiter-params",
+    "kotlin-test",
+]
+kotest = [
+    "kotest-assertions-core",
+    "kotest-assertions-json",
+    "kotest-runner-junit5",
+]
+test = [
+    "junit-jupiter-api",
+    "junit-jupiter-engine",
+    "junit-jupiter-params",
+    "kotest-assertions-core",
+    "kotest-assertions-json",
+    "kotest-runner-junit5",
+    "kotlin-test",
+    "mockk",
 ]
