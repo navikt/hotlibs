@@ -10,7 +10,7 @@ repositories {
 
 catalog {
     versionCatalog {
-        library("hm-katalog", "no.nav.hjelpemidler:hm-katalog:0.1")
+        library("hm-katalog", "no.nav.hjelpemidler:hm-katalog:0.0.1")
     }
 }
 
