@@ -4,6 +4,8 @@ plugins {
     `version-catalog`
 }
 
+group = "no.nav.hjelpemidler.katalog"
+
 repositories {
     gradlePluginPortal()
 }
@@ -27,8 +29,6 @@ publishing {
     }
     publications {
         create<MavenPublication>("maven") {
-            groupId = "no.nav.hjelpemidler.katalog"
-            artifactId = "hm-katalog"
             from(components["versionCatalog"])
         }
     }
