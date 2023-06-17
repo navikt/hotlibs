@@ -1,11 +1,10 @@
 plugins {
-    `kotlin-dsl`
     `maven-publish`
     `version-catalog`
 }
 
 group = "no.nav.hjelpemidler"
-version = System.getenv("GITHUB_REF_NAME")
+version = System.getenv("GITHUB_REF_NAME") ?: "local"
 
 repositories {
     gradlePluginPortal()
