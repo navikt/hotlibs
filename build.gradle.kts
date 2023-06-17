@@ -18,6 +18,11 @@ catalog {
 }
 
 publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["versionCatalog"])
+        }
+    }
     repositories {
         maven {
             name = "GitHubPackages"
@@ -26,11 +31,6 @@ publishing {
                 username = System.getenv("GITHUB_ACTOR")
                 password = System.getenv("GITHUB_TOKEN")
             }
-        }
-    }
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["versionCatalog"])
         }
     }
 }
