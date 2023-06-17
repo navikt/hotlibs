@@ -4,7 +4,8 @@ plugins {
     `version-catalog`
 }
 
-group = "no.nav.hjelpemidler.katalog"
+group = "no.nav.hjelpemidler"
+version = System.getenv("GITHUB_REF_NAME")
 
 repositories {
     gradlePluginPortal()
