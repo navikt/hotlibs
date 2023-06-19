@@ -6,6 +6,7 @@ kafka = "3.4.0"
 kotest = "5.6.2"
 kotlin = "1.8.22"
 ktor = "2.3.1"
+rapidsAndRivers = "2023060108511685602318.b6acfa4d79a1"
 slf4j = "2.0.7"
 testcontainers = "1.18.3"
 
@@ -41,6 +42,7 @@ ktor-server-test-host = { group = "io.ktor", name = "ktor-server-test-host", ver
 
 # Kafka
 kafka-clients = { group = "org.apache.kafka", name = "kafka-clients", version.ref = "kafka" }
+rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", version.ref = "rapidsAndRivers" }
 
 # Database
 hm-database = { group = "no.nav.hjelpemidler.database", name = "hm-database", version = "v0.0.21" }
