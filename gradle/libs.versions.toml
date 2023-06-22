@@ -20,7 +20,7 @@ spotless = { id = "com.diffplug.spotless", version = "6.19.0" }
 # Kotlin
 kotlin-bom = { group = "org.jetbrains.kotlin", name = "kotlin-bom", version.ref = "kotlin" }
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
-kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
+kotlin-test-junit5 = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit5", version.ref = "kotlin" }
 
 # Jackson
 jackson-bom = { group = "com.fasterxml.jackson", name = "jackson-bom", version.ref = "jackson" }
@@ -110,7 +110,7 @@ ktor-server-test = [
     "kotest-assertions-json",
     "kotest-assertions-ktor",
     "kotest-runner-junit5",
-    "kotlin-test",
+    "kotlin-test-junit5",
     "ktor-server-test-host",
     "mockk",
     "nimbus-jose-jwt",
@@ -134,7 +134,7 @@ junit = [
     "junit-jupiter-api",
     "junit-jupiter-engine",
     "junit-jupiter-params",
-    "kotlin-test",
+    "kotlin-test-junit5",
 ]
 kotest = [
     "kotest-assertions-core",
@@ -148,6 +148,6 @@ test = [
     "kotest-assertions-core",
     "kotest-assertions-json",
     "kotest-runner-junit5",
-    "kotlin-test",
+    "kotlin-test-junit5",
     "mockk",
 ]
