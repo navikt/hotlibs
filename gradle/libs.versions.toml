@@ -83,6 +83,7 @@ mockk = { group = "io.mockk", name = "mockk-jvm", version = "1.13.5" }
 nimbus-jose-jwt = { group = "com.nimbusds", name = "nimbus-jose-jwt", version = "9.31" }
 
 # Testcontainers
+testcontainers-junit = { group = "org.testcontainers", name = "junit-jupiter", version.ref = "testcontainers" }
 testcontainers-postgresql = { group = "org.testcontainers", name = "postgresql", version.ref = "testcontainers" }
 
 [bundles]
@@ -113,6 +114,7 @@ ktor-server-test = [
     "ktor-server-test-host",
     "mockk",
     "nimbus-jose-jwt",
+    "testcontainers-junit",
     "testcontainers-postgresql",
 ]
 graphql-client = [
