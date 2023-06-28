@@ -1,13 +1,11 @@
 [versions]
+coroutines = "1.7.1"
 graphql = "6.5.2"
 jackson = "2.15.2"
 junit = "5.9.3"
-kafka = "3.4.0"
 kotest = "5.6.2"
 kotlin = "1.8.22"
 ktor = "2.3.1"
-rapidsAndRivers = "2023060108511685602318.b6acfa4d79a1"
-slf4j = "2.0.7"
 testcontainers = "1.18.3"
 
 [plugins]
@@ -22,6 +20,12 @@ kotlin-bom = { group = "org.jetbrains.kotlin", name = "kotlin-bom", version.ref 
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 kotlin-test-junit5 = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit5", version.ref = "kotlin" }
 
+# Kotlinx Coroutines
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-jdk8 = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-jdk8", version.ref = "coroutines" }
+kotlinx-coroutines-slf4j = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-slf4j", version.ref = "coroutines" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
+
 # Jackson
 jackson-bom = { group = "com.fasterxml.jackson", name = "jackson-bom", version.ref = "jackson" }
 jackson-annotations = { group = "com.fasterxml.jackson.core", name = "jackson-annotations", version.ref = "jackson" }
@@ -30,20 +34,39 @@ jackson-dataformat-yaml = { group = "com.fasterxml.jackson.dataformat", name = "
 jackson-datatype-jsr310 = { group = "com.fasterxml.jackson.datatype", name = "jackson-datatype-jsr310", version.ref = "jackson" }
 jackson-module-kotlin = { group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version.ref = "jackson" }
 
-# Ktor Server
+# Ktor
 ktor-bom = { group = "io.ktor", name = "ktor-bom", version.ref = "ktor" }
+
+# Ktor Serialization
 ktor-serialization-jackson = { group = "io.ktor", name = "ktor-serialization-jackson", version.ref = "ktor" }
+
+# Ktor Server
 ktor-server-auth-jwt = { group = "io.ktor", name = "ktor-server-auth-jwt", version.ref = "ktor" }
 ktor-server-call-logging = { group = "io.ktor", name = "ktor-server-call-logging", version.ref = "ktor" }
+ktor-server-cio = { group = "io.ktor", name = "ktor-server-cio", version.ref = "ktor" }
 ktor-server-content-negotiation = { group = "io.ktor", name = "ktor-server-content-negotiation", version.ref = "ktor" }
 ktor-server-core = { group = "io.ktor", name = "ktor-server-core", version.ref = "ktor" }
 ktor-server-netty = { group = "io.ktor", name = "ktor-server-netty", version.ref = "ktor" }
 ktor-server-status-pages = { group = "io.ktor", name = "ktor-server-status-pages", version.ref = "ktor" }
 ktor-server-test-host = { group = "io.ktor", name = "ktor-server-test-host", version.ref = "ktor" }
 
+# Ktor Client
+ktor-client-apache = { group = "io.ktor", name = "ktor-client-apache", version.ref = "ktor" }
+ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
+ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
+ktor-client-mock = { group = "io.ktor", name = "ktor-client-mock", version.ref = "ktor" }
+
+# Auth0
+java-jwt = { group = "com.auth0", name = "java-jwt", version = "4.4.0" } # følger ktor-server-auth-jwt
+
+# Caffeine
+caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version = "3.1.6" }
+
 # Kafka
-kafka-clients = { group = "org.apache.kafka", name = "kafka-clients", version.ref = "kafka" }
-rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", version.ref = "rapidsAndRivers" }
+kafka-clients = { group = "org.apache.kafka", name = "kafka-clients", version = "3.4.0" } # følger rapids-and-rivers
+rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", version = "2023060108511685602318.b6acfa4d79a1" }
 
 # Database
 hm-database = { group = "no.nav.hjelpemidler.database", name = "hm-database", version = "v0.0.21" }
@@ -60,7 +83,7 @@ influxdb-client-kotlin = { group = "com.influxdb", name = "influxdb-client-kotli
 micrometer-registry-prometheus = { group = "io.micrometer", name = "micrometer-registry-prometheus", version = "1.11.0" }
 
 # Logging
-slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
+slf4j-api = { group = "org.slf4j", name = "slf4j-api", version = "2.0.7" }
 kotlin-logging = { group = "io.github.microutils", name = "kotlin-logging", version = "3.0.5" }
 logback-classic = { group = "ch.qos.logback", name = "logback-classic", version = "1.4.8" }
 logback-syslog4j = { group = "com.papertrailapp", name = "logback-syslog4j", version = "1.0.0" }
@@ -103,6 +126,14 @@ ktor-server = [
     "ktor-server-netty",
     "ktor-server-status-pages",
 ]
+ktor-client = [
+    # "ktor-client-apache",
+    "ktor-client-cio",
+    "ktor-client-content-negotiation",
+    "ktor-client-core",
+    "ktor-client-logging",
+    "ktor-client-mock",
+]
 ktor-server-test = [
     "junit-jupiter-api",
     "junit-jupiter-engine",
@@ -112,6 +143,7 @@ ktor-server-test = [
     "kotest-assertions-ktor",
     "kotest-runner-junit5",
     "kotlin-test-junit5",
+    "kotlinx-coroutines-test",
     "ktor-server-test-host",
     "mockk",
     "nimbus-jose-jwt",
@@ -128,7 +160,6 @@ metrics = [
 ]
 logging-runtime = [
     "logback-classic",
-    "logback-syslog4j",
     "logstash-logback-encoder",
 ]
 junit = [
@@ -150,5 +181,6 @@ test = [
     "kotest-assertions-json",
     "kotest-runner-junit5",
     "kotlin-test-junit5",
+    "kotlinx-coroutines-test",
     "mockk",
 ]
