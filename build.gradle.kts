@@ -1,18 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val coroutinesVersion = "1.7.1"
-val ktorVersion = "2.3.1"
-val jacksonVersion = "2.15.2"
-val javaJwtVersion = "4.4.0" // følger ktor-server-auth-jwt
-val caffeineVersion = "3.1.6"
-val kotlinLoggingVersion = "3.0.5"
-val logbackVersion = "1.4.7"
-val mockkVersion = "1.13.5"
-val kotestVersion = "5.6.2"
-val kotestAssertionsKtorVersion = "2.0.0"
-
 plugins {
-    kotlin("jvm") version "1.8.21"
+    alias(libs.plugins.kotlin)
 }
 
 group = "no.nav.hjelpemidler.http"
@@ -23,54 +12,47 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib"))
+    implementation(enforcedPlatform(libs.kotlin.bom))
+    implementation(libs.kotlin.stdlib)
 
     // Kotlinx
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$coroutinesVersion")
+    implementation(enforcedPlatform(libs.kotlinx.coroutines.bom))
+    api(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.jdk8)
+    implementation(libs.kotlinx.coroutines.slf4j)
 
     // Ktor
-    api("io.ktor:ktor-client-core:$ktorVersion")
-    api("io.ktor:ktor-client-cio:$ktorVersion")
-    api("io.ktor:ktor-client-mock:$ktorVersion")
-    api("io.ktor:ktor-client-logging:$ktorVersion")
-    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
-    implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
+    implementation(enforcedPlatform(libs.ktor.bom))
+    api(libs.ktor.client.core)
+    api(libs.ktor.client.cio)
+    api(libs.ktor.client.mock)
+    api(libs.ktor.client.core)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.jackson)
 
     // Jackson
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
+    implementation(libs.jackson.datatype.jsr310)
 
     // JWT
-    implementation("com.auth0:java-jwt:$javaJwtVersion")
+    implementation(libs.java.jwt)
 
     // Cache
-    api("com.github.ben-manes.caffeine:caffeine:$caffeineVersion")
+    api(libs.caffeine)
 
     // Logging
-    implementation("io.github.microutils:kotlin-logging:$kotlinLoggingVersion")
-    implementation("io.ktor:ktor-client-logging-jvm:2.3.0")
+    implementation(libs.kotlin.logging)
+    implementation(libs.ktor.client.logging)
 
     // Testing
-    testImplementation(kotlin("test"))
-    testImplementation("io.mockk:mockk:$mockkVersion")
-    testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
-    testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
-    testImplementation("io.kotest.extensions:kotest-assertions-ktor:$kotestAssertionsKtorVersion")
-    testRuntimeOnly("ch.qos.logback:logback-classic:$logbackVersion")
-}
-
-tasks.test {
-    useJUnitPlatform()
+    testImplementation(libs.bundles.test)
+    testImplementation(libs.kotest.assertions.ktor)
+    testRuntimeOnly(libs.logback.classic)
 }
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "17"
 }
 
-kotlin {
-    sourceSets {
-        test {
-            languageSettings.optIn("kotlinx.coroutines.ExperimentalCoroutinesApi")
-        }
-    }
+tasks.withType<Test> {
+    useJUnitPlatform()
 }
