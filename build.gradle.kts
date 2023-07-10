@@ -2,27 +2,25 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     alias(libs.plugins.kotlin)
+    `maven-publish`
 }
 
-group = "no.nav.hjelpemidler.http"
-version = "1.0-SNAPSHOT"
+group = "no.nav.hjelpemidler"
+version = System.getenv("GITHUB_REF_NAME") ?: "local"
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation(enforcedPlatform(libs.kotlin.bom))
     implementation(libs.kotlin.stdlib)
 
     // Kotlinx
-    implementation(enforcedPlatform(libs.kotlinx.coroutines.bom))
     api(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.jdk8)
     implementation(libs.kotlinx.coroutines.slf4j)
 
     // Ktor
-    implementation(enforcedPlatform(libs.ktor.bom))
     api(libs.ktor.client.core)
     api(libs.ktor.client.cio)
     api(libs.ktor.client.mock)
@@ -55,4 +53,22 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+        }
+    }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/navikt/hm-database")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
 }
