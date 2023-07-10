@@ -1,11 +1,11 @@
 [versions]
-coroutines = "1.7.1"
-graphql = "6.5.2"
+coroutines = "1.7.2"
+graphql = "6.5.3"
 jackson = "2.15.2"
 junit = "5.9.3"
 kotest = "5.6.2"
-kotlin = "1.8.22"
-ktor = "2.3.1"
+kotlin = "1.9.0"
+ktor = "2.3.2"
 slf4j = "2.0.7"
 testcontainers = "1.18.3"
 
@@ -68,7 +68,7 @@ caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version
 
 # Kafka
 kafka-clients = { group = "org.apache.kafka", name = "kafka-clients", version = "3.4.0" } # følger rapids-and-rivers
-rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", version = "2023060108511685602318.b6acfa4d79a1" }
+rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", version = "2023062911391688031585.522193a413de" }
 
 # Database
 hm-database = { group = "no.nav.hjelpemidler.database", name = "hm-database", version = "v0.0.21" }
@@ -92,7 +92,7 @@ slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4
 kotlin-logging = { group = "io.github.microutils", name = "kotlin-logging", version = "3.0.5" }
 logback-classic = { group = "ch.qos.logback", name = "logback-classic", version = "1.4.8" }
 logback-syslog4j = { group = "com.papertrailapp", name = "logback-syslog4j", version = "1.0.0" }
-logstash-logback-encoder = { group = "net.logstash.logback", name = "logstash-logback-encoder", version = "7.3" }
+logstash-logback-encoder = { group = "net.logstash.logback", name = "logstash-logback-encoder", version = "7.4" }
 
 # JUnit
 junit-jupiter-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit" }
