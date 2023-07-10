@@ -9,6 +9,7 @@ import javax.sql.DataSource
 fun DataSource.flyway(block: FluentConfiguration.() -> Unit = {}): Flyway =
     Flyway.configure()
         .dataSource(this)
+        .loggers("slf4j")
         .apply(block)
         .load()
 
