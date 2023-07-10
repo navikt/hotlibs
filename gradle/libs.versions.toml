@@ -18,6 +18,7 @@ spotless = { id = "com.diffplug.spotless", version = "6.19.0" }
 [libraries]
 # Kotlin
 kotlin-bom = { group = "org.jetbrains.kotlin", name = "kotlin-bom", version.ref = "kotlin" }
+kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 kotlin-test-junit5 = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit5", version.ref = "kotlin" }
 
@@ -27,6 +28,9 @@ kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 kotlinx-coroutines-jdk8 = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-jdk8", version.ref = "coroutines" }
 kotlinx-coroutines-slf4j = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-slf4j", version.ref = "coroutines" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
+
+# Kotlinx Metadata
+kotlinx-metadata-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-metadata-jvm", version = "0.6.2" }
 
 # Jackson
 jackson-bom = { group = "com.fasterxml.jackson", name = "jackson-bom", version.ref = "jackson" }
@@ -69,6 +73,15 @@ caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version
 # Kafka
 kafka-clients = { group = "org.apache.kafka", name = "kafka-clients", version = "3.4.0" } # følger rapids-and-rivers
 rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", version = "2023062911391688031585.522193a413de" }
+
+# JDBC
+flyway-core = { group = "org.flywaydb", name = "flyway-core", version = "9.20.0" }
+hikaricp = { group = "com.zaxxer", name = "HikariCP", version = "5.0.1" }
+kotliquery = { group = "com.github.seratch", name = "kotliquery", version = "1.9.0" }
+postgresql = { group = "org.postgresql", name = "postgresql", version = "42.6.0" }
+
+# Redis
+jedis = { group = "redis.clients", name = "jedis", version = "4.4.3" }
 
 # Database
 hm-database = { group = "no.nav.hjelpemidler.database", name = "hm-database", version = "v0.0.21" }
