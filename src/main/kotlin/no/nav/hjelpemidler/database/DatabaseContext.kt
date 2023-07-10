@@ -3,10 +3,11 @@ package no.nav.hjelpemidler.database
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.ExecutorCoroutineDispatcher
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.withContext
 
-@OptIn(DelicateCoroutinesApi::class)
+@OptIn(ExperimentalCoroutinesApi::class, DelicateCoroutinesApi::class)
 val DatabaseContext: ExecutorCoroutineDispatcher =
     newSingleThreadContext("DatabaseThread")
 
