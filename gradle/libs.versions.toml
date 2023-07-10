@@ -83,11 +83,9 @@ postgresql = { group = "org.postgresql", name = "postgresql", version = "42.6.0"
 # Redis
 jedis = { group = "redis.clients", name = "jedis", version = "4.4.3" }
 
-# Database
-hm-database = { group = "no.nav.hjelpemidler.database", name = "hm-database", version = "v0.0.21" }
-
-# HTTP
-hm-http = { group = "no.nav.hjelpemidler.http", name = "hm-http", version = "v0.0.37" }
+# Team Hjelpemidler
+hm-database = { group = "no.nav.hjelpemidler", name = "hm-database", version = "0.1.0" }
+hm-http = { group = "no.nav.hjelpemidler", name = "hm-http", version = "0.1.0" }
 
 # GraphQL
 graphql-kotlin-ktor-client = { group = "com.expediagroup", name = "graphql-kotlin-ktor-client", version.ref = "graphql" }
