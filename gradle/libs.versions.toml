@@ -15,6 +15,7 @@ flyway = { id = "org.flywaydb.flyway", version.ref = "flyway" }
 graphql = { id = "com.expediagroup.graphql", version.ref = "graphql" }
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
+openapi = { id = "org.openapi.generator", version = "6.6.0" }
 spotless = { id = "com.diffplug.spotless", version = "6.19.0" }
 
 [libraries]
