@@ -67,7 +67,6 @@ publishing {
     }
     repositories {
         maven {
-            name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/navikt/hm-database")
             credentials {
                 username = System.getenv("GITHUB_ACTOR")
