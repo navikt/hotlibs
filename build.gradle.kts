@@ -15,6 +15,7 @@ repositories {
 
 dependencies {
     implementation(libs.kotlin.stdlib)
+    implementation(libs.kotlin.logging)
 
     // Kotlinx
     api(libs.kotlinx.coroutines.core)
@@ -22,10 +23,11 @@ dependencies {
     implementation(libs.kotlinx.coroutines.slf4j)
 
     // Ktor
-    api(libs.ktor.client.core)
     api(libs.ktor.client.cio)
-    api(libs.ktor.client.mock)
     api(libs.ktor.client.core)
+    api(libs.ktor.client.core)
+    api(libs.ktor.client.logging)
+    api(libs.ktor.client.mock)
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.jackson)
 
@@ -37,10 +39,6 @@ dependencies {
 
     // Cache
     api(libs.caffeine)
-
-    // Logging
-    implementation(libs.kotlin.logging)
-    implementation(libs.ktor.client.logging)
 
     // Testing
     testImplementation(libs.bundles.test)
@@ -71,7 +69,6 @@ publishing {
     }
     repositories {
         maven {
-            name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/navikt/hm-http")
             credentials {
                 username = System.getenv("GITHUB_ACTOR")
