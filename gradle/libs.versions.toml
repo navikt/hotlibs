@@ -7,6 +7,7 @@ junit = "5.9.3"
 kotest = "5.6.2"
 kotlin = "1.9.0"
 ktor = "2.3.2"
+micronaut = "4.0.1"
 slf4j = "2.0.7"
 testcontainers = "1.18.3"
 
@@ -14,9 +15,20 @@ testcontainers = "1.18.3"
 flyway = { id = "org.flywaydb.flyway", version.ref = "flyway" }
 graphql = { id = "com.expediagroup.graphql", version.ref = "graphql" }
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version = "1.9.0-1.0.11" } # følger kotlin
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
 openapi = { id = "org.openapi.generator", version = "6.6.0" }
-spotless = { id = "com.diffplug.spotless", version = "6.19.0" }
+shadow = { id = "com.github.johnrengelman.shadow", version = "8.1.1" }
+spotless = { id = "com.diffplug.spotless", version = "6.20.0" }
+
+# Micronaut
+micronaut-aot = { id = "io.micronaut.aot", version.ref = "micronaut" }
+micronaut-application = { id = "io.micronaut.application", version.ref = "micronaut" }
+micronaut-library = { id = "io.micronaut.library", version.ref = "micronaut" }
+micronaut-minimal-application = { id = "io.micronaut.minimal.application", version.ref = "micronaut" }
+micronaut-minimal-library = { id = "io.micronaut.minimal.library", version.ref = "micronaut" }
+micronaut-openapi = { id = "io.micronaut.openapi", version.ref = "micronaut" }
+micronaut-platform-catalog = { id = "io.micronaut.platform.catalog", version.ref = "micronaut" }
 
 [libraries]
 # Kotlin
