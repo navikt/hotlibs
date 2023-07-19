@@ -14,7 +14,9 @@ testcontainers = "1.18.3"
 [plugins]
 flyway = { id = "org.flywaydb.flyway", version.ref = "flyway" }
 graphql = { id = "com.expediagroup.graphql", version.ref = "graphql" }
-kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-noarg = { id = "org.jetbrains.kotlin.plugin.noarg", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version = "1.9.0-1.0.11" } # følger kotlin
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
 openapi = { id = "org.openapi.generator", version = "6.6.0" }
