@@ -21,8 +21,8 @@ interface TestTransactionContext {
 class TestStoreContext : StoreContext<TestTransactionContext> {
     override val dataSource: DataSource = testDataSource
 
-    override fun createTransactionContext(tx: TransactionalSession): TestTransactionContext =
+    override fun createTransactionContext(session: TransactionalSession): TestTransactionContext =
         object : TestTransactionContext {
-            override val testStore: TestStore = TestStore(tx)
+            override val testStore: TestStore = TestStore(session)
         }
 }

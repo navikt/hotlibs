@@ -6,7 +6,7 @@ import javax.sql.DataSource
 
 suspend inline fun <T> transaction(
     dataSource: DataSource,
-    returnGeneratedKey: Boolean = false,
+    returnGeneratedKeys: Boolean = false,
     strict: Boolean = true,
     queryTimeout: Int? = null,
     crossinline block: suspend (TransactionalSession) -> T,
@@ -14,28 +14,28 @@ suspend inline fun <T> transaction(
     withDatabaseContext {
         sessionOf(
             dataSource = dataSource,
-            returnGeneratedKey = returnGeneratedKey,
+            returnGeneratedKey = returnGeneratedKeys,
             strict = strict,
             queryTimeout = queryTimeout
         ).use { session ->
-            session.transaction { tx ->
-                block(tx)
+            session.transaction {
+                block(it)
             }
         }
     }
 
 suspend inline fun <T, X : Any> transaction(
     storeContext: StoreContext<X>,
-    returnGeneratedKey: Boolean = false,
+    returnGeneratedKeys: Boolean = false,
     strict: Boolean = true,
     queryTimeout: Int? = null,
     crossinline block: suspend (X) -> T,
 ): T =
     transaction(
         dataSource = storeContext.dataSource,
-        returnGeneratedKey = returnGeneratedKey,
+        returnGeneratedKeys = returnGeneratedKeys,
         strict = strict,
         queryTimeout = queryTimeout,
-    ) { tx ->
-        block(storeContext(tx))
+    ) {
+        block(storeContext(it))
     }

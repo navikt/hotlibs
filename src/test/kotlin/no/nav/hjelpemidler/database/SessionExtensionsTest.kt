@@ -166,7 +166,7 @@ internal class SessionExtensionsTest {
 
     @Test
     fun `setter inn og henter null`() = runTest {
-        val id = transaction(storeContext.dataSource, returnGeneratedKey = true) { tx ->
+        val id = transaction(storeContext.dataSource, returnGeneratedKeys = true) { tx ->
             tx.updateAndReturnGeneratedKey(
                 sql = """
                     INSERT INTO test_1(string, integer, enum, data_1, data_2)

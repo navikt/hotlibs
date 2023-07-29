@@ -6,8 +6,7 @@ import javax.sql.DataSource
 interface StoreContext<X : Any> {
     val dataSource: DataSource
 
-    fun createTransactionContext(tx: TransactionalSession): X
+    fun createTransactionContext(session: TransactionalSession): X
 
-    operator fun invoke(tx: TransactionalSession): X =
-        createTransactionContext(tx)
+    operator fun invoke(session: TransactionalSession): X = createTransactionContext(session)
 }
