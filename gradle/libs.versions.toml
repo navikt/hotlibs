@@ -102,7 +102,7 @@ jedis = { group = "redis.clients", name = "jedis", version = "4.4.3" }
 lettuce = { group = "io.lettuce", name = "lettuce-core", version = "6.2.5.RELEASE" }
 
 # Team Hjelpemidler
-hm-database = { group = "no.nav.hjelpemidler", name = "hm-database", version = "0.2.0" }
+hm-database = { group = "no.nav.hjelpemidler", name = "hm-database", version = "0.2.1" }
 hm-http = { group = "no.nav.hjelpemidler", name = "hm-http", version = "0.1.2" }
 
 # GraphQL
