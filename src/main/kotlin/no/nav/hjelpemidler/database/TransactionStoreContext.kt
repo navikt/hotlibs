@@ -1,10 +1,12 @@
 package no.nav.hjelpemidler.database
 
 import kotliquery.Session
-import javax.sql.DataSource
+import java.sql.Connection
 
-interface StoreContext<X : Any> {
-    val dataSource: DataSource
+interface TransactionStoreContext<X : Any> {
+    val connection: Connection
+
+    suspend fun <T> execute(block: suspend (X) -> T): T
 
     fun createTransactionContext(tx: Session): X
 

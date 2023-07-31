@@ -11,10 +11,6 @@ plugins {
 group = "no.nav.hjelpemidler"
 version = System.getenv("GITHUB_REF_NAME") ?: "local"
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlin.reflect)

@@ -3,6 +3,7 @@ rootProject.name = "hm-database"
 dependencyResolutionManagement {
     @Suppress("UnstableApiUsage")
     repositories {
+        mavenCentral()
         maven {
             url = uri("https://maven.pkg.github.com/navikt/hm-katalog")
             credentials {

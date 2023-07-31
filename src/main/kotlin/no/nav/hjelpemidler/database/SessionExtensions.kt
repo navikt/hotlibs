@@ -5,7 +5,6 @@ import kotliquery.Session
 import kotliquery.queryOf
 import org.intellij.lang.annotations.Language
 
-typealias QueryParameters = Map<String, Any?>
 typealias ResultMapper<T> = (Row) -> T?
 
 fun <T> Session.query(

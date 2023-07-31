@@ -1,8 +1,8 @@
 package no.nav.hjelpemidler.database
 
 import kotliquery.TransactionalSession
-import kotliquery.sessionOf
 import javax.sql.DataSource
+
 
 suspend inline fun <T> transaction(
     dataSource: DataSource,
@@ -13,8 +13,8 @@ suspend inline fun <T> transaction(
 ): T =
     withDatabaseContext {
         sessionOf(
-            dataSource = dataSource,
-            returnGeneratedKey = returnGeneratedKeys,
+            connection = dataSource.connection,
+            returnGeneratedKeys = returnGeneratedKeys,
             strict = strict,
             queryTimeout = queryTimeout
         ).use { session ->
@@ -38,4 +38,23 @@ suspend inline fun <T, X : Any> transaction(
         queryTimeout = queryTimeout,
     ) {
         block(storeContext(it))
+    }
+
+suspend inline fun <T, X : Any> transaction(
+    storeContext: TransactionStoreContext<X>,
+    returnGeneratedKeys: Boolean = false,
+    strict: Boolean = true,
+    queryTimeout: Int? = null,
+    crossinline block: suspend (X) -> T,
+): T =
+    withDatabaseContext {
+        val transactionContext = storeContext(
+            sessionOf(
+                connection = storeContext.connection,
+                returnGeneratedKeys = returnGeneratedKeys,
+                strict = strict,
+                queryTimeout = queryTimeout
+            )
+        )
+        storeContext.execute { block(transactionContext) }
     }

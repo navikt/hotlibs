@@ -1,6 +1,6 @@
 package no.nav.hjelpemidler.database.test
 
-import kotliquery.TransactionalSession
+import kotliquery.Session
 import no.nav.hjelpemidler.database.StoreContext
 import no.nav.hjelpemidler.database.createDataSource
 import no.nav.hjelpemidler.database.migrate
@@ -21,8 +21,8 @@ interface TestTransactionContext {
 class TestStoreContext : StoreContext<TestTransactionContext> {
     override val dataSource: DataSource = testDataSource
 
-    override fun createTransactionContext(session: TransactionalSession): TestTransactionContext =
+    override fun createTransactionContext(tx: Session): TestTransactionContext =
         object : TestTransactionContext {
-            override val testStore: TestStore = TestStore(session)
+            override val testStore: TestStore = TestStore(tx)
         }
 }
