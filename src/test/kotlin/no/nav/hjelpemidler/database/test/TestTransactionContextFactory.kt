@@ -2,11 +2,10 @@ package no.nav.hjelpemidler.database.test
 
 import kotliquery.Session
 import no.nav.hjelpemidler.database.TransactionContextFactory
-import java.sql.Connection
+import javax.sql.DataSource
 
 class TestTransactionContextFactory : TransactionContextFactory<TestTransactionContext> {
-    override val connection: Connection
-        get() = testDataSource.connection
+    override val dataSource: DataSource = testDataSource
 
     override operator fun invoke(session: Session): TestTransactionContext =
         object : TestTransactionContext {

@@ -9,13 +9,11 @@ import kotlinx.coroutines.withContext
 import no.nav.hjelpemidler.database.test.TestEntity
 import no.nav.hjelpemidler.database.test.TestEnum
 import no.nav.hjelpemidler.database.test.TestTransactionContextFactory
-import no.nav.hjelpemidler.database.test.TestTransactionProvider
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.seconds
 
 class TransactionTest {
     private val transactionContextFactory = TestTransactionContextFactory()
-    private val transactionProvider = TestTransactionProvider()
 
     @Test
     fun `lagrer og henter innslag i transaksjon`() = runTest {
@@ -38,15 +36,6 @@ class TransactionTest {
             }
         }
         result["id"] shouldBe id
-    }
-
-    @Test
-    fun `lagrer og henter innslag med transaction provider`() = runTest {
-        val id = lagreEntity()
-        val result = transaction(transactionProvider) { ctx ->
-            ctx.testStore.hent(id)
-        }
-        result.shouldContain("id", id)
     }
 
     private suspend fun lagreEntity(): Long = transaction(transactionContextFactory) { ctx ->

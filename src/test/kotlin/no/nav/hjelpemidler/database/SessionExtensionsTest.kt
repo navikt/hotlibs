@@ -11,6 +11,7 @@ import kotlinx.coroutines.test.runTest
 import no.nav.hjelpemidler.database.test.TestEntity
 import no.nav.hjelpemidler.database.test.TestEnum
 import no.nav.hjelpemidler.database.test.TestTransactionContextFactory
+import no.nav.hjelpemidler.database.test.testDataSource
 import kotlin.test.Test
 
 internal class SessionExtensionsTest {
@@ -22,20 +23,20 @@ internal class SessionExtensionsTest {
         val sql = "SELECT id FROM test WHERE id = :id"
         val queryParameters = id.toQueryParameters()
 
-        transaction(transactionContextFactory.connection) { tx ->
+        transaction(testDataSource) { tx ->
             tx.query(sql = sql, queryParameters = queryParameters) { row ->
                 row.long("id")
             }
         } shouldBe id
 
-        transaction(transactionContextFactory.connection) { tx ->
+        transaction(testDataSource) { tx ->
             tx.query(sql = sql, queryParameters = 0.toQueryParameters()) { row ->
                 row.long("id")
             }
         } shouldBe null
 
         shouldNotThrow<NoSuchElementException> {
-            transaction(transactionContextFactory.connection) { tx ->
+            transaction(testDataSource) { tx ->
                 tx.single(sql = sql, queryParameters = queryParameters) { row ->
                     row.long("id")
                 }
@@ -46,7 +47,7 @@ internal class SessionExtensionsTest {
     @Test
     fun `henter flere innslag`() = runTest {
         val ids = lagreEntities(10)
-        val result = transaction(transactionContextFactory.connection) { tx ->
+        val result = transaction(testDataSource) { tx ->
             tx.queryList(
                 sql = "SELECT * FROM test WHERE id = ANY(:ids)",
                 queryParameters = mapOf(
@@ -63,7 +64,7 @@ internal class SessionExtensionsTest {
     @Test
     fun `henter side`() = runTest {
         val ids = lagreEntities(20)
-        val result = transaction(transactionContextFactory.connection) { tx ->
+        val result = transaction(testDataSource) { tx ->
             tx.queryPage(
                 sql = """
                     SELECT *, COUNT(1) OVER() AS total
@@ -87,7 +88,7 @@ internal class SessionExtensionsTest {
     @Test
     fun `henter json`() = runTest {
         val id = lagreEntity()
-        val result = transaction(transactionContextFactory.connection) { tx ->
+        val result = transaction(testDataSource) { tx ->
             tx.single(
                 sql = "SELECT data_1 FROM test WHERE id = :id",
                 queryParameters = id.toQueryParameters(),
@@ -102,7 +103,7 @@ internal class SessionExtensionsTest {
     @Test
     fun `oppdaterer innslag`() = runTest {
         val id = lagreEntity()
-        val result = transaction(transactionContextFactory.connection) { tx ->
+        val result = transaction(testDataSource) { tx ->
             tx.update(
                 sql = "UPDATE test SET integer = 50 WHERE id = :id",
                 queryParameters = id.toQueryParameters()
@@ -117,7 +118,7 @@ internal class SessionExtensionsTest {
     @Test
     fun `sletter innslag`() = runTest {
         val id = lagreEntity()
-        val result = transaction(transactionContextFactory.connection) { tx ->
+        val result = transaction(testDataSource) { tx ->
             tx.execute(
                 sql = "DELETE FROM test WHERE id = :id",
                 queryParameters = id.toQueryParameters()
@@ -135,7 +136,7 @@ internal class SessionExtensionsTest {
             TestEntity(string = "x3", integer = 3, enum = TestEnum.C, data1 = mapOf("key" to "t3")),
         )
 
-        val result1 = transaction(transactionContextFactory.connection) { tx ->
+        val result1 = transaction(testDataSource) { tx ->
             tx.batch(
                 sql = """
                     INSERT INTO test (string, integer, enum, data_1)
@@ -149,7 +150,7 @@ internal class SessionExtensionsTest {
 
         result1.size shouldBe 3
 
-        val result2 = transaction(transactionContextFactory.connection) { tx ->
+        val result2 = transaction(testDataSource) { tx ->
             tx.queryList("SELECT * FROM test WHERE string LIKE 'x%'") {
                 TestEntity(
                     id = it.long("id"),
@@ -166,7 +167,7 @@ internal class SessionExtensionsTest {
 
     @Test
     fun `setter inn og henter null`() = runTest {
-        val id = transaction(transactionContextFactory.connection, returnGeneratedKeys = true) { tx ->
+        val id = transaction(testDataSource, returnGeneratedKeys = true) { tx ->
             tx.updateAndReturnGeneratedKey(
                 sql = """
                     INSERT INTO test (string, integer, enum, data_1, data_2)
@@ -179,7 +180,7 @@ internal class SessionExtensionsTest {
         id.shouldNotBeNull()
         id.shouldBePositive()
 
-        val result = transaction(transactionContextFactory.connection) { tx ->
+        val result = transaction(testDataSource) { tx ->
             tx.single(
                 sql = "SELECT id, data_2 FROM test WHERE id = :id",
                 queryParameters = id.toQueryParameters(),
@@ -197,7 +198,7 @@ internal class SessionExtensionsTest {
 
     @Test
     fun `setter inn innslag og svarer med id`() = runTest {
-        val id = transaction(transactionContextFactory.connection) { tx ->
+        val id = transaction(testDataSource) { tx ->
             tx.query(
                 sql = """
                     INSERT INTO test (string, integer, enum, data_1, data_2)
