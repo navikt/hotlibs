@@ -1,11 +1,10 @@
 package no.nav.hjelpemidler.database
 
 import kotliquery.TransactionalSession
-import javax.sql.DataSource
-
+import java.sql.Connection
 
 suspend inline fun <T> transaction(
-    dataSource: DataSource,
+    connection: Connection,
     returnGeneratedKeys: Boolean = false,
     strict: Boolean = true,
     queryTimeout: Int? = null,
@@ -13,7 +12,7 @@ suspend inline fun <T> transaction(
 ): T =
     withDatabaseContext {
         sessionOf(
-            connection = dataSource.connection,
+            connection = connection,
             returnGeneratedKeys = returnGeneratedKeys,
             strict = strict,
             queryTimeout = queryTimeout
@@ -24,37 +23,37 @@ suspend inline fun <T> transaction(
         }
     }
 
-suspend inline fun <T, X : Any> transaction(
-    storeContext: StoreContext<X>,
+suspend inline fun <T, X : TransactionContext> transaction(
+    factory: TransactionContextFactory<X>,
     returnGeneratedKeys: Boolean = false,
     strict: Boolean = true,
     queryTimeout: Int? = null,
     crossinline block: suspend (X) -> T,
 ): T =
     transaction(
-        dataSource = storeContext.dataSource,
+        connection = factory.connection,
         returnGeneratedKeys = returnGeneratedKeys,
         strict = strict,
         queryTimeout = queryTimeout,
     ) {
-        block(storeContext(it))
+        block(factory(it))
     }
 
-suspend inline fun <T, X : Any> transaction(
-    storeContext: TransactionStoreContext<X>,
+suspend fun <T, X : TransactionContext> transaction(
+    provider: TransactionProvider<X>,
     returnGeneratedKeys: Boolean = false,
     strict: Boolean = true,
     queryTimeout: Int? = null,
-    crossinline block: suspend (X) -> T,
+    block: suspend (X) -> T,
 ): T =
     withDatabaseContext {
-        val transactionContext = storeContext(
+        val transactionContext = provider(
             sessionOf(
-                connection = storeContext.connection,
+                connection = provider.connection,
                 returnGeneratedKeys = returnGeneratedKeys,
                 strict = strict,
                 queryTimeout = queryTimeout
             )
         )
-        storeContext.execute { block(transactionContext) }
+        provider(this) { block(transactionContext) }.await()
     }

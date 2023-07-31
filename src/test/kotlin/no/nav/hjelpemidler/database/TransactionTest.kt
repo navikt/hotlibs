@@ -6,31 +6,33 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
-import no.nav.hjelpemidler.database.test.Test1Entity
+import no.nav.hjelpemidler.database.test.TestEntity
 import no.nav.hjelpemidler.database.test.TestEnum
-import no.nav.hjelpemidler.database.test.TestStoreContext
+import no.nav.hjelpemidler.database.test.TestTransactionContextFactory
+import no.nav.hjelpemidler.database.test.TestTransactionProvider
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.seconds
 
 class TransactionTest {
-    private val storeContext = TestStoreContext()
+    private val transactionContextFactory = TestTransactionContextFactory()
+    private val transactionProvider = TestTransactionProvider()
 
     @Test
-    fun `lagrer og henter innslag med transaction context`() = runTest {
+    fun `lagrer og henter innslag i transaksjon`() = runTest {
         val id = lagreEntity()
-        val result = transaction(storeContext) { ctx ->
+        val result = transaction(transactionContextFactory) { ctx ->
             ctx.testStore.hent(id)
         }
         result.shouldContain("id", id)
     }
 
     @Test
-    fun `nested transaction`() = runTest {
+    fun `nestet transaksjon`() = runTest {
         val id = lagreEntity()
-        val result = transaction(storeContext) { ctx1 ->
+        val result = transaction(transactionContextFactory) { ctx1 ->
             someSuspendingFunction()
             ctx1.testStore.hent(id)
-            transaction(storeContext) { ctx2 ->
+            transaction(transactionContextFactory) { ctx2 ->
                 someSuspendingFunction()
                 ctx2.testStore.hent(id)
             }
@@ -38,10 +40,18 @@ class TransactionTest {
         result["id"] shouldBe id
     }
 
-    private suspend fun lagreEntity(): Long =
-        transaction(storeContext) { ctx ->
+    @Test
+    fun `lagrer og henter innslag med transaction provider`() = runTest {
+        val id = lagreEntity()
+        val result = transaction(transactionProvider) { ctx ->
+            ctx.testStore.hent(id)
+        }
+        result.shouldContain("id", id)
+    }
+
+    private suspend fun lagreEntity(): Long = transaction(transactionContextFactory) { ctx ->
             ctx.testStore.lagre(
-                Test1Entity(
+                TestEntity(
                     string = "string",
                     integer = 1,
                     enum = TestEnum.A,
