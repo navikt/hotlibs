@@ -1,7 +1,6 @@
 package no.nav.hjelpemidler.database
 
-import kotliquery.TransactionalSession
-import kotliquery.sessionOf
+import kotliquery.Session
 import javax.sql.DataSource
 
 suspend inline fun <T> transaction(
@@ -9,9 +8,9 @@ suspend inline fun <T> transaction(
     returnGeneratedKeys: Boolean = false,
     strict: Boolean = true,
     queryTimeout: Int? = null,
-    crossinline block: suspend (TransactionalSession) -> T,
+    crossinline block: suspend (Session) -> T,
 ): T = withDatabaseContext {
-    sessionOf(dataSource, returnGeneratedKeys, strict, queryTimeout).use { session ->
+    createSession(dataSource.connection, returnGeneratedKeys, strict, queryTimeout).use { session ->
         session.transaction {
             block(it)
         }
