@@ -31,6 +31,7 @@ micronaut-minimal-application = { id = "io.micronaut.minimal.application", versi
 micronaut-minimal-library = { id = "io.micronaut.minimal.library", version.ref = "micronaut" }
 micronaut-openapi = { id = "io.micronaut.openapi", version.ref = "micronaut" }
 micronaut-platform-catalog = { id = "io.micronaut.platform.catalog", version.ref = "micronaut" }
+micronaut-test-resources = { id = "io.micronaut.test-resources", version.ref = "micronaut" }
 
 [libraries]
 # Kotlin
@@ -43,6 +44,7 @@ kotlin-test-junit5 = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit
 kotlinx-coroutines-bom = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-bom", version.ref = "coroutines" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-jdk8 = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-jdk8", version.ref = "coroutines" }
+kotlinx-coroutines-reactive = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-reactive", version.ref = "coroutines" }
 kotlinx-coroutines-slf4j = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-slf4j", version.ref = "coroutines" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 
