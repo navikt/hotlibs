@@ -1,16 +1,11 @@
 package no.nav.hjelpemidler.database
 
-import kotliquery.Connection
-import kotliquery.Session
+import kotliquery.sessionOf
+import javax.sql.DataSource
 
 fun createSession(
-    connection: java.sql.Connection,
+    dataSource: DataSource,
     returnGeneratedKeys: Boolean = false,
     strict: Boolean = true,
     queryTimeout: Int? = null,
-) = Session(
-    connection = Connection(connection),
-    returnGeneratedKeys = returnGeneratedKeys,
-    strict = strict,
-    queryTimeout = queryTimeout
-)
+): Session = sessionOf(dataSource, returnGeneratedKeys, strict, queryTimeout)

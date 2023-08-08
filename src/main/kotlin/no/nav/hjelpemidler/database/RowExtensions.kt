@@ -1,7 +1,8 @@
 package no.nav.hjelpemidler.database
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import kotliquery.Row
+
+typealias Row = kotliquery.Row
 
 inline fun <reified T> Row.json(columnLabel: String): T =
     jsonMapper.readValue(string(columnLabel), jacksonTypeRef())

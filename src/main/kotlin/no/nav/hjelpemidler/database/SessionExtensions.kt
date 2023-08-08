@@ -1,10 +1,9 @@
 package no.nav.hjelpemidler.database
 
-import kotliquery.Row
-import kotliquery.Session
 import kotliquery.queryOf
 import org.intellij.lang.annotations.Language
 
+typealias Session = kotliquery.Session
 typealias ResultMapper<T> = (Row) -> T?
 
 fun <T> Session.query(

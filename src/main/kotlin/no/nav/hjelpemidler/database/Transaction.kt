@@ -10,7 +10,7 @@ suspend inline fun <T> transaction(
     queryTimeout: Int? = null,
     crossinline block: suspend (Session) -> T,
 ): T = withDatabaseContext {
-    createSession(dataSource.connection, returnGeneratedKeys, strict, queryTimeout).use { session ->
+    createSession(dataSource, returnGeneratedKeys, strict, queryTimeout).use { session ->
         session.transaction {
             block(it)
         }
