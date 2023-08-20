@@ -4,24 +4,40 @@ import com.github.benmanes.caffeine.cache.Expiry
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.cio.CIO
 import io.ktor.http.Parameters
-import no.nav.hjelpemidler.configuration.Environment
-import kotlin.time.Duration.Companion.seconds
+import mu.KotlinLogging
 
-internal val EXPIRE_IMMEDIATELY: Expiry<Parameters, TokenSet> = TokenExpiry(0.seconds)
+internal val EXPIRE_IMMEDIATELY: Expiry<Parameters, TokenSet> = object : Expiry<Parameters, TokenSet> {
+    override fun expireAfterCreate(key: Parameters?, value: TokenSet?, currentTime: Long): Long =
+        0
+
+    override fun expireAfterUpdate(key: Parameters?, value: TokenSet?, currentTime: Long, currentDuration: Long): Long =
+        0
+
+    override fun expireAfterRead(key: Parameters?, value: TokenSet?, currentTime: Long, currentDuration: Long): Long =
+        0
+}
+
+private val log = KotlinLogging.logger {}
 
 internal fun createOpenIDClient(
     engine: HttpClientEngine = CIO.create(),
     configuration: OpenIDClientConfiguration,
-): OpenIDClient = when {
-    configuration.expiry === EXPIRE_IMMEDIATELY -> DefaultOpenIDClient(
-        configuration = configuration,
-        engine = engine,
-    )
+): OpenIDClient {
+    log.info {
+        "Lager OpenID-klient, tokenEndpoint: '${configuration.tokenEndpoint}', clientId: '${configuration.clientId}'"
+    }
 
-    else -> CachedOpenIDClient(
-        configuration = configuration,
-        engine = engine,
-    )
+    return when {
+        configuration.expiry === EXPIRE_IMMEDIATELY -> DefaultOpenIDClient(
+            configuration = configuration,
+            engine = engine,
+        )
+
+        else -> CachedOpenIDClient(
+            configuration = configuration,
+            engine = engine,
+        )
+    }
 }
 
 fun createOpenIDClient(
@@ -32,8 +48,3 @@ fun createOpenIDClient(
         engine = engine,
         configuration = OpenIDClientConfiguration().apply(block),
     )
-
-fun scopeOf(application: String, namespace: String = "teamdigihot"): String {
-    val cluster = Environment.current
-    return "api://$cluster.$namespace.$application/.default"
-}

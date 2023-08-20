@@ -9,8 +9,8 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.Parameters
 import io.ktor.http.ParametersBuilder
 import mu.KotlinLogging
-import mu.withLoggingContext
 import no.nav.hjelpemidler.http.createHttpClient
+import no.nav.hjelpemidler.http.withMDCContext
 
 private val log = KotlinLogging.logger {}
 
@@ -30,7 +30,7 @@ internal class DefaultOpenIDClient(
             })
             builder()
         }
-        return withLoggingContext(
+        return withMDCContext(
             "grantType" to formParameters.grantType,
             "scope" to formParameters.scope,
         ) {

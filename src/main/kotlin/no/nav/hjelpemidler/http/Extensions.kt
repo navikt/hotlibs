@@ -24,7 +24,7 @@ fun HttpClientConfig<*>.jackson(block: ObjectMapper.() -> Unit = {}) =
 
 fun HttpClientConfig<*>.jackson(objectMapper: ObjectMapper) =
     install(ContentNegotiation) {
-        register(ContentType.Application.Json, JacksonConverter(objectMapper, true))
+        register(ContentType.Application.Json, JacksonConverter(objectMapper, streamRequestBody = true))
     }
 
 fun HttpClientConfig<*>.logging(configure: Logging.Config.() -> Unit = {}) =
