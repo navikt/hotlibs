@@ -104,8 +104,8 @@ jedis = { group = "redis.clients", name = "jedis", version = "4.4.3" }
 lettuce = { group = "io.lettuce", name = "lettuce-core", version = "6.2.6.RELEASE" }
 
 # Team Hjelpemidler
-hm-database = { group = "no.nav.hjelpemidler", name = "hm-database", version = "0.1.3" }
-hm-http = { group = "no.nav.hjelpemidler", name = "hm-http", version = "0.1.2" }
+hm-database = { group = "no.nav.hjelpemidler", name = "hm-database", version = "0.1.4" }
+hm-http = { group = "no.nav.hjelpemidler", name = "hm-http", version = "0.1.3" }
 
 # GraphQL
 graphql-kotlin-ktor-client = { group = "com.expediagroup", name = "graphql-kotlin-ktor-client", version.ref = "graphql" }
