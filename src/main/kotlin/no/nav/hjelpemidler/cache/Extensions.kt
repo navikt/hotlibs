@@ -1,9 +1,7 @@
 package no.nav.hjelpemidler.cache
 
 import com.github.benmanes.caffeine.cache.AsyncCache
-import com.github.benmanes.caffeine.cache.AsyncLoadingCache
 import com.github.benmanes.caffeine.cache.Caffeine
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.future.future
 import kotlinx.coroutines.supervisorScope
@@ -58,16 +56,6 @@ fun <K : Any, V : Any> Caffeine<K, V>.refreshAfterWrite(
     duration: Duration,
 ): Caffeine<K, V> =
     refreshAfterWrite(duration.toJavaDuration())
-
-fun <K : Any, V : Any> Caffeine<K, V>.buildAsync(
-    coroutineScope: CoroutineScope,
-    loader: suspend (K) -> V,
-): AsyncLoadingCache<K, V> =
-    buildAsync { key, _ ->
-        coroutineScope.future {
-            loader(key)
-        }
-    }
 
 suspend fun <K : Any, V> AsyncCache<K, V>.getIfPresentAsync(key: K): V? =
     getIfPresent(key)?.await()

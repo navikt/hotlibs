@@ -16,7 +16,7 @@ internal class CachedOpenIDClient(
     configuration: OpenIDClientConfiguration,
     engine: HttpClientEngine = CIO.create(),
 ) : OpenIDClient {
-    private val client: OpenIDClient = DefaultOpenIDClient(
+    private val wrapped: OpenIDClient = DefaultOpenIDClient(
         configuration = configuration,
         engine = engine,
     )
@@ -39,7 +39,7 @@ internal class CachedOpenIDClient(
         val formParameters = Parameters.build(builder)
         return cache.getAsync(formParameters) { _ ->
             log.debug { "Cache miss, henter nytt token, scope: '${formParameters.scope}'" }
-            client.grant(builder)
+            wrapped.grant(builder)
         }
     }
 }
