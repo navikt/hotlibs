@@ -1,37 +1,24 @@
 [versions]
 coroutines = "1.7.3"
-flyway = "9.21.1"
+flyway = "9.22.0"
 graphql = "6.5.3"
 jackson = "2.15.2"
 junit = "5.10.0"
-kotest = "5.6.2"
-kotlin = "1.9.0"
-ktor = "2.3.3"
-micronaut = "4.0.2"
-slf4j = "2.0.7"
+koin = "3.4.3"
+kotest = "5.7.2"
+kotlin = "1.9.10"
+ktor = "2.3.4"
+slf4j = "2.0.9"
 testcontainers = "1.18.3"
 
 [plugins]
 flyway = { id = "org.flywaydb.flyway", version.ref = "flyway" }
 graphql = { id = "com.expediagroup.graphql", version.ref = "graphql" }
-kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-kotlin-noarg = { id = "org.jetbrains.kotlin.plugin.noarg", version.ref = "kotlin" }
-ksp = { id = "com.google.devtools.ksp", version = "1.9.0-1.0.11" } # følger kotlin
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
 openapi = { id = "org.openapi.generator", version = "6.6.0" }
 shadow = { id = "com.github.johnrengelman.shadow", version = "8.1.1" }
 spotless = { id = "com.diffplug.spotless", version = "6.20.0" }
-
-# Micronaut
-micronaut-aot = { id = "io.micronaut.aot", version.ref = "micronaut" }
-micronaut-application = { id = "io.micronaut.application", version.ref = "micronaut" }
-micronaut-library = { id = "io.micronaut.library", version.ref = "micronaut" }
-micronaut-minimal-application = { id = "io.micronaut.minimal.application", version.ref = "micronaut" }
-micronaut-minimal-library = { id = "io.micronaut.minimal.library", version.ref = "micronaut" }
-micronaut-openapi = { id = "io.micronaut.openapi", version.ref = "micronaut" }
-micronaut-platform-catalog = { id = "io.micronaut.platform.catalog", version.ref = "micronaut" }
-micronaut-test-resources = { id = "io.micronaut.test-resources", version.ref = "micronaut" }
 
 [libraries]
 # Kotlin
@@ -43,13 +30,14 @@ kotlin-test-junit5 = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit
 # Kotlinx Coroutines
 kotlinx-coroutines-bom = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-bom", version.ref = "coroutines" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-debug = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-debug", version.ref = "coroutines" }
 kotlinx-coroutines-jdk8 = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-jdk8", version.ref = "coroutines" }
 kotlinx-coroutines-reactive = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-reactive", version.ref = "coroutines" }
 kotlinx-coroutines-slf4j = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-slf4j", version.ref = "coroutines" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 
 # Kotlinx Metadata
-kotlinx-metadata-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-metadata-jvm", version = "0.6.2" }
+kotlinx-metadata-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-metadata-jvm", version = "0.7.0" }
 
 # Jackson
 jackson-bom = { group = "com.fasterxml.jackson", name = "jackson-bom", version.ref = "jackson" }
@@ -90,6 +78,13 @@ java-jwt = { group = "com.auth0", name = "java-jwt", version = "4.4.0" } # følg
 # Caffeine
 caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version = "3.1.8" }
 
+# Koin
+koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
+koin-core-coroutines = { group = "io.insert-koin", name = "koin-core-coroutines", version.ref = "koin" }
+koin-ktor = { group = "io.insert-koin", name = "koin-ktor", version.ref = "koin" }
+koin-logger-slf4j = { group = "io.insert-koin", name = "koin-logger-slf4j", version.ref = "koin" }
+koin-test-junit5 = { group = "io.insert-koin", name = "koin-test-junit5", version.ref = "koin" }
+
 # Kafka
 kafka-clients = { group = "org.apache.kafka", name = "kafka-clients", version = "3.4.0" } # følger rapids-and-rivers
 rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", version = "2023062911391688031585.522193a413de" }
@@ -101,7 +96,7 @@ kotliquery = { group = "com.github.seratch", name = "kotliquery", version = "1.9
 postgresql = { group = "org.postgresql", name = "postgresql", version = "42.6.0" }
 
 # Redis
-jedis = { group = "redis.clients", name = "jedis", version = "4.4.3" }
+jedis = { group = "redis.clients", name = "jedis", version = "5.0.0" }
 lettuce = { group = "io.lettuce", name = "lettuce-core", version = "6.2.6.RELEASE" }
 
 # Team Hjelpemidler
@@ -113,8 +108,8 @@ graphql-kotlin-ktor-client = { group = "com.expediagroup", name = "graphql-kotli
 graphql-kotlin-client-jackson = { group = "com.expediagroup", name = "graphql-kotlin-client-jackson", version.ref = "graphql" }
 
 # Metrics
-influxdb-client-kotlin = { group = "com.influxdb", name = "influxdb-client-kotlin", version = "6.9.0" }
-micrometer-registry-prometheus = { group = "io.micrometer", name = "micrometer-registry-prometheus", version = "1.11.0" }
+influxdb-client-kotlin = { group = "com.influxdb", name = "influxdb-client-kotlin", version = "6.10.0" }
+micrometer-registry-prometheus = { group = "io.micrometer", name = "micrometer-registry-prometheus", version = "1.11.4" }
 
 # Slf4j
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
@@ -138,7 +133,7 @@ kotest-assertions-ktor = { group = "io.kotest.extensions", name = "kotest-assert
 kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest" }
 
 # MockK
-mockk = { group = "io.mockk", name = "mockk-jvm", version = "1.13.5" }
+mockk = { group = "io.mockk", name = "mockk-jvm", version = "1.13.7" }
 
 # Nimbus
 nimbus-jose-jwt = { group = "com.nimbusds", name = "nimbus-jose-jwt", version = "9.31" }
