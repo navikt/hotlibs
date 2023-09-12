@@ -8,18 +8,17 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
 import no.nav.hjelpemidler.database.test.TestEntity
 import no.nav.hjelpemidler.database.test.TestEnum
-import no.nav.hjelpemidler.database.test.TestTransactionContextFactory
+import no.nav.hjelpemidler.database.test.TestStore
+import no.nav.hjelpemidler.database.test.testDataSource
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.seconds
 
 class TransactionTest {
-    private val transactionContextFactory = TestTransactionContextFactory()
-
     @Test
     fun `lagrer og henter innslag i transaksjon`() = runTest {
         val id = lagreEntity()
-        val result = transaction(transactionContextFactory) { ctx ->
-            ctx.testStore.hent(id)
+        val result = transaction(testDataSource) { tx ->
+            TestStore(tx).hent(id)
         }
         result.shouldContain("id", id)
     }
@@ -27,27 +26,27 @@ class TransactionTest {
     @Test
     fun `nestet transaksjon`() = runTest {
         val id = lagreEntity()
-        val result = transaction(transactionContextFactory) { ctx1 ->
+        val result = transaction(testDataSource) { tx1 ->
             someSuspendingFunction()
-            ctx1.testStore.hent(id)
-            transaction(transactionContextFactory) { ctx2 ->
+            TestStore(tx1).hent(id)
+            transaction(testDataSource) { tx2 ->
                 someSuspendingFunction()
-                ctx2.testStore.hent(id)
+                TestStore(tx2).hent(id)
             }
         }
         result["id"] shouldBe id
     }
 
-    private suspend fun lagreEntity(): Long = transaction(transactionContextFactory) { ctx ->
-            ctx.testStore.lagre(
-                TestEntity(
-                    string = "string",
-                    integer = 1,
-                    enum = TestEnum.A,
-                    data1 = emptyMap(),
-                )
+    private suspend fun lagreEntity(): Long = transaction(testDataSource) { tx ->
+        TestStore(tx).lagre(
+            TestEntity(
+                string = "string",
+                integer = 1,
+                enum = TestEnum.A,
+                data1 = emptyMap(),
             )
-        }
+        )
+    }
 
     private suspend fun someSuspendingFunction() =
         withContext(Dispatchers.IO) {

@@ -10,13 +10,11 @@ import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.test.runTest
 import no.nav.hjelpemidler.database.test.TestEntity
 import no.nav.hjelpemidler.database.test.TestEnum
-import no.nav.hjelpemidler.database.test.TestTransactionContextFactory
+import no.nav.hjelpemidler.database.test.TestStore
 import no.nav.hjelpemidler.database.test.testDataSource
 import kotlin.test.Test
 
 internal class SessionExtensionsTest {
-    private val transactionContextFactory = TestTransactionContextFactory()
-
     @Test
     fun `henter ett innslag`() = runTest {
         val id = lagreEntity()
@@ -213,26 +211,26 @@ internal class SessionExtensionsTest {
         id.shouldBePositive()
     }
 
-    private suspend fun lagreEntity(): Long = transaction(transactionContextFactory) { ctx ->
-            ctx.testStore.lagre(
-                TestEntity(
-                    string = "string",
-                    integer = 1,
-                    enum = TestEnum.A,
-                    data1 = mapOf("key" to "value"),
-                )
+    private suspend fun lagreEntity(): Long = transaction(testDataSource) { tx ->
+        TestStore(tx).lagre(
+            TestEntity(
+                string = "string",
+                integer = 1,
+                enum = TestEnum.A,
+                data1 = mapOf("key" to "value"),
             )
-        }
+        )
+    }
 
-    private suspend fun lagreEntities(antall: Int): List<Long> = transaction(transactionContextFactory) { ctx ->
-            ctx.testStore.lagre((1..antall).map {
-                TestEntity(
-                    string = "string",
-                    integer = it,
-                    enum = TestEnum.A,
-                    data1 = mapOf("key" to "value"),
-                    data2 = null
-                )
-            })
-        }
+    private suspend fun lagreEntities(antall: Int): List<Long> = transaction(testDataSource) { tx ->
+        TestStore(tx).lagre((1..antall).map {
+            TestEntity(
+                string = "string",
+                integer = it,
+                enum = TestEnum.A,
+                data1 = mapOf("key" to "value"),
+                data2 = null
+            )
+        })
+    }
 }
