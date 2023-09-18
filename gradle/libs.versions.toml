@@ -1,10 +1,10 @@
 [versions]
 coroutines = "1.7.3"
-flyway = "9.22.0"
-graphql = "6.5.3"
+flyway = "9.22.1"
+graphql = "6.5.6"
 jackson = "2.15.2"
 junit = "5.10.0"
-koin = "3.4.3"
+koin = "3.5.0"
 kotest = "5.7.2"
 kotlin = "1.9.10"
 ktor = "2.3.4"
@@ -16,9 +16,9 @@ flyway = { id = "org.flywaydb.flyway", version.ref = "flyway" }
 graphql = { id = "com.expediagroup.graphql", version.ref = "graphql" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
-openapi = { id = "org.openapi.generator", version = "6.6.0" }
+openapi = { id = "org.openapi.generator", version = "7.0.0" }
 shadow = { id = "com.github.johnrengelman.shadow", version = "8.1.1" }
-spotless = { id = "com.diffplug.spotless", version = "6.20.0" }
+spotless = { id = "com.diffplug.spotless", version = "6.21.0" }
 
 [libraries]
 # Kotlin
@@ -56,6 +56,7 @@ ktor-serialization-jackson = { group = "io.ktor", name = "ktor-serialization-jac
 
 # Ktor Server
 ktor-server-auth-jwt = { group = "io.ktor", name = "ktor-server-auth-jwt", version.ref = "ktor" }
+ktor-server-call-id = { group = "io.ktor", name = "ktor-server-call-id", version.ref = "ktor" }
 ktor-server-call-logging = { group = "io.ktor", name = "ktor-server-call-logging", version.ref = "ktor" }
 ktor-server-cio = { group = "io.ktor", name = "ktor-server-cio", version.ref = "ktor" }
 ktor-server-content-negotiation = { group = "io.ktor", name = "ktor-server-content-negotiation", version.ref = "ktor" }
@@ -86,8 +87,8 @@ koin-logger-slf4j = { group = "io.insert-koin", name = "koin-logger-slf4j", vers
 koin-test-junit5 = { group = "io.insert-koin", name = "koin-test-junit5", version.ref = "koin" }
 
 # Kafka
-kafka-clients = { group = "org.apache.kafka", name = "kafka-clients", version = "3.4.0" } # følger rapids-and-rivers
-rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", version = "2023062911391688031585.522193a413de" }
+kafka-clients = { group = "org.apache.kafka", name = "kafka-clients", version = "3.5.1" } # følger rapids-and-rivers
+rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", version = "2023082311481692784104.98e0711da2cd" }
 
 # JDBC
 flyway-core = { group = "org.flywaydb", name = "flyway-core", version.ref = "flyway" }
@@ -136,7 +137,7 @@ kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", ver
 mockk = { group = "io.mockk", name = "mockk-jvm", version = "1.13.7" }
 
 # Nimbus
-nimbus-jose-jwt = { group = "com.nimbusds", name = "nimbus-jose-jwt", version = "9.31" }
+nimbus-jose-jwt = { group = "com.nimbusds", name = "nimbus-jose-jwt", version = "9.34" }
 
 # Testcontainers
 testcontainers-bom = { group = "org.testcontainers", name = "testcontainers-bom", version.ref = "testcontainers" }
@@ -148,13 +149,13 @@ testcontainers-postgresql = { group = "org.testcontainers", name = "postgresql",
 [bundles]
 jackson = [
     "jackson-databind",
-    "jackson-dataformat-yaml",
     "jackson-datatype-jsr310",
     "jackson-module-kotlin",
 ]
 ktor-server = [
     "ktor-serialization-jackson",
     "ktor-server-auth-jwt",
+    "ktor-server-call-id",
     "ktor-server-call-logging",
     "ktor-server-content-negotiation",
     "ktor-server-core",
