@@ -82,7 +82,7 @@ caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version
 # Koin
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
 koin-core-coroutines = { group = "io.insert-koin", name = "koin-core-coroutines", version.ref = "koin" }
-koin-ktor = { group = "io.insert-koin", name = "koin-ktor", version.ref = "koin" }
+koin-ktor = { group = "io.insert-koin", name = "koin-ktor", version = "3.5.1" }
 koin-logger-slf4j = { group = "io.insert-koin", name = "koin-logger-slf4j", version.ref = "koin" }
 koin-test-junit5 = { group = "io.insert-koin", name = "koin-test-junit5", version.ref = "koin" }
 
