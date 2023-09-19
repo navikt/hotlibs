@@ -4,7 +4,7 @@ flyway = "9.22.1"
 graphql = "6.5.6"
 jackson = "2.15.2"
 junit = "5.10.0"
-koin = "3.5.0"
+koin = "3.4.3"
 kotest = "5.7.2"
 kotlin = "1.9.10"
 ktor = "2.3.4"
@@ -82,8 +82,8 @@ caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version
 # Koin
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
 koin-core-coroutines = { group = "io.insert-koin", name = "koin-core-coroutines", version.ref = "koin" }
-koin-ktor = { group = "io.insert-koin", name = "koin-ktor", version = "3.5.1" }
-koin-logger-slf4j = { group = "io.insert-koin", name = "koin-logger-slf4j", version = "3.5.1" }
+koin-ktor = { group = "io.insert-koin", name = "koin-ktor", version.ref = "koin" }
+koin-logger-slf4j = { group = "io.insert-koin", name = "koin-logger-slf4j", version.ref = "koin" }
 koin-test-junit5 = { group = "io.insert-koin", name = "koin-test-junit5", version.ref = "koin" }
 
 # Kafka
