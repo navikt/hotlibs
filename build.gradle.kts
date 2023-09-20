@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     alias(libs.plugins.kotlin.jvm)
     `java-library`
@@ -13,19 +11,19 @@ dependencies {
     implementation(libs.kotlin.stdlib)
 }
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "17"
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
-
 java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
 
     withSourcesJar()
+}
+
+kotlin {
+    jvmToolchain(17)
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }
 
 publishing {
