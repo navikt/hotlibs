@@ -13,14 +13,14 @@ class Evalueringer {
     fun evaluer(
         identifikator: String,
         beskrivelse: String,
-        lovReferanse: String,
-        lovdataLenke: String,
+        lovreferanse: String,
+        lovdataUrl: String,
         evaluering: Evaluering,
     ): Evaluering =
         evaluering.copy(
             identifikator = identifikator,
             beskrivelse = beskrivelse,
-            lovReferanse = lovReferanse,
-            lovdataLenke = lovdataLenke
+            lovreferanse = lovreferanse,
+            lovdataUrl = lovdataUrl
         )
 }

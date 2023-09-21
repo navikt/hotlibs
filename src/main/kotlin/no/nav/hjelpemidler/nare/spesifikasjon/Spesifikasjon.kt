@@ -1,26 +1,28 @@
 package no.nav.hjelpemidler.nare.spesifikasjon
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import no.nav.hjelpemidler.nare.evaluering.Evaluering
 import no.nav.hjelpemidler.nare.evaluering.Evalueringer
 
 data class Spesifikasjon<T>(
     val beskrivelse: String,
     val identifikator: String = "",
-    val lovReferanse: String = "",
-    val lovdataLenke: String = "",
+    @JsonProperty("lovReferanse") val lovreferanse: String = "",
+    @JsonProperty("lovdataLenke") val lovdataUrl: String = "",
     val grunnlag: Map<String, String> = emptyMap(),
     val barn: List<Spesifikasjon<T>> = emptyList(),
     val implementasjon: Evalueringer.(T) -> Evaluering,
 ) {
-    fun evaluer(t: T): Evaluering = Evalueringer().run {
-        evaluer(
-            beskrivelse = beskrivelse,
-            identifikator = identifikator,
-            lovReferanse = lovReferanse,
-            lovdataLenke = lovdataLenke,
-            evaluering = implementasjon(this, t)
-        )
-    }
+    fun evaluer(t: T): Evaluering =
+        Evalueringer().run {
+            evaluer(
+                beskrivelse = beskrivelse,
+                identifikator = identifikator,
+                lovreferanse = lovreferanse,
+                lovdataUrl = lovdataUrl,
+                evaluering = implementasjon(this, t)
+            )
+        }
 
     infix fun og(annen: Spesifikasjon<T>): Spesifikasjon<T> =
         Spesifikasjon(

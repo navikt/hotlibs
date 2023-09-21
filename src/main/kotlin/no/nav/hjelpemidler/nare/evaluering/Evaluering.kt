@@ -1,12 +1,14 @@
 package no.nav.hjelpemidler.nare.evaluering
 
+import com.fasterxml.jackson.annotation.JsonProperty
+
 data class Evaluering(
     val resultat: Resultat,
     val begrunnelse: String,
     val beskrivelse: String = "",
     val identifikator: String = "",
-    val lovReferanse: String = "",
-    val lovdataLenke: String = "",
+    @JsonProperty("lovReferanse") val lovreferanse: String = "",
+    @JsonProperty("lovdataLenke") val lovdataUrl: String = "",
     val grunnlag: Map<String, String>? = emptyMap(),
     val operator: Operator = Operator.INGEN,
     var barn: List<Evaluering> = emptyList(),

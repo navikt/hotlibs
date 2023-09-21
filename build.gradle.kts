@@ -9,6 +9,7 @@ version = System.getenv("GITHUB_REF_NAME") ?: "local"
 
 dependencies {
     implementation(libs.kotlin.stdlib)
+    implementation(libs.jackson.annotations)
 }
 
 java {
