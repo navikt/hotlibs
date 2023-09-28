@@ -103,7 +103,7 @@ lettuce = { group = "io.lettuce", name = "lettuce-core", version = "6.2.6.RELEAS
 # Team Hjelpemidler
 hm-database = { group = "no.nav.hjelpemidler", name = "hm-database", version = "0.1.5" }
 hm-http = { group = "no.nav.hjelpemidler", name = "hm-http", version = "0.1.4" }
-hm-nare = { group = "no.nav.hjelpemidler", name = "hm-nare", version = "0.1.1" }
+hm-nare = { group = "no.nav.hjelpemidler", name = "hm-nare", version = "0.1.2" }
 
 # GraphQL
 graphql-kotlin-ktor-client = { group = "com.expediagroup", name = "graphql-kotlin-ktor-client", version.ref = "graphql" }
