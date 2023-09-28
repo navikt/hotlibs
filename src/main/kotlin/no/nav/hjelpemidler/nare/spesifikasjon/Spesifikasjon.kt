@@ -1,5 +1,6 @@
 package no.nav.hjelpemidler.nare.spesifikasjon
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import no.nav.hjelpemidler.nare.evaluering.Evaluering
 import no.nav.hjelpemidler.nare.evaluering.Evalueringer
@@ -11,7 +12,7 @@ data class Spesifikasjon<T>(
     @JsonProperty("lovdataLenke") val lovdataUrl: String = "",
     val grunnlag: Map<String, String> = emptyMap(),
     val barn: List<Spesifikasjon<T>> = emptyList(),
-    val implementasjon: Evalueringer.(T) -> Evaluering,
+    @JsonIgnore val implementasjon: Evalueringer.(T) -> Evaluering,
 ) {
     fun evaluer(t: T): Evaluering =
         Evalueringer().run {
