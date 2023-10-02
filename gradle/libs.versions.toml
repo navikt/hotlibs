@@ -1,6 +1,6 @@
 [versions]
 coroutines = "1.7.3"
-flyway = "9.22.2"
+flyway = "9.22.1"
 graphql = "7.0.1"
 jackson = "2.15.2"
 junit = "5.10.0"
