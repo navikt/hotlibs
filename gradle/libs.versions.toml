@@ -4,13 +4,13 @@ flyway = "9.22.1"
 graphql = "7.0.1"
 jackson = "2.15.2"
 junit = "5.10.0"
-koin = "3.4.3"
+koin = "3.5.1"
 kotest = "5.7.2"
 kotlin = "1.9.10"
 ktor = "2.3.4"
 slf4j = "2.0.9"
 spotless = "6.22.0"
-testcontainers = "1.18.3"
+testcontainers = "1.19.1"
 
 [plugins]
 flyway = { id = "org.flywaydb.flyway", version.ref = "flyway" }
@@ -90,7 +90,7 @@ koin-test-junit5 = { group = "io.insert-koin", name = "koin-test-junit5", versio
 
 # Kafka
 kafka-clients = { group = "org.apache.kafka", name = "kafka-clients", version = "3.5.1" } # følger rapids-and-rivers
-rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", version = "2023082311481692784104.98e0711da2cd" }
+rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", version = "2023093008351696055717.ffdec6aede3d" }
 
 # JDBC
 flyway-core = { group = "org.flywaydb", name = "flyway-core", version.ref = "flyway" }
@@ -103,9 +103,9 @@ jedis = { group = "redis.clients", name = "jedis", version = "5.0.1" }
 lettuce = { group = "io.lettuce", name = "lettuce-core", version = "6.2.6.RELEASE" }
 
 # Team Hjelpemidler
-hm-database = { group = "no.nav.hjelpemidler", name = "hm-database", version = "0.1.5" }
-hm-http = { group = "no.nav.hjelpemidler", name = "hm-http", version = "0.1.4" }
-hm-nare = { group = "no.nav.hjelpemidler", name = "hm-nare", version = "0.1.2" }
+hm-database = { group = "no.nav.hjelpemidler", name = "hm-database", version = "0.1.6" }
+hm-http = { group = "no.nav.hjelpemidler", name = "hm-http", version = "0.1.5" }
+hm-nare = { group = "no.nav.hjelpemidler", name = "hm-nare", version = "0.1.3" }
 
 # GraphQL
 graphql-kotlin-client-jackson = { group = "com.expediagroup", name = "graphql-kotlin-client-jackson", version.ref = "graphql" }
