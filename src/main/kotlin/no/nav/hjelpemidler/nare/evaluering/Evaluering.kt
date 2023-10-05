@@ -1,18 +1,18 @@
 package no.nav.hjelpemidler.nare.evaluering
 
-import com.fasterxml.jackson.annotation.JsonProperty
+import no.nav.hjelpemidler.nare.dokumentasjon.Metadata
 
 data class Evaluering(
     val resultat: Resultat,
     val begrunnelse: String,
-    val beskrivelse: String = "",
-    val identifikator: String = "",
-    @JsonProperty("lovReferanse") val lovreferanse: String = "",
-    @JsonProperty("lovdataLenke") val lovdataUrl: String = "",
+    override val beskrivelse: String = "",
+    override val identifikator: String = "",
+    override val lovreferanse: String = "",
+    override val lovdataUrl: String = "",
     val grunnlag: Map<String, String>? = emptyMap(),
     val operator: Operator = Operator.INGEN,
     var barn: List<Evaluering> = emptyList(),
-) {
+) : Metadata {
     infix fun og(annen: Evaluering): Evaluering =
         Evaluering(
             resultat = resultat og annen.resultat,

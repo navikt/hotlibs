@@ -14,6 +14,8 @@ dependencies {
 
     testImplementation(libs.kotlin.test.junit5)
     testImplementation(libs.kotest.assertions.core)
+    testImplementation(libs.jackson.databind)
+    testImplementation(libs.jackson.module.kotlin)
 }
 
 java {

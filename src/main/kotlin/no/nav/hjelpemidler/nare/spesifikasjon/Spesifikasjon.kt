@@ -1,19 +1,19 @@
 package no.nav.hjelpemidler.nare.spesifikasjon
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.annotation.JsonProperty
+import no.nav.hjelpemidler.nare.dokumentasjon.Metadata
 import no.nav.hjelpemidler.nare.evaluering.Evaluering
 import no.nav.hjelpemidler.nare.evaluering.Evalueringer
 
 data class Spesifikasjon<T>(
-    val beskrivelse: String,
-    val identifikator: String = "",
-    @JsonProperty("lovReferanse") val lovreferanse: String = "",
-    @JsonProperty("lovdataLenke") val lovdataUrl: String = "",
+    override val beskrivelse: String,
+    override val identifikator: String = "",
+    override val lovreferanse: String = "",
+    override val lovdataUrl: String = "",
     val grunnlag: Map<String, String> = emptyMap(),
     val barn: List<Spesifikasjon<T>> = emptyList(),
     @JsonIgnore val implementasjon: Evalueringer.(T) -> Evaluering,
-) {
+) : Metadata {
     fun evaluer(t: T): Evaluering =
         Evalueringer().run {
             evaluer(
