@@ -5,6 +5,7 @@ import no.nav.hjelpemidler.nare.dokumentasjon.Metadata
 data class Evaluering(
     val resultat: Resultat,
     val begrunnelse: String,
+    val årsak: Årsak? = null,
     override val beskrivelse: String = "",
     override val identifikator: String = "",
     override val lovreferanse: String = "",

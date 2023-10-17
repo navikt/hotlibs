@@ -18,20 +18,16 @@ dependencies {
     testImplementation(libs.jackson.module.kotlin)
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+val jdkVersion = 17
 
+java {
+    toolchain { languageVersion.set(JavaLanguageVersion.of(jdkVersion)) }
     withSourcesJar()
 }
 
-kotlin {
-    jvmToolchain(17)
-}
+kotlin { jvmToolchain(jdkVersion) }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
+tasks.test { useJUnitPlatform() }
 
 publishing {
     publications {

@@ -15,15 +15,13 @@ data class Spesifikasjon<T>(
     @JsonIgnore val implementasjon: Evalueringer.(T) -> Evaluering,
 ) : Metadata {
     fun evaluer(t: T): Evaluering =
-        Evalueringer().run {
-            evaluer(
-                beskrivelse = beskrivelse,
+        Evalueringer().implementasjon(t)
+            .copy(
                 identifikator = identifikator,
+                beskrivelse = beskrivelse,
                 lovreferanse = lovreferanse,
-                lovdataUrl = lovdataUrl,
-                evaluering = implementasjon(this, t)
+                lovdataUrl = lovdataUrl
             )
-        }
 
     infix fun og(annen: Spesifikasjon<T>): Spesifikasjon<T> =
         Spesifikasjon(
