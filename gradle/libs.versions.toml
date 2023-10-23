@@ -90,7 +90,7 @@ koin-test-junit5 = { group = "io.insert-koin", name = "koin-test-junit5", versio
 
 # Kafka
 kafka-clients = { group = "org.apache.kafka", name = "kafka-clients", version = "3.5.1" } # følger rapids-and-rivers
-rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", version = "2023093008351696055717.ffdec6aede3d" }
+rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", version = "2023101613431697456627.0cdd93eb696f" }
 
 # JDBC
 flyway-core = { group = "org.flywaydb", name = "flyway-core", version.ref = "flyway" }
