@@ -89,7 +89,7 @@ koin-logger-slf4j = { group = "io.insert-koin", name = "koin-logger-slf4j", vers
 koin-test-junit5 = { group = "io.insert-koin", name = "koin-test-junit5", version.ref = "koin" }
 
 # Kafka
-kafka-clients = { group = "org.apache.kafka", name = "kafka-clients", version = "3.5.1" } # følger rapids-and-rivers
+kafka-clients = { group = "org.apache.kafka", name = "kafka-clients", version = "3.6.0" } # følger rapids-and-rivers
 rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", version = "2023101613431697456627.0cdd93eb696f" }
 
 # JDBC
