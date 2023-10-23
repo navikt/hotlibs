@@ -2,7 +2,7 @@
 coroutines = "1.7.3"
 flyway = "9.22.1"
 graphql = "7.0.1"
-jackson = "2.15.2"
+jackson = "2.15.3"
 junit = "5.10.0"
 koin = "3.4.3"
 kotest = "5.7.2"
