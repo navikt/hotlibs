@@ -1,4 +1,5 @@
 [versions]
+confluent = "7.5.1"
 coroutines = "1.7.3"
 flyway = "9.22.1"
 graphql = "7.0.1"
@@ -91,6 +92,9 @@ koin-test-junit5 = { group = "io.insert-koin", name = "koin-test-junit5", versio
 # Kafka
 kafka-clients = { group = "org.apache.kafka", name = "kafka-clients", version = "3.6.0" } # følger rapids-and-rivers
 rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", version = "2023101613431697456627.0cdd93eb696f" }
+
+# Confluent
+kafka-avro-serializer = { group = "io.confluent", name = "kafka-avro-serializer", version.ref = "confluent" }
 
 # JDBC
 flyway-core = { group = "org.flywaydb", name = "flyway-core", version.ref = "flyway" }
