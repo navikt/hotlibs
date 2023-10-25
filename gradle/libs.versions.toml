@@ -5,6 +5,7 @@ flyway = "9.22.1"
 graphql = "7.0.1"
 jackson = "2.15.3"
 junit = "5.10.0"
+kafka = "3.6.0" # følger rapids-and-rivers
 koin = "3.4.3"
 kotest = "5.7.2"
 kotlin = "1.9.10"
@@ -90,7 +91,9 @@ koin-logger-slf4j = { group = "io.insert-koin", name = "koin-logger-slf4j", vers
 koin-test-junit5 = { group = "io.insert-koin", name = "koin-test-junit5", version.ref = "koin" }
 
 # Kafka
-kafka-clients = { group = "org.apache.kafka", name = "kafka-clients", version = "3.6.0" } # følger rapids-and-rivers
+kafka-clients = { group = "org.apache.kafka", name = "kafka-clients", version.ref = "kafka" }
+kafka-streams = { group = "org.apache.kafka", name = "kafka-streams", version.ref = "kafka" }
+kafka-streams-test-utils = { group = "org.apache.kafka", name = "kafka-streams-test-utils", version.ref = "kafka" }
 rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", version = "2023101613431697456627.0cdd93eb696f" }
 
 # Confluent
