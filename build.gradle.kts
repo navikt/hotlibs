@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     alias(libs.plugins.kotlin.jvm)
     `java-library`
@@ -9,20 +7,22 @@ plugins {
 group = "no.nav.hjelpemidler"
 version = System.getenv("GITHUB_REF_NAME") ?: "local"
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
+    implementation(platform(libs.kotlin.bom))
     implementation(libs.kotlin.stdlib)
+
+    // Logging
+    implementation(platform(libs.slf4j.bom))
     implementation(libs.kotlin.logging)
 
     // Kotlinx
+    api(platform(libs.kotlinx.coroutines.bom))
     api(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.jdk8)
     implementation(libs.kotlinx.coroutines.slf4j)
 
     // Ktor
+    api(platform(libs.ktor.bom))
     api(libs.ktor.client.cio)
     api(libs.ktor.client.core)
     api(libs.ktor.client.core)
@@ -32,6 +32,7 @@ dependencies {
     implementation(libs.ktor.serialization.jackson)
 
     // Jackson
+    implementation(platform(libs.jackson.bom))
     implementation(libs.jackson.datatype.jsr310)
 
     // JWT
@@ -46,20 +47,14 @@ dependencies {
     testRuntimeOnly(libs.logback.classic)
 }
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "17"
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
-
+val jdkVersion = JavaLanguageVersion.of(17)
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-
+    toolchain { languageVersion.set(jdkVersion) }
     withSourcesJar()
 }
+kotlin { jvmToolchain { languageVersion.set(jdkVersion) } }
+
+tasks.test { useJUnitPlatform() }
 
 publishing {
     publications {

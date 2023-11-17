@@ -3,6 +3,7 @@ rootProject.name = "hm-http"
 dependencyResolutionManagement {
     @Suppress("UnstableApiUsage")
     repositories {
+        mavenCentral()
         maven {
             url = uri("https://maven.pkg.github.com/navikt/hm-katalog")
             credentials {
@@ -16,7 +17,7 @@ dependencyResolutionManagement {
     }
     versionCatalogs {
         create("libs") {
-            from("no.nav.hjelpemidler:hm-katalog:0.0.47")
+            from("no.nav.hjelpemidler:hm-katalog:0.0.51")
         }
     }
 }
