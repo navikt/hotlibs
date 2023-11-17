@@ -1,6 +1,3 @@
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-import org.gradle.api.tasks.testing.logging.TestLogEvent
-
 plugins {
     alias(libs.plugins.kotlin.jvm)
     `java-library`
@@ -22,6 +19,7 @@ dependencies {
     api(libs.kotliquery)
     api(libs.hikaricp)
     api(libs.flyway.core)
+    runtimeOnly(libs.flyway.database.postgresql)
     implementation(libs.postgresql)
 
     // Jackson
@@ -33,26 +31,16 @@ dependencies {
     testRuntimeOnly(libs.slf4j.simple)
 }
 
-kotlin {
-    jvmToolchain(17)
-}
-
-tasks.test {
-    useJUnitPlatform()
-    testLogging {
-        showExceptions = true
-        showStackTraces = false
-        exceptionFormat = TestExceptionFormat.SHORT
-        events = setOf(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
-    }
-}
-
+val jdkVersion = JavaLanguageVersion.of(17)
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-
+    toolchain { languageVersion.set(jdkVersion) }
     withSourcesJar()
 }
+kotlin {
+    jvmToolchain { languageVersion.set(jdkVersion) }
+}
+
+tasks.test { useJUnitPlatform() }
 
 publishing {
     publications {
