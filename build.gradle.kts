@@ -19,12 +19,10 @@ dependencies {
 }
 
 val jdkVersion = 17
-
 java {
     toolchain { languageVersion.set(JavaLanguageVersion.of(jdkVersion)) }
     withSourcesJar()
 }
-
 kotlin { jvmToolchain(jdkVersion) }
 
 tasks.test { useJUnitPlatform() }
