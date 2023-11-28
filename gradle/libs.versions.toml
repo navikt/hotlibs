@@ -125,9 +125,9 @@ jedis = { group = "redis.clients", name = "jedis", version = "5.1.0" }
 lettuce = { group = "io.lettuce", name = "lettuce-core", version = "6.3.0.RELEASE" }
 
 # Team Hjelpemidler
-hm-database = { group = "no.nav.hjelpemidler", name = "hm-database", version = "0.1.9" }
-hm-http = { group = "no.nav.hjelpemidler", name = "hm-http", version = "0.1.8" }
-hm-nare = { group = "no.nav.hjelpemidler", name = "hm-nare", version = "0.1.6" }
+hm-database = { group = "no.nav.hjelpemidler", name = "hm-database", version = "0.1.11" }
+hm-http = { group = "no.nav.hjelpemidler", name = "hm-http", version = "0.1.10" }
+hm-nare = { group = "no.nav.hjelpemidler", name = "hm-nare", version = "0.1.7" }
 
 # GraphQL
 graphql-kotlin-client-jackson = { group = "com.expediagroup", name = "graphql-kotlin-client-jackson", version.ref = "graphql" }
