@@ -6,12 +6,12 @@ import kotlin.test.Test
 
 class EnvironmentTest {
     @Test
-    fun `gjeldende miljø skal være local`() {
+    fun `Gjeldende miljø skal være local`() {
         Environment.current shouldBe LocalEnvironment
     }
 
     @Test
-    fun `hvert miljø har riktig tier`() {
+    fun `Hvert miljø har riktig tier`() {
         LocalEnvironment shouldHaveTier Environment.Tier.LOCAL
         FssEnvironment.DEV shouldHaveTier Environment.Tier.DEV
         FssEnvironment.PROD shouldHaveTier Environment.Tier.PROD
@@ -21,7 +21,7 @@ class EnvironmentTest {
     }
 
     @Test
-    fun `hver tier har riktig flagg`() {
+    fun `Hver tier har riktig flagg`() {
         Environment.Tier.LOCAL.shouldHaveFlag(isLocal = true)
         Environment.Tier.LABS.shouldHaveFlag(isLabs = true)
         Environment.Tier.DEV.shouldHaveFlag(isDev = true)

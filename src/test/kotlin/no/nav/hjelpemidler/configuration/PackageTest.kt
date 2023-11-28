@@ -6,13 +6,13 @@ import kotlin.test.Test
 
 class PackageTest {
     @Test
-    fun `henter alle variabler, inkludert eksterne`() {
+    fun `Henter alle variabler, inkludert eksterne`() {
         val variables = environmentVariablesIn(TestConfiguration, includeExternal = true)
         variables shouldContainExactlyInAnyOrder listOf("FOO", "BAR")
     }
 
     @Test
-    fun `henter variabler som ikke er markert som eksterne`() {
+    fun `Henter variabler som ikke er markert som eksterne`() {
         val variables = environmentVariablesIn(TestConfiguration, includeExternal = false)
         variables shouldContainExactlyInAnyOrder listOf("BAR")
     }
@@ -22,7 +22,7 @@ class PackageTest {
         @External
         val FOO by EnvironmentVariable
         val BAR by EnvironmentVariable
-        const val test = "test"
+        const val TEST = "test"
         val instant: Instant = Instant.now()
     }
 }

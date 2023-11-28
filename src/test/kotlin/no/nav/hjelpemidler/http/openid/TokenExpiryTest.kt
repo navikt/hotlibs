@@ -27,7 +27,7 @@ class TokenExpiryTest {
     }
 
     @Test
-    fun `henter nytt token`() {
+    fun `Henter nytt token`() {
         val tokenSet1 = tokenSetThat(expiresIn = 0.seconds)
         cache.put(key, tokenSet1)
         val tokenSet2 = cache.get(key, loader)
@@ -40,7 +40,7 @@ class TokenExpiryTest {
     }
 
     @Test
-    fun `bruker token fra cache`() {
+    fun `Bruker token fra cache`() {
         val tokenSet1 = tokenSetThat(expiresIn = 1.minutes)
         cache.put(key, tokenSet1)
         val tokenSet2 = cache.get(key, loader)

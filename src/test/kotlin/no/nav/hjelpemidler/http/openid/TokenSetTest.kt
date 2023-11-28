@@ -28,25 +28,25 @@ class TokenSetTest {
     }
 
     @Test
-    fun `er utløpt når expiresIn er 0 sekunder`() {
+    fun `Er utløpt når expiresIn er 0 sekunder`() {
         val tokenSet = tokenSetThat(expiresIn = 0.seconds)
         tokenSet.isExpired(at = at, leeway = 0.seconds) shouldBe true
     }
 
     @Test
-    fun `er utløpt når expiresIn er 1 sekund med leeway 1 sekund`() {
+    fun `Er utløpt når expiresIn er 1 sekund med leeway 1 sekund`() {
         val tokenSet = tokenSetThat(expiresIn = 1.seconds)
         tokenSet.isExpired(at = at, leeway = 1.seconds) shouldBe true
     }
 
     @Test
-    fun `er ikke utløpt når expiresIn er 1`() {
+    fun `Er ikke utløpt når expiresIn er 1`() {
         val tokenSet = tokenSetThat(expiresIn = 1.seconds)
         tokenSet.isExpired(at = at, leeway = 0.seconds) shouldBe false
     }
 
     @Test
-    fun `er ikke utløpt når expiresIn er 2 med leeway 1`() {
+    fun `Er ikke utløpt når expiresIn er 2 med leeway 1`() {
         val tokenSet = tokenSetThat(expiresIn = 2.seconds)
         tokenSet.isExpired(at = at, leeway = 1.seconds) shouldBe false
     }

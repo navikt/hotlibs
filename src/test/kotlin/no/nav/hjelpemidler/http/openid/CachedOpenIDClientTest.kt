@@ -14,7 +14,7 @@ import kotlin.time.Duration.Companion.minutes
 
 class CachedOpenIDClientTest {
     @Test
-    fun `skal bruke token fra cache`() = runTest {
+    fun `Skal bruke token fra cache`() = runTest {
         val tokenSet = TokenSet.bearer(expiresIn = 10.minutes, "token")
         val client = createTestClient {
             respondJson(tokenSet)
@@ -27,7 +27,7 @@ class CachedOpenIDClientTest {
     }
 
     @Test
-    fun `skal ikke bruke token fra cache, ulike parametre`() = runTest {
+    fun `Skal ikke bruke token fra cache, ulike parametre`() = runTest {
         val tokenSet = TokenSet.bearer(expiresIn = 10.minutes, "token")
         val client = createTestClient {
             respondJson(tokenSet)
@@ -40,7 +40,7 @@ class CachedOpenIDClientTest {
     }
 
     @Test
-    fun `skal ikke bruke token fra cache, token utløpt`() = runTest {
+    fun `Skal ikke bruke token fra cache, token utløpt`() = runTest {
         val tokenSet = TokenSet.bearer(expiresIn = 0.minutes, "token")
         val client = createTestClient {
             respondJson(tokenSet)

@@ -9,7 +9,7 @@ class SlackTest {
     private val slackWebHook = "<KREVES FOR TESTING MOT SLACK>"
 
     @Test
-    fun `send testmelding til slack`() = runTest {
+    fun `Send testmelding til slack`() = runTest {
         val client = slack(DefaultSlackConfiguration(slackWebHook))
 
         client.sendMessage(

@@ -14,7 +14,7 @@ import kotlin.test.assertTrue
 
 class DefaultOpenIDClientTest {
     @Test
-    fun `client credentials grant`() = runTest {
+    fun `Client credentials grant`() = runTest {
         val client = createTestClient {
             respondJson(
                 """
@@ -35,7 +35,7 @@ class DefaultOpenIDClientTest {
     }
 
     @Test
-    fun `on behalf of grant`() = runTest {
+    fun `On behalf of grant`() = runTest {
         val client = createTestClient {
             respondJson(
                 """
@@ -58,7 +58,7 @@ class DefaultOpenIDClientTest {
     }
 
     @Test
-    fun `grant feiler`() = runTest {
+    fun `Grant feiler`() = runTest {
         val client = createTestClient {
             respondJson(
                 """

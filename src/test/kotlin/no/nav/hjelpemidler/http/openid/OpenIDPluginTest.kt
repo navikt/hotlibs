@@ -18,7 +18,7 @@ import kotlin.time.Duration.Companion.hours
 
 class OpenIDPluginTest {
     @Test
-    fun `skal hente og bruke access token fra klient`() = runTest {
+    fun `Skal hente og bruke access token fra klient`() = runTest {
         val engine = MockEngine {
             when {
                 it.url.toString().endsWith("/token") ->
@@ -51,7 +51,7 @@ class OpenIDPluginTest {
     }
 
     @Test
-    fun `skal kaste feil hvis grant feiler`() = runTest {
+    fun `Skal kaste feil hvis grant feiler`() = runTest {
         val openIDClient = mockk<OpenIDClient>()
         val engine = MockEngine {
             respondOk("")

@@ -6,7 +6,7 @@ import kotlin.test.Test
 
 class EnvironmentVariableTest {
     @Test
-    fun `skal lese konfigurasjon fra properties`() {
+    fun `Skal lese konfigurasjon fra properties`() {
         val configuration = azureADEnvironmentConfiguration()
         configuration.tokenEndpoint shouldBe "http://azure/token"
         NaisEnvironmentVariable.NAIS_CLUSTER_NAME shouldBe "local"
