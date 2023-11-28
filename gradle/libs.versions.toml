@@ -1,5 +1,5 @@
 [versions]
-confluent = "7.5.1"
+confluent = "7.5.2"
 coroutines = "1.7.3"
 flyway = "10.1.0"
 graphql = "7.0.2"
@@ -112,6 +112,7 @@ rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", ver
 
 # Confluent
 kafka-avro-serializer = { group = "io.confluent", name = "kafka-avro-serializer", version.ref = "confluent" }
+kafka-streams-avro-serde = { group = "io.confluent", name = "kafka-streams-avro-serde", version.ref = "confluent" }
 
 # JDBC
 flyway-core = { group = "org.flywaydb", name = "flyway-core", version.ref = "flyway" }
