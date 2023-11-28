@@ -121,7 +121,7 @@ kotliquery = { group = "com.github.seratch", name = "kotliquery", version = "1.9
 postgresql = { group = "org.postgresql", name = "postgresql", version = "42.7.0" }
 
 # Redis
-jedis = { group = "redis.clients", name = "jedis", version = "5.0.2" }
+jedis = { group = "redis.clients", name = "jedis", version = "5.1.0" }
 lettuce = { group = "io.lettuce", name = "lettuce-core", version = "6.3.0.RELEASE" }
 
 # Team Hjelpemidler
