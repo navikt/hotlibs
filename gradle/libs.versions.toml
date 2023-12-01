@@ -127,6 +127,7 @@ jedis = { group = "redis.clients", name = "jedis", version = "5.1.0" }
 lettuce = { group = "io.lettuce", name = "lettuce-core", version = "6.3.0.RELEASE" }
 
 # DigiHoT
+hm-contract-pdl-avro = { group = "no.nav.hjelpemidler", name = "hm-contract-pdl-avro", version = "1.0.0" }
 hm-database = { group = "no.nav.hjelpemidler", name = "hm-database", version = "0.2.0" }
 hm-http = { group = "no.nav.hjelpemidler", name = "hm-http", version = "0.2.0" }
 hm-nare = { group = "no.nav.hjelpemidler", name = "hm-nare", version = "0.2.0" }
