@@ -47,7 +47,7 @@ dependencies {
     testRuntimeOnly(libs.logback.classic)
 }
 
-val jdkVersion = JavaLanguageVersion.of(17)
+val jdkVersion = JavaLanguageVersion.of(21)
 java {
     toolchain { languageVersion.set(jdkVersion) }
     withSourcesJar()
