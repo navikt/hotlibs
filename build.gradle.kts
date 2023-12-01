@@ -18,7 +18,7 @@ dependencies {
     testImplementation(libs.jackson.module.kotlin)
 }
 
-val jdkVersion = 17
+val jdkVersion = 21
 java {
     toolchain { languageVersion.set(JavaLanguageVersion.of(jdkVersion)) }
     withSourcesJar()
