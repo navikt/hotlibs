@@ -31,7 +31,7 @@ dependencies {
     testRuntimeOnly(libs.slf4j.simple)
 }
 
-val jdkVersion = JavaLanguageVersion.of(17)
+val jdkVersion = JavaLanguageVersion.of(21)
 java {
     toolchain { languageVersion.set(jdkVersion) }
     withSourcesJar()
