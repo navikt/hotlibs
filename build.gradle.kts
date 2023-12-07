@@ -12,6 +12,8 @@ dependencies {
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlinx.coroutines.core)
 
+    compileOnly(libs.java.annotations)
+
     // Logging
     implementation(libs.slf4j.api)
 
