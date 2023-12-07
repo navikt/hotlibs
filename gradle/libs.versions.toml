@@ -10,9 +10,9 @@ koin = "3.4.3"
 kotest = "5.8.0"
 kotlin = "1.9.21"
 ktor = "2.3.6"
-serialization = "1.6.1"
+serialization = "1.6.2"
 slf4j = "2.0.9"
-spotless = "6.22.0"
+spotless = "6.23.3"
 testcontainers = "1.19.3"
 
 [plugins]
@@ -43,7 +43,7 @@ kotlinx-coroutines-slf4j = { group = "org.jetbrains.kotlinx", name = "kotlinx-co
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 
 # Kotlinx Metadata
-kotlinx-metadata-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-metadata-jvm", version = "0.7.0" }
+kotlinx-metadata-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-metadata-jvm", version = "0.8.0" }
 
 # Kotlinx Serialization
 kotlinx-serialization-bom = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-bom", version.ref = "serialization" }
@@ -95,6 +95,9 @@ java-jwt = { group = "com.auth0", name = "java-jwt", version = "4.4.0" } # følg
 # NoCommons
 nocommons = { group = "no.bekk.bekkopen", name = "nocommons", version = "0.15.0" }
 
+# Java Annotations
+java-annotations = { group = "org.jetbrains", name = "annotations", version = "24.1.0" }
+
 # Caffeine
 caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version = "3.1.8" }
 
@@ -109,7 +112,7 @@ koin-test-junit5 = { group = "io.insert-koin", name = "koin-test-junit5", versio
 kafka-clients = { group = "org.apache.kafka", name = "kafka-clients", version.ref = "kafka" }
 kafka-streams = { group = "org.apache.kafka", name = "kafka-streams", version.ref = "kafka" }
 kafka-streams-test-utils = { group = "org.apache.kafka", name = "kafka-streams-test-utils", version.ref = "kafka" }
-rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", version = "2023101613431697456627.0cdd93eb696f" }
+rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", version = "2023120410321701682379.55cc1a24d803" }
 
 # Confluent
 kafka-avro-serializer = { group = "io.confluent", name = "kafka-avro-serializer", version.ref = "confluent" }
@@ -120,7 +123,7 @@ flyway-core = { group = "org.flywaydb", name = "flyway-core", version.ref = "fly
 flyway-database-postgresql = { group = "org.flywaydb", name = "flyway-database-postgresql", version.ref = "flyway" }
 hikaricp = { group = "com.zaxxer", name = "HikariCP", version = "5.1.0" }
 kotliquery = { group = "com.github.seratch", name = "kotliquery", version = "1.9.0" }
-postgresql = { group = "org.postgresql", name = "postgresql", version = "42.7.0" }
+postgresql = { group = "org.postgresql", name = "postgresql", version = "42.7.1" }
 
 # Redis
 jedis = { group = "redis.clients", name = "jedis", version = "5.1.0" }
@@ -138,7 +141,7 @@ graphql-kotlin-gradle-plugin = { group = "com.expediagroup", name = "graphql-kot
 graphql-kotlin-ktor-client = { group = "com.expediagroup", name = "graphql-kotlin-ktor-client", version.ref = "graphql" }
 
 # Metrics
-influxdb-client-kotlin = { group = "com.influxdb", name = "influxdb-client-kotlin", version = "6.10.0" }
+influxdb-client-kotlin = { group = "com.influxdb", name = "influxdb-client-kotlin", version = "6.11.0" }
 micrometer-registry-prometheus = { group = "io.micrometer", name = "micrometer-registry-prometheus", version = "1.12.0" }
 
 # Slf4j
@@ -148,7 +151,7 @@ slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4
 
 # Logging
 kotlin-logging = { group = "io.github.microutils", name = "kotlin-logging", version = "3.0.5" }
-logback-classic = { group = "ch.qos.logback", name = "logback-classic", version = "1.4.11" }
+logback-classic = { group = "ch.qos.logback", name = "logback-classic", version = "1.4.14" }
 logback-syslog4j = { group = "com.papertrailapp", name = "logback-syslog4j", version = "1.0.0" }
 logstash-logback-encoder = { group = "net.logstash.logback", name = "logstash-logback-encoder", version = "7.4" }
 
@@ -170,7 +173,7 @@ kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", ver
 mockk = { group = "io.mockk", name = "mockk-jvm", version = "1.13.8" }
 
 # Nimbus
-nimbus-jose-jwt = { group = "com.nimbusds", name = "nimbus-jose-jwt", version = "9.37.1" }
+nimbus-jose-jwt = { group = "com.nimbusds", name = "nimbus-jose-jwt", version = "9.37.2" }
 
 # Testcontainers
 testcontainers-bom = { group = "org.testcontainers", name = "testcontainers-bom", version.ref = "testcontainers" }
