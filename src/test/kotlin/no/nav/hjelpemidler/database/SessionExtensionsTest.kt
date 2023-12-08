@@ -14,7 +14,7 @@ import no.nav.hjelpemidler.database.test.TestStore
 import no.nav.hjelpemidler.database.test.testDataSource
 import kotlin.test.Test
 
-internal class SessionExtensionsTest {
+class SessionExtensionsTest {
     @Test
     fun `henter ett innslag`() = runTest {
         val id = lagreEntity()
