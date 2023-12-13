@@ -7,25 +7,21 @@ sealed interface Environment {
     val tier: Tier
 
     companion object {
-        private val all: Set<Environment> = setOf(LocalEnvironment) +
+        private val all: Set<Environment> = setOf(TestEnvironment, LocalEnvironment) +
                 EnumSet.allOf(FssEnvironment::class.java) +
                 EnumSet.allOf(GcpEnvironment::class.java)
 
         val current: Environment by lazy {
             val cluster = System.getenv("NAIS_CLUSTER_NAME")
-            all.find {
-                it.cluster == cluster
-            } ?: LocalEnvironment
+            all.find { it.cluster == cluster } ?: LocalEnvironment
         }
     }
 
     enum class Tier {
-        LOCAL, LABS, DEV, PROD;
+        LOCAL, DEV, PROD;
 
         val isLocal: Boolean
             get() = this == LOCAL
-        val isLabs: Boolean
-            get() = this == LABS
         val isDev: Boolean
             get() = this == DEV
         val isProd: Boolean
@@ -33,12 +29,13 @@ sealed interface Environment {
     }
 }
 
-object LocalEnvironment : Environment {
-    override val cluster: String = "local"
+private class NamedEnvironment(override val cluster: String) : Environment {
     override val tier: Environment.Tier = Environment.Tier.LOCAL
-
     override fun toString(): String = cluster
 }
+
+val TestEnvironment: Environment = NamedEnvironment("test")
+val LocalEnvironment: Environment = NamedEnvironment("local")
 
 enum class FssEnvironment(
     override val cluster: String,
@@ -54,7 +51,6 @@ enum class GcpEnvironment(
     override val cluster: String,
     override val tier: Environment.Tier,
 ) : Environment {
-    LABS("labs-gcp", Environment.Tier.LABS),
     DEV("dev-gcp", Environment.Tier.DEV),
     PROD("prod-gcp", Environment.Tier.PROD);
 

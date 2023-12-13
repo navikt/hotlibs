@@ -13,7 +13,7 @@ class ConfigurationTest {
 
     @Test
     fun `Feiler ikke hvis manglende properties`() {
-        val configuration = Configuration.load(GcpEnvironment.LABS)
+        val configuration = Configuration.load(GcpEnvironment.DEV)
         configuration shouldNotBe null
     }
 }

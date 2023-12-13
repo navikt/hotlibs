@@ -26,8 +26,10 @@ class Configuration internal constructor(
                 .apply {
                     Configuration::class.java.getResourceAsStream(location)
                         .apply {
-                            if (this == null) log.info { "Leser konfigurasjon fra miljøvariabler" }
-                            else log.info { "Leser konfigurasjon fra miljøvariabler og: '$location'" }
+                            when (this) {
+                                null -> log.info { "Leser konfigurasjon fra miljøvariabler" }
+                                else -> log.info { "Leser konfigurasjon fra miljøvariabler og: '$location'" }
+                            }
                         }?.use(::load)
                 }
                 .mapKeys { it.key.toString() }

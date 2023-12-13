@@ -54,7 +54,10 @@ java {
 }
 kotlin { jvmToolchain { languageVersion.set(jdkVersion) } }
 
-tasks.test { useJUnitPlatform() }
+tasks.test {
+    environment("NAIS_CLUSTER_NAME", "local")
+    useJUnitPlatform()
+}
 
 publishing {
     publications {
