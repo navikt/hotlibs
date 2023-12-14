@@ -25,7 +25,7 @@ class DataSourceConfiguration internal constructor() : HikariConfig() {
 
     internal fun toDataSource(): DataSource {
         val cluster = System.getenv("NAIS_CLUSTER_NAME") ?: "local"
-        if (envVarPrefix != null && cluster != "local") {
+        if (envVarPrefix != null && cluster !in setOf("local", "test")) {
             log.info("Overskriver konfigurasjon med miljøvariabler, cluster: $cluster, envVarPrefix: $envVarPrefix")
             hostname = fromEnvVar("HOST")
             port = fromEnvVar("PORT").toInt()
