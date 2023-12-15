@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 plugins {
     alias(libs.plugins.kotlin.jvm)
     `java-library`
@@ -14,6 +16,7 @@ dependencies {
     // Logging
     implementation(platform(libs.slf4j.bom))
     implementation(libs.kotlin.logging)
+    runtimeOnly(libs.slf4j.jdk.platform.logging)
 
     // Kotlinx
     api(platform(libs.kotlinx.coroutines.bom))
@@ -57,6 +60,9 @@ kotlin { jvmToolchain { languageVersion.set(jdkVersion) } }
 tasks.test {
     environment("NAIS_CLUSTER_NAME", "local")
     useJUnitPlatform()
+    testLogging {
+        events(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
+    }
 }
 
 publishing {
