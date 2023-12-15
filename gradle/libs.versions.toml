@@ -1,7 +1,7 @@
 [versions]
 confluent = "7.5.2"
 coroutines = "1.7.3"
-flyway = "10.1.0"
+flyway = "10.3.0"
 graphql = "7.0.2"
 jackson = "2.16.0"
 junit = "5.10.1"
