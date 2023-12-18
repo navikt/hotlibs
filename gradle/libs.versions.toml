@@ -93,7 +93,7 @@ ktor-client-mock = { group = "io.ktor", name = "ktor-client-mock", version.ref =
 java-jwt = { group = "com.auth0", name = "java-jwt", version = "4.4.0" } # følger ktor-server-auth-jwt
 
 # NoCommons
-nocommons = { group = "no.bekk.bekkopen", name = "nocommons", version = "0.15.0" }
+nocommons = { group = "no.bekk.bekkopen", name = "nocommons", version = "0.16.0" }
 
 # Java Annotations
 java-annotations = { group = "org.jetbrains", name = "annotations", version = "24.1.0" }
