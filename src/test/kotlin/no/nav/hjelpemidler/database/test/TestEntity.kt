@@ -4,7 +4,7 @@ import no.nav.hjelpemidler.database.QueryParameters
 import no.nav.hjelpemidler.database.pgJsonbOf
 
 data class TestEntity(
-    val id: Long = -1,
+    val id: TestId = TestId(),
     val string: String,
     val integer: Int,
     val enum: TestEnum,
@@ -15,7 +15,7 @@ data class TestEntity(
         mapOf(
             "string" to string,
             "integer" to integer,
-            "enum" to enum.name,
+            "enum" to enum,
             "data_1" to pgJsonbOf(data1),
             "data_2" to pgJsonbOf(data2),
         )

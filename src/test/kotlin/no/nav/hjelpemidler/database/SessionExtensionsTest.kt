@@ -10,6 +10,7 @@ import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.test.runTest
 import no.nav.hjelpemidler.database.test.TestEntity
 import no.nav.hjelpemidler.database.test.TestEnum
+import no.nav.hjelpemidler.database.test.TestId
 import no.nav.hjelpemidler.database.test.TestStore
 import no.nav.hjelpemidler.database.test.testDataSource
 import kotlin.test.Test
@@ -22,22 +23,16 @@ class SessionExtensionsTest {
         val queryParameters = id.toQueryParameters()
 
         transaction(testDataSource) { tx ->
-            tx.query(sql = sql, queryParameters = queryParameters) { row ->
-                row.long("id")
-            }
-        } shouldBe id
+            tx.query(sql = sql, queryParameters = queryParameters) { row -> row.long("id") }
+        } shouldBe id.value
 
         transaction(testDataSource) { tx ->
-            tx.query(sql = sql, queryParameters = 0.toQueryParameters()) { row ->
-                row.long("id")
-            }
+            tx.query(sql = sql, queryParameters = 0.toQueryParameters()) { row -> row.long("id") }
         } shouldBe null
 
         shouldNotThrow<NoSuchElementException> {
             transaction(testDataSource) { tx ->
-                tx.single(sql = sql, queryParameters = queryParameters) { row ->
-                    row.long("id")
-                }
+                tx.single(sql = sql, queryParameters = queryParameters) { row -> row.long("id") }
             }
         }
     }
@@ -48,12 +43,8 @@ class SessionExtensionsTest {
         val result = transaction(testDataSource) { tx ->
             tx.queryList(
                 sql = "SELECT * FROM test WHERE id = ANY(:ids)",
-                queryParameters = mapOf(
-                    "ids" to ids.toTypedArray()
-                ),
-            ) {
-                it.toMap()
-            }
+                queryParameters = mapOf("ids" to ids.toTypedArray()),
+            ) { it.toMap() }
         }
 
         result shouldBeSameSizeAs ids
@@ -69,14 +60,10 @@ class SessionExtensionsTest {
                     FROM test
                     WHERE id = ANY(:ids)
                 """.trimIndent(),
-                queryParameters = mapOf(
-                    "ids" to ids.toTypedArray()
-                ),
+                queryParameters = mapOf("ids" to ids.toTypedArray()),
                 limit = 5,
                 offset = 0,
-            ) {
-                it.toMap()
-            }
+            ) { it.toMap() }
         }
 
         result shouldHaveSize 5
@@ -90,9 +77,7 @@ class SessionExtensionsTest {
             tx.single(
                 sql = "SELECT data_1 FROM test WHERE id = :id",
                 queryParameters = id.toQueryParameters(),
-            ) {
-                it.json<Map<String, Any?>>("data_1")
-            }
+            ) { it.json<Map<String, Any?>>("data_1") }
         }
 
         result.shouldContain("key", "value")
@@ -151,7 +136,7 @@ class SessionExtensionsTest {
         val result2 = transaction(testDataSource) { tx ->
             tx.queryList("SELECT * FROM test WHERE string LIKE 'x%'") {
                 TestEntity(
-                    id = it.long("id"),
+                    id = it.long("id").let(::TestId),
                     string = it.string("string"),
                     integer = it.int("integer"),
                     enum = it.enum("enum"),
@@ -203,15 +188,13 @@ class SessionExtensionsTest {
                     VALUES ('test', 1, 'A', '{}', NULL)
                     RETURNING id
                 """.trimIndent()
-            ) {
-                it.long("id")
-            }
+            ) { it.long("id") }
         }
         id.shouldNotBeNull()
         id.shouldBePositive()
     }
 
-    private suspend fun lagreEntity(): Long = transaction(testDataSource) { tx ->
+    private suspend fun lagreEntity(): TestId = transaction(testDataSource) { tx ->
         TestStore(tx).lagre(
             TestEntity(
                 string = "string",

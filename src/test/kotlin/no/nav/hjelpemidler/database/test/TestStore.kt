@@ -17,12 +17,12 @@ class TestStore(private val tx: Session) : Store {
         RETURNING id
     """.trimIndent()
 
-    fun lagre(entity: TestEntity): Long =
+    fun lagre(entity: TestEntity): TestId =
         tx.single(
             sql = insertSql,
             queryParameters = entity.toQueryParameters()
         ) { row ->
-            row.long("id")
+            row.long("id").let(::TestId)
         }
 
     fun lagre(entities: List<TestEntity>): List<Long> =
@@ -32,7 +32,7 @@ class TestStore(private val tx: Session) : Store {
             block = TestEntity::toQueryParameters,
         )
 
-    fun hent(id: Long): Map<String, Any?> =
+    fun hent(id: TestId): Map<String, Any?> =
         tx.single(
             sql = """
                 SELECT *

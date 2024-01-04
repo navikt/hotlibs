@@ -8,6 +8,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
 import no.nav.hjelpemidler.database.test.TestEntity
 import no.nav.hjelpemidler.database.test.TestEnum
+import no.nav.hjelpemidler.database.test.TestId
 import no.nav.hjelpemidler.database.test.TestStore
 import no.nav.hjelpemidler.database.test.testDataSource
 import kotlin.test.Test
@@ -20,7 +21,7 @@ class TransactionTest {
         val result = transaction(testDataSource) { tx ->
             TestStore(tx).hent(id)
         }
-        result.shouldContain("id", id)
+        result.shouldContain("id", id.value)
     }
 
     @Test
@@ -34,10 +35,10 @@ class TransactionTest {
                 TestStore(tx2).hent(id)
             }
         }
-        result["id"] shouldBe id
+        result["id"] shouldBe id.value
     }
 
-    private suspend fun lagreEntity(): Long = transaction(testDataSource) { tx ->
+    private suspend fun lagreEntity(): TestId = transaction(testDataSource) { tx ->
         TestStore(tx).lagre(
             TestEntity(
                 string = "string",
