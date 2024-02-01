@@ -1,19 +1,19 @@
 [versions]
-confluent = "7.5.2"
+confluent = "7.5.3"
 coroutines = "1.7.3"
-flyway = "10.4.1"
+flyway = "10.7.1"
 graphql = "7.0.2"
 jackson = "2.16.1"
 junit = "5.10.1"
-kafka = "3.6.0" # følger rapids-and-rivers
+kafka = "3.6.1" # følger rapids-and-rivers
 koin = "3.5.3"
 kotest = "5.8.0"
 kotlin = "1.9.22"
-ktor = "2.3.7"
+ktor = "2.3.8"
 serialization = "1.6.2"
-slf4j = "2.0.9"
+slf4j = "2.0.10"
 spotless = "6.23.3"
-testcontainers = "1.19.3"
+testcontainers = "1.19.4"
 
 [plugins]
 flyway = { id = "org.flywaydb.flyway", version.ref = "flyway" }
@@ -112,7 +112,7 @@ koin-test-junit5 = { group = "io.insert-koin", name = "koin-test-junit5", versio
 kafka-clients = { group = "org.apache.kafka", name = "kafka-clients", version.ref = "kafka" }
 kafka-streams = { group = "org.apache.kafka", name = "kafka-streams", version.ref = "kafka" }
 kafka-streams-test-utils = { group = "org.apache.kafka", name = "kafka-streams-test-utils", version.ref = "kafka" }
-rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", version = "2023120410321701682379.55cc1a24d803" }
+rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", version = "2024010209171704183456.6d035b91ffb4" }
 
 # Confluent
 kafka-avro-serializer = { group = "io.confluent", name = "kafka-avro-serializer", version.ref = "confluent" }
@@ -127,7 +127,7 @@ postgresql = { group = "org.postgresql", name = "postgresql", version = "42.7.1"
 
 # Redis
 jedis = { group = "redis.clients", name = "jedis", version = "5.1.0" }
-lettuce = { group = "io.lettuce", name = "lettuce-core", version = "6.3.0.RELEASE" }
+lettuce = { group = "io.lettuce", name = "lettuce-core", version = "6.3.1.RELEASE" }
 
 # DigiHoT
 hm-contract-pdl-avro = { group = "no.nav.hjelpemidler", name = "hm-contract-pdl-avro", version = "1.0.1" }
@@ -141,8 +141,8 @@ graphql-kotlin-gradle-plugin = { group = "com.expediagroup", name = "graphql-kot
 graphql-kotlin-ktor-client = { group = "com.expediagroup", name = "graphql-kotlin-ktor-client", version.ref = "graphql" }
 
 # Metrics
-influxdb-client-kotlin = { group = "com.influxdb", name = "influxdb-client-kotlin", version = "6.11.0" }
-micrometer-registry-prometheus = { group = "io.micrometer", name = "micrometer-registry-prometheus", version = "1.12.0" }
+influxdb-client-kotlin = { group = "com.influxdb", name = "influxdb-client-kotlin", version = "7.0.0" }
+micrometer-registry-prometheus = { group = "io.micrometer", name = "micrometer-registry-prometheus", version = "1.12.2" }
 
 # Slf4j
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
@@ -171,10 +171,10 @@ kotest-assertions-ktor = { group = "io.kotest.extensions", name = "kotest-assert
 kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest" }
 
 # MockK
-mockk = { group = "io.mockk", name = "mockk-jvm", version = "1.13.8" }
+mockk = { group = "io.mockk", name = "mockk-jvm", version = "1.13.9" }
 
 # Nimbus
-nimbus-jose-jwt = { group = "com.nimbusds", name = "nimbus-jose-jwt", version = "9.37.2" }
+nimbus-jose-jwt = { group = "com.nimbusds", name = "nimbus-jose-jwt", version = "9.37.3" }
 
 # Testcontainers
 testcontainers-bom = { group = "org.testcontainers", name = "testcontainers-bom", version.ref = "testcontainers" }
