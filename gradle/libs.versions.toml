@@ -131,8 +131,8 @@ lettuce = { group = "io.lettuce", name = "lettuce-core", version = "6.3.1.RELEAS
 
 # DigiHoT
 hm-contract-pdl-avro = { group = "no.nav.hjelpemidler", name = "hm-contract-pdl-avro", version = "1.0.1" }
-hm-database = { group = "no.nav.hjelpemidler", name = "hm-database", version = "0.2.5" }
-hm-http = { group = "no.nav.hjelpemidler", name = "hm-http", version = "0.2.4" }
+hm-database = { group = "no.nav.hjelpemidler", name = "hm-database", version = "0.2.6" }
+hm-http = { group = "no.nav.hjelpemidler", name = "hm-http", version = "0.2.5" }
 hm-nare = { group = "no.nav.hjelpemidler", name = "hm-nare", version = "0.2.2" }
 
 # GraphQL
