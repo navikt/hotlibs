@@ -5,26 +5,29 @@ import org.intellij.lang.annotations.Language
 typealias Session = kotliquery.Session
 typealias ResultMapper<T> = (Row) -> T?
 
-fun <T> Session.query(
-    @Language("PostgreSQL") sql: String,
-    queryParameters: QueryParameters = emptyMap(),
-    mapper: ResultMapper<T>,
-): T? = single(queryOf(sql, queryParameters), mapper)
-
 fun <T : Any> Session.single(
-    @Language("PostgreSQL") sql: String,
+    @Language("PostgreSQL") sql: CharSequence,
     queryParameters: QueryParameters = emptyMap(),
     mapper: ResultMapper<T>,
-): T = query(sql, queryParameters, mapper) ?: throw NoSuchElementException("Forventet en verdi, men var null")
+): T =
+    query(sql.toString(), queryParameters, mapper) ?: throw NoSuchElementException("Forventet en verdi, men var null")
+
+fun <T> Session.query(
+    @Language("PostgreSQL") sql: CharSequence,
+    queryParameters: QueryParameters = emptyMap(),
+    mapper: ResultMapper<T>,
+): T? =
+    single(queryOf(sql.toString(), queryParameters), mapper)
 
 fun <T : Any> Session.queryList(
-    @Language("PostgreSQL") sql: String,
+    @Language("PostgreSQL") sql: CharSequence,
     queryParameters: QueryParameters = emptyMap(),
     mapper: ResultMapper<T>,
-): List<T> = list(queryOf(sql, queryParameters), mapper)
+): List<T> =
+    list(queryOf(sql.toString(), queryParameters), mapper)
 
 fun <T : Any> Session.queryPage(
-    @Language("PostgreSQL") sql: String,
+    @Language("PostgreSQL") sql: CharSequence,
     queryParameters: QueryParameters = emptyMap(),
     limit: Int,
     offset: Int,
@@ -57,40 +60,40 @@ fun <T : Any> Session.queryPage(
 }
 
 fun Session.execute(
-    @Language("PostgreSQL") sql: String,
+    @Language("PostgreSQL") sql: CharSequence,
     queryParameters: QueryParameters = emptyMap(),
-): Boolean = execute(queryOf(sql, queryParameters))
+): Boolean = execute(queryOf(sql.toString(), queryParameters))
 
 fun Session.update(
-    @Language("PostgreSQL") sql: String,
+    @Language("PostgreSQL") sql: CharSequence,
     queryParameters: QueryParameters = emptyMap(),
-): UpdateResult = UpdateResult(update(queryOf(sql, queryParameters)))
+): UpdateResult = UpdateResult(update(queryOf(sql.toString(), queryParameters)))
 
 fun Session.updateAndReturnGeneratedKey(
-    @Language("PostgreSQL") sql: String,
+    @Language("PostgreSQL") sql: CharSequence,
     queryParameters: QueryParameters = emptyMap(),
-): Long = checkNotNull(updateAndReturnGeneratedKey(queryOf(sql, queryParameters))) {
+): Long = checkNotNull(updateAndReturnGeneratedKey(queryOf(sql.toString(), queryParameters))) {
     "Forventet en generert nøkkel, men var null"
 }
 
 fun Session.batch(
-    @Language("PostgreSQL") sql: String,
+    @Language("PostgreSQL") sql: CharSequence,
     queryParameters: Collection<QueryParameters> = emptyList(),
-): List<Int> = batchPreparedNamedStatement(sql, queryParameters.prepare())
+): List<Int> = batchPreparedNamedStatement(sql.toString(), queryParameters.prepare())
 
 fun <T : Any> Session.batch(
-    @Language("PostgreSQL") sql: String,
+    @Language("PostgreSQL") sql: CharSequence,
     items: Collection<T> = emptyList(),
     block: (T) -> QueryParameters,
 ): List<Int> = batch(sql, items.map(block))
 
 fun Session.batchAndReturnGeneratedKeys(
-    @Language("PostgreSQL") sql: String,
+    @Language("PostgreSQL") sql: CharSequence,
     queryParameters: Collection<QueryParameters> = emptyList(),
-): List<Long> = batchPreparedNamedStatementAndReturnGeneratedKeys(sql, queryParameters.prepare())
+): List<Long> = batchPreparedNamedStatementAndReturnGeneratedKeys(sql.toString(), queryParameters.prepare())
 
 fun <T : Any> Session.batchAndReturnGeneratedKeys(
-    @Language("PostgreSQL") sql: String,
+    @Language("PostgreSQL") sql: CharSequence,
     items: Collection<T> = emptyList(),
     block: (T) -> QueryParameters,
 ): List<Long> = batchAndReturnGeneratedKeys(sql, items.map(block))

@@ -1,6 +1,7 @@
 package no.nav.hjelpemidler.database
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.UUID
 
 typealias Row = kotliquery.Row
 
@@ -17,6 +18,28 @@ inline fun <reified T : Enum<T>> Row.enum(columnLabel: String): T =
 
 inline fun <reified T : Enum<T>> Row.enumOrNull(columnLabel: String): T? =
     stringOrNull(columnLabel)?.let<String, T>(::enumValueOf)
+
+inline fun <reified E : Enum<E>> Row.enums(columnLabel: String): Set<E> =
+    array<String>(columnLabel).toEnumSet()
+
+inline fun <reified E : Enum<E>> Row.enumsOrNull(columnLabel: String): Set<E> {
+    val strings = arrayOrNull<String>(columnLabel) ?: return emptySet()
+    return strings.toEnumSet()
+}
+
+private fun <K, V> Row.ifPresent(columnLabel: String, valueOrNull: Row.(String) -> K?, transform: Row.(K) -> V): V? {
+    val value = valueOrNull(columnLabel) ?: return null
+    return transform(value)
+}
+
+fun <T> Row.ifLongPresent(columnLabel: String, transform: Row.(Long) -> T): T? =
+    ifPresent(columnLabel, Row::longOrNull, transform)
+
+fun <T> Row.ifStringPresent(columnLabel: String, transform: Row.(String) -> T): T? =
+    ifPresent(columnLabel, Row::stringOrNull, transform)
+
+fun <T> Row.ifUuidPresent(columnLabel: String, transform: Row.(UUID) -> T): T? =
+    ifPresent(columnLabel, Row::uuidOrNull, transform)
 
 fun Row.toMap(): Map<String, Any?> {
     val metaData = checkNotNull(metaDataOrNull())
