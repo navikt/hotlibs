@@ -27,7 +27,7 @@ inline fun <reified E : Enum<E>> Row.enumsOrNull(columnLabel: String): Set<E> {
     return strings.toEnumSet()
 }
 
-private fun <K, V> Row.ifPresent(columnLabel: String, valueOrNull: Row.(String) -> K?, transform: Row.(K) -> V): V? {
+fun <K, V> Row.ifPresent(columnLabel: String, valueOrNull: Row.(String) -> K?, transform: Row.(K) -> V): V? {
     val value = valueOrNull(columnLabel) ?: return null
     return transform(value)
 }
