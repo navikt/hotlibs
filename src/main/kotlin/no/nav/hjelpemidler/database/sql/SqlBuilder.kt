@@ -51,7 +51,7 @@ internal fun StringBuilder.appendOrderBy(orderBy: SqlOrderBy): StringBuilder =
     appendLine().append(orderBy)
 
 fun buildSql(@Language("PostgreSQL") sql: String, block: SqlBuilder.() -> Unit): Sql =
-    buildSql(sqlOf(sql.trim()), block)
+    buildSql(sqlOf(sql), block)
 
 fun buildSql(sql: Sql, block: SqlBuilder.() -> Unit): Sql =
     SqlBuilder(sql).apply(block).toSql()

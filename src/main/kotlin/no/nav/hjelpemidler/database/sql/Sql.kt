@@ -8,4 +8,4 @@ value class Sql internal constructor(@Language("PostgreSQL") private val value: 
     override fun toString(): String = value
 }
 
-fun sqlOf(@Language("PostgreSQL") value: String): Sql = Sql(value.trimIndent())
+fun sqlOf(@Language("PostgreSQL") value: String): Sql = Sql(value)
