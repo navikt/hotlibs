@@ -3,8 +3,7 @@ package no.nav.hjelpemidler.database.sql
 import org.intellij.lang.annotations.Language
 
 @JvmInline
-value class SqlCondition internal constructor(@Language("PostgreSQL") private val value: String) :
-    Comparable<SqlCondition> {
+value class SqlCondition(@Language("PostgreSQL") private val value: String) : Comparable<SqlCondition> {
     infix fun and(other: SqlCondition): SqlCondition = SqlCondition("($value AND ${other.value})")
 
     infix fun or(other: SqlCondition): SqlCondition = SqlCondition("($value OR ${other.value})")
@@ -19,5 +18,3 @@ value class SqlCondition internal constructor(@Language("PostgreSQL") private va
         val FALSE = SqlCondition("FALSE")
     }
 }
-
-fun sqlConditionOf(@Language("PostgreSQL") value: String): SqlCondition = SqlCondition(value)
