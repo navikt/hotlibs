@@ -1,4 +1,4 @@
-package no.nav.hjelpemidler.database
+package no.nav.hjelpemidler.collections
 
 import java.util.EnumSet
 
@@ -7,7 +7,7 @@ inline fun <reified E : Enum<E>> emptyEnumSet(): Set<E> = EnumSet.noneOf(E::clas
 
 fun <E : Enum<E>> enumSetOf(first: E, vararg rest: E): Set<E> = EnumSet.of(first, *rest)
 
-inline fun <reified E : Enum<E>> Array<String>.toEnumSet(): Set<E> {
+inline fun <reified E : Enum<E>> Array<out String>.toEnumSet(): Set<E> {
     if (isEmpty()) return emptyEnumSet()
     return EnumSet.copyOf(map { enumValueOf<E>(it) })
 }

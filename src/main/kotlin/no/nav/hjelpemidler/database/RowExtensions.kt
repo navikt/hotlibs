@@ -1,6 +1,7 @@
 package no.nav.hjelpemidler.database
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import no.nav.hjelpemidler.collections.toEnumSet
 import java.util.UUID
 
 typealias Row = kotliquery.Row
