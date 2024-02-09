@@ -6,4 +6,6 @@ import org.intellij.lang.annotations.Language
 value class Sql(@Language("PostgreSQL") private val value: String) : Comparable<Sql> {
     override fun compareTo(other: Sql): Int = value.compareTo(other.value)
     override fun toString(): String = value
+
+    fun replace(oldValue: String, newValue: String): Sql = Sql(value.replace(oldValue, newValue))
 }
