@@ -5,7 +5,7 @@ import org.intellij.lang.annotations.Language
 class SqlBuilder internal constructor(
     private val baseSql: Sql,
     private val conditions: MutableSet<SqlCondition> = mutableSetOf(),
-    private var orderBy: SqlOrderBy? = null,
+    private var orderBy: MutableSet<SqlOrderBy> = mutableSetOf()
 ) {
     fun filter(condition: SqlCondition) {
         conditions.add(condition)
@@ -19,7 +19,7 @@ class SqlBuilder internal constructor(
     }
 
     fun orderBy(columnName: String, order: SqlOrderBy.Order = SqlOrderBy.Order.ASC) {
-        orderBy = SqlOrderBy(columnName, order)
+        orderBy.add(SqlOrderBy(columnName, order))
     }
 
     fun orderBy(column: SqlColumn, order: SqlOrderBy.Order = SqlOrderBy.Order.ASC) = orderBy(column.columnName, order)
@@ -34,20 +34,15 @@ class SqlBuilder internal constructor(
     fun toSql(): Sql = buildString {
         append(baseSql)
         if (conditions.isNotEmpty()) {
-            appendLine().append("WHERE TRUE")
-            conditions.forEach(::appendCondition)
+            conditions.joinTo(buffer = this, separator = " AND ", prefix = "\nWHERE ")
         }
-        orderBy?.let(::appendOrderBy)
+        if (orderBy.isNotEmpty()) {
+            orderBy.joinTo(buffer = this, separator = ", ", prefix = "\nORDER BY ")
+        }
     }.let(::Sql)
 
     override fun toString(): String = toSql().toString()
 }
-
-internal fun StringBuilder.appendCondition(condition: SqlCondition): StringBuilder =
-    appendLine().append('\t').append("AND ").append(condition)
-
-internal fun StringBuilder.appendOrderBy(orderBy: SqlOrderBy): StringBuilder =
-    appendLine().append(orderBy)
 
 fun buildSql(@Language("PostgreSQL") baseSql: String, block: SqlBuilder.() -> Unit): Sql =
     buildSql(Sql(baseSql), block)
