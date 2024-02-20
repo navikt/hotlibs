@@ -112,7 +112,7 @@ koin-test-junit5 = { group = "io.insert-koin", name = "koin-test-junit5", versio
 kafka-clients = { group = "org.apache.kafka", name = "kafka-clients", version.ref = "kafka" }
 kafka-streams = { group = "org.apache.kafka", name = "kafka-streams", version.ref = "kafka" }
 kafka-streams-test-utils = { group = "org.apache.kafka", name = "kafka-streams-test-utils", version.ref = "kafka" }
-rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", version = "2024020419561707073004.70bfb92c077c" }
+rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", version = "2024020611421707216156.1a4e8bdae578" }
 
 # Confluent
 kafka-avro-serializer = { group = "io.confluent", name = "kafka-avro-serializer", version.ref = "confluent" }
