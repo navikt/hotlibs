@@ -1,5 +1,5 @@
 [versions]
-confluent = "7.5.3"
+confluent = "7.6.0"
 coroutines = "1.8.0"
 flyway = "10.8.1"
 graphql = "7.0.2"
