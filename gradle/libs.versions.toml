@@ -123,7 +123,7 @@ flyway-core = { group = "org.flywaydb", name = "flyway-core", version.ref = "fly
 flyway-database-postgresql = { group = "org.flywaydb", name = "flyway-database-postgresql", version.ref = "flyway" }
 hikaricp = { group = "com.zaxxer", name = "HikariCP", version = "5.1.0" }
 kotliquery = { group = "com.github.seratch", name = "kotliquery", version = "1.9.0" }
-postgresql = { group = "org.postgresql", name = "postgresql", version = "42.7.1" }
+postgresql = { group = "org.postgresql", name = "postgresql", version = "42.7.2" }
 
 # Redis
 jedis = { group = "redis.clients", name = "jedis", version = "5.1.0" }
