@@ -17,4 +17,4 @@ inline fun <reified E : Enum<E>> Collection<E>.toEnumSet(): Set<E> {
     return EnumSet.copyOf(this)
 }
 
-fun <E : Enum<E>> E.toEnumSet(): EnumSet<E> = EnumSet.of(this)
+fun <E : Enum<E>> E.toSet(): Set<E> = EnumSet.of(this)
