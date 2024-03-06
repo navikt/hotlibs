@@ -1,7 +1,7 @@
 [versions]
 confluent = "7.6.0"
 coroutines = "1.8.0"
-flyway = "10.8.1"
+flyway = "10.9.0"
 graphql = "7.0.2"
 jackson = "2.16.1"
 junit = "5.10.2"
@@ -12,8 +12,8 @@ kotlin = "1.9.22"
 ktor = "2.3.8"
 serialization = "1.6.3"
 slf4j = "2.0.12"
-spotless = "6.23.3"
-testcontainers = "1.19.6"
+spotless = "6.25.0"
+testcontainers = "1.19.7"
 
 [plugins]
 flyway = { id = "org.flywaydb.flyway", version.ref = "flyway" }
@@ -128,7 +128,7 @@ kotliquery = { group = "com.github.seratch", name = "kotliquery", version = "1.9
 postgresql = { group = "org.postgresql", name = "postgresql", version = "42.7.2" }
 
 # Redis
-jedis = { group = "redis.clients", name = "jedis", version = "5.1.0" }
+jedis = { group = "redis.clients", name = "jedis", version = "5.1.1" }
 lettuce = { group = "io.lettuce", name = "lettuce-core", version = "6.3.1.RELEASE" }
 
 # DigiHoT
@@ -154,7 +154,7 @@ slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4
 
 # Logging
 kotlin-logging = { group = "io.github.microutils", name = "kotlin-logging", version = "3.0.5" }
-logback-classic = { group = "ch.qos.logback", name = "logback-classic", version = "1.5.0" }
+logback-classic = { group = "ch.qos.logback", name = "logback-classic", version = "1.5.3" }
 logback-syslog4j = { group = "com.papertrailapp", name = "logback-syslog4j", version = "1.0.0" }
 logstash-logback-encoder = { group = "net.logstash.logback", name = "logstash-logback-encoder", version = "7.4" }
 
@@ -173,7 +173,7 @@ kotest-assertions-ktor = { group = "io.kotest.extensions", name = "kotest-assert
 kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest" }
 
 # MockK
-mockk = { group = "io.mockk", name = "mockk-jvm", version = "1.13.9" }
+mockk = { group = "io.mockk", name = "mockk-jvm", version = "1.13.10" }
 
 # Nimbus
 nimbus-jose-jwt = { group = "com.nimbusds", name = "nimbus-jose-jwt", version = "9.37.3" }
