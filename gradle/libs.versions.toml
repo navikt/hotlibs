@@ -125,6 +125,7 @@ flyway-core = { group = "org.flywaydb", name = "flyway-core", version.ref = "fly
 flyway-database-postgresql = { group = "org.flywaydb", name = "flyway-database-postgresql", version.ref = "flyway" }
 hikaricp = { group = "com.zaxxer", name = "HikariCP", version = "5.1.0" }
 kotliquery = { group = "com.github.seratch", name = "kotliquery", version = "1.9.0" }
+ojdbc11 = { group = "com.oracle.database.jdbc", name = "ojdbc11", version = "23.3.0.23.09" }
 postgresql = { group = "org.postgresql", name = "postgresql", version = "42.7.2" }
 
 # Redis
@@ -183,6 +184,8 @@ testcontainers-bom = { group = "org.testcontainers", name = "testcontainers-bom"
 testcontainers-junit = { group = "org.testcontainers", name = "junit-jupiter", version.ref = "testcontainers" }
 testcontainers-kafka = { group = "org.testcontainers", name = "kafka", version.ref = "testcontainers" }
 testcontainers-mockserver = { group = "org.testcontainers", name = "mockserver", version.ref = "testcontainers" }
+testcontainers-oracle-free = { group = "org.testcontainers", name = "oracle-free", version.ref = "testcontainers" }
+testcontainers-oracle-xe = { group = "org.testcontainers", name = "oracle-xe", version.ref = "testcontainers" }
 testcontainers-postgresql = { group = "org.testcontainers", name = "postgresql", version.ref = "testcontainers" }
 
 [bundles]
