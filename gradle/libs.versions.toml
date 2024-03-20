@@ -1,14 +1,14 @@
 [versions]
 confluent = "7.6.0"
 coroutines = "1.8.0"
-flyway = "10.9.0"
+flyway = "10.10.0"
 graphql = "7.0.2"
-jackson = "2.16.1"
+jackson = "2.17.0"
 junit = "5.10.2"
 kafka = "3.6.1" # følger rapids-and-rivers
 koin = "3.5.3"
-kotest = "5.8.0"
-kotlin = "1.9.22"
+kotest = "5.8.1"
+kotlin = "1.9.23"
 ktor = "2.3.9"
 serialization = "1.6.3"
 slf4j = "2.0.12"
