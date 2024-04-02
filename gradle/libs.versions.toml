@@ -231,8 +231,8 @@ ktor-server-test = [
     "testcontainers-postgresql",
 ]
 graphql-client = [
-    "graphql-kotlin-ktor-client",
-    "graphql-kotlin-client-jackson",
+    "graphql-ktor-client",
+    "graphql-client-jackson",
 ]
 metrics = [
     "influxdb-client-kotlin",
