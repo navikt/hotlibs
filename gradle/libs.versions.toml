@@ -140,9 +140,9 @@ hm-http = { group = "no.nav.hjelpemidler", name = "hm-http", version = "0.2.9" }
 hm-nare = { group = "no.nav.hjelpemidler", name = "hm-nare", version = "0.2.5" }
 
 # GraphQL
-graphql-kotlin-client-jackson = { group = "com.expediagroup", name = "graphql-kotlin-client-jackson", version.ref = "graphql" }
-graphql-kotlin-gradle-plugin = { group = "com.expediagroup", name = "graphql-kotlin-gradle-plugin", version.ref = "graphql" }
-graphql-kotlin-ktor-client = { group = "com.expediagroup", name = "graphql-kotlin-ktor-client", version.ref = "graphql" }
+graphql-client-jackson = { group = "com.expediagroup", name = "graphql-kotlin-client-jackson", version.ref = "graphql" }
+graphql-gradle-plugin = { group = "com.expediagroup", name = "graphql-kotlin-gradle-plugin", version.ref = "graphql" }
+graphql-ktor-client = { group = "com.expediagroup", name = "graphql-kotlin-ktor-client", version.ref = "graphql" }
 
 # Metrics
 influxdb-client-kotlin = { group = "com.influxdb", name = "influxdb-client-kotlin", version = "7.0.0" }
@@ -161,10 +161,10 @@ logback-syslog4j = { group = "com.papertrailapp", name = "logback-syslog4j", ver
 logstash-logback-encoder = { group = "net.logstash.logback", name = "logstash-logback-encoder", version = "7.4" }
 
 # Spotless
-spotless-plugin-gradle = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version.ref = "spotless" }
+spotless-gradle-plugin = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version.ref = "spotless" }
 
 # OpenAPI
-microprofile-openapi-api = { group = "org.eclipse.microprofile.openapi", name = "microprofile-openapi-api", version = "3.1.1" }
+microprofile-openapi = { group = "org.eclipse.microprofile.openapi", name = "microprofile-openapi-api", version = "3.1.1" }
 openapi-gradle-plugin = { group = "org.openapitools", name = "openapi-generator-gradle-plugin", version.ref = "openapi" }
 swagger-annotations = { group = "io.swagger.core.v3", name = "swagger-annotations", version = "2.2.21" }
 
