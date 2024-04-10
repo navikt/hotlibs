@@ -1,11 +1,9 @@
-rootProject.name = "hm-http"
-
 dependencyResolutionManagement {
     @Suppress("UnstableApiUsage")
     repositories {
         mavenCentral()
         maven {
-            url = uri("https://maven.pkg.github.com/navikt/hm-katalog")
+            url = uri("https://maven.pkg.github.com/navikt/*")
             credentials {
                 username = System.getenv("GITHUB_ACTOR")
                 password = System.getenv("GITHUB_TOKEN")
@@ -21,3 +19,5 @@ dependencyResolutionManagement {
         }
     }
 }
+
+rootProject.name = "hm-http"
