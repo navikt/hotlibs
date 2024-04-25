@@ -1,5 +1,3 @@
-rootProject.name = "hm-nare"
-
 dependencyResolutionManagement {
     @Suppress("UnstableApiUsage")
     repositories {
@@ -21,3 +19,5 @@ dependencyResolutionManagement {
         }
     }
 }
+
+rootProject.name = "hm-nare"
