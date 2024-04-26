@@ -79,7 +79,7 @@ ktor-client-resources = { group = "io.ktor", name = "ktor-client-resources", ver
 
 ktor-serialization-jackson = { group = "io.ktor", name = "ktor-serialization-jackson", version.ref = "ktor" }
 
-ktor-server-auth-jvm = { group = "io.ktor", name = "ktor-server-auth-jvm", version.ref = "ktor" }
+ktor-server-auth = { group = "io.ktor", name = "ktor-server-auth-jvm", version.ref = "ktor" }
 ktor-server-auth-jwt = { group = "io.ktor", name = "ktor-server-auth-jwt-jvm", version.ref = "ktor" }
 ktor-server-call-id = { group = "io.ktor", name = "ktor-server-call-id", version.ref = "ktor" }
 ktor-server-call-logging = { group = "io.ktor", name = "ktor-server-call-logging", version.ref = "ktor" }
@@ -98,14 +98,14 @@ java-jwt = { group = "com.auth0", name = "java-jwt", version = "4.4.0" } # følg
 nimbus-jose-jwt = { group = "com.nimbusds", name = "nimbus-jose-jwt", version = "9.37.3" }
 
 # tms-ktor-token-support
-tmsKtorTokenSupport-azure-exchange = { group = "no.nav.tms.token.support", name = "azure-exchange", version = "tmsKtorTokenSupport" }
-tmsKtorTokenSupport-azure-validation = { group = "no.nav.tms.token.support", name = "azure-validation", version = "tmsKtorTokenSupport" }
-tmsKtorTokenSupport-azure-validation-mock = { group = "no.nav.tms.token.support", name = "azure-validation-mock", version = "tmsKtorTokenSupport" }
-tmsKtorTokenSupport-idporten-sidecar = { group = "no.nav.tms.token.support", name = "idporten-sidecar", version = "tmsKtorTokenSupport" }
-tmsKtorTokenSupport-idporten-sidecar-mock = { group = "no.nav.tms.token.support", name = "idporten-sidecar-mock", version = "tmsKtorTokenSupport" }
-tmsKtorTokenSupport-tokendings-exchange = { group = "no.nav.tms.token.support", name = "tokendings-exchange", version = "tmsKtorTokenSupport" }
-tmsKtorTokenSupport-tokenx-validation = { group = "no.nav.tms.token.support", name = "tokenx-validation", version = "tmsKtorTokenSupport" }
-tmsKtorTokenSupport-tokenx-validation-mock = { group = "no.nav.tms.token.support", name = "tokenx-validation-mock", version = "tmsKtorTokenSupport" }
+azure-exchange = { group = "no.nav.tms.token.support", name = "azure-exchange", version.ref = "tmsKtorTokenSupport" }
+azure-validation = { group = "no.nav.tms.token.support", name = "azure-validation", version.ref = "tmsKtorTokenSupport" }
+azure-validation-mock = { group = "no.nav.tms.token.support", name = "azure-validation-mock", version.ref = "tmsKtorTokenSupport" }
+idporten-sidecar = { group = "no.nav.tms.token.support", name = "idporten-sidecar", version.ref = "tmsKtorTokenSupport" }
+idporten-sidecar-mock = { group = "no.nav.tms.token.support", name = "idporten-sidecar-mock", version.ref = "tmsKtorTokenSupport" }
+tokendings-exchange = { group = "no.nav.tms.token.support", name = "tokendings-exchange", version.ref = "tmsKtorTokenSupport" }
+tokenx-validation = { group = "no.nav.tms.token.support", name = "tokenx-validation", version.ref = "tmsKtorTokenSupport" }
+tokenx-validation-mock = { group = "no.nav.tms.token.support", name = "tokenx-validation-mock", version.ref = "tmsKtorTokenSupport" }
 
 # NoCommons
 nocommons = { group = "no.bekk.bekkopen", name = "nocommons", version = "0.16.0" }
