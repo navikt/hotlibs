@@ -15,6 +15,7 @@ serialization = "1.6.3"
 slf4j = "2.0.13"
 spotless = "6.25.0"
 testcontainers = "1.19.7"
+tmsKtorTokenSupport = "4.1.0"
 
 [plugins]
 flyway = { id = "org.flywaydb.flyway", version.ref = "flyway" }
@@ -95,6 +96,16 @@ ktor-server-test-host = { group = "io.ktor", name = "ktor-server-test-host", ver
 # JWT
 java-jwt = { group = "com.auth0", name = "java-jwt", version = "4.4.0" } # følger ktor-server-auth-jwt
 nimbus-jose-jwt = { group = "com.nimbusds", name = "nimbus-jose-jwt", version = "9.37.3" }
+
+# tms-ktor-token-support
+tmsKtorTokenSupport-azure-exchange = { group = "no.nav.tms.token.support", name = "azure-exchange", version = "tmsKtorTokenSupport" }
+tmsKtorTokenSupport-azure-validation = { group = "no.nav.tms.token.support", name = "azure-validation", version = "tmsKtorTokenSupport" }
+tmsKtorTokenSupport-azure-validation-mock = { group = "no.nav.tms.token.support", name = "azure-validation-mock", version = "tmsKtorTokenSupport" }
+tmsKtorTokenSupport-idporten-sidecar = { group = "no.nav.tms.token.support", name = "idporten-sidecar", version = "tmsKtorTokenSupport" }
+tmsKtorTokenSupport-idporten-sidecar-mock = { group = "no.nav.tms.token.support", name = "idporten-sidecar-mock", version = "tmsKtorTokenSupport" }
+tmsKtorTokenSupport-tokendings-exchange = { group = "no.nav.tms.token.support", name = "tokendings-exchange", version = "tmsKtorTokenSupport" }
+tmsKtorTokenSupport-tokenx-validation = { group = "no.nav.tms.token.support", name = "tokenx-validation", version = "tmsKtorTokenSupport" }
+tmsKtorTokenSupport-tokenx-validation-mock = { group = "no.nav.tms.token.support", name = "tokenx-validation-mock", version = "tmsKtorTokenSupport" }
 
 # NoCommons
 nocommons = { group = "no.bekk.bekkopen", name = "nocommons", version = "0.16.0" }
