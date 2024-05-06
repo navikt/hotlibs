@@ -68,6 +68,7 @@ jackson-module-kotlin = { group = "com.fasterxml.jackson.module", name = "jackso
 
 # Ktor
 ktor-bom = { group = "io.ktor", name = "ktor-bom", version.ref = "ktor" }
+ktor-gradle-plugin = { group = "io.ktor.plugin", name = "plugin", version.ref = "ktor" }
 
 ktor-client-apache = { group = "io.ktor", name = "ktor-client-apache", version.ref = "ktor" }
 ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
