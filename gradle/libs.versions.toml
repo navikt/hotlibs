@@ -1,9 +1,9 @@
 [versions]
 confluent = "7.6.1"
 coroutines = "1.8.0"
-flyway = "10.11.1"
+flyway = "10.12.0"
 graphql = "7.1.1"
-jackson = "2.17.0"
+jackson = "2.17.1"
 junit = "5.10.2"
 kafka = "3.7.0" # følger rapids-and-rivers
 koin = "3.5.6"
@@ -15,7 +15,7 @@ serialization = "1.6.3"
 slf4j = "2.0.13"
 spotless = "6.25.0"
 testcontainers = "1.19.7"
-tmsKtorTokenSupport = "4.1.0"
+tmsKtorTokenSupport = "4.1.1"
 
 [plugins]
 flyway = { id = "org.flywaydb.flyway", version.ref = "flyway" }
@@ -75,6 +75,7 @@ ktor-client-apache = { group = "io.ktor", name = "ktor-client-apache", version.r
 ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
 ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktor-client-jackson = { group = "io.ktor", name = "ktor-client-jackson-jvm", version.ref = "ktor" }
 ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
 ktor-client-mock = { group = "io.ktor", name = "ktor-client-mock", version.ref = "ktor" }
 ktor-client-resources = { group = "io.ktor", name = "ktor-client-resources", version.ref = "ktor" }
@@ -89,6 +90,8 @@ ktor-server-core = { group = "io.ktor", name = "ktor-server-core", version.ref =
 ktor-server-double-receive = { group = "io.ktor", name = "ktor-server-double-receive", version.ref = "ktor" }
 ktor-server-metrics-micrometer = { group = "io.ktor", name = "ktor-server-metrics-micrometer", version.ref = "ktor" }
 ktor-server-netty = { group = "io.ktor", name = "ktor-server-netty", version.ref = "ktor" }
+ktor-server-rate-limit = { group = "io.ktor", name = "ktor-server-rate-limit-jvm", version.ref = "ktor" }
+ktor-server-request-validation = { group = "io.ktor", name = "ktor-server-request-validation-jvm", version.ref = "ktor" }
 ktor-server-resources = { group = "io.ktor", name = "ktor-server-resources", version.ref = "ktor" }
 ktor-server-status-pages = { group = "io.ktor", name = "ktor-server-status-pages", version.ref = "ktor" }
 ktor-server-test-host = { group = "io.ktor", name = "ktor-server-test-host", version.ref = "ktor" }
@@ -140,12 +143,15 @@ ojdbc11 = { group = "com.oracle.database.jdbc", name = "ojdbc11", version = "23.
 postgresql = { group = "org.postgresql", name = "postgresql", version = "42.7.3" }
 
 # Cache
+cache-api = { group = "javax.cache", name = "cache-api", version = "1.1.1" }
+ehcache = { group = "org.ehcache", name = "ehcache", version = "3.10.8" }
 caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version = "3.1.8" }
 jedis = { group = "redis.clients", name = "jedis", version = "5.1.2" }
 lettuce = { group = "io.lettuce", name = "lettuce-core", version = "6.3.2.RELEASE" }
 
 # DigiHoT
 hm-contract-pdl-avro = { group = "no.nav.hjelpemidler", name = "hm-contract-pdl-avro", version = "1.0.1" }
+hm-behovsmeldingsmodell = { group = "no.nav.hjelpemidler", name = "hm-behovsmeldingsmodell", version = "24.128.100644" }
 hm-database = { group = "no.nav.hjelpemidler", name = "hm-database", version = "0.2.16" }
 hm-http = { group = "no.nav.hjelpemidler", name = "hm-http", version = "0.2.10" }
 hm-nare = { group = "no.nav.hjelpemidler", name = "hm-nare", version = "0.2.6" }
@@ -166,7 +172,8 @@ slf4j-jdk-platform-logging = { group = "org.slf4j", name = "slf4j-jdk-platform-l
 slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j" }
 
 # Logging
-kotlin-logging = { group = "io.github.microutils", name = "kotlin-logging", version = "3.0.5" }
+kotlin-logging-deprecated = { group = "io.github.microutils", name = "kotlin-logging", version = "3.0.5" }
+kotlin-logging = { group = "io.github.oshai", name = "kotlin-logging-jvm", version = "6.0.9" }
 logback-classic = { group = "ch.qos.logback", name = "logback-classic", version = "1.5.6" }
 logback-syslog4j = { group = "com.papertrailapp", name = "logback-syslog4j", version = "1.0.0" }
 logstash-logback-encoder = { group = "net.logstash.logback", name = "logstash-logback-encoder", version = "7.4" }
@@ -180,7 +187,11 @@ openapi-gradle-plugin = { group = "org.openapitools", name = "openapi-generator-
 swagger-annotations = { group = "io.swagger.core.v3", name = "swagger-annotations", version = "2.2.21" }
 
 # Unleash
-unleash = { group = "no.finn.unleash", name = "unleash-client-java", version = "4.4.1" }
+unleash-deprecated = { group = "no.finn.unleash", name = "unleash-client-java", version = "4.4.1" }
+unleash = { group = "io.getunleash", name = "unleash-client-java", version = "9.2.1" }
+
+# Configuration
+konfig-deprecated = { group = "com.natpryce", name = "konfig", version = "1.6.10.0" }
 
 # JUnit
 junit-jupiter-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit" }
