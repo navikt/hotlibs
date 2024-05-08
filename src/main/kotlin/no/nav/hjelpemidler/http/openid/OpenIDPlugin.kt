@@ -1,12 +1,13 @@
 package no.nav.hjelpemidler.http.openid
 
 import io.ktor.client.HttpClientConfig
+import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.api.createClientPlugin
 
 class OpenIDPluginConfiguration {
     var scope: String = ""
-    var openIDClient: OpenIDClient? = null
-    var onBehalfOfProvider: suspend () -> String? = { null }
+    var tokenSetProvider: TokenSetProvider? = null
 
     internal val openIDClientConfiguration: OpenIDClientConfiguration = OpenIDClientConfiguration()
     fun openIDClient(block: OpenIDClientConfiguration.() -> Unit) {
@@ -15,22 +16,22 @@ class OpenIDPluginConfiguration {
 }
 
 val OpenIDPlugin = createClientPlugin("OpenIDPlugin", ::OpenIDPluginConfiguration) {
-    val scope = pluginConfig.scope
-    val openIDClient = when (val openIDClient = pluginConfig.openIDClient) {
-        null -> createOpenIDClient(
-            engine = client.engine,
-            configuration = pluginConfig.openIDClientConfiguration,
-        )
-
-        else -> openIDClient
-    }
-    val onBehalfOfProvider = pluginConfig.onBehalfOfProvider
+    val tokenSetProvider = pluginConfig.tokenSetProvider ?: createOpenIDClient(
+        engine = client.engine,
+        configuration = pluginConfig.openIDClientConfiguration,
+    ).withScope(pluginConfig.scope)
     onRequest { request, _ ->
-        val tokenSet = when (val accessToken: String? = onBehalfOfProvider()) {
-            null -> openIDClient.grant(scope = scope)
-            else -> openIDClient.grant(scope = scope, onBehalfOf = accessToken)
-        }
-        request.bearerAuth(tokenSet)
+        request.bearerAuth(tokenSetProvider())
+    }
+}
+
+fun HttpClientConfig<*>.openID(
+    tokenSetProvider: TokenSetProvider? = null,
+    block: OpenIDPluginConfiguration.() -> Unit = {},
+) {
+    install(OpenIDPlugin) {
+        this.tokenSetProvider = tokenSetProvider
+        block()
     }
 }
 
@@ -38,28 +39,16 @@ fun HttpClientConfig<*>.openID(
     scope: String,
     openIDClient: OpenIDClient? = null,
     block: OpenIDPluginConfiguration.() -> Unit = {},
-) {
-    install(OpenIDPlugin) {
-        this.scope = scope
-        this.openIDClient = openIDClient
-        block()
-    }
-}
+) = openID(openIDClient?.withScope(scope), block)
 
-fun HttpClientConfig<*>.azureAD(scope: String, block: OpenIDClientConfiguration.() -> Unit = {}) {
-    openID(scope = scope) {
-        openIDClient {
-            azureADEnvironmentConfiguration()
-            block()
-        }
-    }
-}
+fun HttpClientConfig<*>.azureAD(
+    scope: String,
+    engine: HttpClientEngine = CIO.create(),
+    block: OpenIDClientConfiguration.() -> Unit = {},
+) = openID(azureADClient(engine, block).withScope(scope))
 
-fun HttpClientConfig<*>.tokenX(scope: String, block: OpenIDClientConfiguration.() -> Unit = {}) {
-    openID(scope = scope) {
-        openIDClient {
-            tokenXEnvironmentConfiguration()
-            block()
-        }
-    }
-}
+fun HttpClientConfig<*>.tokenX(
+    scope: String,
+    engine: HttpClientEngine = CIO.create(),
+    block: OpenIDClientConfiguration.() -> Unit = {},
+) = openID(tokenXClient(engine, block).withScope(scope))

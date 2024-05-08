@@ -9,6 +9,7 @@ import io.ktor.client.engine.mock.respondOk
 import io.ktor.client.request.get
 import io.ktor.http.HttpStatusCode
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import no.nav.hjelpemidler.http.createHttpClient
@@ -52,7 +53,11 @@ class OpenIDPluginTest {
 
     @Test
     fun `Skal kaste feil hvis grant feiler`() = runTest {
-        val openIDClient = mockk<OpenIDClient>()
+        val openIDClient = mockk<OpenIDClient> {
+            every { withScope(any()) } answers {
+                TokenSetProvider { grant(firstArg<String>()) }
+            }
+        }
         val engine = MockEngine {
             respondOk("")
         }
