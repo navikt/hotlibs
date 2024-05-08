@@ -1,5 +1,6 @@
 package no.nav.hjelpemidler.http.openid
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngine
@@ -8,7 +9,6 @@ import io.ktor.client.request.forms.submitForm
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.Parameters
 import io.ktor.http.ParametersBuilder
-import mu.KotlinLogging
 import no.nav.hjelpemidler.http.createHttpClient
 import no.nav.hjelpemidler.http.withMDCContext
 

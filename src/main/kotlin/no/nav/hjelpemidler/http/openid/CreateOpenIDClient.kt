@@ -1,8 +1,8 @@
 package no.nav.hjelpemidler.http.openid
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.cio.CIO
-import mu.KotlinLogging
 
 private val log = KotlinLogging.logger {}
 

@@ -1,6 +1,6 @@
 package no.nav.hjelpemidler.configuration
 
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import java.util.Properties
 
 private val log = KotlinLogging.logger {}
