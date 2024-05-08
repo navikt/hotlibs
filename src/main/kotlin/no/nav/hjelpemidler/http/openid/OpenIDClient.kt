@@ -27,4 +27,6 @@ interface OpenIDClient {
     fun ParametersBuilder.assertion(value: String) = append("assertion", value)
     fun ParametersBuilder.scope(value: String) = append("scope", value)
     fun ParametersBuilder.requestedTokenUse(value: String) = append("requested_token_use", value)
+
+    fun withScope(scope: String): TokenSetProvider = TokenSetProvider { grant(scope) }
 }
