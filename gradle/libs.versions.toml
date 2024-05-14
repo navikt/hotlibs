@@ -151,10 +151,10 @@ lettuce = { group = "io.lettuce", name = "lettuce-core", version = "6.3.2.RELEAS
 
 # DigiHoT
 hm-contract-pdl-avro = { group = "no.nav.hjelpemidler", name = "hm-contract-pdl-avro", version = "1.0.1" }
-hm-behovsmeldingsmodell = { group = "no.nav.hjelpemidler", name = "hm-behovsmeldingsmodell", version = "24.128.100644" }
-hm-database = { group = "no.nav.hjelpemidler", name = "hm-database", version = "0.2.16" }
-hm-http = { group = "no.nav.hjelpemidler", name = "hm-http", version = "0.2.12" }
-hm-nare = { group = "no.nav.hjelpemidler", name = "hm-nare", version = "0.2.6" }
+hm-behovsmeldingsmodell = { group = "no.nav.hjelpemidler", name = "hm-behovsmeldingsmodell", version = "24.135.105818" }
+hm-database = { group = "no.nav.hjelpemidler", name = "hm-database", version = "0.2.17" }
+hm-http = { group = "no.nav.hjelpemidler", name = "hm-http", version = "0.2.13" }
+hm-nare = { group = "no.nav.hjelpemidler", name = "hm-nare", version = "0.2.7" }
 
 # GraphQL
 graphql-client-jackson = { group = "com.expediagroup", name = "graphql-kotlin-client-jackson", version.ref = "graphql" }
