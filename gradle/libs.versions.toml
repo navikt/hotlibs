@@ -1,4 +1,5 @@
 [versions]
+behovsmeldingsmodell = "24.137.094929"
 confluent = "7.6.1"
 coroutines = "1.8.1"
 flyway = "10.12.0"
@@ -151,7 +152,7 @@ lettuce = { group = "io.lettuce", name = "lettuce-core", version = "6.3.2.RELEAS
 
 # DigiHoT
 hm-contract-pdl-avro = { group = "no.nav.hjelpemidler", name = "hm-contract-pdl-avro", version = "1.0.1" }
-hm-behovsmeldingsmodell = { group = "no.nav.hjelpemidler", name = "hm-behovsmeldingsmodell", version = "24.135.105818" }
+hm-behovsmeldingsmodell = { group = "no.nav.hjelpemidler", name = "hm-behovsmeldingsmodell", version.ref = "behovsmeldingsmodell" }
 hm-database = { group = "no.nav.hjelpemidler", name = "hm-database", version = "0.2.18" }
 hm-http = { group = "no.nav.hjelpemidler", name = "hm-http", version = "0.2.14" }
 hm-nare = { group = "no.nav.hjelpemidler", name = "hm-nare", version = "0.2.8" }
