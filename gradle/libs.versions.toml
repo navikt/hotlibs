@@ -1,5 +1,5 @@
 [versions]
-behovsmeldingsmodell = "24.137.094929"
+behovsmeldingsmodell = "24.137.105844"
 confluent = "7.6.1"
 coroutines = "1.8.1"
 flyway = "10.12.0"
