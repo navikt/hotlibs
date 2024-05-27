@@ -23,11 +23,11 @@ class SessionExtensionsTest {
         val queryParameters = id.toQueryParameters()
 
         transaction(testDataSource) { tx ->
-            tx.query(sql = sql, queryParameters = queryParameters) { row -> row.long("id") }
+            tx.singleOrNull(sql, queryParameters) { row -> row.long("id") }
         } shouldBe id.value
 
         transaction(testDataSource) { tx ->
-            tx.query(sql = sql, queryParameters = 0.toQueryParameters()) { row -> row.long("id") }
+            tx.singleOrNull(sql = sql, queryParameters = 0.toQueryParameters()) { row -> row.long("id") }
         } shouldBe null
 
         shouldNotThrow<NoSuchElementException> {
@@ -41,9 +41,9 @@ class SessionExtensionsTest {
     fun `henter flere innslag`() = runTest {
         val ids = lagreEntities(10)
         val result = transaction(testDataSource) { tx ->
-            tx.queryList(
+            tx.list(
                 sql = "SELECT * FROM test WHERE id = ANY(:ids)",
-                queryParameters = mapOf("ids" to ids.toTypedArray()),
+                queryParameters = mapOf("ids" to ids.toTypedArray())
             ) { it.toMap() }
         }
 
@@ -54,7 +54,7 @@ class SessionExtensionsTest {
     fun `henter side`() = runTest {
         val ids = lagreEntities(20)
         val result = transaction(testDataSource) { tx ->
-            tx.queryPage(
+            tx.page(
                 sql = """
                     SELECT *, COUNT(1) OVER() AS total
                     FROM test
@@ -62,7 +62,7 @@ class SessionExtensionsTest {
                 """.trimIndent(),
                 queryParameters = mapOf("ids" to ids.toTypedArray()),
                 limit = 5,
-                offset = 0,
+                offset = 0
             ) { it.toMap() }
         }
 
@@ -134,7 +134,7 @@ class SessionExtensionsTest {
         result1.size shouldBe 3
 
         val result2 = transaction(testDataSource) { tx ->
-            tx.queryList("SELECT * FROM test WHERE string LIKE 'x%'") {
+            tx.list("SELECT * FROM test WHERE string LIKE 'x%'") {
                 TestEntity(
                     id = it.long("id").let(::TestId),
                     string = it.string("string"),
@@ -182,7 +182,7 @@ class SessionExtensionsTest {
     @Test
     fun `setter inn innslag og svarer med id`() = runTest {
         val id = transaction(testDataSource) { tx ->
-            tx.query(
+            tx.singleOrNull(
                 sql = """
                     INSERT INTO test (string, integer, enum, data_1, data_2)
                     VALUES ('test', 1, 'A', '{}', NULL)

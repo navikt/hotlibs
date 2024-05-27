@@ -10,7 +10,7 @@ fun <T : Any> Session.single(
     @Language("PostgreSQL") sql: String,
     queryParameters: QueryParameters = emptyMap(),
     mapper: ResultMapper<T>,
-): T = query(sql, queryParameters, mapper) ?: throw NoSuchElementException("Forventet en verdi, men var null")
+): T = singleOrNull(sql, queryParameters, mapper) ?: throw NoSuchElementException("Forventet en verdi, men var null")
 
 fun <T : Any> Session.single(
     sql: Sql,
@@ -18,31 +18,59 @@ fun <T : Any> Session.single(
     mapper: ResultMapper<T>,
 ): T = single(sql.toString(), queryParameters, mapper)
 
-fun <T> Session.query(
+fun <T> Session.singleOrNull(
     @Language("PostgreSQL") sql: String,
     queryParameters: QueryParameters = emptyMap(),
     mapper: ResultMapper<T>,
 ): T? = single(queryOf(sql, queryParameters), mapper)
 
+fun <T> Session.singleOrNull(
+    sql: Sql,
+    queryParameters: QueryParameters = emptyMap(),
+    mapper: ResultMapper<T>,
+): T? = singleOrNull(sql.toString(), queryParameters, mapper)
+
+@Deprecated("Bruk singleOrNull", ReplaceWith("this.singleOrNull(sql, queryParameters, mapper)"))
+fun <T> Session.query(
+    @Language("PostgreSQL") sql: String,
+    queryParameters: QueryParameters = emptyMap(),
+    mapper: ResultMapper<T>,
+): T? = singleOrNull(sql, queryParameters, mapper)
+
+@Deprecated("Bruk singleOrNull", ReplaceWith("this.singleOrNull(sql, queryParameters, mapper)"))
 fun <T> Session.query(
     sql: Sql,
     queryParameters: QueryParameters = emptyMap(),
     mapper: ResultMapper<T>,
-): T? = query(sql.toString(), queryParameters, mapper)
+): T? = singleOrNull(sql, queryParameters, mapper)
 
-fun <T : Any> Session.queryList(
+fun <T : Any> Session.list(
     @Language("PostgreSQL") sql: String,
     queryParameters: QueryParameters = emptyMap(),
     mapper: ResultMapper<T>,
 ): List<T> = list(queryOf(sql, queryParameters), mapper)
 
+fun <T : Any> Session.list(
+    sql: Sql,
+    queryParameters: QueryParameters = emptyMap(),
+    mapper: ResultMapper<T>,
+): List<T> = list(sql.toString(), queryParameters, mapper)
+
+@Deprecated("Bruk list", ReplaceWith("this.list(sql, queryParameters, mapper)"))
+fun <T : Any> Session.queryList(
+    @Language("PostgreSQL") sql: String,
+    queryParameters: QueryParameters = emptyMap(),
+    mapper: ResultMapper<T>,
+): List<T> = list(sql, queryParameters, mapper)
+
+@Deprecated("Bruk list", ReplaceWith("this.list(sql, queryParameters, mapper)"))
 fun <T : Any> Session.queryList(
     sql: Sql,
     queryParameters: QueryParameters = emptyMap(),
     mapper: ResultMapper<T>,
-): List<T> = queryList(sql.toString(), queryParameters, mapper)
+): List<T> = list(sql, queryParameters, mapper)
 
-fun <T : Any> Session.queryPage(
+fun <T : Any> Session.page(
     @Language("PostgreSQL") sql: String,
     queryParameters: QueryParameters = emptyMap(),
     limit: Int,
@@ -75,6 +103,26 @@ fun <T : Any> Session.queryPage(
     )
 }
 
+fun <T : Any> Session.page(
+    sql: Sql,
+    queryParameters: QueryParameters = emptyMap(),
+    limit: Int,
+    offset: Int,
+    totalNumberOfItemsLabel: String = "total",
+    mapper: ResultMapper<T>,
+): Page<T> = page(sql.toString(), queryParameters, limit, offset, totalNumberOfItemsLabel, mapper)
+
+@Deprecated("Bruk page", ReplaceWith("this.page(sql, queryParameters, limit, offset, totalNumberOfItemsLabel, mapper)"))
+fun <T : Any> Session.queryPage(
+    @Language("PostgreSQL") sql: String,
+    queryParameters: QueryParameters = emptyMap(),
+    limit: Int,
+    offset: Int,
+    totalNumberOfItemsLabel: String = "total",
+    mapper: ResultMapper<T>,
+): Page<T> = page(sql, queryParameters, limit, offset, totalNumberOfItemsLabel, mapper)
+
+@Deprecated("Bruk page", ReplaceWith("this.page(sql, queryParameters, limit, offset, totalNumberOfItemsLabel, mapper)"))
 fun <T : Any> Session.queryPage(
     sql: Sql,
     queryParameters: QueryParameters = emptyMap(),
@@ -82,7 +130,7 @@ fun <T : Any> Session.queryPage(
     offset: Int,
     totalNumberOfItemsLabel: String = "total",
     mapper: ResultMapper<T>,
-): Page<T> = queryPage(sql.toString(), queryParameters, limit, offset, totalNumberOfItemsLabel, mapper)
+): Page<T> = page(sql, queryParameters, limit, offset, totalNumberOfItemsLabel, mapper)
 
 fun Session.execute(
     @Language("PostgreSQL") sql: String,
@@ -146,5 +194,5 @@ fun <T : Any> Session.batchAndReturnGeneratedKeys(
 fun <T : Any> Session.batchAndReturnGeneratedKeys(
     sql: Sql,
     items: Collection<T> = emptyList(),
-    block: (T) -> QueryParameters
+    block: (T) -> QueryParameters,
 ): List<Long> = batchAndReturnGeneratedKeys(sql.toString(), items, block)
