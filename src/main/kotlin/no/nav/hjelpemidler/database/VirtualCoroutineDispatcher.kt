@@ -11,4 +11,5 @@ internal val VirtualCoroutineDispatcher: ExecutorCoroutineDispatcher =
     Executors.newVirtualThreadPerTaskExecutor().asCoroutineDispatcher()
 
 @Suppress("UnusedReceiverParameter")
-val Dispatchers.Virtual: @BlockingExecutor CoroutineDispatcher get() = VirtualCoroutineDispatcher
+val Dispatchers.Virtual: @BlockingExecutor CoroutineDispatcher
+    get() = VirtualCoroutineDispatcher

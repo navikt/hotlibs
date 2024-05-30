@@ -1,15 +1,13 @@
 package no.nav.hjelpemidler.database.test
 
 import kotliquery.Row
-import kotliquery.Session
+import no.nav.hjelpemidler.database.JdbcOperations
 import no.nav.hjelpemidler.database.Store
-import no.nav.hjelpemidler.database.batchAndReturnGeneratedKeys
-import no.nav.hjelpemidler.database.single
 import no.nav.hjelpemidler.database.toMap
 import no.nav.hjelpemidler.database.toQueryParameters
 import org.intellij.lang.annotations.Language
 
-class TestStore(private val tx: Session) : Store {
+class TestStore(private val tx: JdbcOperations) : Store {
     @Language("PostgreSQL")
     private val insertSql = """
         INSERT INTO test (string, integer, enum, data_1, data_2)

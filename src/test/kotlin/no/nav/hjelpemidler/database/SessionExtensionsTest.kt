@@ -67,7 +67,7 @@ class SessionExtensionsTest {
         }
 
         result shouldHaveSize 5
-        result.total shouldBe ids.size
+        result.totalElements shouldBe ids.size
     }
 
     @Test
@@ -194,7 +194,7 @@ class SessionExtensionsTest {
         id.shouldBePositive()
     }
 
-    private suspend fun lagreEntity(): TestId = transaction(testDataSource) { tx ->
+    private suspend fun lagreEntity(): TestId = transactionAsync(testDataSource) { tx ->
         TestStore(tx).lagre(
             TestEntity(
                 string = "string",
@@ -205,7 +205,7 @@ class SessionExtensionsTest {
         )
     }
 
-    private suspend fun lagreEntities(antall: Int): List<Long> = transaction(testDataSource) { tx ->
+    private suspend fun lagreEntities(antall: Int): List<Long> = transactionAsync(testDataSource) { tx ->
         TestStore(tx).lagre((1..antall).map {
             TestEntity(
                 string = "string",

@@ -1,6 +1,7 @@
 package no.nav.hjelpemidler.database
 
 import kotliquery.Query
+import no.nav.hjelpemidler.database.sql.Sql
 
 interface QueryParameter<out T> {
     val value: T
@@ -23,5 +24,8 @@ internal fun QueryParameters.prepare(): Map<String, Any?> = mapValues { (_, valu
 
 internal fun Collection<QueryParameters>.prepare(): List<Map<String, Any?>> = map(QueryParameters::prepare)
 
-fun queryOf(statement: String, queryParameters: QueryParameters): Query =
-    Query(statement, listOf(), queryParameters.prepare())
+fun queryOf(sql: Sql, queryParameters: QueryParameters): Query =
+    Query(sql.toString(), listOf(), queryParameters.prepare())
+
+fun queryOf(sql: String, queryParameters: QueryParameters): Query =
+    queryOf(Sql(sql), queryParameters)

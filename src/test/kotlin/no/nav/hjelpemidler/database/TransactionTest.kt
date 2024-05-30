@@ -18,7 +18,7 @@ class TransactionTest {
     @Test
     fun `lagrer og henter innslag i transaksjon`() = runTest {
         val id = lagreEntity()
-        val result = transaction(testDataSource) { tx ->
+        val result = transactionAsync(testDataSource) { tx ->
             TestStore(tx).hent(id)
         }
         result.shouldContain("id", id.value)
@@ -27,10 +27,10 @@ class TransactionTest {
     @Test
     fun `nestet transaksjon`() = runTest {
         val id = lagreEntity()
-        val result = transaction(testDataSource) { tx1 ->
+        val result = transactionAsync(testDataSource) { tx1 ->
             someSuspendingFunction()
             TestStore(tx1).hent(id)
-            transaction(testDataSource) { tx2 ->
+            transactionAsync(testDataSource) { tx2 ->
                 someSuspendingFunction()
                 TestStore(tx2).hent(id)
             }
@@ -38,7 +38,7 @@ class TransactionTest {
         result["id"] shouldBe id.value
     }
 
-    private suspend fun lagreEntity(): TestId = transaction(testDataSource) { tx ->
+    private suspend fun lagreEntity(): TestId = transactionAsync(testDataSource) { tx ->
         TestStore(tx).lagre(
             TestEntity(
                 string = "string",

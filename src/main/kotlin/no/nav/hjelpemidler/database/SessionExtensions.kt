@@ -6,69 +6,71 @@ import org.intellij.lang.annotations.Language
 typealias Session = kotliquery.Session
 typealias ResultMapper<T> = (Row) -> T?
 
+val Session.jdbcOperations: JdbcOperations get() = SessionJdbcOperations(this)
+
 fun <T : Any> Session.single(
     @Language("PostgreSQL") sql: String,
     queryParameters: QueryParameters = emptyMap(),
     mapper: ResultMapper<T>,
-): T = singleOrNull(sql, queryParameters, mapper) ?: throw NoSuchElementException("Forventet en verdi, men var null")
+): T = jdbcOperations.single(sql, queryParameters, mapper)
 
 fun <T : Any> Session.single(
     sql: Sql,
     queryParameters: QueryParameters = emptyMap(),
     mapper: ResultMapper<T>,
-): T = single(sql.toString(), queryParameters, mapper)
+): T = jdbcOperations.single(sql, queryParameters, mapper)
 
 fun <T> Session.singleOrNull(
     @Language("PostgreSQL") sql: String,
     queryParameters: QueryParameters = emptyMap(),
     mapper: ResultMapper<T>,
-): T? = single(queryOf(sql, queryParameters), mapper)
+): T? = jdbcOperations.singleOrNull(sql, queryParameters, mapper)
 
 fun <T> Session.singleOrNull(
     sql: Sql,
     queryParameters: QueryParameters = emptyMap(),
     mapper: ResultMapper<T>,
-): T? = singleOrNull(sql.toString(), queryParameters, mapper)
+): T? = jdbcOperations.singleOrNull(sql, queryParameters, mapper)
 
 @Deprecated("Bruk singleOrNull", ReplaceWith("this.singleOrNull(sql, queryParameters, mapper)"))
 fun <T> Session.query(
     @Language("PostgreSQL") sql: String,
     queryParameters: QueryParameters = emptyMap(),
     mapper: ResultMapper<T>,
-): T? = singleOrNull(sql, queryParameters, mapper)
+): T? = jdbcOperations.singleOrNull(sql, queryParameters, mapper)
 
 @Deprecated("Bruk singleOrNull", ReplaceWith("this.singleOrNull(sql, queryParameters, mapper)"))
 fun <T> Session.query(
     sql: Sql,
     queryParameters: QueryParameters = emptyMap(),
     mapper: ResultMapper<T>,
-): T? = singleOrNull(sql, queryParameters, mapper)
+): T? = jdbcOperations.singleOrNull(sql, queryParameters, mapper)
 
 fun <T : Any> Session.list(
     @Language("PostgreSQL") sql: String,
     queryParameters: QueryParameters = emptyMap(),
     mapper: ResultMapper<T>,
-): List<T> = list(queryOf(sql, queryParameters), mapper)
+): List<T> = jdbcOperations.list(sql, queryParameters, mapper)
 
 fun <T : Any> Session.list(
     sql: Sql,
     queryParameters: QueryParameters = emptyMap(),
     mapper: ResultMapper<T>,
-): List<T> = list(sql.toString(), queryParameters, mapper)
+): List<T> = jdbcOperations.list(sql, queryParameters, mapper)
 
 @Deprecated("Bruk list", ReplaceWith("this.list(sql, queryParameters, mapper)"))
 fun <T : Any> Session.queryList(
     @Language("PostgreSQL") sql: String,
     queryParameters: QueryParameters = emptyMap(),
     mapper: ResultMapper<T>,
-): List<T> = list(sql, queryParameters, mapper)
+): List<T> = jdbcOperations.list(sql, queryParameters, mapper)
 
 @Deprecated("Bruk list", ReplaceWith("this.list(sql, queryParameters, mapper)"))
 fun <T : Any> Session.queryList(
     sql: Sql,
     queryParameters: QueryParameters = emptyMap(),
     mapper: ResultMapper<T>,
-): List<T> = list(sql, queryParameters, mapper)
+): List<T> = jdbcOperations.list(sql, queryParameters, mapper)
 
 fun <T : Any> Session.page(
     @Language("PostgreSQL") sql: String,
@@ -77,31 +79,8 @@ fun <T : Any> Session.page(
     offset: Int,
     totalNumberOfItemsLabel: String = "total",
     mapper: ResultMapper<T>,
-): Page<T> {
-    val limitParameter = "no_nav_hjelpemidler_database_limit"
-    val offsetParameter = "no_nav_hjelpemidler_database_offset"
-    var totalNumberOfItems = -1
-    val items = list(
-        queryOf(
-            statement = """
-                $sql
-                LIMIT :$limitParameter
-                OFFSET :$offsetParameter
-            """.trimIndent(),
-            queryParameters + mapOf(
-                limitParameter to limit + 1, // hent limit + 1 for å sjekke "hasMore"
-                offsetParameter to offset,
-            )
-        )
-    ) { row ->
-        totalNumberOfItems = row.intOrNull(totalNumberOfItemsLabel) ?: -1
-        mapper(row)
-    }
-    return Page(
-        items = items.take(limit),
-        total = totalNumberOfItems,
-    )
-}
+): Page<T> =
+    jdbcOperations.page(sql, queryParameters, pageRequestFromOffset(limit, offset), totalNumberOfItemsLabel, mapper)
 
 fun <T : Any> Session.page(
     sql: Sql,
@@ -110,7 +89,8 @@ fun <T : Any> Session.page(
     offset: Int,
     totalNumberOfItemsLabel: String = "total",
     mapper: ResultMapper<T>,
-): Page<T> = page(sql.toString(), queryParameters, limit, offset, totalNumberOfItemsLabel, mapper)
+): Page<T> =
+    jdbcOperations.page(sql, queryParameters, pageRequestFromOffset(limit, offset), totalNumberOfItemsLabel, mapper)
 
 @Deprecated("Bruk page", ReplaceWith("this.page(sql, queryParameters, limit, offset, totalNumberOfItemsLabel, mapper)"))
 fun <T : Any> Session.queryPage(
@@ -120,7 +100,8 @@ fun <T : Any> Session.queryPage(
     offset: Int,
     totalNumberOfItemsLabel: String = "total",
     mapper: ResultMapper<T>,
-): Page<T> = page(sql, queryParameters, limit, offset, totalNumberOfItemsLabel, mapper)
+): Page<T> =
+    jdbcOperations.page(sql, queryParameters, pageRequestFromOffset(limit, offset), totalNumberOfItemsLabel, mapper)
 
 @Deprecated("Bruk page", ReplaceWith("this.page(sql, queryParameters, limit, offset, totalNumberOfItemsLabel, mapper)"))
 fun <T : Any> Session.queryPage(
@@ -130,69 +111,82 @@ fun <T : Any> Session.queryPage(
     offset: Int,
     totalNumberOfItemsLabel: String = "total",
     mapper: ResultMapper<T>,
-): Page<T> = page(sql, queryParameters, limit, offset, totalNumberOfItemsLabel, mapper)
+): Page<T> =
+    jdbcOperations.page(sql, queryParameters, pageRequestFromOffset(limit, offset), totalNumberOfItemsLabel, mapper)
 
 fun Session.execute(
     @Language("PostgreSQL") sql: String,
     queryParameters: QueryParameters = emptyMap(),
-): Boolean = execute(queryOf(sql, queryParameters))
+): Boolean = jdbcOperations.execute(sql, queryParameters)
 
-fun Session.execute(sql: Sql, queryParameters: QueryParameters = emptyMap()): Boolean =
-    execute(sql.toString(), queryParameters)
+fun Session.execute(
+    sql: Sql,
+    queryParameters: QueryParameters = emptyMap(),
+): Boolean = jdbcOperations.execute(sql, queryParameters)
 
 fun Session.update(
     @Language("PostgreSQL") sql: String,
     queryParameters: QueryParameters = emptyMap(),
-): UpdateResult = UpdateResult(update(queryOf(sql, queryParameters)))
+): UpdateResult = jdbcOperations.update(sql, queryParameters)
 
-fun Session.update(sql: Sql, queryParameters: QueryParameters = emptyMap()): UpdateResult =
-    update(sql.toString(), queryParameters)
+fun Session.update(
+    sql: Sql,
+    queryParameters: QueryParameters = emptyMap(),
+): UpdateResult = jdbcOperations.update(sql, queryParameters)
 
 fun Session.updateAndReturnGeneratedKey(
     @Language("PostgreSQL") sql: String,
     queryParameters: QueryParameters = emptyMap(),
-): Long = checkNotNull(updateAndReturnGeneratedKey(queryOf(sql, queryParameters))) {
-    "Forventet en generert nøkkel, men var null"
-}
+): Long = jdbcOperations.updateAndReturnGeneratedKey(sql, queryParameters)
 
-fun Session.updateAndReturnGeneratedKey(sql: Sql, queryParameters: QueryParameters = emptyMap()): Long =
-    updateAndReturnGeneratedKey(sql.toString(), queryParameters)
+fun Session.updateAndReturnGeneratedKey(
+    sql: Sql,
+    queryParameters: QueryParameters = emptyMap(),
+): Long = jdbcOperations.updateAndReturnGeneratedKey(sql, queryParameters)
 
 fun Session.batch(
     @Language("PostgreSQL") sql: String,
     queryParameters: Collection<QueryParameters> = emptyList(),
-): List<Int> = batchPreparedNamedStatement(sql, queryParameters.prepare())
+): List<Int> = jdbcOperations.batch(sql, queryParameters)
 
-fun Session.batch(sql: Sql, queryParameters: Collection<QueryParameters> = emptyList()): List<Int> =
-    batch(sql.toString(), queryParameters)
+fun Session.batch(
+    sql: Sql,
+    queryParameters: Collection<QueryParameters> = emptyList(),
+): List<Int> = jdbcOperations.batch(sql, queryParameters)
 
 fun <T : Any> Session.batch(
     @Language("PostgreSQL") sql: String,
     items: Collection<T> = emptyList(),
     block: (T) -> QueryParameters,
-): List<Int> = batch(sql, items.map(block))
+): List<Int> = jdbcOperations.batch(sql, items, block)
 
-fun <T : Any> Session.batch(sql: Sql, items: Collection<T> = emptyList(), block: (T) -> QueryParameters): List<Int> =
-    batch(sql.toString(), items, block)
+fun <T : Any> Session.batch(
+    sql: Sql,
+    items: Collection<T> = emptyList(),
+    block: (T) -> QueryParameters,
+): List<Int> = jdbcOperations.batch(sql, items, block)
 
 fun Session.batchAndReturnGeneratedKeys(
     @Language("PostgreSQL") sql: String,
     queryParameters: Collection<QueryParameters> = emptyList(),
-): List<Long> = batchPreparedNamedStatementAndReturnGeneratedKeys(sql, queryParameters.prepare())
+): List<Long> = jdbcOperations.batchAndReturnGeneratedKeys(sql, queryParameters)
 
 fun Session.batchAndReturnGeneratedKeys(
     sql: Sql,
     queryParameters: Collection<QueryParameters> = emptyList(),
-): List<Long> = batchAndReturnGeneratedKeys(sql.toString(), queryParameters)
+): List<Long> = jdbcOperations.batchAndReturnGeneratedKeys(sql, queryParameters)
 
 fun <T : Any> Session.batchAndReturnGeneratedKeys(
     @Language("PostgreSQL") sql: String,
     items: Collection<T> = emptyList(),
     block: (T) -> QueryParameters,
-): List<Long> = batchAndReturnGeneratedKeys(sql, items.map(block))
+): List<Long> = jdbcOperations.batchAndReturnGeneratedKeys(sql, items, block)
 
 fun <T : Any> Session.batchAndReturnGeneratedKeys(
     sql: Sql,
     items: Collection<T> = emptyList(),
     block: (T) -> QueryParameters,
-): List<Long> = batchAndReturnGeneratedKeys(sql.toString(), items, block)
+): List<Long> = jdbcOperations.batchAndReturnGeneratedKeys(sql, items, block)
+
+@Deprecated("Kun for bakoverkompatibilitet", ReplaceWith("PageRequest()"))
+internal fun pageRequestFromOffset(limit: Int, offset: Int): PageRequest = PageRequest((offset / limit) + 1, limit)
