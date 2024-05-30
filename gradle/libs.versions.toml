@@ -207,7 +207,7 @@ kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", ver
 
 # Mocking
 mockk = { group = "io.mockk", name = "mockk-jvm", version = "1.13.10" }
-wiremock = { group = "org.wiremock", name = "wiremock", version = "3.5.4" }
+wiremock = { group = "org.wiremock", name = "wiremock", version = "3.6.0" }
 
 # Testcontainers
 testcontainers-bom = { group = "org.testcontainers", name = "testcontainers-bom", version.ref = "testcontainers" }
