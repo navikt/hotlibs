@@ -1,18 +1,18 @@
 [versions]
-behovsmeldingsmodell = "24.151.115338"
+behovsmeldingsmodell = "24.151.140730"
 confluent = "7.6.1"
-coroutines = "1.8.1"
-flyway = "10.12.0"
+coroutines = "1.8.1" # 1.9 kommer med kotlin 2.0
+flyway = "10.13.0"
 graphql = "7.1.1"
 jackson = "2.17.1"
 junit = "5.10.2"
 kafka = "3.7.0" # følger rapids-and-rivers
 koin = "3.5.6"
 kotest = "5.9.0"
-kotlin = "1.9.24"
+kotlin = "2.0.0"
 ktor = "2.3.11"
-openapi = "7.5.0"
-serialization = "1.6.3"
+openapi = "7.6.0"
+serialization = "1.6.3" # 1.7 kommer med kotlin 2.0
 slf4j = "2.0.13"
 spotless = "6.25.0"
 testcontainers = "1.19.8"
@@ -99,7 +99,7 @@ ktor-server-test-host = { group = "io.ktor", name = "ktor-server-test-host", ver
 
 # JWT
 java-jwt = { group = "com.auth0", name = "java-jwt", version = "4.4.0" } # følger ktor-server-auth-jwt
-nimbus-jose-jwt = { group = "com.nimbusds", name = "nimbus-jose-jwt", version = "9.39" }
+nimbus-jose-jwt = { group = "com.nimbusds", name = "nimbus-jose-jwt", version = "9.39.3" }
 
 # tms-ktor-token-support
 azure-exchange = { group = "no.nav.tms.token.support", name = "azure-exchange", version.ref = "tmsKtorTokenSupport" }
@@ -128,7 +128,7 @@ koin-test-junit5 = { group = "io.insert-koin", name = "koin-test-junit5", versio
 kafka-clients = { group = "org.apache.kafka", name = "kafka-clients", version.ref = "kafka" }
 kafka-streams = { group = "org.apache.kafka", name = "kafka-streams", version.ref = "kafka" }
 kafka-streams-test-utils = { group = "org.apache.kafka", name = "kafka-streams-test-utils", version.ref = "kafka" }
-rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", version = "2024041714471713358051.71746f05c18e" }
+rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", version = "2024052210261716366380.edbfb26e544b" }
 
 # Confluent
 kafka-avro-serializer = { group = "io.confluent", name = "kafka-avro-serializer", version.ref = "confluent" }
@@ -147,7 +147,7 @@ postgresql = { group = "org.postgresql", name = "postgresql", version = "42.7.3"
 cache-api = { group = "javax.cache", name = "cache-api", version = "1.1.1" }
 ehcache = { group = "org.ehcache", name = "ehcache", version = "3.10.8" }
 caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version = "3.1.8" }
-jedis = { group = "redis.clients", name = "jedis", version = "5.1.2" }
+jedis = { group = "redis.clients", name = "jedis", version = "5.1.3" }
 lettuce = { group = "io.lettuce", name = "lettuce-core", version = "6.3.2.RELEASE" }
 
 # DigiHoT
@@ -163,7 +163,7 @@ graphql-gradle-plugin = { group = "com.expediagroup", name = "graphql-kotlin-gra
 graphql-ktor-client = { group = "com.expediagroup", name = "graphql-kotlin-ktor-client", version.ref = "graphql" }
 
 # Metrics
-influxdb-client-kotlin = { group = "com.influxdb", name = "influxdb-client-kotlin", version = "7.0.0" }
+influxdb-client-kotlin = { group = "com.influxdb", name = "influxdb-client-kotlin", version = "7.1.0" }
 micrometer-registry-prometheus = { group = "io.micrometer", name = "micrometer-registry-prometheus", version = "1.13.0" }
 
 # Slf4j
@@ -185,11 +185,11 @@ spotless-gradle-plugin = { group = "com.diffplug.spotless", name = "spotless-plu
 # OpenAPI
 microprofile-openapi = { group = "org.eclipse.microprofile.openapi", name = "microprofile-openapi-api", version = "3.1.1" }
 openapi-gradle-plugin = { group = "org.openapitools", name = "openapi-generator-gradle-plugin", version.ref = "openapi" }
-swagger-annotations = { group = "io.swagger.core.v3", name = "swagger-annotations", version = "2.2.21" }
+swagger-annotations = { group = "io.swagger.core.v3", name = "swagger-annotations", version = "2.2.22" }
 
 # Unleash
 unleash-deprecated = { group = "no.finn.unleash", name = "unleash-client-java", version = "4.4.1" }
-unleash = { group = "io.getunleash", name = "unleash-client-java", version = "9.2.1" }
+unleash = { group = "io.getunleash", name = "unleash-client-java", version = "9.2.2" }
 
 # Configuration
 konfig-deprecated = { group = "com.natpryce", name = "konfig", version = "1.6.10.0" }
@@ -206,7 +206,7 @@ kotest-assertions-ktor = { group = "io.kotest.extensions", name = "kotest-assert
 kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest" }
 
 # Mocking
-mockk = { group = "io.mockk", name = "mockk-jvm", version = "1.13.10" }
+mockk = { group = "io.mockk", name = "mockk-jvm", version = "1.13.11" }
 wiremock = { group = "org.wiremock", name = "wiremock", version = "3.6.0" }
 
 # Testcontainers
