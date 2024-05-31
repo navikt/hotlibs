@@ -1,11 +1,9 @@
 package no.nav.hjelpemidler.http
 
+import io.github.oshai.kotlinlogging.coroutines.withLoggingContextAsync
 import io.ktor.client.request.header
 import io.ktor.http.HttpMessage
 import io.ktor.http.HttpMessageBuilder
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.slf4j.MDCContext
-import kotlinx.coroutines.withContext
 import no.nav.hjelpemidler.configuration.NaisEnvironmentVariable
 import org.slf4j.MDC
 import java.util.UUID
@@ -44,33 +42,10 @@ fun HttpMessageBuilder.correlationId(value: String = currentCorrelationId()): St
     return value
 }
 
-suspend fun <T> withMDCContext(
-    context: Map<String, String?>,
-    block: suspend CoroutineScope.() -> T,
-): T {
-    context.forEach { (key, value) ->
-        MDC.put(key, value)
-    }
-    return withContext(
-        context = MDCContext(),
-        block = block,
-    )
-}
-
-suspend fun <T> withMDCContext(
+suspend inline fun <T> withCorrelationId(
     vararg pair: Pair<String, String?>,
-    block: suspend CoroutineScope.() -> T,
-): T =
-    withMDCContext(
-        context = pair.toMap(),
-        block = block,
-    )
-
-suspend fun <T> withCorrelationId(
-    vararg pair: Pair<String, String?>,
-    block: suspend CoroutineScope.() -> T,
-): T =
-    withMDCContext(
-        context = mapOf(*pair, CORRELATION_ID_KEY to currentCorrelationId()),
-        block = block,
-    )
+    crossinline body: suspend () -> T,
+): T = withLoggingContextAsync(
+    map = mapOf(*pair, CORRELATION_ID_KEY to currentCorrelationId()),
+    body = body,
+)

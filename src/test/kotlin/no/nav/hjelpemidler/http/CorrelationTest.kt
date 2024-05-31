@@ -8,38 +8,10 @@ import io.ktor.client.engine.mock.respondOk
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.get
 import io.ktor.client.statement.request
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.withContext
-import org.slf4j.MDC
 import kotlin.test.Test
 
 class CorrelationTest {
-    @Test
-    fun `Nestet MDCContext`() = runTest {
-        fun valueShouldBe1() = MDC.get("id") shouldBe "1"
-        fun valueShouldBe2() = MDC.get("id") shouldBe "2"
-
-        withMDCContext(
-            "id" to "1"
-        ) {
-            valueShouldBe1()
-
-            withContext(Dispatchers.IO) {
-                withMDCContext("id" to "2") {
-                    launch {
-                        valueShouldBe2()
-                    }
-
-                    valueShouldBe2()
-                }
-            }
-
-            valueShouldBe1()
-        }
-    }
-
     @Test
     fun `Gjeldende correlationId skal være satt`() = runTest {
         withCorrelationId("foo" to "bar") {

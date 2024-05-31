@@ -1,6 +1,7 @@
 package no.nav.hjelpemidler.http.openid
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import io.github.oshai.kotlinlogging.coroutines.withLoggingContextAsync
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngine
@@ -10,7 +11,6 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.Parameters
 import io.ktor.http.ParametersBuilder
 import no.nav.hjelpemidler.http.createHttpClient
-import no.nav.hjelpemidler.http.withMDCContext
 
 private val log = KotlinLogging.logger {}
 
@@ -30,7 +30,7 @@ internal class DefaultOpenIDClient(
             })
             builder()
         }
-        return withMDCContext(
+        return withLoggingContextAsync(
             "grantType" to formParameters.grantType,
             "scope" to formParameters.scope,
         ) {
