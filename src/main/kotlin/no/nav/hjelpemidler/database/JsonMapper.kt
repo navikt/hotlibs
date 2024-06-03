@@ -26,4 +26,4 @@ internal class DefaultJsonMapper : JsonMapper {
         wrapped.convertValue(fromValue, toValueTypeRef)
 }
 
-val jsonMapper: JsonMapper by service { DefaultJsonMapper() }
+val jsonMapper: JsonMapper by service<JsonMapper>(::DefaultJsonMapper)
