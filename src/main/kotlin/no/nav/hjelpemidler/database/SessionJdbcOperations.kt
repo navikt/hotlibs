@@ -52,7 +52,7 @@ internal class SessionJdbcOperations(private val session: Session) : JdbcOperati
             mapper(row)
         }
 
-        return Page(
+        return pageOf(
             content = content.take(limit),
             totalElements = totalElements,
             pageRequest = pageRequest,
