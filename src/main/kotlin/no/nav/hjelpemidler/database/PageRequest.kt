@@ -7,8 +7,8 @@ data class PageRequest(
     val pageSize: Int = 25,
 ) {
     init {
-        check(pageNumber > 0) { "pageNumber: $pageNumber er ugyldig, må være positiv" }
-        check(pageSize > 0) { "pageSize: $pageSize er ugyldig, må være positiv" }
+        require(pageNumber > 0) { "pageNumber: $pageNumber er ugyldig, må være positiv" }
+        require(pageSize > 0) { "pageSize: $pageSize er ugyldig, må være positiv" }
     }
 
     val limit: Int @JsonIgnore get() = pageSize
