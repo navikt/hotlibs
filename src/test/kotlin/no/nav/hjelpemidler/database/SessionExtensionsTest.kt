@@ -22,16 +22,16 @@ class SessionExtensionsTest {
         val sql = "SELECT id FROM test WHERE id = :id"
         val queryParameters = id.toQueryParameters()
 
-        transaction(testDataSource) { tx ->
+        transactionAsync(testDataSource) { tx ->
             tx.singleOrNull(sql, queryParameters) { row -> row.long("id") }
         } shouldBe id.value
 
-        transaction(testDataSource) { tx ->
+        transactionAsync(testDataSource) { tx ->
             tx.singleOrNull(sql = sql, queryParameters = 0.toQueryParameters()) { row -> row.long("id") }
         } shouldBe null
 
         shouldNotThrow<NoSuchElementException> {
-            transaction(testDataSource) { tx ->
+            transactionAsync(testDataSource) { tx ->
                 tx.single(sql = sql, queryParameters = queryParameters) { row -> row.long("id") }
             }
         }
@@ -40,7 +40,7 @@ class SessionExtensionsTest {
     @Test
     fun `henter flere innslag`() = runTest {
         val ids = lagreEntities(10)
-        val result = transaction(testDataSource) { tx ->
+        val result = transactionAsync(testDataSource) { tx ->
             tx.list(
                 sql = "SELECT * FROM test WHERE id = ANY(:ids)",
                 queryParameters = mapOf("ids" to ids.toTypedArray())
@@ -53,7 +53,7 @@ class SessionExtensionsTest {
     @Test
     fun `henter side`() = runTest {
         val ids = lagreEntities(20)
-        val result = transaction(testDataSource) { tx ->
+        val result = transactionAsync(testDataSource) { tx ->
             tx.page(
                 sql = """
                     SELECT *, COUNT(1) OVER() AS total
@@ -61,8 +61,7 @@ class SessionExtensionsTest {
                     WHERE id = ANY(:ids)
                 """.trimIndent(),
                 queryParameters = mapOf("ids" to ids.toTypedArray()),
-                limit = 5,
-                offset = 0
+                pageRequest = PageRequest(1, 5)
             ) { it.toMap() }
         }
 
@@ -73,7 +72,7 @@ class SessionExtensionsTest {
     @Test
     fun `henter json`() = runTest {
         val id = lagreEntity()
-        val result = transaction(testDataSource) { tx ->
+        val result = transactionAsync(testDataSource) { tx ->
             tx.single(
                 sql = "SELECT data_1 FROM test WHERE id = :id",
                 queryParameters = id.toQueryParameters(),
@@ -86,7 +85,7 @@ class SessionExtensionsTest {
     @Test
     fun `oppdaterer innslag`() = runTest {
         val id = lagreEntity()
-        val result = transaction(testDataSource) { tx ->
+        val result = transactionAsync(testDataSource) { tx ->
             tx.update(
                 sql = "UPDATE test SET integer = 50 WHERE id = :id",
                 queryParameters = id.toQueryParameters()
@@ -101,7 +100,7 @@ class SessionExtensionsTest {
     @Test
     fun `sletter innslag`() = runTest {
         val id = lagreEntity()
-        val result = transaction(testDataSource) { tx ->
+        val result = transactionAsync(testDataSource) { tx ->
             tx.execute(
                 sql = "DELETE FROM test WHERE id = :id",
                 queryParameters = id.toQueryParameters()
@@ -119,7 +118,7 @@ class SessionExtensionsTest {
             TestEntity(string = "x3", integer = 3, enum = TestEnum.C, data1 = mapOf("key" to "t3")),
         )
 
-        val result1 = transaction(testDataSource) { tx ->
+        val result1 = transactionAsync(testDataSource) { tx ->
             tx.batch(
                 sql = """
                     INSERT INTO test (string, integer, enum, data_1)
@@ -133,7 +132,7 @@ class SessionExtensionsTest {
 
         result1.size shouldBe 3
 
-        val result2 = transaction(testDataSource) { tx ->
+        val result2 = transactionAsync(testDataSource) { tx ->
             tx.list("SELECT * FROM test WHERE string LIKE 'x%'") {
                 TestEntity(
                     id = it.long("id").let(::TestId),
@@ -150,7 +149,7 @@ class SessionExtensionsTest {
 
     @Test
     fun `setter inn og henter null`() = runTest {
-        val id = transaction(testDataSource, returnGeneratedKeys = true) { tx ->
+        val id = transactionAsync(testDataSource, returnGeneratedKeys = true) { tx ->
             tx.updateAndReturnGeneratedKey(
                 sql = """
                     INSERT INTO test (string, integer, enum, data_1, data_2)
@@ -163,7 +162,7 @@ class SessionExtensionsTest {
         id.shouldNotBeNull()
         id.shouldBePositive()
 
-        val result = transaction(testDataSource) { tx ->
+        val result = transactionAsync(testDataSource) { tx ->
             tx.single(
                 sql = "SELECT id, data_2 FROM test WHERE id = :id",
                 queryParameters = id.toQueryParameters(),
@@ -181,7 +180,7 @@ class SessionExtensionsTest {
 
     @Test
     fun `setter inn innslag og svarer med id`() = runTest {
-        val id = transaction(testDataSource) { tx ->
+        val id = transactionAsync(testDataSource) { tx ->
             tx.singleOrNull(
                 sql = """
                     INSERT INTO test (string, integer, enum, data_1, data_2)

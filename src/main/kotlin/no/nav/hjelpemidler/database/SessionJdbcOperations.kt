@@ -1,5 +1,6 @@
 package no.nav.hjelpemidler.database
 
+import kotliquery.Session
 import no.nav.hjelpemidler.database.sql.Sql
 
 internal class SessionJdbcOperations(private val session: Session) : JdbcOperations {

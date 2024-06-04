@@ -1,22 +1,15 @@
 package no.nav.hjelpemidler.database
 
-import kotliquery.Session
 import javax.sql.DataSource
 
-/**
- * NB! Vurder å bruke [transactionAsync] i stedet. [transactionAsync] gir tilgang til [JdbcOperations] som
- * bare eksponerer de funksjonene vi trenger fremfor å bruke extensions på [Session].
- */
-suspend fun <T> transaction(
+fun <T> transaction(
     dataSource: DataSource,
     returnGeneratedKeys: Boolean = false,
     strict: Boolean = true,
     queryTimeout: Int? = null,
-    block: suspend (Session) -> T,
-): T = withDatabaseContext {
-    createSession(dataSource, returnGeneratedKeys, strict, queryTimeout).use { session ->
-        session.transaction { tx -> block(tx) }
-    }
+    block: (JdbcOperations) -> T,
+): T = createSession(dataSource, returnGeneratedKeys, strict, queryTimeout).use { session ->
+    session.transaction { tx -> block(SessionJdbcOperations(tx)) }
 }
 
 suspend fun <T> transactionAsync(
@@ -27,6 +20,6 @@ suspend fun <T> transactionAsync(
     block: suspend (JdbcOperations) -> T,
 ): T = withDatabaseContext {
     createSession(dataSource, returnGeneratedKeys, strict, queryTimeout).use { session ->
-        session.transaction { tx -> block(tx.jdbcOperations) }
+        session.transaction { tx -> block(SessionJdbcOperations(tx)) }
     }
 }

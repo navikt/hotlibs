@@ -1,9 +1,10 @@
 package no.nav.hjelpemidler.database
 
+import kotliquery.Session
 import kotliquery.sessionOf
 import javax.sql.DataSource
 
-fun createSession(
+internal fun createSession(
     dataSource: DataSource,
     returnGeneratedKeys: Boolean = false,
     strict: Boolean = true,
