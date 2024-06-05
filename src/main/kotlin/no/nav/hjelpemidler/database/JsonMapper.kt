@@ -1,6 +1,9 @@
 package no.nav.hjelpemidler.database
 
 import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 
 interface JsonMapper {
@@ -11,7 +14,11 @@ interface JsonMapper {
 }
 
 internal class DefaultJsonMapper : JsonMapper {
-    private val wrapped = jacksonMapperBuilder().build()
+    private val wrapped = jacksonMapperBuilder()
+        .addModule(JavaTimeModule())
+        .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+        .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+        .build()
 
     override fun <T> writeValueAsString(value: T): String =
         wrapped.writeValueAsString(value)

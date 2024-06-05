@@ -28,11 +28,15 @@ dependencies {
 
     // Jackson
     implementation(libs.jackson.module.kotlin)
+    implementation(libs.jackson.datatype.jsr310)
 
     // Testing
     testImplementation(libs.bundles.test)
-    testRuntimeOnly(libs.testcontainers.postgresql)
     testRuntimeOnly(libs.slf4j.simple)
+    testRuntimeOnly(libs.testcontainers.postgresql)
+    constraints {
+        testApi(libs.commons.compress)
+    }
 }
 
 val jdkVersion = JavaLanguageVersion.of(21)
