@@ -35,7 +35,7 @@ dependencies {
     testRuntimeOnly(libs.slf4j.simple)
     testRuntimeOnly(libs.testcontainers.postgresql)
     constraints {
-        testApi(libs.commons.compress)
+        testRuntimeOnly(libs.commons.compress)
     }
 }
 
