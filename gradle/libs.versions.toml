@@ -114,6 +114,12 @@ tokenx-validation-mock = { group = "no.nav.tms.token.support", name = "tokenx-va
 # NoCommons
 nocommons = { group = "no.bekk.bekkopen", name = "nocommons", version = "0.16.0" }
 
+# Apache Commons
+commons-compress = { group = "org.apache.commons", name = "commons-compress", version = "1.26.2" }
+
+# Netty
+netty-bom = { group = "io.netty", name = "netty-bom", version = "4.1.110.Final" }
+
 # Java Annotations
 java-annotations = { group = "org.jetbrains", name = "annotations", version = "24.1.0" }
 
@@ -190,6 +196,9 @@ swagger-annotations = { group = "io.swagger.core.v3", name = "swagger-annotation
 # Unleash
 unleash-deprecated = { group = "no.finn.unleash", name = "unleash-client-java", version = "4.4.1" }
 unleash = { group = "io.getunleash", name = "unleash-client-java", version = "9.2.2" }
+
+# JSON Patch
+zjsonpatch = { group = "com.flipkart.zjsonpatch", name = "zjsonpatch", version = "0.4.16" }
 
 # Configuration
 konfig-deprecated = { group = "com.natpryce", name = "konfig", version = "1.6.10.0" }
