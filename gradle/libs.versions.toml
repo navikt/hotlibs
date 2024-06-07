@@ -12,13 +12,14 @@ kotest = "5.9.0"
 kotlin = "2.0.0"
 ktor = "2.3.11"
 openapi = "7.6.0"
-serialization = "1.6.3" # 1.7 kommer med kotlin 2.0
+serialization = "1.7.0"
 slf4j = "2.0.13"
 spotless = "6.25.0"
 testcontainers = "1.19.8"
 tmsKtorTokenSupport = "4.1.1"
 
 [plugins]
+bom = { id = "org.cyclonedx.bom", version = "1.8.2" }
 flyway = { id = "org.flywaydb.flyway", version.ref = "flyway" }
 graphql = { id = "com.expediagroup.graphql", version.ref = "graphql" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
