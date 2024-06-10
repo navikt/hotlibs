@@ -2,16 +2,18 @@
 behovsmeldingsmodell = "24.151.140730"
 confluent = "7.6.1"
 coroutines = "1.8.1" # 1.9 kommer med kotlin 2.0
-flyway = "10.13.0"
+flyway = "10.14.0"
 graphql = "7.1.1"
 jackson = "2.17.1"
 junit = "5.10.2"
 kafka = "3.7.0" # følger rapids-and-rivers
 koin = "3.5.6"
-kotest = "5.9.0"
+kotest = "5.9.1"
 kotlin = "2.0.0"
 ktor = "2.3.11"
+micrometer = "1.13.0"
 openapi = "7.6.0"
+prometheus = "1.3.1"
 serialization = "1.7.0"
 slf4j = "2.0.13"
 spotless = "6.25.0"
@@ -47,7 +49,7 @@ kotlinx-coroutines-slf4j = { group = "org.jetbrains.kotlinx", name = "kotlinx-co
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 
 # Reflection
-classgraph = { group = "io.github.classgraph", name = "classgraph", version = "4.8.172" }
+classgraph = { group = "io.github.classgraph", name = "classgraph", version = "4.8.173" }
 kotlinx-metadata-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-metadata-jvm", version = "0.9.0" }
 
 # Kotlinx Serialization
@@ -100,7 +102,7 @@ ktor-server-test-host = { group = "io.ktor", name = "ktor-server-test-host", ver
 
 # JWT
 java-jwt = { group = "com.auth0", name = "java-jwt", version = "4.4.0" } # følger ktor-server-auth-jwt
-nimbus-jose-jwt = { group = "com.nimbusds", name = "nimbus-jose-jwt", version = "9.39.3" }
+nimbus-jose-jwt = { group = "com.nimbusds", name = "nimbus-jose-jwt", version = "9.40" }
 
 # tms-ktor-token-support
 azure-exchange = { group = "no.nav.tms.token.support", name = "azure-exchange", version.ref = "tmsKtorTokenSupport" }
@@ -171,7 +173,13 @@ graphql-ktor-client = { group = "com.expediagroup", name = "graphql-kotlin-ktor-
 
 # Metrics
 influxdb-client-kotlin = { group = "com.influxdb", name = "influxdb-client-kotlin", version = "7.1.0" }
-micrometer-registry-prometheus = { group = "io.micrometer", name = "micrometer-registry-prometheus", version = "1.13.0" }
+micrometer-bom = { group = "io.micrometer", name = "micrometer-bom", version.ref = "micrometer" }
+micrometer-registry-prometheus = { group = "io.micrometer", name = "micrometer-registry-prometheus", version.ref = "micrometer" }
+micrometer-registry-prometheus-deprecated = { group = "io.micrometer", name = "micrometer-registry-prometheus-simpleclient", version.ref = "micrometer" } # bruk micrometer-registry-prometheus
+prometheus-client-deprecated = { group = "io.prometheus", name = "simpleclient_common", version = "0.16.0" } # bruk prometheus-metrics-core
+prometheus-metrics-bom = { group = "io.prometheus", name = "prometheus-metrics-bom", version.ref = "prometheus" }
+prometheus-metrics-core = { group = "io.prometheus", name = "prometheus-metrics-core", version.ref = "prometheus" }
+prometheus-metrics-simpleclient-bridge = { group = "io.prometheus", name = "prometheus-metrics-simpleclient-bridge", version.ref = "prometheus" }
 
 # Slf4j
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
