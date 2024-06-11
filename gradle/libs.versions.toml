@@ -143,6 +143,9 @@ rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", ver
 kafka-avro-serializer = { group = "io.confluent", name = "kafka-avro-serializer", version.ref = "confluent" }
 kafka-streams-avro-serde = { group = "io.confluent", name = "kafka-streams-avro-serde", version.ref = "confluent" }
 
+# Google Cloud
+google-cloud-bigquery = { group = "com.google.cloud", name = "google-cloud-bigquery", version = "2.40.2" }
+
 # JDBC
 flyway-core = { group = "org.flywaydb", name = "flyway-core", version.ref = "flyway" }
 flyway-database-postgresql = { group = "org.flywaydb", name = "flyway-database-postgresql", version.ref = "flyway" }
