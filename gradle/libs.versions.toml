@@ -153,9 +153,12 @@ flyway-database-postgresql = { group = "org.flywaydb", name = "flyway-database-p
 h2 = { group = "com.h2database", name = "h2", version = "2.2.224" }
 hikaricp = { group = "com.zaxxer", name = "HikariCP", version = "5.1.0" }
 kotliquery = { group = "com.github.seratch", name = "kotliquery", version = "1.9.0" }
-ojdbc11 = { group = "com.oracle.database.jdbc", name = "ojdbc11", version.ref = "oracle" }
-ojdbc8 = { group = "com.oracle.database.jdbc", name = "ojdbc8", version.ref = "oracle" }
 postgresql = { group = "org.postgresql", name = "postgresql", version = "42.7.3" }
+
+# Oracle
+ojdbc-bom = { group = "com.oracle.database.jdbc", name = "ojdbc-bom", version.ref = "oracle" }
+ojdbc11 = { group = "com.oracle.database.jdbc", name = "ojdbc11", version.ref = "oracle" }
+ojdbc11-production = { group = "com.oracle.database.jdbc", name = "ojdbc11-production", version.ref = "oracle" }
 
 # Cache
 cache-api = { group = "javax.cache", name = "cache-api", version = "1.1.1" }
