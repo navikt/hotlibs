@@ -2,7 +2,7 @@
 behovsmeldingsmodell = "24.151.140730"
 confluent = "7.6.1"
 coroutines = "1.8.1" # 1.9 kommer med kotlin 2.0
-flyway = "10.14.0"
+flyway = "10.15.0"
 graphql = "7.1.1"
 jackson = "2.17.1"
 junit = "5.10.2"
@@ -149,6 +149,7 @@ google-cloud-bigquery = { group = "com.google.cloud", name = "google-cloud-bigqu
 
 # JDBC
 flyway-core = { group = "org.flywaydb", name = "flyway-core", version.ref = "flyway" }
+flyway-database-oracle = { group = "org.flywaydb", name = "flyway-database-oracle", version.ref = "flyway" }
 flyway-database-postgresql = { group = "org.flywaydb", name = "flyway-database-postgresql", version.ref = "flyway" }
 h2 = { group = "com.h2database", name = "h2", version = "2.2.224" }
 hikaricp = { group = "com.zaxxer", name = "HikariCP", version = "5.1.0" }
