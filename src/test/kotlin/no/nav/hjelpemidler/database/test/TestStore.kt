@@ -8,7 +8,7 @@ import no.nav.hjelpemidler.database.toQueryParameters
 import org.intellij.lang.annotations.Language
 
 class TestStore(private val tx: JdbcOperations) : Store {
-    @Language("PostgreSQL")
+    @Language("SQL")
     private val insertSql = """
         INSERT INTO test (string, integer, enum, data_1, data_2)
         VALUES (:string, :integer, :enum, :data_1, :data_2)

@@ -11,7 +11,7 @@ class SqlBuilder internal constructor(
         conditions.add(condition)
     }
 
-    fun filter(@Language("PostgreSQL") condition: String) = filter(SqlCondition(condition))
+    fun filter(@Language("SQL") condition: String) = filter(SqlCondition(condition))
 
     fun filter(filter: SqlFilter?) {
         val condition = filter?.condition ?: return
@@ -44,7 +44,7 @@ class SqlBuilder internal constructor(
     override fun toString(): String = toSql().toString()
 }
 
-fun buildSql(@Language("PostgreSQL") baseSql: String, block: SqlBuilder.() -> Unit): Sql =
+fun buildSql(@Language("SQL") baseSql: String, block: SqlBuilder.() -> Unit): Sql =
     buildSql(Sql(baseSql), block)
 
 fun buildSql(baseSql: Sql, block: SqlBuilder.() -> Unit): Sql =

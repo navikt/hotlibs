@@ -20,7 +20,7 @@ interface JdbcOperations {
      * @throws NoSuchElementException hvis spørringen ikke gir treff i databasen
      */
     fun <T : Any> single(
-        @Language("PostgreSQL") sql: String,
+        @Language("SQL") sql: String,
         queryParameters: QueryParameters = emptyMap(),
         mapper: ResultMapper<T>,
     ): T = single(Sql(sql), queryParameters, mapper)
@@ -32,7 +32,7 @@ interface JdbcOperations {
     ): T?
 
     fun <T> singleOrNull(
-        @Language("PostgreSQL") sql: String,
+        @Language("SQL") sql: String,
         queryParameters: QueryParameters = emptyMap(),
         mapper: ResultMapper<T>,
     ): T? = singleOrNull(Sql(sql), queryParameters, mapper)
@@ -44,7 +44,7 @@ interface JdbcOperations {
     ): List<T>
 
     fun <T : Any> list(
-        @Language("PostgreSQL") sql: String,
+        @Language("SQL") sql: String,
         queryParameters: QueryParameters = emptyMap(),
         mapper: ResultMapper<T>,
     ): List<T> = list(Sql(sql), queryParameters, mapper)
@@ -58,7 +58,7 @@ interface JdbcOperations {
     ): Page<T>
 
     fun <T : Any> page(
-        @Language("PostgreSQL") sql: String,
+        @Language("SQL") sql: String,
         queryParameters: QueryParameters = emptyMap(),
         pageRequest: PageRequest,
         totalNumberOfItemsLabel: String = "total",
@@ -67,38 +67,38 @@ interface JdbcOperations {
 
     fun execute(sql: Sql, queryParameters: QueryParameters = emptyMap()): Boolean
     fun execute(
-        @Language("PostgreSQL") sql: String,
+        @Language("SQL") sql: String,
         queryParameters: QueryParameters = emptyMap(),
     ): Boolean = execute(Sql(sql), queryParameters)
 
     fun update(sql: Sql, queryParameters: QueryParameters = emptyMap()): UpdateResult
     fun update(
-        @Language("PostgreSQL") sql: String,
+        @Language("SQL") sql: String,
         queryParameters: QueryParameters = emptyMap(),
     ): UpdateResult = update(Sql(sql), queryParameters)
 
     fun updateAndReturnGeneratedKey(sql: Sql, queryParameters: QueryParameters = emptyMap()): Long
     fun updateAndReturnGeneratedKey(
-        @Language("PostgreSQL") sql: String,
+        @Language("SQL") sql: String,
         queryParameters: QueryParameters = emptyMap(),
     ): Long = updateAndReturnGeneratedKey(Sql(sql), queryParameters)
 
     fun batch(sql: Sql, queryParameters: Collection<QueryParameters> = emptyList()): List<Int>
     fun batch(
-        @Language("PostgreSQL") sql: String,
+        @Language("SQL") sql: String,
         queryParameters: Collection<QueryParameters> = emptyList(),
     ): List<Int> = batch(Sql(sql), queryParameters)
 
     fun <T : Any> batch(sql: Sql, items: Collection<T> = emptyList(), block: (T) -> QueryParameters): List<Int>
     fun <T : Any> batch(
-        @Language("PostgreSQL") sql: String,
+        @Language("SQL") sql: String,
         items: Collection<T> = emptyList(),
         block: (T) -> QueryParameters,
     ): List<Int> = batch(Sql(sql), items, block)
 
     fun batchAndReturnGeneratedKeys(sql: Sql, queryParameters: Collection<QueryParameters> = emptyList()): List<Long>
     fun batchAndReturnGeneratedKeys(
-        @Language("PostgreSQL") sql: String,
+        @Language("SQL") sql: String,
         queryParameters: Collection<QueryParameters> = emptyList(),
     ): List<Long> = batchAndReturnGeneratedKeys(Sql(sql), queryParameters.prepare())
 
@@ -109,7 +109,7 @@ interface JdbcOperations {
     ): List<Long>
 
     fun <T : Any> batchAndReturnGeneratedKeys(
-        @Language("PostgreSQL") sql: String,
+        @Language("SQL") sql: String,
         items: Collection<T> = emptyList(),
         block: (T) -> QueryParameters,
     ): List<Long> = batchAndReturnGeneratedKeys(Sql(sql), items, block)

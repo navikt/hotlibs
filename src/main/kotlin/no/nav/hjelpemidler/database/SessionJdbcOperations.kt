@@ -2,8 +2,9 @@ package no.nav.hjelpemidler.database
 
 import kotliquery.Session
 import no.nav.hjelpemidler.database.sql.Sql
+import java.io.Closeable
 
-internal class SessionJdbcOperations(private val session: Session) : JdbcOperations {
+internal class SessionJdbcOperations(private val session: Session) : JdbcOperations, Closeable by session {
     override fun <T : Any> single(
         sql: Sql,
         queryParameters: QueryParameters,
