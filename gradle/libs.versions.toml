@@ -145,7 +145,7 @@ kafka-avro-serializer = { group = "io.confluent", name = "kafka-avro-serializer"
 kafka-streams-avro-serde = { group = "io.confluent", name = "kafka-streams-avro-serde", version.ref = "confluent" }
 
 # Google Cloud
-google-cloud-bigquery = { group = "com.google.cloud", name = "google-cloud-bigquery", version = "2.40.2" }
+google-cloud-bigquery = { group = "com.google.cloud", name = "google-cloud-bigquery", version = "2.40.3" }
 
 # JDBC
 flyway-core = { group = "org.flywaydb", name = "flyway-core", version.ref = "flyway" }
@@ -164,8 +164,8 @@ ucp11 = { group = "com.oracle.database.jdbc", name = "ucp11", version.ref = "ora
 
 # Cache
 cache-api = { group = "javax.cache", name = "cache-api", version = "1.1.1" }
-ehcache = { group = "org.ehcache", name = "ehcache", version = "3.10.8" }
 caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version = "3.1.8" }
+ehcache = { group = "org.ehcache", name = "ehcache", version = "3.10.8" }
 jedis = { group = "redis.clients", name = "jedis", version = "5.1.3" }
 lettuce = { group = "io.lettuce", name = "lettuce-core", version = "6.3.2.RELEASE" }
 
@@ -182,8 +182,10 @@ graphql-client-jackson = { group = "com.expediagroup", name = "graphql-kotlin-cl
 graphql-gradle-plugin = { group = "com.expediagroup", name = "graphql-kotlin-gradle-plugin", version.ref = "graphql" }
 graphql-ktor-client = { group = "com.expediagroup", name = "graphql-kotlin-ktor-client", version.ref = "graphql" }
 
-# Metrics
+# InfluxDB
 influxdb-client-kotlin = { group = "com.influxdb", name = "influxdb-client-kotlin", version = "7.1.0" }
+
+# Micrometer
 micrometer-bom = { group = "io.micrometer", name = "micrometer-bom", version.ref = "micrometer" }
 micrometer-registry-prometheus = { group = "io.micrometer", name = "micrometer-registry-prometheus", version.ref = "micrometer" }
 micrometer-registry-prometheus-deprecated = { group = "io.micrometer", name = "micrometer-registry-prometheus-simpleclient", version.ref = "micrometer" } # bruk micrometer-registry-prometheus
@@ -200,7 +202,7 @@ slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4
 
 # Logging
 kotlin-logging-deprecated = { group = "io.github.microutils", name = "kotlin-logging", version = "3.0.5" }
-kotlin-logging = { group = "io.github.oshai", name = "kotlin-logging-jvm", version = "6.0.9" }
+kotlin-logging = { group = "io.github.oshai", name = "kotlin-logging-jvm", version = "7.0.0" }
 logback-classic = { group = "ch.qos.logback", name = "logback-classic", version = "1.5.6" }
 logback-syslog4j = { group = "com.papertrailapp", name = "logback-syslog4j", version = "1.0.0" }
 logstash-logback-encoder = { group = "net.logstash.logback", name = "logstash-logback-encoder", version = "7.4" }
