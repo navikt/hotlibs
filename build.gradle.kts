@@ -21,7 +21,7 @@ dependencies {
     implementation(libs.jackson.datatype.jsr310)
     implementation(libs.jackson.module.kotlin)
 
-    // Database
+    // JDBC
     api(libs.kotliquery)
     api(libs.hikaricp)
 
