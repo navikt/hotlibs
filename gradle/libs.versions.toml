@@ -4,7 +4,6 @@ confluent = "7.6.1"
 coroutines = "1.8.1" # 1.9 kommer med kotlin 2.0
 flyway = "10.15.0"
 graphql = "7.1.1"
-hmDatabase = "0.5.0"
 jackson = "2.17.1"
 junit = "5.10.2"
 kafka = "3.7.0" # følger rapids-and-rivers
@@ -174,15 +173,9 @@ lettuce = { group = "io.lettuce", name = "lettuce-core", version = "6.3.2.RELEAS
 hm-behovsmeldingsmodell = { group = "no.nav.hjelpemidler", name = "hm-behovsmeldingsmodell", version.ref = "behovsmeldingsmodell" }
 hm-contract-pdl-avro = { group = "no.nav.hjelpemidler", name = "hm-contract-pdl-avro", version = "1.0.1" }
 hm-core = { group = "no.nav.hjelpemidler", name = "hm-core", version = "0.0.1" }
+hm-database = { group = "no.nav.hjelpemidler", name = "hm-database", version = "0.5.0" }
 hm-http = { group = "no.nav.hjelpemidler", name = "hm-http", version = "0.3.1" }
 hm-nare = { group = "no.nav.hjelpemidler", name = "hm-nare", version = "0.3.0" }
-
-# DigiHoT - Database
-hm-database = { group = "no.nav.hjelpemidler", name = "hm-database", version.ref = "hmDatabase" }
-hm-database-h2 = { group = "no.nav.hjelpemidler", name = "hm-database-h2", version.ref = "hmDatabase" }
-hm-database-oracle = { group = "no.nav.hjelpemidler", name = "hm-database-oracle", version.ref = "hmDatabase" }
-hm-database-postgresql = { group = "no.nav.hjelpemidler", name = "hm-database-postgresql", version.ref = "hmDatabase" }
-hm-database-testcontainers = { group = "no.nav.hjelpemidler", name = "hm-database-testcontainers", version.ref = "hmDatabase" }
 
 # GraphQL
 graphql-client-jackson = { group = "com.expediagroup", name = "graphql-kotlin-client-jackson", version.ref = "graphql" }
