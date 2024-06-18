@@ -24,11 +24,14 @@ internal class SessionJdbcOperations(private val session: Session) : JdbcOperati
         mapper: ResultMapper<T>,
     ): List<T> = session.list(queryOf(sql, queryParameters), mapper)
 
+    /**
+     * NB! Implementasjonen fungerer ikke med Oracle pt.
+     */
     override fun <T : Any> page(
         sql: Sql,
         queryParameters: QueryParameters,
         pageRequest: PageRequest,
-        totalNumberOfItemsLabel: String,
+        totalElementsLabel: String,
         mapper: ResultMapper<T>,
     ): Page<T> {
         val limitParameter = "no_nav_hjelpemidler_database_limit"
@@ -50,7 +53,7 @@ internal class SessionJdbcOperations(private val session: Session) : JdbcOperati
                 )
             )
         ) { row ->
-            totalElements = row.longOrNull(totalNumberOfItemsLabel) ?: -1
+            totalElements = row.longOrNull(totalElementsLabel) ?: -1
             mapper(row)
         }
 
@@ -75,7 +78,7 @@ internal class SessionJdbcOperations(private val session: Session) : JdbcOperati
         sql: Sql,
         queryParameters: QueryParameters,
     ): Long = checkNotNull(session.updateAndReturnGeneratedKey(queryOf(sql, queryParameters))) {
-        "Forventet en generert nøkkel, men var null"
+        "Generert nøkkel mangler"
     }
 
     override fun batch(

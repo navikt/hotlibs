@@ -17,7 +17,7 @@ import kotlin.test.Test
 
 class SessionExtensionsTest {
     @Test
-    fun `henter ett innslag`() = runTest {
+    fun `Henter ett innslag`() = runTest {
         val id = lagreEntity()
         val sql = "SELECT id FROM test WHERE id = :id"
         val queryParameters = id.toQueryParameters()
@@ -38,7 +38,7 @@ class SessionExtensionsTest {
     }
 
     @Test
-    fun `henter flere innslag`() = runTest {
+    fun `Henter flere innslag`() = runTest {
         val ids = lagreEntities(10)
         val result = transactionAsync(testDataSource) { tx ->
             tx.list(
@@ -51,12 +51,12 @@ class SessionExtensionsTest {
     }
 
     @Test
-    fun `henter side`() = runTest {
+    fun `Henter side`() = runTest {
         val ids = lagreEntities(20)
         val result = transactionAsync(testDataSource) { tx ->
             tx.page(
                 sql = """
-                    SELECT *, COUNT(1) OVER() AS total
+                    SELECT *, COUNT(1) OVER() AS total_elements
                     FROM test
                     WHERE id = ANY(:ids)
                 """.trimIndent(),
@@ -70,7 +70,7 @@ class SessionExtensionsTest {
     }
 
     @Test
-    fun `henter json`() = runTest {
+    fun `Henter json`() = runTest {
         val id = lagreEntity()
         val result = transactionAsync(testDataSource) { tx ->
             tx.single(
@@ -83,7 +83,7 @@ class SessionExtensionsTest {
     }
 
     @Test
-    fun `oppdaterer innslag`() = runTest {
+    fun `Oppdaterer innslag`() = runTest {
         val id = lagreEntity()
         val result = transactionAsync(testDataSource) { tx ->
             tx.update(
@@ -98,7 +98,7 @@ class SessionExtensionsTest {
     }
 
     @Test
-    fun `sletter innslag`() = runTest {
+    fun `Sletter innslag`() = runTest {
         val id = lagreEntity()
         val result = transactionAsync(testDataSource) { tx ->
             tx.execute(
@@ -111,7 +111,7 @@ class SessionExtensionsTest {
     }
 
     @Test
-    fun `setter inn flere innslag`() = runTest {
+    fun `Setter inn flere innslag`() = runTest {
         val items = listOf(
             TestEntity(string = "x1", integer = 1, enum = TestEnum.A, data1 = mapOf("key" to "t1")),
             TestEntity(string = "x2", integer = 2, enum = TestEnum.B, data1 = mapOf("key" to "t2")),
@@ -148,7 +148,7 @@ class SessionExtensionsTest {
     }
 
     @Test
-    fun `setter inn og henter null`() = runTest {
+    fun `Setter inn og henter null`() = runTest {
         val id = transactionAsync(testDataSource, returnGeneratedKeys = true) { tx ->
             tx.updateAndReturnGeneratedKey(
                 sql = """
@@ -179,7 +179,7 @@ class SessionExtensionsTest {
     }
 
     @Test
-    fun `setter inn innslag og svarer med id`() = runTest {
+    fun `Setter inn innslag og svarer med id`() = runTest {
         val id = transactionAsync(testDataSource) { tx ->
             tx.singleOrNull(
                 sql = """

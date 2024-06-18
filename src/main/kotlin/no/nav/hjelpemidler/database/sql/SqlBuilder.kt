@@ -5,13 +5,14 @@ import org.intellij.lang.annotations.Language
 class SqlBuilder internal constructor(
     private val baseSql: Sql,
     private val conditions: MutableSet<SqlCondition> = mutableSetOf(),
-    private var orderBy: MutableSet<SqlOrderBy> = mutableSetOf()
+    private var orderBy: MutableSet<SqlOrderBy> = mutableSetOf(),
 ) {
     fun filter(condition: SqlCondition) {
         conditions.add(condition)
     }
 
-    fun filter(@Language("SQL") condition: String) = filter(SqlCondition(condition))
+    fun filter(@Language("SQL") condition: String) =
+        filter(SqlCondition(condition))
 
     fun filter(filter: SqlFilter?) {
         val condition = filter?.condition ?: return
@@ -22,14 +23,16 @@ class SqlBuilder internal constructor(
         orderBy.add(SqlOrderBy(columnName, order))
     }
 
-    fun orderBy(column: SqlColumn, order: SqlOrderBy.Order = SqlOrderBy.Order.ASC) = orderBy(column.columnName, order)
+    fun orderBy(column: SqlColumn, order: SqlOrderBy.Order = SqlOrderBy.Order.ASC) =
+        orderBy(column.columnName, order)
 
     fun orderBy(orderBy: SqlOrderBy?) {
         val (columnName, order) = orderBy ?: return
         orderBy(columnName, order)
     }
 
-    fun copy(): SqlBuilder = SqlBuilder(baseSql, conditions.toMutableSet(), orderBy)
+    fun copy(): SqlBuilder =
+        SqlBuilder(baseSql, conditions.toMutableSet(), orderBy)
 
     fun toSql(): Sql = buildString {
         append(baseSql)

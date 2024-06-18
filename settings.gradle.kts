@@ -1,4 +1,6 @@
-rootProject.name = "hm-database"
+pluginManagement {
+    includeBuild("build-logic")
+}
 
 dependencyResolutionManagement {
     @Suppress("UnstableApiUsage")
@@ -17,7 +19,9 @@ dependencyResolutionManagement {
     }
     versionCatalogs {
         create("libs") {
-            from("no.nav.hjelpemidler:hm-katalog:0.2.12")
+            from("no.nav.hjelpemidler:hm-katalog:0.2.14")
         }
     }
 }
+
+rootProject.name = "hm-database"

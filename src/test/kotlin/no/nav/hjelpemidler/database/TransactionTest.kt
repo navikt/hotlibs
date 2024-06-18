@@ -16,7 +16,7 @@ import kotlin.time.Duration.Companion.seconds
 
 class TransactionTest {
     @Test
-    fun `lagrer og henter innslag i transaksjon`() = runTest {
+    fun `Lagrer og henter innslag i transaksjon`() = runTest {
         val id = lagreEntity()
         val result = transactionAsync(testDataSource) { tx ->
             TestStore(tx).hent(id)
@@ -25,7 +25,7 @@ class TransactionTest {
     }
 
     @Test
-    fun `nestet transaksjon`() = runTest {
+    fun `Nestet transaksjon`() = runTest {
         val id = lagreEntity()
         val result = transactionAsync(testDataSource) { tx1 ->
             someSuspendingFunction()

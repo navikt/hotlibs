@@ -4,7 +4,7 @@ import no.nav.hjelpemidler.database.sql.Sql
 import org.intellij.lang.annotations.Language
 
 /**
- * Interface for kommunikasjon med en PostgreSQL-database.
+ * Interface for kommunikasjon med en database.
  */
 interface JdbcOperations {
     /**
@@ -53,7 +53,7 @@ interface JdbcOperations {
         sql: Sql,
         queryParameters: QueryParameters = emptyMap(),
         pageRequest: PageRequest,
-        totalNumberOfItemsLabel: String = "total",
+        totalElementsLabel: String = "total_elements",
         mapper: ResultMapper<T>,
     ): Page<T>
 
@@ -61,9 +61,9 @@ interface JdbcOperations {
         @Language("SQL") sql: String,
         queryParameters: QueryParameters = emptyMap(),
         pageRequest: PageRequest,
-        totalNumberOfItemsLabel: String = "total",
+        totalElementsLabel: String = "total_elements",
         mapper: ResultMapper<T>,
-    ): Page<T> = page(Sql(sql), queryParameters, pageRequest, totalNumberOfItemsLabel, mapper)
+    ): Page<T> = page(Sql(sql), queryParameters, pageRequest, totalElementsLabel, mapper)
 
     fun execute(sql: Sql, queryParameters: QueryParameters = emptyMap()): Boolean
     fun execute(

@@ -2,12 +2,9 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
-    `java-library`
+    id("buildlogic.kotlin-library-conventions")
     `maven-publish`
 }
-
-group = "no.nav.hjelpemidler"
-version = System.getenv("GITHUB_REF_NAME") ?: "local"
 
 dependencies {
     implementation(libs.kotlin.stdlib)
@@ -19,24 +16,51 @@ dependencies {
     // Logging
     implementation(libs.slf4j.api)
 
+    // Jackson
+    implementation(libs.jackson.databind)
+    implementation(libs.jackson.datatype.jsr310)
+    implementation(libs.jackson.module.kotlin)
+
     // Database
     api(libs.kotliquery)
     api(libs.hikaricp)
-    api(libs.flyway.core)
-    runtimeOnly(libs.flyway.database.postgresql)
-    implementation(libs.postgresql)
 
-    // Jackson
-    implementation(libs.jackson.module.kotlin)
-    implementation(libs.jackson.datatype.jsr310)
+    // H2
+    h2Implementation(project(path))
+    h2RuntimeOnly(libs.h2)
 
-    // Testing
-    testImplementation(libs.bundles.test)
-    testRuntimeOnly(libs.slf4j.simple)
-    testRuntimeOnly(libs.testcontainers.postgresql)
+    // Oracle
+    oracleImplementation(project(path))
+    oracleRuntimeOnly(libs.ojdbc11)
+
+    // PostgreSQL
+    postgresqlImplementation(project(path))
+    postgresqlImplementation(libs.postgresql)
+
+    // PostgreSQL - Flyway
+    postgresqlApi(libs.flyway.core)
+    postgresqlRuntimeOnly(libs.flyway.database.postgresql)
+
+    // Testcontainers
+    testcontainersImplementation(project(path))
+    testcontainersRuntimeOnly(libs.testcontainers.postgresql) // fixme -> kunne vi valgt oracle hvis oracle-capability?
     constraints {
         testRuntimeOnly(libs.commons.compress)
     }
+
+    // Testing
+    testImplementation(project(path)) {
+        capabilities {
+            requireCapability("${project.group}:${project.name}-postgresql")
+        }
+    }
+    testImplementation(project(path)) {
+        capabilities {
+            requireCapability("${project.group}:${project.name}-testcontainers")
+        }
+    }
+    testImplementation(libs.bundles.test)
+    testRuntimeOnly(libs.slf4j.simple)
 }
 
 val jdkVersion = JavaLanguageVersion.of(21)
