@@ -10,24 +10,22 @@ group = "no.nav.hjelpemidler"
 version = System.getenv("GITHUB_REF_NAME") ?: "local"
 
 dependencies {
-    implementation(platform(libs.kotlin.bom))
     implementation(libs.kotlin.stdlib)
 
     // Logging
-    implementation(platform(libs.slf4j.bom))
     implementation(libs.kotlin.logging)
     runtimeOnly(libs.slf4j.jdk.platform.logging)
 
     // Kotlinx
-    api(platform(libs.kotlinx.coroutines.bom))
     api(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.jdk8)
     implementation(libs.kotlinx.coroutines.slf4j)
 
+    // DigiHoT
+    api(libs.hm.core)
+
     // Ktor
-    api(platform(libs.ktor.bom))
     api(libs.ktor.client.cio)
-    api(libs.ktor.client.core)
     api(libs.ktor.client.core)
     api(libs.ktor.client.logging)
     api(libs.ktor.client.mock)
@@ -35,8 +33,7 @@ dependencies {
     implementation(libs.ktor.serialization.jackson)
 
     // Jackson
-    implementation(platform(libs.jackson.bom))
-    implementation(libs.jackson.datatype.jsr310)
+    implementation(libs.bundles.jackson)
 
     // JWT
     implementation(libs.java.jwt)
