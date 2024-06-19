@@ -7,8 +7,8 @@ object Oracle : DataSourceConfigurationFactory<OracleDataSourceConfiguration> {
         OracleDataSourceConfiguration()
             .apply(block)
             .apply {
-                addDataSourceProperty("url", jdbcUrl)
-                addDataSourceProperty("databaseName", databaseName)
+                addDataSourcePropertyIfNotNull("url", jdbcUrl)
+                addDataSourcePropertyIfNotNull("databaseName", databaseName)
                 addDataSourceProperty(
                     "connectionProperties", propertiesOf(
                         "oracle.jdbc.defaultConnectionValidation" to "LOCAL",

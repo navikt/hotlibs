@@ -10,16 +10,14 @@ dependencies {
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlinx.coroutines.core)
-
+    implementation(libs.hm.core)
     compileOnly(libs.java.annotations)
 
     // Logging
     implementation(libs.slf4j.api)
 
     // Jackson
-    implementation(libs.jackson.databind)
-    implementation(libs.jackson.datatype.jsr310)
-    implementation(libs.jackson.module.kotlin)
+    implementation(libs.bundles.jackson)
 
     // JDBC
     api(libs.kotliquery)
@@ -31,10 +29,12 @@ dependencies {
 
     // Oracle
     oracleImplementation(project(path))
+    oracleImplementation(libs.hm.core)
     oracleRuntimeOnly(libs.ojdbc11)
 
     // PostgreSQL
     postgresqlImplementation(project(path))
+    postgresqlImplementation(libs.hm.core)
     postgresqlImplementation(libs.postgresql)
 
     // PostgreSQL - Flyway
