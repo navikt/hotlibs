@@ -10,12 +10,8 @@ group = "no.nav.hjelpemidler"
 version = System.getenv("GITHUB_REF_NAME") ?: "local"
 
 dependencies {
-    implementation(platform(libs.kotlin.bom))
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlin.reflect)
-
-    // Logging
-    implementation(platform(libs.slf4j.bom))
     implementation(libs.kotlin.logging)
 
     // Testing
