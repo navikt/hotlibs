@@ -10,7 +10,7 @@ dependencies {
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.hm.core)
+    api(libs.hm.core)
     compileOnly(libs.java.annotations)
 
     // Logging
@@ -29,12 +29,10 @@ dependencies {
 
     // Oracle
     oracleImplementation(project(path))
-    oracleImplementation(libs.hm.core)
     oracleRuntimeOnly(libs.ojdbc11)
 
     // PostgreSQL
     postgresqlImplementation(project(path))
-    postgresqlImplementation(libs.hm.core)
     postgresqlImplementation(libs.postgresql)
 
     // PostgreSQL - Flyway
