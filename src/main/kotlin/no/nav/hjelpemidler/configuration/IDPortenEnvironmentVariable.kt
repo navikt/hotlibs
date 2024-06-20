@@ -3,7 +3,7 @@ package no.nav.hjelpemidler.configuration
 /**
  * @see <a href="https://docs.nais.io/auth/idporten/reference/#runtime-variables-credentials">NAIS</a>
  */
-object IDPorten {
+object IDPortenEnvironmentVariable {
     @External
     val IDPORTEN_AUDIENCE by EnvironmentVariable
 

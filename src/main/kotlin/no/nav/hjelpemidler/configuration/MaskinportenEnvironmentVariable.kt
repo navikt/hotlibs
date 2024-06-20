@@ -3,7 +3,7 @@ package no.nav.hjelpemidler.configuration
 /**
  * @see <a href="https://docs.nais.io/auth/maskinporten/reference/#runtime-variables-credentials">NAIS</a>
  */
-object Maskinporten {
+object MaskinportenEnvironmentVariable {
     @External
     val MASKINPORTEN_CLIENT_ID by EnvironmentVariable
 

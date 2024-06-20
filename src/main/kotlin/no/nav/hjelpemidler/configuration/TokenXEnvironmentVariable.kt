@@ -3,7 +3,7 @@ package no.nav.hjelpemidler.configuration
 /**
  * @see <a href="https://docs.nais.io/auth/tokenx/reference/#runtime-variables-credentials">NAIS</a>
  */
-object TokenX {
+object TokenXEnvironmentVariable {
     @External
     val TOKEN_X_CLIENT_ID by EnvironmentVariable
 

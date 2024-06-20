@@ -3,7 +3,7 @@ package no.nav.hjelpemidler.configuration
 /**
  * @see <a href="https://docs.nais.io/auth/entra-id/reference/#runtime-variables-credentials">NAIS</a>
  */
-object EntraID {
+object EntraIDEnvironmentVariable {
     @External
     val AZURE_APP_CLIENT_ID by EnvironmentVariable
 
