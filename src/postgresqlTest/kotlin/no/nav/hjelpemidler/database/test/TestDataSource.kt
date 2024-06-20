@@ -6,5 +6,7 @@ import no.nav.hjelpemidler.database.migrate
 import javax.sql.DataSource
 
 val testDataSource: DataSource by lazy {
-    createDataSource(Testcontainers).also(DataSource::migrate)
+    createDataSource(Testcontainers) {
+        tag = "15-alpine"
+    }.also(DataSource::migrate)
 }

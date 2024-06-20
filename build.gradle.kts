@@ -1,5 +1,3 @@
-import org.gradle.api.tasks.testing.logging.TestLogEvent
-
 plugins {
     alias(libs.plugins.kotlin.jvm)
     id("buildlogic.kotlin-library-conventions")
@@ -45,36 +43,11 @@ dependencies {
     constraints {
         testRuntimeOnly(libs.commons.compress)
     }
-
-    // Testing
-    testImplementation(project(path)) {
-        capabilities {
-            requireCapability("${project.group}:${project.name}-postgresql")
-        }
-    }
-    testImplementation(project(path)) {
-        capabilities {
-            requireCapability("${project.group}:${project.name}-testcontainers")
-        }
-    }
-    testImplementation(libs.bundles.test)
-    testRuntimeOnly(libs.slf4j.simple)
 }
 
-val jdkVersion = JavaLanguageVersion.of(21)
 java {
-    toolchain { languageVersion.set(jdkVersion) }
+    toolchain { languageVersion.set(JavaLanguageVersion.of(21)) }
     withSourcesJar()
-}
-kotlin {
-    jvmToolchain { languageVersion.set(jdkVersion) }
-}
-
-tasks.test {
-    useJUnitPlatform()
-    testLogging {
-        events(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
-    }
 }
 
 publishing {
