@@ -2,11 +2,11 @@ package no.nav.hjelpemidler.http.openid
 
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.cio.CIO
-import no.nav.hjelpemidler.configuration.TokenX
+import no.nav.hjelpemidler.configuration.TokenXEnvironmentVariable
 
 fun tokenXEnvironmentConfiguration(): OpenIDConfiguration = DefaultOpenIDConfiguration(
-    tokenEndpoint = TokenX.TOKEN_X_TOKEN_ENDPOINT,
-    clientId = TokenX.TOKEN_X_CLIENT_ID,
+    tokenEndpoint = TokenXEnvironmentVariable.TOKEN_X_TOKEN_ENDPOINT,
+    clientId = TokenXEnvironmentVariable.TOKEN_X_CLIENT_ID,
     clientSecret = null,
 )
 

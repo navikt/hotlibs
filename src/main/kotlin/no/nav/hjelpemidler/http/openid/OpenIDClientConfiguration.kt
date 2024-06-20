@@ -3,8 +3,8 @@ package no.nav.hjelpemidler.http.openid
 import com.github.benmanes.caffeine.cache.Expiry
 import io.ktor.http.Parameters
 import no.nav.hjelpemidler.cache.CacheConfiguration
-import no.nav.hjelpemidler.configuration.EntraID
-import no.nav.hjelpemidler.configuration.TokenX
+import no.nav.hjelpemidler.configuration.EntraIDEnvironmentVariable
+import no.nav.hjelpemidler.configuration.TokenXEnvironmentVariable
 import kotlin.time.Duration
 
 class OpenIDClientConfiguration internal constructor() {
@@ -13,14 +13,14 @@ class OpenIDClientConfiguration internal constructor() {
     var clientSecret: String? = null
 
     fun azureADEnvironmentConfiguration() {
-        tokenEndpoint = EntraID.AZURE_OPENID_CONFIG_TOKEN_ENDPOINT
-        clientId = EntraID.AZURE_APP_CLIENT_ID
-        clientSecret = EntraID.AZURE_APP_CLIENT_SECRET
+        tokenEndpoint = EntraIDEnvironmentVariable.AZURE_OPENID_CONFIG_TOKEN_ENDPOINT
+        clientId = EntraIDEnvironmentVariable.AZURE_APP_CLIENT_ID
+        clientSecret = EntraIDEnvironmentVariable.AZURE_APP_CLIENT_SECRET
     }
 
     fun tokenXEnvironmentConfiguration() {
-        tokenEndpoint = TokenX.TOKEN_X_TOKEN_ENDPOINT
-        clientId = TokenX.TOKEN_X_CLIENT_ID
+        tokenEndpoint = TokenXEnvironmentVariable.TOKEN_X_TOKEN_ENDPOINT
+        clientId = TokenXEnvironmentVariable.TOKEN_X_CLIENT_ID
         clientSecret = null
     }
 
