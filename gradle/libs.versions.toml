@@ -1,5 +1,5 @@
 [versions]
-behovsmeldingsmodell = "24.151.140730"
+behovsmeldingsmodell = "24.178.123446"
 confluent = "7.6.1"
 coroutines = "1.8.1" # 1.9 kommer med kotlin 2.0
 flyway = "10.15.0"
