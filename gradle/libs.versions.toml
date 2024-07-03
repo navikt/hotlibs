@@ -2,7 +2,7 @@
 behovsmeldingsmodell = "24.178.123446"
 confluent = "7.6.1"
 coroutines = "1.8.1" # 1.9 kommer med kotlin 2.0
-flyway = "10.15.0"
+flyway = "10.15.2"
 graphql = "7.1.1"
 jackson = "2.17.1"
 junit = "5.10.2"
@@ -10,16 +10,16 @@ kafka = "3.7.0" # følger rapids-and-rivers
 koin = "3.5.6"
 kotest = "5.9.1"
 kotlin = "2.0.0"
-ktor = "2.3.11"
-micrometer = "1.13.0"
+ktor = "2.3.12"
+micrometer = "1.13.1"
 openapi = "7.6.0"
 oracle = "23.4.0.24.05"
 prometheus = "1.3.1"
-serialization = "1.7.0"
+serialization = "1.7.1"
 slf4j = "2.0.13"
 spotless = "6.25.0"
 testcontainers = "1.19.8"
-tmsKtorTokenSupport = "4.1.1"
+tmsKtorTokenSupport = "4.1.2"
 
 [plugins]
 bom = { id = "org.cyclonedx.bom", version = "1.8.2" }
@@ -125,7 +125,7 @@ nocommons = { group = "no.bekk.bekkopen", name = "nocommons", version = "0.16.0"
 commons-compress = { group = "org.apache.commons", name = "commons-compress", version = "1.26.2" }
 
 # Netty
-netty-bom = { group = "io.netty", name = "netty-bom", version = "4.1.110.Final" }
+netty-bom = { group = "io.netty", name = "netty-bom", version = "4.1.111.Final" }
 
 # Java Annotations
 java-annotations = { group = "org.jetbrains", name = "annotations", version = "24.1.0" }
@@ -141,14 +141,14 @@ koin-test-junit5 = { group = "io.insert-koin", name = "koin-test-junit5", versio
 kafka-clients = { group = "org.apache.kafka", name = "kafka-clients", version.ref = "kafka" }
 kafka-streams = { group = "org.apache.kafka", name = "kafka-streams", version.ref = "kafka" }
 kafka-streams-test-utils = { group = "org.apache.kafka", name = "kafka-streams-test-utils", version.ref = "kafka" }
-rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", version = "2024052210261716366380.edbfb26e544b" }
+rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", version = "2024061408021718344972.64ebbdb34321" }
 
 # Confluent
 kafka-avro-serializer = { group = "io.confluent", name = "kafka-avro-serializer", version.ref = "confluent" }
 kafka-streams-avro-serde = { group = "io.confluent", name = "kafka-streams-avro-serde", version.ref = "confluent" }
 
 # Google Cloud
-google-cloud-bigquery = { group = "com.google.cloud", name = "google-cloud-bigquery", version = "2.40.3" }
+google-cloud-bigquery = { group = "com.google.cloud", name = "google-cloud-bigquery", version = "2.41.0" }
 
 # JDBC
 flyway-core = { group = "org.flywaydb", name = "flyway-core", version.ref = "flyway" }
@@ -241,7 +241,7 @@ kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5-jvm",
 
 # Mocking
 mockk = { group = "io.mockk", name = "mockk-jvm", version = "1.13.11" }
-wiremock = { group = "org.wiremock", name = "wiremock", version = "3.6.0" }
+wiremock = { group = "org.wiremock", name = "wiremock", version = "3.8.0" }
 
 # Testcontainers
 testcontainers = { group = "org.testcontainers", name = "testcontainers", version.ref = "testcontainers" }
