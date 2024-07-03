@@ -50,6 +50,8 @@ java {
         capability(capabilityGroup, "${project.name}-${testcontainers.name}", capabilityVersion)
         withSourcesJar()
     }
+
+    toolchain { languageVersion.set(JavaLanguageVersion.of(21)) }
 }
 
 @Suppress("UnstableApiUsage")
