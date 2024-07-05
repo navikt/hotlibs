@@ -1,5 +1,12 @@
 package no.nav.hjelpemidler.configuration
 
+/**
+ * NB! Krever følgende i nais.yaml:
+ * ```
+ *   kafka:
+ *     pool: nav-dev | nav-prod
+ * ```
+ */
 object KafkaEnvironmentVariable {
     @External
     val KAFKA_BROKERS by EnvironmentVariable
