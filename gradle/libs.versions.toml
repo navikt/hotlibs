@@ -1,35 +1,79 @@
 [versions]
-behovsmeldingsmodell = "24.178.123446"
+bigquery = "2.41.0"
+cacheApi = "1.1.1"
+caffeine = "3.1.8"
+classgraph = "4.8.173"
+commons-compress = "1.26.2"
 confluent = "7.6.1"
-coroutines = "1.8.1" # 1.9 kommer med kotlin 2.0
+cyclonedx = "1.8.2"
+ehcache = "3.10.8"
 flyway = "10.15.2"
 graphql = "7.1.1"
+h2 = "2.2.224"
+hikaricp = "5.1.0"
+influxdb = "7.1.0"
 jackson = "2.17.1"
+javaJwt = "4.4.0" # følger ktor-server-auth-jwt
+jedis = "5.1.3"
+jetbrains-annotations = "24.1.0"
+joseJwt = "9.40"
 junit = "5.10.2"
 kafka = "3.7.0" # følger rapids-and-rivers
 koin = "3.5.6"
+konfig = "1.6.10.0"
 kotest = "5.9.1"
+kotest-ktor = "2.0.0"
 kotlin = "2.0.0"
+kotlin-logging = "7.0.0"
+kotlin-logging-deprecated = "3.0.5"
+kotlinx-coroutines = "1.8.1" # 1.9 kommer med kotlin 2.0
+kotlinx-metadata = "0.9.0"
+kotlinx-serialization = "1.7.1"
+kotliquery = "1.9.0"
 ktor = "2.3.12"
+lettuce = "6.3.2.RELEASE"
+logback = "1.5.6"
+logback-logstash = "7.4"
+logback-syslog4j = "1.0.0"
 micrometer = "1.13.1"
+microprofile = "3.1.1"
+mockk = "1.13.11"
+netty = "4.1.111.Final"
+nocommons = "0.16.0"
 openapi = "7.6.0"
 oracle = "23.4.0.24.05"
+postgresql = "42.7.3"
 prometheus = "1.3.1"
-serialization = "1.7.1"
+prometheus-deprecated = "0.16.0"
+rapidsAndRivers = "2024061408021718344972.64ebbdb34321"
+shadow = "8.1.1"
 slf4j = "2.0.13"
 spotless = "6.25.0"
+swagger = "2.2.22"
 testcontainers = "1.19.8"
 tmsKtorTokenSupport = "4.1.2"
+unleash = "9.2.2"
+unleash-deprecated = "9.2.2"
+wiremock = "3.8.0"
+zjsonpatch = "0.4.16"
+
+# DigiHoT
+behovsmeldingsmodell = "24.178.123446"
+contractPdlAvro = "1.0.1"
+core = "0.1.1"
+database = "0.5.4"
+http = "0.4.1"
+nare = "0.3.0"
 
 [plugins]
-bom = { id = "org.cyclonedx.bom", version = "1.8.2" }
+bom = { id = "org.cyclonedx.bom", version.ref = "cyclonedx" }
 flyway = { id = "org.flywaydb.flyway", version.ref = "flyway" }
 graphql = { id = "com.expediagroup.graphql", version.ref = "graphql" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
 openapi = { id = "org.openapi.generator", version.ref = "openapi" }
-shadow = { id = "com.github.johnrengelman.shadow", version = "8.1.1" }
+shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 
 [libraries]
@@ -42,25 +86,25 @@ kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", versio
 kotlin-test-junit5 = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit5", version.ref = "kotlin" }
 
 # Kotlinx Coroutines
-kotlinx-coroutines-bom = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-bom", version.ref = "coroutines" }
-kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core-jvm", version.ref = "coroutines" }
-kotlinx-coroutines-debug = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-debug", version.ref = "coroutines" }
-kotlinx-coroutines-jdk8 = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-jdk8", version.ref = "coroutines" }
-kotlinx-coroutines-reactive = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-reactive", version.ref = "coroutines" }
-kotlinx-coroutines-slf4j = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-slf4j", version.ref = "coroutines" }
-kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test-jvm", version.ref = "coroutines" }
+kotlinx-coroutines-bom = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-bom", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core-jvm", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-debug = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-debug", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-jdk8 = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-jdk8", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-reactive = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-reactive", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-slf4j = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-slf4j", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test-jvm", version.ref = "kotlinx-coroutines" }
 
 # Reflection
-classgraph = { group = "io.github.classgraph", name = "classgraph", version = "4.8.173" }
-kotlinx-metadata-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-metadata-jvm", version = "0.9.0" }
+classgraph = { group = "io.github.classgraph", name = "classgraph", version.ref = "classgraph" }
+kotlinx-metadata-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-metadata-jvm", version.ref = "kotlinx-metadata" }
 
 # Kotlinx Serialization
-kotlinx-serialization-bom = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-bom", version.ref = "serialization" }
-kotlinx-serialization-cbor = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-cbor-jvm", version.ref = "serialization" }
-kotlinx-serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core-jvm", version.ref = "serialization" }
-kotlinx-serialization-hocon = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-hocon", version.ref = "serialization" }
-kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json-jvm", version.ref = "serialization" }
-kotlinx-serialization-properties = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-properties-jvm", version.ref = "serialization" }
+kotlinx-serialization-bom = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-bom", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-cbor = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-cbor-jvm", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core-jvm", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-hocon = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-hocon", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json-jvm", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-properties = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-properties-jvm", version.ref = "kotlinx-serialization" }
 
 # Jackson
 jackson-annotations = { group = "com.fasterxml.jackson.core", name = "jackson-annotations", version.ref = "jackson" }
@@ -105,8 +149,8 @@ ktor-server-status-pages = { group = "io.ktor", name = "ktor-server-status-pages
 ktor-server-test-host = { group = "io.ktor", name = "ktor-server-test-host-jvm", version.ref = "ktor" }
 
 # JWT
-java-jwt = { group = "com.auth0", name = "java-jwt", version = "4.4.0" } # følger ktor-server-auth-jwt
-nimbus-jose-jwt = { group = "com.nimbusds", name = "nimbus-jose-jwt", version = "9.40" }
+java-jwt = { group = "com.auth0", name = "java-jwt", version.ref = "javaJwt" }
+nimbus-jose-jwt = { group = "com.nimbusds", name = "nimbus-jose-jwt", version.ref = "joseJwt" }
 
 # tms-ktor-token-support
 azure-exchange = { group = "no.nav.tms.token.support", name = "azure-exchange", version.ref = "tmsKtorTokenSupport" }
@@ -119,16 +163,16 @@ tokenx-validation = { group = "no.nav.tms.token.support", name = "tokenx-validat
 tokenx-validation-mock = { group = "no.nav.tms.token.support", name = "tokenx-validation-mock", version.ref = "tmsKtorTokenSupport" }
 
 # NoCommons
-nocommons = { group = "no.bekk.bekkopen", name = "nocommons", version = "0.16.0" }
+nocommons = { group = "no.bekk.bekkopen", name = "nocommons", version.ref = "nocommons" }
 
 # Apache Commons
-commons-compress = { group = "org.apache.commons", name = "commons-compress", version = "1.26.2" }
+commons-compress = { group = "org.apache.commons", name = "commons-compress", version.ref = "commons-compress" }
 
 # Netty
-netty-bom = { group = "io.netty", name = "netty-bom", version = "4.1.111.Final" }
+netty-bom = { group = "io.netty", name = "netty-bom", version.ref = "netty" }
 
-# Java Annotations
-java-annotations = { group = "org.jetbrains", name = "annotations", version = "24.1.0" }
+# JetBrains Annotations
+jetbrains-annotations = { group = "org.jetbrains", name = "annotations", version.ref = "jetbrains-annotations" }
 
 # Koin
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
@@ -141,23 +185,23 @@ koin-test-junit5 = { group = "io.insert-koin", name = "koin-test-junit5", versio
 kafka-clients = { group = "org.apache.kafka", name = "kafka-clients", version.ref = "kafka" }
 kafka-streams = { group = "org.apache.kafka", name = "kafka-streams", version.ref = "kafka" }
 kafka-streams-test-utils = { group = "org.apache.kafka", name = "kafka-streams-test-utils", version.ref = "kafka" }
-rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", version = "2024061408021718344972.64ebbdb34321" }
+rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", version.ref = "rapidsAndRivers" }
 
 # Confluent
 kafka-avro-serializer = { group = "io.confluent", name = "kafka-avro-serializer", version.ref = "confluent" }
 kafka-streams-avro-serde = { group = "io.confluent", name = "kafka-streams-avro-serde", version.ref = "confluent" }
 
 # Google Cloud
-google-cloud-bigquery = { group = "com.google.cloud", name = "google-cloud-bigquery", version = "2.41.0" }
+google-cloud-bigquery = { group = "com.google.cloud", name = "google-cloud-bigquery", version.ref = "bigquery" }
 
 # JDBC
 flyway-core = { group = "org.flywaydb", name = "flyway-core", version.ref = "flyway" }
 flyway-database-oracle = { group = "org.flywaydb", name = "flyway-database-oracle", version.ref = "flyway" }
 flyway-database-postgresql = { group = "org.flywaydb", name = "flyway-database-postgresql", version.ref = "flyway" }
-h2 = { group = "com.h2database", name = "h2", version = "2.2.224" }
-hikaricp = { group = "com.zaxxer", name = "HikariCP", version = "5.1.0" }
-kotliquery = { group = "com.github.seratch", name = "kotliquery", version = "1.9.0" }
-postgresql = { group = "org.postgresql", name = "postgresql", version = "42.7.3" }
+h2 = { group = "com.h2database", name = "h2", version.ref = "h2" }
+hikaricp = { group = "com.zaxxer", name = "HikariCP", version.ref = "hikaricp" }
+kotliquery = { group = "com.github.seratch", name = "kotliquery", version.ref = "kotliquery" }
+postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgresql" }
 
 # Oracle
 ojdbc-bom = { group = "com.oracle.database.jdbc", name = "ojdbc-bom", version.ref = "oracle" }
@@ -166,19 +210,19 @@ ojdbc11-production = { group = "com.oracle.database.jdbc", name = "ojdbc11-produ
 ucp11 = { group = "com.oracle.database.jdbc", name = "ucp11", version.ref = "oracle" }
 
 # Cache
-cache-api = { group = "javax.cache", name = "cache-api", version = "1.1.1" }
-caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version = "3.1.8" }
-ehcache = { group = "org.ehcache", name = "ehcache", version = "3.10.8" }
-jedis = { group = "redis.clients", name = "jedis", version = "5.1.3" }
-lettuce = { group = "io.lettuce", name = "lettuce-core", version = "6.3.2.RELEASE" }
+cache-api = { group = "javax.cache", name = "cache-api", version.ref = "cacheApi" }
+caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version.ref = "caffeine" }
+ehcache = { group = "org.ehcache", name = "ehcache", version.ref = "ehcache" }
+jedis = { group = "redis.clients", name = "jedis", version.ref = "jedis" }
+lettuce = { group = "io.lettuce", name = "lettuce-core", version.ref = "lettuce" }
 
 # DigiHoT
 hm-behovsmeldingsmodell = { group = "no.nav.hjelpemidler", name = "hm-behovsmeldingsmodell", version.ref = "behovsmeldingsmodell" }
-hm-contract-pdl-avro = { group = "no.nav.hjelpemidler", name = "hm-contract-pdl-avro", version = "1.0.1" }
-hm-core = { group = "no.nav.hjelpemidler", name = "hm-core", version = "0.1.0" }
-hm-database = { group = "no.nav.hjelpemidler", name = "hm-database", version = "0.5.3" }
-hm-http = { group = "no.nav.hjelpemidler", name = "hm-http", version = "0.4.1" }
-hm-nare = { group = "no.nav.hjelpemidler", name = "hm-nare", version = "0.3.0" }
+hm-contract-pdl-avro = { group = "no.nav.hjelpemidler", name = "hm-contract-pdl-avro", version.ref = "contractPdlAvro" }
+hm-core = { group = "no.nav.hjelpemidler", name = "hm-core", version.ref = "core" }
+hm-database = { group = "no.nav.hjelpemidler", name = "hm-database", version.ref = "database" }
+hm-http = { group = "no.nav.hjelpemidler", name = "hm-http", version.ref = "http" }
+hm-nare = { group = "no.nav.hjelpemidler", name = "hm-nare", version.ref = "nare" }
 
 # GraphQL
 graphql-client-jackson = { group = "com.expediagroup", name = "graphql-kotlin-client-jackson", version.ref = "graphql" }
@@ -186,13 +230,13 @@ graphql-gradle-plugin = { group = "com.expediagroup", name = "graphql-kotlin-gra
 graphql-ktor-client = { group = "com.expediagroup", name = "graphql-kotlin-ktor-client", version.ref = "graphql" }
 
 # InfluxDB
-influxdb-client-kotlin = { group = "com.influxdb", name = "influxdb-client-kotlin", version = "7.1.0" }
+influxdb-client-kotlin = { group = "com.influxdb", name = "influxdb-client-kotlin", version.ref = "influxdb" }
 
 # Micrometer / Prometheus
 micrometer-bom = { group = "io.micrometer", name = "micrometer-bom", version.ref = "micrometer" }
 micrometer-registry-prometheus = { group = "io.micrometer", name = "micrometer-registry-prometheus", version.ref = "micrometer" }
 micrometer-registry-prometheus-deprecated = { group = "io.micrometer", name = "micrometer-registry-prometheus-simpleclient", version.ref = "micrometer" } # bruk micrometer-registry-prometheus
-prometheus-client-deprecated = { group = "io.prometheus", name = "simpleclient_common", version = "0.16.0" } # bruk prometheus-metrics-core
+prometheus-client-deprecated = { group = "io.prometheus", name = "simpleclient_common", version.ref = "prometheus-deprecated" } # bruk prometheus-metrics-core
 prometheus-metrics-bom = { group = "io.prometheus", name = "prometheus-metrics-bom", version.ref = "prometheus" }
 prometheus-metrics-core = { group = "io.prometheus", name = "prometheus-metrics-core", version.ref = "prometheus" }
 prometheus-metrics-simpleclient-bridge = { group = "io.prometheus", name = "prometheus-metrics-simpleclient-bridge", version.ref = "prometheus" }
@@ -204,29 +248,29 @@ slf4j-jdk-platform-logging = { group = "org.slf4j", name = "slf4j-jdk-platform-l
 slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j" }
 
 # Logging
-kotlin-logging = { group = "io.github.oshai", name = "kotlin-logging-jvm", version = "7.0.0" }
-kotlin-logging-deprecated = { group = "io.github.microutils", name = "kotlin-logging", version = "3.0.5" }
-logback-classic = { group = "ch.qos.logback", name = "logback-classic", version = "1.5.6" }
-logback-syslog4j = { group = "com.papertrailapp", name = "logback-syslog4j", version = "1.0.0" }
-logstash-logback-encoder = { group = "net.logstash.logback", name = "logstash-logback-encoder", version = "7.4" }
+kotlin-logging = { group = "io.github.oshai", name = "kotlin-logging-jvm", version.ref = "kotlin-logging" }
+kotlin-logging-deprecated = { group = "io.github.microutils", name = "kotlin-logging", version.ref = "kotlin-logging-deprecated" }
+logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
+logback-syslog4j = { group = "com.papertrailapp", name = "logback-syslog4j", version.ref = "logback-syslog4j" }
+logstash-logback-encoder = { group = "net.logstash.logback", name = "logstash-logback-encoder", version.ref = "logback-logstash" }
 
 # Spotless
 spotless-gradle-plugin = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version.ref = "spotless" }
 
 # OpenAPI
-microprofile-openapi = { group = "org.eclipse.microprofile.openapi", name = "microprofile-openapi-api", version = "3.1.1" }
+microprofile-openapi = { group = "org.eclipse.microprofile.openapi", name = "microprofile-openapi-api", version.ref = "microprofile" }
 openapi-gradle-plugin = { group = "org.openapitools", name = "openapi-generator-gradle-plugin", version.ref = "openapi" }
-swagger-annotations = { group = "io.swagger.core.v3", name = "swagger-annotations", version = "2.2.22" }
+swagger-annotations = { group = "io.swagger.core.v3", name = "swagger-annotations", version.ref = "swagger" }
 
 # Unleash
-unleash = { group = "io.getunleash", name = "unleash-client-java", version = "9.2.2" }
-unleash-deprecated = { group = "no.finn.unleash", name = "unleash-client-java", version = "4.4.1" }
+unleash = { group = "io.getunleash", name = "unleash-client-java", version.ref = "unleash" }
+unleash-deprecated = { group = "no.finn.unleash", name = "unleash-client-java", version.ref = "unleash-deprecated" }
 
 # JSON Patch
-zjsonpatch = { group = "com.flipkart.zjsonpatch", name = "zjsonpatch", version = "0.4.16" }
+zjsonpatch = { group = "com.flipkart.zjsonpatch", name = "zjsonpatch", version.ref = "zjsonpatch" }
 
 # Configuration
-konfig-deprecated = { group = "com.natpryce", name = "konfig", version = "1.6.10.0" }
+konfig-deprecated = { group = "com.natpryce", name = "konfig", version.ref = "konfig" }
 
 # JUnit
 junit-jupiter-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit" }
@@ -236,12 +280,12 @@ junit-jupiter-params = { group = "org.junit.jupiter", name = "junit-jupiter-para
 # Kotest
 kotest-assertions-core = { group = "io.kotest", name = "kotest-assertions-core-jvm", version.ref = "kotest" }
 kotest-assertions-json = { group = "io.kotest", name = "kotest-assertions-json-jvm", version.ref = "kotest" }
-kotest-assertions-ktor = { group = "io.kotest.extensions", name = "kotest-assertions-ktor-jvm", version = "2.0.0" }
+kotest-assertions-ktor = { group = "io.kotest.extensions", name = "kotest-assertions-ktor-jvm", version.ref = "kotest-ktor" }
 kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5-jvm", version.ref = "kotest" }
 
 # Mocking
-mockk = { group = "io.mockk", name = "mockk-jvm", version = "1.13.11" }
-wiremock = { group = "org.wiremock", name = "wiremock", version = "3.8.0" }
+mockk = { group = "io.mockk", name = "mockk-jvm", version.ref = "mockk" }
+wiremock = { group = "org.wiremock", name = "wiremock", version.ref = "wiremock" }
 
 # Testcontainers
 testcontainers = { group = "org.testcontainers", name = "testcontainers", version.ref = "testcontainers" }
