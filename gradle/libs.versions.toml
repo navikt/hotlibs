@@ -228,6 +228,7 @@ hm-nare = { group = "no.nav.hjelpemidler", name = "hm-nare", version.ref = "nare
 graphql-client-jackson = { group = "com.expediagroup", name = "graphql-kotlin-client-jackson", version.ref = "graphql" }
 graphql-gradle-plugin = { group = "com.expediagroup", name = "graphql-kotlin-gradle-plugin", version.ref = "graphql" }
 graphql-ktor-client = { group = "com.expediagroup", name = "graphql-kotlin-ktor-client", version.ref = "graphql" }
+graphql-ktor-server = { group = "com.expediagroup", name = "graphql-kotlin-ktor-server", version.ref = "graphql" }
 
 # InfluxDB
 influxdb-client-kotlin = { group = "com.influxdb", name = "influxdb-client-kotlin", version.ref = "influxdb" }
