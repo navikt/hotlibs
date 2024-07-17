@@ -53,6 +53,7 @@ spotless = "6.25.0"
 swagger = "2.2.22"
 testcontainers = "1.19.8"
 tmsKtorTokenSupport = "4.1.2"
+tmsVarsel = "1.0.0"
 unleash = "9.2.2"
 unleash-deprecated = "9.2.2"
 wiremock = "3.8.0"
@@ -163,6 +164,9 @@ idporten-sidecar-mock = { group = "no.nav.tms.token.support", name = "idporten-s
 tokendings-exchange = { group = "no.nav.tms.token.support", name = "tokendings-exchange", version.ref = "tmsKtorTokenSupport" }
 tokenx-validation = { group = "no.nav.tms.token.support", name = "tokenx-validation", version.ref = "tmsKtorTokenSupport" }
 tokenx-validation-mock = { group = "no.nav.tms.token.support", name = "tokenx-validation-mock", version.ref = "tmsKtorTokenSupport" }
+
+# tms-varsel
+kotlin-builder = { group = "no.nav.tms.varsel", name = "kotlin-builder", version.ref = "tmsVarsel" }
 
 # NoCommons
 nocommons = { group = "no.bekk.bekkopen", name = "nocommons", version.ref = "nocommons" }
