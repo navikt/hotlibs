@@ -166,7 +166,7 @@ tokenx-validation = { group = "no.nav.tms.token.support", name = "tokenx-validat
 tokenx-validation-mock = { group = "no.nav.tms.token.support", name = "tokenx-validation-mock", version.ref = "tmsKtorTokenSupport" }
 
 # tms-varsel
-kotlin-builder = { group = "no.nav.tms.varsel", name = "kotlin-builder", version.ref = "tmsVarsel" }
+varsel-kotlin-builder = { group = "no.nav.tms.varsel", name = "kotlin-builder", version.ref = "tmsVarsel" }
 
 # NoCommons
 nocommons = { group = "no.bekk.bekkopen", name = "nocommons", version.ref = "nocommons" }
