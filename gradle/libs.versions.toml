@@ -65,7 +65,7 @@ zjsonpatch = "0.4.16"
 behovsmeldingsmodell = "24.194.094058"
 contractPdlAvro = "1.0.1"
 core = "0.1.1"
-database = "0.5.4"
+database = "0.6.0"
 http = "0.4.2"
 nare = "0.3.0"
 
