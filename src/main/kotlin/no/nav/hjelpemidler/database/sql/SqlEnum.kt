@@ -5,5 +5,5 @@ import no.nav.hjelpemidler.database.QueryParameter
 interface SqlEnum<E : Enum<E>> : QueryParameter<String> {
     val name: String
 
-    override val value: String get() = name
+    override val queryParameter: String get() = name
 }

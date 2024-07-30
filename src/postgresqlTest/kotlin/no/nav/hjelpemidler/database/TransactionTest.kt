@@ -21,7 +21,7 @@ class TransactionTest {
         val result = transactionAsync(testDataSource) { tx ->
             TestStore(tx).hent(id)
         }
-        result.shouldContain("id", id.value)
+        result.shouldContain("id", id.queryParameter)
     }
 
     @Test
@@ -35,7 +35,7 @@ class TransactionTest {
                 TestStore(tx2).hent(id)
             }
         }
-        result["id"] shouldBe id.value
+        result["id"] shouldBe id.queryParameter
     }
 
     private suspend fun lagreEntity(): TestId = transactionAsync(testDataSource) { tx ->

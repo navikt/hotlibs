@@ -4,7 +4,7 @@ import kotliquery.Query
 import no.nav.hjelpemidler.database.sql.Sql
 
 interface QueryParameter<out T> {
-    val value: T
+    val queryParameter: T
 }
 
 typealias QueryParameters = Map<String, Any?>
@@ -16,8 +16,9 @@ fun <T> QueryParameter<T>?.toQueryParameters(key: String = "id"): QueryParameter
 
 internal fun QueryParameters.prepare(): Map<String, Any?> = mapValues { (_, value) ->
     when (value) {
-        is QueryParameter<*> -> value.value
+        is CharSequence -> value.toString()
         is Enum<*> -> value.name
+        is QueryParameter<*> -> value.queryParameter
         else -> value
     }
 }

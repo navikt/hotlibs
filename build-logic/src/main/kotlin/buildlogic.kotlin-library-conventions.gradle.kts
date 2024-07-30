@@ -51,14 +51,14 @@ java {
         withSourcesJar()
     }
 
-    toolchain { languageVersion.set(JavaLanguageVersion.of(21)) }
+    toolchain { languageVersion.set(libs.versions.java.map(JavaLanguageVersion::of)) }
 }
 
 @Suppress("UnstableApiUsage")
 testing {
     suites {
         withType<JvmTestSuite> {
-            useKotlinTest(libs.versions.kotlin)
+            useKotlinTest(libs.versions.kotlin.asProvider())
             dependencies {
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.kotest.assertions.core)

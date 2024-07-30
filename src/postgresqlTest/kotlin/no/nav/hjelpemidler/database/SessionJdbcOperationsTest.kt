@@ -24,7 +24,7 @@ class SessionJdbcOperationsTest {
 
         transactionAsync(testDataSource) { tx ->
             tx.singleOrNull(sql, queryParameters) { row -> row.long("id") }
-        } shouldBe id.value
+        } shouldBe id.queryParameter
 
         transactionAsync(testDataSource) { tx ->
             tx.singleOrNull(sql = sql, queryParameters = 0.toQueryParameters()) { row -> row.long("id") }
