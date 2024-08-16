@@ -64,10 +64,10 @@ zjsonpatch = "0.4.16"
 # DigiHoT
 behovsmeldingsmodell = "24.228.102320"
 contractPdlAvro = "1.0.1"
-core = "0.1.1"
+core = "0.1.2"
 database = "0.6.0"
 http = "0.4.2"
-nare = "0.3.0"
+nare = "0.3.1"
 
 [plugins]
 bom = { id = "org.cyclonedx.bom", version.ref = "cyclonedx" }
