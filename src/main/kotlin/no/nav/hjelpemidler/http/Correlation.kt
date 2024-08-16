@@ -50,5 +50,6 @@ suspend inline fun <T> withCorrelationId(
     crossinline body: suspend () -> T,
 ): T = withLoggingContextAsync(
     map = mapOf(*pair, CORRELATION_ID_KEY to currentCorrelationId()),
+    restorePrevious = false,
     body = body,
 )

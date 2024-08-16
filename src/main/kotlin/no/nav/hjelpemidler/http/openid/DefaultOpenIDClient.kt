@@ -33,6 +33,7 @@ internal class DefaultOpenIDClient(
         return withLoggingContextAsync(
             "grantType" to formParameters.grantType,
             "scope" to formParameters.scope,
+            restorePrevious = false,
         ) {
             log.debug { "Henter token" }
             val response = client
