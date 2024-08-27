@@ -123,11 +123,12 @@ jackson-module-kotlin = { group = "com.fasterxml.jackson.module", name = "jackso
 # Ktor
 ktor-bom = { group = "io.ktor", name = "ktor-bom", version.ref = "ktor" }
 ktor-gradle-plugin = { group = "io.ktor.plugin", name = "plugin", version.ref = "ktor" }
+ktor-resources = { group = "io.ktor", name = "ktor-resources-jvm", version.ref = "ktor" }
 ktor-serialization-jackson = { group = "io.ktor", name = "ktor-serialization-jackson-jvm", version.ref = "ktor" }
 
 # Ktor Client
 ktor-client-apache = { group = "io.ktor", name = "ktor-client-apache-jvm", version.ref = "ktor" }
-ktor-client-auth = { group = "io.ktor", name = "ktor-client-auth", version.ref = "ktor" }
+ktor-client-auth = { group = "io.ktor", name = "ktor-client-auth-jvm", version.ref = "ktor" }
 ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio-jvm", version.ref = "ktor" }
 ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation-jvm", version.ref = "ktor" }
 ktor-client-core = { group = "io.ktor", name = "ktor-client-core-jvm", version.ref = "ktor" }
