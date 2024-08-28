@@ -33,7 +33,9 @@ dependencies {
     implementation(libs.ktor.serialization.jackson)
 
     // Jackson
-    implementation(libs.bundles.jackson)
+    api(libs.jackson.databind)
+    implementation(libs.jackson.datatype.jsr310)
+    implementation(libs.jackson.module.kotlin)
 
     // JWT
     implementation(libs.java.jwt)
