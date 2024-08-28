@@ -17,7 +17,7 @@ import no.nav.hjelpemidler.configuration.Environment
  */
 fun JsonMapper.Builder.default(): JsonMapper.Builder =
     this
-        .addModules(JavaTimeModule())
+        .addModule(JavaTimeModule())
         .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
         .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
         .configure(JsonParser.Feature.INCLUDE_SOURCE_IN_LOCATION, Environment.current.tier != Environment.Tier.PROD)
