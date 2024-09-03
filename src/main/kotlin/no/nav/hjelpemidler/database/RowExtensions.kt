@@ -3,6 +3,10 @@ package no.nav.hjelpemidler.database
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import no.nav.hjelpemidler.collections.emptyEnumSet
 import no.nav.hjelpemidler.collections.toEnumSet
+import no.nav.hjelpemidler.domain.person.AktørId
+import no.nav.hjelpemidler.domain.person.Fødselsnummer
+import no.nav.hjelpemidler.domain.person.toAktørId
+import no.nav.hjelpemidler.domain.person.toFødselsnummer
 import java.util.UUID
 
 typealias Row = kotliquery.Row
@@ -49,3 +53,15 @@ fun Row.toMap(): Map<String, Any?> {
         metaData.getColumnLabel(columnIndex) to anyOrNull(columnIndex)
     }
 }
+
+fun Row.aktørId(columnLabel: String): AktørId =
+    string(columnLabel).toAktørId()
+
+fun Row.aktørIdOrNull(columnLabel: String): AktørId? =
+    stringOrNull(columnLabel)?.toAktørId()
+
+fun Row.fødselsnummer(columnLabel: String): Fødselsnummer =
+    string(columnLabel).toFødselsnummer()
+
+fun Row.fødselsnummerOrNull(columnLabel: String): Fødselsnummer? =
+    stringOrNull(columnLabel)?.toFødselsnummer()

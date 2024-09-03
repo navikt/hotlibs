@@ -10,8 +10,8 @@ import org.intellij.lang.annotations.Language
 class TestStore(private val tx: JdbcOperations) : Store {
     @Language("SQL")
     private val insertSql = """
-        INSERT INTO test (string, integer, enum, data_1, data_2)
-        VALUES (:string, :integer, :enum, :data_1, :data_2)
+        INSERT INTO test (string, integer, enum, data_1, data_2, fnr, aktor_id)
+        VALUES (:string, :integer, :enum, :data_1, :data_2, :fnr, :aktor_id)
         RETURNING id
     """.trimIndent()
 
