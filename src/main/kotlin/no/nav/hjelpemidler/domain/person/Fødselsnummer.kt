@@ -75,6 +75,11 @@ class Fødselsnummer @JsonIgnore private constructor(
 
 fun String.toFødselsnummer(): Fødselsnummer = Fødselsnummer(this)
 
+/**
+ * Sett til `true` for å tillate syntetiske fødselsnumre.
+ *
+ * @see [FodselsnummerValidator.ALLOW_SYNTHETIC_NUMBERS]
+ */
 var TILLAT_SYNTETISKE_FØDSELSNUMRE: Boolean
     get() = FodselsnummerValidator.ALLOW_SYNTHETIC_NUMBERS
     set(value) {
