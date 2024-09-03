@@ -4,7 +4,7 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockkStatic
 import no.nav.hjelpemidler.http.test.createJWT
-import no.nav.hjelpemidler.time.now
+import no.nav.hjelpemidler.time.nå
 import java.time.LocalDate
 import java.time.Month
 import java.time.ZoneId
@@ -21,9 +21,9 @@ class TokenSetTest {
 
     @BeforeTest
     fun setUp() {
-        mockkStatic(::now)
+        mockkStatic(::nå)
         every {
-            now()
+            nå()
         } returns at
     }
 
