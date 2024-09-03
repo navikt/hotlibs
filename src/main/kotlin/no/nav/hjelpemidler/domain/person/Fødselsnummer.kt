@@ -16,7 +16,7 @@ import no.nav.hjelpemidler.logging.secureLog
 import no.nav.hjelpemidler.time.toDate
 
 /**
- * Fnr/Dnr med 11 siffer. Støtter også syntetiske verdier.
+ * FNR/DNR med 11 siffer. Støtter også syntetiske verdier.
  *
  * @see [Fodselsnummer]
  */
@@ -74,3 +74,9 @@ class Fødselsnummer @JsonIgnore private constructor(
 }
 
 fun String.toFødselsnummer(): Fødselsnummer = Fødselsnummer(this)
+
+var TILLAT_SYNTETISKE_FØDSELSNUMRE: Boolean
+    get() = FodselsnummerValidator.ALLOW_SYNTHETIC_NUMBERS
+    set(value) {
+        FodselsnummerValidator.ALLOW_SYNTHETIC_NUMBERS = value
+    }
