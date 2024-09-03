@@ -1,16 +1,19 @@
 package no.nav.hjelpemidler.time
 
-import no.bekk.bekkopen.date.NorwegianDateUtil
-import no.nav.hjelpemidler.localization.LOCALE_NORWAY
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.TimeZone
 import kotlin.time.Duration
+
+val TIME_ZONE_EUROPE_OSLO: TimeZone =
+    TimeZone.getTimeZone("Europe/Oslo")
+
+val ZONE_ID_EUROPE_OSLO: ZoneId =
+    TIME_ZONE_EUROPE_OSLO.toZoneId()
 
 fun nå(): Instant =
     Instant.now()
@@ -53,23 +56,3 @@ operator fun Instant.minus(duration: Duration): Instant =
 
 operator fun Instant.plus(duration: Duration): Instant =
     plusNanos(duration.inWholeNanoseconds)
-
-fun Instant.leggTilArbeidsdager(days: Int): Instant =
-    NorwegianDateUtil.addWorkingDaysToDate(toDate(), days).toInstant()
-
-val Instant.erArbeidsdag: Boolean
-    get() = NorwegianDateUtil.isWorkingDay(toDate())
-
-val Instant.erIkkeArbeidsdag: Boolean
-    get() = NorwegianDateUtil.isHoliday(toDate())
-
-val Int.arbeidsdager: Instant get() = nå().leggTilArbeidsdager(this)
-
-val TIME_ZONE_EUROPE_OSLO: TimeZone =
-    TimeZone.getTimeZone("Europe/Oslo")
-
-val ZONE_ID_EUROPE_OSLO: ZoneId =
-    TIME_ZONE_EUROPE_OSLO.toZoneId()
-
-val DATE_TIME_FORMATTER_NORWEGIAN_DATE: DateTimeFormatter =
-    DateTimeFormatter.ofPattern("dd.MM.yyyy", LOCALE_NORWAY).withZone(ZONE_ID_EUROPE_OSLO)

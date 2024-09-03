@@ -12,9 +12,17 @@ import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonPrimitive
 
 /**
- * Abstrakt klasse for implementasjon av sterke typer for ulike identifikatorer.
- * Dette er et alternativ til å bruk primitive typer direkte.
+ * Klasse som danner grunnlag for implementasjon av sterke typer for ulike identifikatorer.
+ * Dette er et alternativ til å bruke primitive typer direkte.
+ *
  * Bruk av [JsonValue] sikrer at kun [value] havner i JSON ved serialisering.
+ * Konstruktøren(e) i konkrete implementasjoner brukes ved deserialisering.
+ * Bruk evt. [com.fasterxml.jackson.annotation.JsonCreator] for å markere hvilke(n) konstruktør(er) som
+ * skal benyttes.
+ *
+ * Det er også lagt opp til bruk av ktor-resources med [Id.Serializer]. Implementasjoner av denne sikrer
+ * riktig (de)serialisering ved bruk av kotlinx-serialization som brukes under panseret i ktor-resources.
+ *
  * NB! Vi serialiserer alltid verdien til [String] i JSON.
  */
 abstract class Id<out T : Any>(val value: T) {

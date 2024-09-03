@@ -8,8 +8,6 @@ typealias Fødselsdato = LocalDate
 
 fun Fødselsdato.alder(dag: LocalDate = iDag()): Int = Period.between(this, dag).years
 
-private infix fun Int.år(dag: LocalDate): Fødselsdato = dag.minusYears(toLong())
-
-infix fun Int.`år på`(dag: LocalDate): Fødselsdato = this år dag
+infix fun Int.år(dag: LocalDate): Fødselsdato = dag.minusYears(toLong())
 
 val Int.år: Fødselsdato get() = this år iDag()

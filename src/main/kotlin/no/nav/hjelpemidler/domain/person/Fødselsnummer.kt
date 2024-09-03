@@ -15,6 +15,11 @@ import no.bekk.bekkopen.person.FodselsnummerValidator
 import no.nav.hjelpemidler.logging.secureLog
 import no.nav.hjelpemidler.time.toDate
 
+/**
+ * Fnr/Dnr med 11 siffer. Støtter også syntetiske verdier.
+ *
+ * @see [Fodselsnummer]
+ */
 @Serializable(with = Fødselsnummer.Serializer::class)
 class Fødselsnummer @JsonIgnore private constructor(
     private val internal: Fodselsnummer,

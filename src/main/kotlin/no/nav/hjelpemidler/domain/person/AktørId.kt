@@ -10,6 +10,9 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import no.nav.hjelpemidler.logging.secureLog
 
+/**
+ * AktørId med 13 siffer.
+ */
 @Serializable(with = AktørId.Serializer::class)
 data class AktørId @JsonCreator constructor(override val value: String) : PersonIdent, CharSequence by value {
     init {
