@@ -64,9 +64,9 @@ zjsonpatch = "0.4.16"
 # DigiHoT
 behovsmeldingsmodell = "24.242.122156"
 contractPdlAvro = "1.0.1"
-core = "0.2.0"
-database = "0.7.0"
-http = "0.5.2"
+core = "0.3.0"
+database = "0.7.1"
+http = "0.5.3"
 nare = "0.5.0"
 
 [plugins]
