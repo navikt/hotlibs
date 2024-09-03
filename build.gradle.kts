@@ -2,6 +2,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.serialization)
     `java-library`
     `maven-publish`
 }
@@ -13,9 +14,19 @@ dependencies {
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlin.logging)
+    implementation(libs.nocommons)
+
+    // Jackson
+    compileOnly(libs.jackson.annotations)
+
+    // Kotlinx Serialization
+    compileOnly(libs.kotlinx.serialization.core)
+    compileOnly(libs.kotlinx.serialization.json)
 
     // Testing
     testImplementation(libs.bundles.test)
+    testImplementation(libs.bundles.jackson)
+    testImplementation(libs.kotlinx.serialization.json)
     testRuntimeOnly(libs.slf4j.simple)
 }
 
