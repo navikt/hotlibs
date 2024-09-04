@@ -20,7 +20,7 @@ jedis = "5.1.5"
 jetbrains-annotations = "24.1.0"
 joseJwt = "9.40"
 junit = "5.11.0"
-kafka = "3.8.0" # følger rapids-and-rivers
+kafka = "3.8.0" # følger tbdLibs-kafka
 koin = "3.5.6"
 konfig = "1.6.10.0"
 kotest = "5.9.1"
@@ -53,6 +53,7 @@ shadow = "8.1.1"
 slf4j = "2.0.15"
 spotless = "6.25.0"
 swagger = "2.2.22"
+tbdLibs = "2024.08.27-14.42-c1673749" # følger rapidsAndRivers
 testcontainers = "1.20.1"
 tmsKtorTokenSupport = "4.1.2"
 tmsVarsel = "1.0.0"
@@ -189,6 +190,12 @@ koin-core-coroutines = { group = "io.insert-koin", name = "koin-core-coroutines"
 koin-ktor = { group = "io.insert-koin", name = "koin-ktor", version.ref = "koin" }
 koin-logger-slf4j = { group = "io.insert-koin", name = "koin-logger-slf4j", version.ref = "koin" }
 koin-test-junit5 = { group = "io.insert-koin", name = "koin-test-junit5", version.ref = "koin" }
+
+# tbd libs
+tbdLibs-kafka = { group = "com.github.navikt.tbd-libs", name = "kafka", version.ref = "tbdLibs" }
+tbdLibs-rapidsAndRivers = { group = "com.github.navikt.tbd-libs", name = "rapids-and-rivers", version.ref = "tbdLibs" }
+tbdLibs-rapidsAndRivers-api = { group = "com.github.navikt.tbd-libs", name = "rapids-and-rivers-api", version.ref = "tbdLibs" }
+tbdLibs-rapidsAndRivers-test = { group = "com.github.navikt.tbd-libs", name = "rapids-and-rivers-test", version.ref = "tbdLibs" }
 
 # Kafka
 kafka-clients = { group = "org.apache.kafka", name = "kafka-clients", version.ref = "kafka" }
