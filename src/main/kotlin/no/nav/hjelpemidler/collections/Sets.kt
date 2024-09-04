@@ -12,12 +12,12 @@ fun <E : Enum<E>> enumSetOf(first: E, vararg rest: E): Set<E> =
     EnumSet.of(first, *rest)
 
 inline fun <reified E : Enum<E>> Array<out String>.toEnumSet(): Set<E> {
-    if (isEmpty()) return emptyEnumSet()
+    if (isEmpty()) return emptyEnumSet<E>()
     return EnumSet.copyOf(map { enumValueOf<E>(it) })
 }
 
 inline fun <reified E : Enum<E>> Collection<E>.toEnumSet(): Set<E> {
-    if (isEmpty()) return emptyEnumSet()
+    if (isEmpty()) return emptyEnumSet<E>()
     return EnumSet.copyOf(this)
 }
 

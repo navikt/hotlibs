@@ -4,7 +4,7 @@ import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import java.time.Instant
 import kotlin.test.Test
 
-class PackageTest {
+class EnvironmentVariablesInTest {
     @Test
     fun `Henter alle variabler, inkludert eksterne`() {
         val variables = environmentVariablesIn(TestConfiguration, includeExternal = true)

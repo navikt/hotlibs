@@ -8,13 +8,13 @@ import java.time.Instant
  *
  * @see [Instant.leggTilArbeidsdager]
  */
-val Int.arbeidsdager: Instant get() = nå().leggTilArbeidsdager(this)
+val Int.arbeidsdager: Instant get() = nå() leggTilArbeidsdager this
 
 /**
  * @see [NorwegianDateUtil.addWorkingDaysToDate]
  */
-infix fun Instant.leggTilArbeidsdager(days: Int): Instant =
-    NorwegianDateUtil.addWorkingDaysToDate(toDate(), days).toInstant()
+infix fun Instant.leggTilArbeidsdager(arbeidsdager: Int): Instant =
+    NorwegianDateUtil.addWorkingDaysToDate(toDate(), arbeidsdager).toInstant()
 
 /**
  * @see [NorwegianDateUtil.isWorkingDay]

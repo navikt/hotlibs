@@ -19,7 +19,7 @@ dependencies {
     // Jackson
     compileOnly(libs.jackson.annotations)
 
-    // Kotlinx Serialization
+    // kotlinx.serialization
     compileOnly(libs.kotlinx.serialization.core)
     compileOnly(libs.kotlinx.serialization.json)
 

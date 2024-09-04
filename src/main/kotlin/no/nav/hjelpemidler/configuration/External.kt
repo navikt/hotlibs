@@ -1,7 +1,8 @@
 package no.nav.hjelpemidler.configuration
 
 /**
- * Brukes for å markere at en egenskap er definert utenfor applikasjonen.
+ * Brukes for å markere at en egenskap/miljøvariabel er definert utenfor applikasjonen.
+ * F.eks. fra en mounted secret eller for database/Kafka.
  */
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.PROPERTY)

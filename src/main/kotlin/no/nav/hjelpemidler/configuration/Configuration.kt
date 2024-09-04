@@ -5,17 +5,27 @@ import java.util.Properties
 
 private val log = KotlinLogging.logger {}
 
+/**
+ * Inneholder alle miljøvariabler fra [System.getenv] i tillegg til variabler fra properties-fil for
+ * gjeldende miljø (hvis denne finnes).
+ *
+ * NB! Variabler fra properties-fil overstyrer de fra [System.getenv].
+ *
+ * @see [System.getenv]
+ */
 class Configuration internal constructor(
     private val properties: Map<String, String>,
 ) : Map<String, String> by properties {
-    override fun equals(other: Any?): Boolean =
-        properties == other
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+        other as Configuration
+        return properties == other.properties
+    }
 
-    override fun hashCode(): Int =
-        properties.hashCode()
+    override fun hashCode(): Int = properties.hashCode()
 
-    override fun toString(): String =
-        properties.toString()
+    override fun toString(): String = properties.toString()
 
     companion object {
         val current by lazy { load() }
