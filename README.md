@@ -14,14 +14,14 @@ Inneholder det som trengs for å gjøre en app konfigurerbar og tilpasset miljø
 Pakken inneholder også en rekke objekter med felter for typiske miljøvariabler vi ofte bruker og som defineres
 av NAIS.
 
-Sentrale klasser:
+#### Sentrale klasser:
 
 * [no.nav.hjelpemidler.configuration.Configuration](/src/main/kotlin/no/nav/hjelpemidler/configuration/Configuration.kt) ->
   Den gjeldende miljøkonfigurasjonen
 * [no.nav.hjelpemidler.configuration.Environment](/src/main/kotlin/no/nav/hjelpemidler/configuration/Environment.kt) ->
   Det gjeldende miljøet (e.g. "test", "dev-gcp", "prod-gcp")
 
-Bruk av [EnvironmentVariable](/src/main/kotlin/no/nav/hjelpemidler/configuration/EnvironmentVariable.kt):
+#### Bruk av [EnvironmentVariable](/src/main/kotlin/no/nav/hjelpemidler/configuration/EnvironmentVariable.kt):
 
 ```kotlin
 object AppConfig {
@@ -34,7 +34,7 @@ object AppConfig {
 ### `no.nav.hjelpemidler.domain.*`
 
 Inneholder domenerelaterte funksjoner og klasser som vi tenker er helt generelle for alle løsningene våre som f.eks.
-[Fødseslnummer](/src/main/kotlin/no/nav/hjelpemidler/domain/person/Fødselsnummer.kt).
+[Fødselsnummer](/src/main/kotlin/no/nav/hjelpemidler/domain/person/Fødselsnummer.kt).
 
 ### `no.nav.hjelpemidler.localization`
 
@@ -60,4 +60,4 @@ Publisering av hm-core gjøres manuelt pt.
 Gå til "Releases" -> "Draft a new release" og skriv inn versjonen (e.g. "0.5.0") som skal bygges under "Choose a tag" og
 trykk "Enter". Tag-en blir da opprettet og workflow for publisering kjører.
 
-Lag ny release [her](/releases/new).
+Lag ny release [her](https://github.com/navikt/hm-core/releases/new).
