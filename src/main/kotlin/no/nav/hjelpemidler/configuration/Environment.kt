@@ -17,25 +17,32 @@ sealed interface Environment {
         }
     }
 
-    enum class Tier {
-        LOCAL, DEV, PROD;
+    val isTest: Boolean get() = tier.isTest
+    val isLocal: Boolean get() = tier.isLocal
+    val isDev: Boolean get() = tier.isDev
+    val isProd: Boolean get() = tier.isProd
 
-        val isLocal: Boolean
-            get() = this == LOCAL
-        val isDev: Boolean
-            get() = this == DEV
-        val isProd: Boolean
-            get() = this == PROD
+    enum class Tier {
+        TEST, LOCAL, DEV, PROD;
+
+        val isTest: Boolean get() = this == TEST
+        val isLocal: Boolean get() = this == LOCAL
+        val isDev: Boolean get() = this == DEV
+        val isProd: Boolean get() = this == PROD
     }
 }
 
-private class NamedEnvironment(override val cluster: String) : Environment {
-    override val tier: Environment.Tier = Environment.Tier.LOCAL
+object TestEnvironment : Environment {
+    override val cluster: String = "test"
+    override val tier: Environment.Tier = Environment.Tier.TEST
     override fun toString(): String = cluster
 }
 
-val TestEnvironment: Environment = NamedEnvironment("test")
-val LocalEnvironment: Environment = NamedEnvironment("local")
+object LocalEnvironment : Environment {
+    override val cluster: String = "local"
+    override val tier: Environment.Tier = Environment.Tier.LOCAL
+    override fun toString(): String = cluster
+}
 
 enum class FssEnvironment(
     override val cluster: String,

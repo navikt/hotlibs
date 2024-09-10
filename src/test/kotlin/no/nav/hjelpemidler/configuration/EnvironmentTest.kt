@@ -12,7 +12,7 @@ class EnvironmentTest {
 
     @Test
     fun `Hvert miljø har riktig tier`() {
-        TestEnvironment shouldHaveTier Environment.Tier.LOCAL
+        TestEnvironment shouldHaveTier Environment.Tier.TEST
         LocalEnvironment shouldHaveTier Environment.Tier.LOCAL
         FssEnvironment.DEV shouldHaveTier Environment.Tier.DEV
         FssEnvironment.PROD shouldHaveTier Environment.Tier.PROD
@@ -22,6 +22,7 @@ class EnvironmentTest {
 
     @Test
     fun `Hver tier har riktig flagg`() {
+        Environment.Tier.TEST.shouldHaveFlag(isTest = true)
         Environment.Tier.LOCAL.shouldHaveFlag(isLocal = true)
         Environment.Tier.DEV.shouldHaveFlag(isDev = true)
         Environment.Tier.PROD.shouldHaveFlag(isProd = true)
@@ -32,10 +33,12 @@ class EnvironmentTest {
     }
 
     private fun Environment.Tier.shouldHaveFlag(
+        isTest: Boolean = false,
         isLocal: Boolean = false,
         isDev: Boolean = false,
         isProd: Boolean = false,
     ) = assertSoftly {
+        this.isTest shouldBe isTest
         this.isLocal shouldBe isLocal
         this.isDev shouldBe isDev
         this.isProd shouldBe isProd
