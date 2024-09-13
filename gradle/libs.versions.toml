@@ -63,7 +63,7 @@ wiremock = "3.9.1"
 zjsonpatch = "0.4.16"
 
 # DigiHoT
-behovsmeldingsmodell = "24.254.090751"
+behovsmeldingsmodell = "24.257.091604"
 contractPdlAvro = "1.0.1"
 core = "0.3.2"
 database = "0.7.4"
