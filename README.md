@@ -130,3 +130,12 @@ val result: Map<String, Any?> = transaction(dataSource) {
     it.single("SELECT * FROM table_v1 WHERE id = 1") { row: Row -> row.toMap() }
 }
 ```
+
+## Publisering
+
+Publisering av hm-database gjøres manuelt pt.
+
+Gå til "Releases" -> "Draft a new release" og skriv inn versjonen (e.g. "0.8.0") som skal bygges under "Choose a tag" og
+trykk "Enter". Tag-en blir da opprettet og workflow for publisering kjører.
+
+Lag ny release [her](https://github.com/navikt/hm-database/releases/new).
