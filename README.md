@@ -108,7 +108,7 @@ val dataSource = createDataSource(Testcontainers) {
     tag = "15-alpine"
 }
 
-// Oracle
+// H2 (Oracle)
 val dataSource = createDataSource(H2) {
     mode = H2Mode.Oracle
 }
