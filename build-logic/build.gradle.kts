@@ -16,7 +16,6 @@ dependencies {
 
 java {
     toolchain {
-        languageVersion.set(libs.versions.java.map(JavaLanguageVersion::of))
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
-
