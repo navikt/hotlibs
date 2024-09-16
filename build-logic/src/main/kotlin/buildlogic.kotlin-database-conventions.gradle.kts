@@ -1,10 +1,10 @@
-import org.gradle.accessors.dm.LibrariesForLibs
-
 /**
  * Inspirert av:
  * https://docs.gradle.org/current/userguide/feature_variants.html
  * https://github.com/jjohannes/understanding-gradle/tree/main/17_Feature_Variants
  */
+
+import org.gradle.accessors.dm.LibrariesForLibs
 
 plugins {
     id("buildlogic.kotlin-library-conventions")

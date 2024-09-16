@@ -1,9 +1,9 @@
 name: Publiser JAR
 
 on:
-  release:
-    types:
-      - created
+  push:
+    branches:
+      - main
 
 jobs:
   publish-jar:

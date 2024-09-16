@@ -15,8 +15,10 @@ repositories {
 }
 
 dependencies {
+    implementation(platform(libs.kotlin.bom))
+
     constraints {
-        // implementation("commons-codec:commons-codec:1.17.1")
+        // implementation(libs.kotlin.stdlib)
     }
 }
 
