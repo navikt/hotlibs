@@ -1,1 +1,2 @@
-rootProject.name = "hm-katalog"
+rootProject.name = "hotlibs"
+include("http", "katalog")
