@@ -3,4 +3,4 @@ pluginManagement {
 }
 
 rootProject.name = "hotlibs"
-include("http", "katalog", "nare")
+include("database", "http", "katalog", "nare")
