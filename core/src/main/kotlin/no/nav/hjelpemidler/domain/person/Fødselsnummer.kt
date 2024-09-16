@@ -2,7 +2,6 @@ package no.nav.hjelpemidler.domain.person
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonIgnore
-import kotlinx.serialization.Serializable
 import no.bekk.bekkopen.person.Fodselsnummer
 import no.bekk.bekkopen.person.FodselsnummerCalculator
 import no.bekk.bekkopen.person.FodselsnummerValidator
