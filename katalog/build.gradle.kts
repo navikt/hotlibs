@@ -12,7 +12,7 @@ repositories {
 
 catalog {
     versionCatalog {
-        from(files("./gradle/libs.versions.toml"))
+        from(files("../gradle/libs.versions.toml"))
     }
 }
 
@@ -25,7 +25,7 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/navikt/hm-katalog")
+            url = uri("https://maven.pkg.github.com/navikt/hotlibs")
             credentials {
                 username = System.getenv("GITHUB_ACTOR")
                 password = System.getenv("GITHUB_TOKEN")
