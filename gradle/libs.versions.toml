@@ -65,6 +65,9 @@ zjsonpatch = "0.4.16"
 # DigiHoT
 behovsmeldingsmodell = "24.257.091604"
 contractPdlAvro = "1.0.1"
+hotlibs = "24.260.160822"
+
+# fixme -> fjern disse etter overgang til hotlibs
 core = "0.3.3"
 database = "0.7.5"
 http = "0.5.7"
@@ -235,10 +238,17 @@ lettuce = { group = "io.lettuce", name = "lettuce-core", version.ref = "lettuce"
 # DigiHoT
 hm-behovsmeldingsmodell = { group = "no.nav.hjelpemidler", name = "hm-behovsmeldingsmodell", version.ref = "behovsmeldingsmodell" }
 hm-contract-pdl-avro = { group = "no.nav.hjelpemidler", name = "hm-contract-pdl-avro", version.ref = "contractPdlAvro" }
+
+# fixme -> fjern disse etter overgang til hotlibs
 hm-core = { group = "no.nav.hjelpemidler", name = "hm-core", version.ref = "core" }
 hm-database = { group = "no.nav.hjelpemidler", name = "hm-database", version.ref = "database" }
 hm-http = { group = "no.nav.hjelpemidler", name = "hm-http", version.ref = "http" }
 hm-nare = { group = "no.nav.hjelpemidler", name = "hm-nare", version.ref = "nare" }
+
+hotlibs-core = { group = "no.nav.hjelpemidler", name = "core", version.ref = "hotlibs" }
+hotlibs-database = { group = "no.nav.hjelpemidler", name = "database", version.ref = "hotlibs" }
+hotlibs-http = { group = "no.nav.hjelpemidler", name = "http", version.ref = "hotlibs" }
+hotlibs-nare = { group = "no.nav.hjelpemidler", name = "nare", version.ref = "hotlibs" }
 
 # GraphQL
 graphql-client-jackson = { group = "com.expediagroup", name = "graphql-kotlin-client-jackson", version.ref = "graphql" }
