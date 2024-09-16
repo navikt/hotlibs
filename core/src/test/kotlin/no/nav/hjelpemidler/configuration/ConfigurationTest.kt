@@ -7,7 +7,7 @@ import kotlin.test.Test
 class ConfigurationTest {
     @Test
     fun `Skal lese konfigurasjon fra properties`() {
-        val configuration = Configuration.load(LocalEnvironment)
+        val configuration = Configuration.load(TestEnvironment)
         configuration["PORT"] shouldBe "8080"
     }
 

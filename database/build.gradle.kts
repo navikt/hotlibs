@@ -1,14 +1,13 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm)
-    id("buildlogic.kotlin-library-conventions")
-    `maven-publish`
+    id("buildlogic.kotlin-database-conventions")
 }
 
 dependencies {
+    api(project(":core"))
+
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlinx.coroutines.core)
-    api(libs.hm.core)
     compileOnly(libs.jetbrains.annotations)
 
     // Logging
@@ -42,27 +41,5 @@ dependencies {
     testcontainersRuntimeOnly(libs.testcontainers.postgresql) // fixme -> kunne vi valgt oracle hvis oracle-capability?
     constraints {
         testRuntimeOnly(libs.commons.compress)
-    }
-}
-
-java {
-    toolchain { languageVersion.set(JavaLanguageVersion.of(21)) }
-    withSourcesJar()
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["java"])
-        }
-    }
-    repositories {
-        maven {
-            url = uri("https://maven.pkg.github.com/navikt/hm-database")
-            credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
-            }
-        }
     }
 }

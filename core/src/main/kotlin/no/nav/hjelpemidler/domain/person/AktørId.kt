@@ -1,6 +1,7 @@
 package no.nav.hjelpemidler.domain.person
 
 import com.fasterxml.jackson.annotation.JsonCreator
+import kotlinx.serialization.Serializable
 import no.nav.hjelpemidler.logging.secureLog
 
 /**

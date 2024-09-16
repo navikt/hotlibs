@@ -7,7 +7,7 @@ import kotlin.test.Test
 class EnvironmentTest {
     @Test
     fun `Gjeldende miljø skal være local`() {
-        Environment.current shouldBe LocalEnvironment
+        Environment.current shouldBe TestEnvironment
     }
 
     @Test

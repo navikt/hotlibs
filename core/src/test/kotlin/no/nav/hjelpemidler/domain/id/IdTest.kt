@@ -2,6 +2,7 @@ package no.nav.hjelpemidler.domain.id
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import no.nav.hjelpemidler.test.jsonToValue
