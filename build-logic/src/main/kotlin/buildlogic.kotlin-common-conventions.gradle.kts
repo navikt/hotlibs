@@ -18,7 +18,7 @@ dependencies {
     implementation(platform(libs.kotlin.bom))
 
     constraints {
-        // implementation(libs.kotlin.stdlib)
+        implementation(libs.commons.compress)
     }
 }
 
