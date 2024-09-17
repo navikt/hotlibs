@@ -12,14 +12,14 @@ dependencies {
     implementation(libs.hm.database)
     implementation(libs.hm.database) {
         capabilities {
-            requireCapability("no.nav.hjelpemidler:hm-database-postgresql")
+            requireCapability("no.nav.hjelpemidler:database-postgresql")
         }
     }
 
     // Testing
     testImplementation(libs.hm.database) {
         capabilities {
-            requireCapability("no.nav.hjelpemidler:hm-database-testcontainers")
+            requireCapability("no.nav.hjelpemidler:database-testcontainers")
         }
     }
 }
@@ -33,14 +33,14 @@ dependencies {
     implementation(libs.hm.database)
     implementation(libs.hm.database) {
         capabilities {
-            requireCapability("no.nav.hjelpemidler:hm-database-oracle")
+            requireCapability("no.nav.hjelpemidler:database-oracle")
         }
     }
 
     // Testing
     testImplementation(libs.hm.database) {
         capabilities {
-            requireCapability("no.nav.hjelpemidler:hm-database-h2")
+            requireCapability("no.nav.hjelpemidler:database-h2")
         }
     }
 }
