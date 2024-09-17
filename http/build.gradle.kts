@@ -34,6 +34,5 @@ dependencies {
     api(libs.caffeine)
 
     // Testing
-    testImplementation(libs.kotest.assertions.ktor)
     testRuntimeOnly(libs.logback.classic)
 }

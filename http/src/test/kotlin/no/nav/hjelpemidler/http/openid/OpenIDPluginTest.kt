@@ -1,6 +1,5 @@
 package no.nav.hjelpemidler.http.openid
 
-import io.kotest.assertions.ktor.client.shouldHaveStatus
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.ktor.client.engine.mock.MockEngine
@@ -48,7 +47,7 @@ class OpenIDPluginTest {
 
         val response = client.get("/test")
 
-        response shouldHaveStatus HttpStatusCode.OK
+        response.status shouldBe HttpStatusCode.OK
     }
 
     @Test

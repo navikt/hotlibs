@@ -18,6 +18,7 @@ dependencies {
     implementation(platform(libs.kotlin.bom))
 
     constraints {
+        // CVE-2024-25710
         implementation(libs.commons.compress)
     }
 }
