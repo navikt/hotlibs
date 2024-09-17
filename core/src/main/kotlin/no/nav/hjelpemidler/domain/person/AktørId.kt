@@ -7,7 +7,7 @@ import no.nav.hjelpemidler.logging.secureLog
 /**
  * AktørId med 13 siffer.
  */
-@Serializable(with = AktørId.Serializer::class)
+@Serializable(with = AktørIdSerializer::class)
 class AktørId @JsonCreator constructor(value: String) : PersonIdent(value) {
     init {
         val valid = value matches regex
@@ -15,10 +15,6 @@ class AktørId @JsonCreator constructor(value: String) : PersonIdent(value) {
             secureLog.error { "Ugyldig aktørId: '$value'" }
             throw IllegalArgumentException("Ugyldig aktørId")
         }
-    }
-
-    internal object Serializer : PersonIdent.Serializer<AktørId>() {
-        override fun deserialize(value: String): AktørId = AktørId(value)
     }
 }
 

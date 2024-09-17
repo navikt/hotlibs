@@ -61,21 +61,21 @@ class IdTest {
 
 @Serializable(with = TestLongId.Serializer::class)
 class TestLongId(value: Long) : Id<Long>(value) {
-    object Serializer : Id.Serializer<TestLongId>() {
+    object Serializer : IdSerializer<TestLongId>() {
         override fun deserialize(value: String): TestLongId = TestLongId(value.toLong())
     }
 }
 
 @Serializable(with = TestStringId.Serializer::class)
 class TestStringId(value: String) : Id<String>(value) {
-    object Serializer : Id.Serializer<TestStringId>() {
+    object Serializer : IdSerializer<TestStringId>() {
         override fun deserialize(value: String): TestStringId = TestStringId(value)
     }
 }
 
 @Serializable(with = TestUuidId.Serializer::class)
 class TestUuidId(value: UUID) : Id<UUID>(value) {
-    object Serializer : Id.Serializer<TestUuidId>() {
+    object Serializer : IdSerializer<TestUuidId>() {
         override fun deserialize(value: String): TestUuidId = TestUuidId(value.toUUID())
     }
 }

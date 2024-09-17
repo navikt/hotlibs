@@ -17,7 +17,7 @@ import no.nav.hjelpemidler.time.toDate
  * @see [Fodselsnummer]
  * @see [TILLAT_SYNTETISKE_FØDSELSNUMRE]
  */
-@Serializable(with = Fødselsnummer.Serializer::class)
+@Serializable(with = FødselsnummerSerializer::class)
 class Fødselsnummer @JsonIgnore private constructor(private val internal: Fodselsnummer) : PersonIdent(internal.value) {
     val kvinne: Boolean get() = internal.isFemale
     val mann: Boolean get() = internal.isMale
@@ -43,10 +43,6 @@ class Fødselsnummer @JsonIgnore private constructor(private val internal: Fodse
      */
     @JsonIgnore
     constructor(fødselsdato: Fødselsdato) : this(FodselsnummerCalculator.getFodselsnummerForDate(fødselsdato.toDate()))
-
-    internal object Serializer : PersonIdent.Serializer<Fødselsnummer>() {
-        override fun deserialize(value: String): Fødselsnummer = Fødselsnummer(value)
-    }
 }
 
 /**
