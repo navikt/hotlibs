@@ -2,6 +2,11 @@ name: Publiser JAR
 
 on:
   push:
+    paths-ignore:
+      - "**.md"
+      - ".gitignore"
+      - "LICENCE"
+      - "CODEOWNERS"
     branches:
       - main
 
