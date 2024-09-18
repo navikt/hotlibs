@@ -13,6 +13,12 @@ repositories {
 catalog {
     versionCatalog {
         from(files("../gradle/libs.versions.toml"))
+
+        // Legg til hotlibs i katalogen med versjonen som bygges nå
+        val hotlibs = version("hotlibs", "$version")
+        listOf("core", "database", "http", "nare").forEach { artifact ->
+            library("$hotlibs-$artifact", "$group", artifact).versionRef(hotlibs)
+        }
     }
 }
 

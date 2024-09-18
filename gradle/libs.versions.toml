@@ -2,7 +2,6 @@
 # DigiHoT
 behovsmeldingsmodell = "24.257.091604"
 contractPdlAvro = "1.0.1"
-hotlibs = "24.262.145656"
 
 # Third party
 bigquery = "2.42.3"
@@ -233,12 +232,6 @@ lettuce = { group = "io.lettuce", name = "lettuce-core", version.ref = "lettuce"
 # DigiHoT
 hm-behovsmeldingsmodell = { group = "no.nav.hjelpemidler", name = "hm-behovsmeldingsmodell", version.ref = "behovsmeldingsmodell" }
 hm-contract-pdl-avro = { group = "no.nav.hjelpemidler", name = "hm-contract-pdl-avro", version.ref = "contractPdlAvro" }
-
-# DigiHoT - hotlibs
-hotlibs-core = { group = "no.nav.hjelpemidler", name = "core", version.ref = "hotlibs" }
-hotlibs-database = { group = "no.nav.hjelpemidler", name = "database", version.ref = "hotlibs" }
-hotlibs-http = { group = "no.nav.hjelpemidler", name = "http", version.ref = "hotlibs" }
-hotlibs-nare = { group = "no.nav.hjelpemidler", name = "nare", version.ref = "hotlibs" }
 
 # GraphQL
 graphql-client-jackson = { group = "com.expediagroup", name = "graphql-kotlin-client-jackson", version.ref = "graphql" }
