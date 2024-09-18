@@ -18,14 +18,21 @@ val ZONE_ID_EUROPE_OSLO: ZoneId =
 fun nå(): Instant =
     Instant.now()
 
+fun nåtz(): ZonedDateTime =
+    ZonedDateTime.now(ZONE_ID_EUROPE_OSLO)
+
 fun iDag(): LocalDate =
     LocalDate.now()
+
+// Date
 
 fun Date.toLocalDate(): LocalDate =
     toInstant().toLocalDate()
 
 fun Date.toLocalDateTime(): LocalDateTime =
     toInstant().toLocalDateTime()
+
+// LocalDate
 
 fun LocalDate.toInstant(): Instant =
     atStartOfDay().atZone(ZONE_ID_EUROPE_OSLO).toInstant()
@@ -36,17 +43,24 @@ fun LocalDate.toDate(): Date =
 infix fun LocalDate.erISammeÅrSom(other: LocalDate): Boolean =
     year == other.year
 
+// LocalDateTime
+
 fun LocalDateTime.toInstant(): Instant =
     atZone(ZONE_ID_EUROPE_OSLO).toInstant()
 
 fun LocalDateTime.toDate(): Date =
     toInstant().toDate()
 
+// Instant
+
 fun Instant.toLocalDate(): LocalDate =
     ZonedDateTime.ofInstant(this, ZONE_ID_EUROPE_OSLO).toLocalDate()
 
 fun Instant.toLocalDateTime(): LocalDateTime =
     ZonedDateTime.ofInstant(this, ZONE_ID_EUROPE_OSLO).toLocalDateTime()
+
+fun Instant.toZonedDateTime(): ZonedDateTime =
+    atZone(ZONE_ID_EUROPE_OSLO)
 
 fun Instant.toDate(): Date =
     Date.from(this)
