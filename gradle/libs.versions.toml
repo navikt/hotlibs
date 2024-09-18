@@ -2,7 +2,7 @@
 # DigiHoT
 behovsmeldingsmodell = "24.257.091604"
 contractPdlAvro = "1.0.1"
-hotlibs = "24.261.083845"
+hotlibs = "24.262.145656"
 
 # Third party
 bigquery = "2.42.3"
