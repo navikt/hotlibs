@@ -1,7 +1,6 @@
 package no.nav.hjelpemidler.domain.person
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.annotation.JsonKey
 import no.bekk.bekkopen.person.Fodselsnummer
 import no.bekk.bekkopen.person.FodselsnummerCalculator
 import no.bekk.bekkopen.person.FodselsnummerValidator
@@ -48,7 +47,6 @@ value class Fødselsnummer(override val value: String) : PersonIdent, CharSequen
             .toString()
     )
 
-    @JsonKey
     override fun toString(): String = value
 }
 
