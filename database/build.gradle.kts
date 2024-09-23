@@ -43,3 +43,9 @@ dependencies {
         testRuntimeOnly(libs.commons.compress)
     }
 }
+
+
+@Suppress("UnstableApiUsage")
+tasks.named("check") {
+    dependsOn(testing.suites.named("postgresqlTest"))
+}

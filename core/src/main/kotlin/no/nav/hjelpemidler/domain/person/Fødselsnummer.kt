@@ -1,8 +1,7 @@
 package no.nav.hjelpemidler.domain.person
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonIgnore
-import kotlinx.serialization.Serializable
+import com.fasterxml.jackson.annotation.JsonKey
 import no.bekk.bekkopen.person.Fodselsnummer
 import no.bekk.bekkopen.person.FodselsnummerCalculator
 import no.bekk.bekkopen.person.FodselsnummerValidator
@@ -17,32 +16,40 @@ import no.nav.hjelpemidler.time.toDate
  * @see [Fodselsnummer]
  * @see [TILLAT_SYNTETISKE_FØDSELSNUMRE]
  */
-@Serializable(with = FødselsnummerSerializer::class)
-class Fødselsnummer @JsonIgnore private constructor(private val internal: Fodselsnummer) : PersonIdent(internal.value) {
-    val kvinne: Boolean get() = internal.isFemale
-    val mann: Boolean get() = internal.isMale
-    val fødselsdato: Fødselsdato
-        get() = Fødselsdato.of(
-            internal.birthYear.toInt(),
-            internal.month.toInt(),
-            internal.dayInMonth.toInt(),
-        )
-
-    @JsonCreator
-    constructor(value: String) : this(
-        try {
-            FodselsnummerValidator.getFodselsnummer(value)
-        } catch (e: IllegalArgumentException) {
-            secureLog.error(e) { "Ugyldig fødselsnummer: '$value'" }
+@JvmInline
+value class Fødselsnummer(override val value: String) : PersonIdent, CharSequence by value {
+    init {
+        if (!FodselsnummerValidator.isValid(value)) {
+            secureLog.error { "Ugyldig fødselsnummer: '$value'" }
             throw IllegalArgumentException("Ugyldig fødselsnummer")
-        },
-    )
+        }
+    }
+
+    private val internal: Fodselsnummer get() = FodselsnummerValidator.getFodselsnummer(value)
+
+    val erKvinne: Boolean get() = internal.isFemale
+    val erMann: Boolean get() = internal.isMale
+    val fødselsdato: Fødselsdato
+        get() = internal.let {
+            Fødselsdato.of(
+                it.birthYear.toInt(),
+                it.month.toInt(),
+                it.dayInMonth.toInt(),
+            )
+        }
 
     /**
      * Lag et tilfeldig fødselsnummer for [fødselsdato].
      */
     @JsonIgnore
-    constructor(fødselsdato: Fødselsdato) : this(FodselsnummerCalculator.getFodselsnummerForDate(fødselsdato.toDate()))
+    constructor(fødselsdato: Fødselsdato) : this(
+        FodselsnummerCalculator
+            .getFodselsnummerForDate(fødselsdato.toDate())
+            .toString()
+    )
+
+    @JsonKey
+    override fun toString(): String = value
 }
 
 /**

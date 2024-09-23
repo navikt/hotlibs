@@ -1,21 +1,20 @@
 package no.nav.hjelpemidler.domain.person
 
-import com.fasterxml.jackson.annotation.JsonCreator
-import kotlinx.serialization.Serializable
 import no.nav.hjelpemidler.logging.secureLog
 
 /**
  * AktørId med 13 siffer.
  */
-@Serializable(with = AktørIdSerializer::class)
-class AktørId @JsonCreator constructor(value: String) : PersonIdent(value) {
+@JvmInline
+value class AktørId(override val value: String) : PersonIdent, CharSequence by value {
     init {
-        val valid = value matches regex
-        if (!valid) {
+        if (!(value matches regex)) {
             secureLog.error { "Ugyldig aktørId: '$value'" }
             throw IllegalArgumentException("Ugyldig aktørId")
         }
     }
+
+    override fun toString(): String = value
 }
 
 /**

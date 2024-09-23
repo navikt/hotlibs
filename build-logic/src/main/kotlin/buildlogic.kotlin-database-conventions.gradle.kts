@@ -84,8 +84,3 @@ testing {
         }
     }
 }
-
-@Suppress("UnstableApiUsage")
-tasks.named("check") {
-    dependsOn(testing.suites.named("postgresqlTest"))
-}
