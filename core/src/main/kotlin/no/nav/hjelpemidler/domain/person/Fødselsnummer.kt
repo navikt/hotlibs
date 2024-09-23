@@ -15,8 +15,7 @@ import no.nav.hjelpemidler.time.toDate
  * @see [Fodselsnummer]
  * @see [TILLAT_SYNTETISKE_FØDSELSNUMRE]
  */
-@JvmInline
-value class Fødselsnummer(override val value: String) : PersonIdent, CharSequence by value {
+class Fødselsnummer(value: String) : PersonIdent(value) {
     init {
         if (!FodselsnummerValidator.isValid(value)) {
             secureLog.error { "Ugyldig fødselsnummer: '$value'" }
@@ -46,8 +45,6 @@ value class Fødselsnummer(override val value: String) : PersonIdent, CharSequen
             .getFodselsnummerForDate(fødselsdato.toDate())
             .toString()
     )
-
-    override fun toString(): String = value
 }
 
 /**

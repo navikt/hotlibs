@@ -1,27 +1,12 @@
 package no.nav.hjelpemidler.domain.id
 
-import com.fasterxml.jackson.annotation.JsonValue
-import kotlinx.serialization.Serializable
 import java.util.UUID
 
-@JvmInline
-@Serializable
-value class TestLongId(override val value: Long) : Id<Long> {
-    @JsonValue
-    override fun toString(): String = value.toString()
-}
+class TestLongId(value: Long) : LongId(value)
 
-@JvmInline
-@Serializable
-value class TestStringId(override val value: String) : Id<String> {
-    override fun toString(): String = value
-}
+class TestStringId(value: String) : StringId(value)
 
-@JvmInline
-@Serializable
-value class TestUuidId(@Serializable(with = UUIDSerializer::class) override val value: UUID) : Id<UUID> {
-    override fun toString(): String = value.toString()
-}
+class TestUuidId(value: UUID) : Id<UUID>(value)
 
 val longId = TestLongId(12345)
 val stringId = TestStringId("54321")

@@ -1,5 +1,5 @@
 package no.nav.hjelpemidler.domain.person
 
-sealed interface PersonIdent : CharSequence {
-    val value: String
-}
+import no.nav.hjelpemidler.domain.id.StringId
+
+sealed class PersonIdent(value: String) : StringId(value)

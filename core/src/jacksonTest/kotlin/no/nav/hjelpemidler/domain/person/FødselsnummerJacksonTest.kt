@@ -1,7 +1,5 @@
 package no.nav.hjelpemidler.domain.person
 
-import com.fasterxml.jackson.core.JacksonException
-import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import no.nav.hjelpemidler.test.jsonToValue
 import no.nav.hjelpemidler.test.valueToJson
@@ -23,10 +21,6 @@ class FødselsnummerJacksonTest {
         jsonToValue<Person1>(person1Json) shouldBe Person1(fnr)
         jsonToValue<Person2>(person2Json) shouldBe Person2(null)
         jsonToValue<List<Fødselsnummer>>(fnrAsArrayElementJson) shouldBe listOf(fnr)
-
-        // pga. https://github.com/FasterXML/jackson-module-kotlin/issues/777
-        shouldThrow<JacksonException> {
-            jsonToValue<Map<Fødselsnummer, Boolean>>(fnrAsMapKeyJson) shouldBe mapOf(fnr to true)
-        }
+        jsonToValue<Map<Fødselsnummer, Boolean>>(fnrAsMapKeyJson) shouldBe mapOf(fnr to true)
     }
 }
