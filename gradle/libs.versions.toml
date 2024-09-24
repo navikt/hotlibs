@@ -204,8 +204,9 @@ rapidsAndRivers = { group = "com.github.navikt", name = "rapids-and-rivers", ver
 kafka-avro-serializer = { group = "io.confluent", name = "kafka-avro-serializer", version.ref = "confluent" }
 kafka-streams-avro-serde = { group = "io.confluent", name = "kafka-streams-avro-serde", version.ref = "confluent" }
 
-# Google Cloud
+# Google
 google-cloud-bigquery = { group = "com.google.cloud", name = "google-cloud-bigquery", version.ref = "bigquery" }
+owasp-java-html-sanitizer = { group = "com.googlecode.owasp-java-html-sanitizer", name = "owasp-java-html-sanitizer", version = "20240325.1" }
 
 # JDBC
 flyway-core = { group = "org.flywaydb", name = "flyway-core", version.ref = "flyway" }
