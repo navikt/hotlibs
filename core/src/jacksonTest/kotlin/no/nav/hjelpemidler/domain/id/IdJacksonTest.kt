@@ -8,15 +8,15 @@ import kotlin.test.Test
 class IdJacksonTest {
     @Test
     fun `Serialiser til JSON med Jackson`() {
-        valueToJson(longId) shouldBe longIdJsonString
+        valueToJson(numberId) shouldBe numberIdJsonString
         valueToJson(stringId) shouldBe stringIdJsonString
         valueToJson(uuidId) shouldBe uuidIdJsonString
     }
 
     @Test
     fun `Deserialiser til Kotlin med Jackson`() {
-        jsonToValue<TestLongId>(longIdJsonNumber) shouldBe longId
-        jsonToValue<TestLongId>(longIdJsonString) shouldBe longId
+        jsonToValue<TestNumberId>(numberIdJsonNumber) shouldBe numberId
+        jsonToValue<TestNumberId>(numberIdJsonString) shouldBe numberId
         jsonToValue<TestStringId>(stringIdJsonString) shouldBe stringId
         jsonToValue<TestUuidId>(uuidIdJsonString) shouldBe uuidId
     }

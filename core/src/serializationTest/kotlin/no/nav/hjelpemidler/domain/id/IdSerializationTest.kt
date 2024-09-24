@@ -9,33 +9,33 @@ import kotlin.test.Test
 class IdSerializationTest {
     @Test
     fun `Serialiser til JSON med kotlinx-serialization-json`() {
-        Json.encodeToString(TestLongIdSerializer, longId) shouldBe longIdJsonString
+        Json.encodeToString(TestNumberIdSerializer, numberId) shouldBe numberIdJsonString
         Json.encodeToString(TestStringIdSerializer, stringId) shouldBe stringIdJsonString
         Json.encodeToString(TestUuidIdSerializer, uuidId) shouldBe uuidIdJsonString
     }
 
     @Test
     fun `Deserialiser til Kotlin med kotlinx-serialization-json`() {
-        Json.decodeFromString(TestLongIdSerializer, longIdJsonNumber) shouldBe longId
-        Json.decodeFromString(TestLongIdSerializer, longIdJsonString) shouldBe longId
+        Json.decodeFromString(TestNumberIdSerializer, numberIdJsonNumber) shouldBe numberId
+        Json.decodeFromString(TestNumberIdSerializer, numberIdJsonString) shouldBe numberId
         Json.decodeFromString(TestStringIdSerializer, stringIdJsonString) shouldBe stringId
         Json.decodeFromString(TestUuidIdSerializer, uuidIdJsonString) shouldBe uuidId
 
-        shouldThrow<NumberFormatException> { Json.decodeFromString(TestLongIdSerializer, """true""") }
-        shouldThrow<NumberFormatException> { Json.decodeFromString(TestLongIdSerializer, """false""") }
-        shouldThrow<IllegalArgumentException> { Json.decodeFromString(TestLongIdSerializer, """null""") }
+        shouldThrow<NumberFormatException> { Json.decodeFromString(TestNumberIdSerializer, """true""") }
+        shouldThrow<NumberFormatException> { Json.decodeFromString(TestNumberIdSerializer, """false""") }
+        shouldThrow<IllegalArgumentException> { Json.decodeFromString(TestNumberIdSerializer, """null""") }
 
-        Json.decodeFromString(TestLongIdSerializer.nullable, """null""") shouldBe null
+        Json.decodeFromString(TestNumberIdSerializer.nullable, """null""") shouldBe null
         Json.decodeFromString(TestStringIdSerializer.nullable, """null""") shouldBe null
         Json.decodeFromString(TestUuidIdSerializer.nullable, """null""") shouldBe null
     }
 }
 
-private object TestLongIdSerializer :
-    IdSerializer<TestLongId>("no.nav.hjelpemidler.domain.id.TestLongIdSerializer", { TestLongId(it.toLong()) })
+private object TestNumberIdSerializer :
+    IdSerializer<TestNumberId>("no.nav.hjelpemidler.domain.id.TestNumberIdSerializer", ::TestNumberId)
 
 private object TestStringIdSerializer :
     IdSerializer<TestStringId>("no.nav.hjelpemidler.domain.id.TestStringIdSerializer", ::TestStringId)
 
 private object TestUuidIdSerializer :
-    IdSerializer<TestUuidId>("no.nav.hjelpemidler.domain.id.TestUuidIdSerializer", { TestUuidId(UUID(it)) })
+    IdSerializer<TestUuidId>("no.nav.hjelpemidler.domain.id.TestUuidIdSerializer", ::TestUuidId)

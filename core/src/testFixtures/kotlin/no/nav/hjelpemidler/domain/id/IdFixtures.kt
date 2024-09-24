@@ -2,17 +2,23 @@ package no.nav.hjelpemidler.domain.id
 
 import java.util.UUID
 
-class TestLongId(value: Long) : LongId(value)
+class TestNumberId(value: Long) : NumberId(value) {
+    constructor(value: String) : this(value.toLong())
+}
 
-class TestStringId(value: String) : StringId(value)
+class TestStringId(value: String) : StringId(value) {
+    constructor(value: Long) : this(value.toString())
+}
 
-class TestUuidId(value: UUID) : Id<UUID>(value)
+class TestUuidId(value: UUID) : Id<UUID>(value) {
+    constructor(value: String) : this(UUID(value))
+}
 
-val longId = TestLongId(12345)
+val numberId = TestNumberId(12345)
 val stringId = TestStringId("54321")
 val uuidId = TestUuidId(UUID())
 
-val longIdJsonNumber = "$longId"
-val longIdJsonString = """"$longId""""
+val numberIdJsonNumber = "$numberId"
+val numberIdJsonString = """"$numberId""""
 val stringIdJsonString = """"$stringId""""
 val uuidIdJsonString = """"$uuidId""""
