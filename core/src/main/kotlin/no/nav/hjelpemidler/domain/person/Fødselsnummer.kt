@@ -17,7 +17,7 @@ import no.nav.hjelpemidler.time.toDate
  */
 class Fødselsnummer(value: String) : PersonIdent(value) {
     init {
-        if (!FodselsnummerValidator.isValid(value)) {
+        if (!erGyldig(value)) {
             secureLog.error { "Ugyldig fødselsnummer: '$value'" }
             throw IllegalArgumentException("Ugyldig fødselsnummer")
         }
@@ -45,6 +45,10 @@ class Fødselsnummer(value: String) : PersonIdent(value) {
             .getFodselsnummerForDate(fødselsdato.toDate())
             .toString()
     )
+
+    companion object {
+        fun erGyldig(value: String): Boolean = FodselsnummerValidator.isValid(value)
+    }
 }
 
 /**

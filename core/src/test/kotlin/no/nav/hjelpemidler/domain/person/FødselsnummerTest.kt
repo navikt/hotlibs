@@ -3,6 +3,7 @@ package no.nav.hjelpemidler.domain.person
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlin.test.Test
 
 class FødselsnummerTest {
@@ -10,6 +11,7 @@ class FødselsnummerTest {
     fun `Fødselsnummer skal være gyldig`() {
         shouldThrow<IllegalArgumentException> { Fødselsnummer("12345678910") }
         shouldNotThrowAny { Fødselsnummer(40.år) }
+        Fødselsnummer(40.år).toString().toPersonIdent().shouldBeInstanceOf<Fødselsnummer>()
     }
 
     @Test

@@ -7,10 +7,16 @@ import no.nav.hjelpemidler.logging.secureLog
  */
 class AktørId(value: String) : PersonIdent(value) {
     init {
-        if (!(value matches regex)) {
+        if (!erGyldig(value)) {
             secureLog.error { "Ugyldig aktørId: '$value'" }
             throw IllegalArgumentException("Ugyldig aktørId")
         }
+    }
+
+    companion object {
+        private val regex: Regex = Regex("^[0-9]{13}$")
+
+        fun erGyldig(value: String): Boolean = value matches regex
     }
 }
 
@@ -18,5 +24,3 @@ class AktørId(value: String) : PersonIdent(value) {
  * Konverter til [AktørId].
  */
 fun String.toAktørId(): AktørId = AktørId(this)
-
-private val regex: Regex = Regex("^[0-9]{13}$")
