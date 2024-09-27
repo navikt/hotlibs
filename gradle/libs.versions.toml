@@ -1,7 +1,7 @@
 [versions]
 # DigiHoT
 behovsmeldingsmodell = "24.271.095527"
-contractPdlAvro = "1.0.1"
+contractPdlAvro = "1.0.2"
 
 # Third party
 bigquery = "2.42.3"
