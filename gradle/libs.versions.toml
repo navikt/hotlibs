@@ -1,6 +1,6 @@
 [versions]
 # DigiHoT
-behovsmeldingsmodell = "24.268.103805"
+behovsmeldingsmodell = "24.271.095527"
 contractPdlAvro = "1.0.1"
 
 # Third party
