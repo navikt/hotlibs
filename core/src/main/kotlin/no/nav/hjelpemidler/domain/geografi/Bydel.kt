@@ -7,4 +7,7 @@ data class Bydel(
     override val nummer: String,
     @JsonAlias("bydelsnavn")
     override val navn: String,
-) : GeografiskOmråde()
+) : GeografiskOmråde() {
+    // for extensions
+    companion object
+}
