@@ -3,8 +3,12 @@ package no.nav.hjelpemidler.database
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import no.nav.hjelpemidler.collections.emptyEnumSet
 import no.nav.hjelpemidler.collections.toEnumSet
+import no.nav.hjelpemidler.domain.geografi.Bydel
+import no.nav.hjelpemidler.domain.geografi.Enhet
+import no.nav.hjelpemidler.domain.geografi.Kommune
 import no.nav.hjelpemidler.domain.person.AktørId
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
+import no.nav.hjelpemidler.domain.person.Personnavn
 import no.nav.hjelpemidler.domain.person.toAktørId
 import no.nav.hjelpemidler.domain.person.toFødselsnummer
 import java.util.UUID
@@ -65,3 +69,51 @@ fun Row.fødselsnummer(columnLabel: String): Fødselsnummer =
 
 fun Row.fødselsnummerOrNull(columnLabel: String): Fødselsnummer? =
     stringOrNull(columnLabel)?.toFødselsnummer()
+
+// Personnavn
+
+fun Personnavn?.toQueryParameters(prefix: String? = null): QueryParameters = mapOf(
+    "fornavn" to this?.fornavn,
+    "mellomnavn" to this?.mellomnavn,
+    "etternavn" to this?.etternavn,
+).transform(prefix)
+
+fun Row.toPersonnavn(prefix: String? = null): Personnavn = Personnavn(
+    fornavn = string(columnLabelOf("fornavn", prefix)),
+    mellomnavn = stringOrNull(columnLabelOf("mellomnavn", prefix)),
+    etternavn = string(columnLabelOf("etternavn", prefix)),
+)
+
+// Enhet
+
+fun Enhet.toQueryParameters(): QueryParameters =
+    mapOf("enhetsnummer" to nummer, "enhetsnavn" to navn)
+
+fun Row.toEnhet(): Enhet = Enhet(
+    nummer = string("enhetsnummer"),
+    navn = string("enhetsnavn"),
+)
+
+// Kommune
+
+fun Kommune.toQueryParameters(prefix: String? = null): QueryParameters = mapOf(
+    "kommunenummer" to nummer,
+    "kommunenavn" to navn,
+).transform(prefix = prefix)
+
+fun Row.toKommuneOrNull(prefix: String? = null): Kommune? =
+    ifStringPresent(columnLabelOf("kommunenummer", prefix)) { nummer ->
+        Kommune(nummer = nummer, navn = string(columnLabelOf("kommunenavn", prefix)))
+    }
+
+// Bydel
+
+fun Bydel.toQueryParameters(prefix: String? = null): QueryParameters = mapOf(
+    "bydelsnummer" to nummer,
+    "bydelsnavn" to navn,
+).transform(prefix = prefix)
+
+fun Row.toBydelOrNull(prefix: String? = null): Bydel? =
+    ifStringPresent(columnLabelOf("bydelsnummer", prefix)) { nummer ->
+        Bydel(nummer = nummer, navn = string(columnLabelOf("bydelsnavn", prefix)))
+    }

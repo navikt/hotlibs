@@ -16,6 +16,9 @@ fun String?.toQueryParameters(key: String = "id"): QueryParameters = mapOf(key t
 fun Id<*>?.toQueryParameters(key: String = "id"): QueryParameters = mapOf(key to this)
 fun <T> QueryParameter<T>?.toQueryParameters(key: String = "id"): QueryParameters = mapOf(key to this)
 
+/**
+ * Transformer til verdier som støttes av JDBC direkte.
+ */
 internal fun QueryParameters.prepare(): Map<String, Any?> = mapValues { (_, value) ->
     when (value) {
         is CharSequence -> value.toString()
@@ -33,3 +36,15 @@ fun queryOf(sql: Sql, queryParameters: QueryParameters): Query =
 
 fun queryOf(sql: String, queryParameters: QueryParameters): Query =
     queryOf(Sql(sql), queryParameters)
+
+/**
+ * Legg til [prefix] og/eller [postfix] på [columnLabel].
+ */
+fun columnLabelOf(columnLabel: String, prefix: String? = null, postfix: String? = null): String =
+    listOfNotNull(prefix, columnLabel, postfix).joinToString("_")
+
+/**
+ * Legg til [prefix] og/eller [postfix] på alle kolonnenavn i [this].
+ */
+fun QueryParameters.transform(prefix: String? = null, postfix: String? = null): QueryParameters =
+    mapKeys { columnLabelOf(it.key, prefix, postfix) }
