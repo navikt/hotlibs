@@ -5,7 +5,7 @@ behovsmeldingsmodell = "24.290.163514"
 contractPdlAvro = "1.0.2"
 
 # Third party
-bigquery = "2.42.3"
+bigquery = "2.43.1"
 cacheApi = "1.1.1"
 caffeine = "3.1.8"
 classgraph = "4.8.177"
