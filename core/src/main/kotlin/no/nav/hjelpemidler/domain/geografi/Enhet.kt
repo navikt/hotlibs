@@ -1,17 +1,27 @@
 package no.nav.hjelpemidler.domain.geografi
 
 import com.fasterxml.jackson.annotation.JsonAlias
+import no.nav.hjelpemidler.validering.nummerValidator
 
-data class Enhet(
+class Enhet(
+    /**
+     * Alias: "enhetNr" er bla. brukt i NORG2.
+     */
     @JsonAlias("enhetsnummer", "enhetNr")
     override val nummer: String,
     @JsonAlias("enhetsnavn")
     override val navn: String,
 ) : GeografiskOmråde() {
+    init {
+        require(validator(nummer)) { "Ugyldig enhetsnummer: '$nummer'" }
+    }
+
     /**
      * NB! Ikke alle sentraler er lagt til her pt. Kun de som brukes i logikk og/eller tester.
      */
     companion object {
+        private val validator = nummerValidator(lengde = 4)
+
         /**
          * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/2103">NORG2</a>
          */

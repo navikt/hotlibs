@@ -1,6 +1,7 @@
 package no.nav.hjelpemidler.domain.person
 
 import no.nav.hjelpemidler.logging.secureLog
+import no.nav.hjelpemidler.validering.nummerValidator
 
 /**
  * AktørId med 13 siffer.
@@ -14,9 +15,9 @@ class AktørId(value: String) : PersonIdent(value) {
     }
 
     companion object {
-        private val regex: Regex = Regex("^[0-9]{13}$")
+        private val validator = nummerValidator(13)
 
-        fun erGyldig(value: String): Boolean = value matches regex
+        fun erGyldig(value: String): Boolean = validator(value)
     }
 }
 

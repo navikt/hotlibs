@@ -1,17 +1,24 @@
 package no.nav.hjelpemidler.domain.geografi
 
 import com.fasterxml.jackson.annotation.JsonAlias
+import no.nav.hjelpemidler.validering.nummerValidator
 
-data class Kommune(
+class Kommune(
     @JsonAlias("kommunenummer")
     override val nummer: String,
     @JsonAlias("kommunenavn")
     override val navn: String,
 ) : GeografiskOmråde() {
+    init {
+        require(validator(nummer)) { "Ugyldig kommunenummer: '$nummer'" }
+    }
+
     /**
      * NB! Ikke alle kommuner er lagt til her pt. Kun de som brukes i logikk og/eller tester.
      */
     companion object {
+        private val validator = nummerValidator(lengde = 4)
+
         /**
          * @see <a href="https://digihot-oppslag.intern.dev.nav.no/api/geografi/kommuner/0301">DigiHoT Oppslag</a>
          */
