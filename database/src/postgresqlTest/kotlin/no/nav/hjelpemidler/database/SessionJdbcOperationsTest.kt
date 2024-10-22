@@ -1,53 +1,35 @@
 package no.nav.hjelpemidler.database
 
+import com.fasterxml.jackson.databind.node.MissingNode
+import com.fasterxml.jackson.databind.node.NullNode
 import io.kotest.assertions.throwables.shouldNotThrow
-import io.kotest.matchers.collections.shouldBeSameSizeAs
 import io.kotest.matchers.collections.shouldHaveSize
-import io.kotest.matchers.longs.shouldBePositive
 import io.kotest.matchers.maps.shouldContain
-import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.test.runTest
 import no.nav.hjelpemidler.database.test.TestEntity
 import no.nav.hjelpemidler.database.test.TestEnum
-import no.nav.hjelpemidler.database.test.TestId
 import no.nav.hjelpemidler.database.test.TestStore
 import no.nav.hjelpemidler.database.test.testDataSource
+import no.nav.hjelpemidler.database.test.testDatabase
+import no.nav.hjelpemidler.database.test.toTestEntity
 import kotlin.test.Test
 
 class SessionJdbcOperationsTest {
     @Test
     fun `Henter ett innslag`() = runTest {
-        val id = lagreEntity()
-        val sql = "SELECT id FROM test WHERE id = :id"
-        val queryParameters = id.toQueryParameters()
-
-        transactionAsync(testDataSource) { tx ->
-            tx.singleOrNull(sql, queryParameters) { row -> row.long("id") }
-        } shouldBe id.value
-
-        transactionAsync(testDataSource) { tx ->
-            tx.singleOrNull(sql = sql, queryParameters = 0.toQueryParameters()) { row -> row.long("id") }
-        } shouldBe null
-
-        shouldNotThrow<NoSuchElementException> {
-            transactionAsync(testDataSource) { tx ->
-                tx.single(sql = sql, queryParameters = queryParameters) { row -> row.long("id") }
-            }
-        }
+        val nyEntity = TestEntity()
+        val id = testDatabase { lagre(nyEntity) }
+        val lagretEntity = testDatabase { hent(id) }
+        lagretEntity shouldBe nyEntity.copy(id = id)
     }
 
     @Test
     fun `Henter flere innslag`() = runTest {
         val ids = lagreEntities(10)
-        val result = transactionAsync(testDataSource) { tx ->
-            tx.list(
-                sql = "SELECT * FROM test WHERE id = ANY(:ids)",
-                queryParameters = mapOf("ids" to ids.toTypedArray())
-            ) { it.toMap() }
-        }
+        val result = testDatabase { hent(ids).map { it.id.value } }
 
-        result shouldBeSameSizeAs ids
+        result shouldBe ids
     }
 
     @Test
@@ -55,57 +37,40 @@ class SessionJdbcOperationsTest {
         val ids = lagreEntities(20)
         val result = transactionAsync(testDataSource) { tx ->
             tx.page(
-                sql = """
-                    SELECT *, COUNT(1) OVER() AS total_elements
-                    FROM test
-                    WHERE id = ANY(:ids)
-                """.trimIndent(),
+                sql = "SELECT *, COUNT(1) OVER() AS total_elements FROM test WHERE id = ANY (:ids) ORDER BY id",
                 queryParameters = mapOf("ids" to ids.toTypedArray()),
-                pageRequest = PageRequest(1, 5)
-            ) { it.toMap() }
+                pageRequest = PageRequest(1, 5),
+                mapper = Row::toTestEntity,
+            )
         }
 
         result shouldHaveSize 5
         result.totalElements shouldBe ids.size
+        result.map { it.id.value } shouldBe ids.subList(0, 5)
     }
 
     @Test
-    fun `Henter json`() = runTest {
-        val id = lagreEntity()
-        val result = transactionAsync(testDataSource) { tx ->
-            tx.single(
-                sql = "SELECT data_1 FROM test WHERE id = :id",
-                queryParameters = id.toQueryParameters(),
-            ) { it.json<Map<String, Any?>>("data_1") }
-        }
+    fun `Henter JSON`() = runTest {
+        val data1 = mapOf("key" to "value")
+        val id = testDatabase { lagre(TestEntity(data1 = data1)) }
+        val result = testDatabase { hent(id, "id", "data_1") }
 
-        result.shouldContain("key", "value")
+        result.shouldContain("id", id.value)
+        result.shouldContain("data_1", pgObjectOf("jsonb", """{"key": "value"}"""))
     }
 
     @Test
     fun `Oppdaterer innslag`() = runTest {
-        val id = lagreEntity()
-        val result = transactionAsync(testDataSource) { tx ->
-            tx.update(
-                sql = "UPDATE test SET integer = 50 WHERE id = :id",
-                queryParameters = id.toQueryParameters()
-            )
-        }
+        val id = testDatabase { lagre(TestEntity()) }
+        val result = testDatabase { oppdater(id, 50) }
 
-        shouldNotThrow<IllegalStateException> {
-            result.expect(1)
-        }
+        shouldNotThrow<IllegalStateException> { result.expect(expectedRowCount = 1) }
     }
 
     @Test
     fun `Sletter innslag`() = runTest {
-        val id = lagreEntity()
-        val result = transactionAsync(testDataSource) { tx ->
-            tx.execute(
-                sql = "DELETE FROM test WHERE id = :id",
-                queryParameters = id.toQueryParameters()
-            )
-        }
+        val id = testDatabase { lagre(TestEntity()) }
+        val result = testDatabase { slett(id) }
 
         result shouldBe false
     }
@@ -118,101 +83,47 @@ class SessionJdbcOperationsTest {
             TestEntity(string = "x3", integer = 3, enum = TestEnum.C, data1 = mapOf("key" to "t3")),
         )
 
-        val result1 = transactionAsync(testDataSource) { tx ->
-            tx.batch(
-                sql = """
-                    INSERT INTO test (string, integer, enum, data_1)
-                    VALUES (:string, :integer, :enum, :data_1)
-                """.trimIndent(),
-                items = items
-            ) {
-                it.toQueryParameters()
-            }
+        val rows1 = transactionAsync(testDataSource) { tx ->
+            tx.batch(TestStore.SQL_INSERT, items, TestEntity::toQueryParameters)
         }
 
-        result1.size shouldBe 3
+        rows1 shouldHaveSize 3
 
-        val result2 = transactionAsync(testDataSource) { tx ->
-            tx.list("SELECT * FROM test WHERE string LIKE 'x%'") {
-                TestEntity(
-                    id = it.long("id").let(::TestId),
-                    string = it.string("string"),
-                    integer = it.int("integer"),
-                    enum = it.enum("enum"),
-                    data1 = it.json("data_1"),
-                )
-            }
+        val rows2 = transactionAsync(testDataSource) { tx ->
+            tx.list("SELECT * FROM test WHERE string LIKE 'x%'", mapper = Row::toTestEntity)
         }
 
-        result2.size shouldBe 3
+        rows2 shouldHaveSize 3
     }
 
     @Test
-    fun `Setter inn og henter null`() = runTest {
-        val id = transactionAsync(testDataSource, returnGeneratedKeys = true) { tx ->
-            tx.updateAndReturnGeneratedKey(
-                sql = """
-                    INSERT INTO test (string, integer, enum, data_1, data_2)
-                    VALUES ('test', 1, 'A', '{}', NULL)
-                    RETURNING id
-                """.trimIndent()
-            )
-        }
+    fun `Skal sette inn og hente null som null`() = runTest {
+        val id = testDatabase { lagre(TestEntity(data2 = null)) }
+        val result = testDatabase { hent(id, "id", "data_2") }
 
-        id.shouldNotBeNull()
-        id.shouldBePositive()
-
-        val result = transactionAsync(testDataSource) { tx ->
-            tx.single(
-                sql = "SELECT id, data_2 FROM test WHERE id = :id",
-                queryParameters = id.toQueryParameters(),
-            ) {
-                mapOf(
-                    "id" to it.long("id"),
-                    "data_2" to it.jsonOrNull("data_2"),
-                )
-            }
-        }
-
-        result.shouldContain("id", id)
+        result.shouldContain("id", id.value)
         result.shouldContain("data_2", null)
     }
 
     @Test
-    fun `Setter inn innslag og svarer med id`() = runTest {
-        val id = transactionAsync(testDataSource) { tx ->
-            tx.singleOrNull(
-                sql = """
-                    INSERT INTO test (string, integer, enum, data_1, data_2)
-                    VALUES ('test', 1, 'A', '{}', NULL)
-                    RETURNING id
-                """.trimIndent()
-            ) { it.long("id") }
-        }
-        id.shouldNotBeNull()
-        id.shouldBePositive()
+    fun `Skal sette inn og hente NullNode som null`() = runTest {
+        val id = testDatabase { lagre(TestEntity(data2 = NullNode.getInstance())) }
+        val result = testDatabase { hent(id, "id", "data_2") }
+
+        result.shouldContain("id", id.value)
+        result.shouldContain("data_2", null)
     }
 
-    private suspend fun lagreEntity(): TestId = transactionAsync(testDataSource) { tx ->
-        TestStore(tx).lagre(
-            TestEntity(
-                string = "string",
-                integer = 1,
-                enum = TestEnum.A,
-                data1 = mapOf("key" to "value"),
-            )
-        )
+    @Test
+    fun `Skal sette inn og hente MissingNode som null`() = runTest {
+        val id = testDatabase { lagre(TestEntity(data2 = MissingNode.getInstance())) }
+        val result = testDatabase { hent(id, "id", "data_2") }
+
+        result.shouldContain("id", id.value)
+        result.shouldContain("data_2", null)
     }
 
-    private suspend fun lagreEntities(antall: Int): List<Long> = transactionAsync(testDataSource) { tx ->
-        TestStore(tx).lagre((1..antall).map {
-            TestEntity(
-                string = "string",
-                integer = it,
-                enum = TestEnum.A,
-                data1 = mapOf("key" to "value"),
-                data2 = null
-            )
-        })
+    private suspend fun lagreEntities(antall: Int): List<Long> = testDatabase {
+        lagre((1..antall).map { TestEntity(integer = it) })
     }
 }

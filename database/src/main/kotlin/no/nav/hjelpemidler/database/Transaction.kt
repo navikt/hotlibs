@@ -23,3 +23,8 @@ suspend fun <T> transactionAsync(
         session.transaction { tx -> block(SessionJdbcOperations(tx)) }
     }
 }
+
+interface Transaction<S : Any> {
+    suspend operator fun <T> invoke(block: suspend S.() -> T): T
+    suspend fun <T> transaction(block: suspend S.() -> T): T = invoke(block)
+}

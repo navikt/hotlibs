@@ -1,6 +1,13 @@
 package no.nav.hjelpemidler.database.test
 
+import com.fasterxml.jackson.databind.JsonNode
 import no.nav.hjelpemidler.database.QueryParameters
+import no.nav.hjelpemidler.database.Row
+import no.nav.hjelpemidler.database.aktørIdOrNull
+import no.nav.hjelpemidler.database.enum
+import no.nav.hjelpemidler.database.fødselsnummerOrNull
+import no.nav.hjelpemidler.database.json
+import no.nav.hjelpemidler.database.jsonOrNull
 import no.nav.hjelpemidler.database.pgJsonbOf
 import no.nav.hjelpemidler.domain.person.AktørId
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
@@ -8,11 +15,11 @@ import no.nav.hjelpemidler.domain.person.år
 
 data class TestEntity(
     val id: TestId = TestId(),
-    val string: String,
-    val integer: Int,
-    val enum: TestEnum,
-    val data1: Map<String, Any?>,
-    val data2: Map<String, Any?>? = null,
+    val string: String = "",
+    val integer: Int = 0,
+    val enum: TestEnum = TestEnum.A,
+    val data1: Map<String, Any?> = emptyMap(),
+    val data2: JsonNode? = null,
     val fnr: Fødselsnummer? = Fødselsnummer(50.år),
     val aktørId: AktørId? = AktørId("1234567891011"),
 ) {
@@ -26,6 +33,15 @@ data class TestEntity(
             "fnr" to fnr,
             "aktor_id" to aktørId,
         )
-
-
 }
+
+fun Row.toTestEntity(): TestEntity = TestEntity(
+    id = testId(),
+    string = string("string"),
+    integer = int("integer"),
+    enum = enum("enum"),
+    data1 = json("data_1"),
+    data2 = jsonOrNull("data_2"),
+    fnr = fødselsnummerOrNull("fnr"),
+    aktørId = aktørIdOrNull("aktor_id"),
+)
