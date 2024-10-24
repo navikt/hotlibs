@@ -14,13 +14,15 @@ import no.nav.hjelpemidler.configuration.Environment
  * * Skrur av [SerializationFeature.WRITE_DATES_AS_TIMESTAMPS] for at datoer og tidspunkt skal serialiseres som tekst.
  * * Skrur av [DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES] for å tillate egenskaper i JSON som ikke finnes i Kotlin-klassen det mappes til.
  * * Skrur på [JsonParser.Feature.INCLUDE_SOURCE_IN_LOCATION] hvis IKKE produksjon slik at kilde-JSON inkluderes ved feil under deserialisering.
+ *
+ * @see [defaultJsonMapper]
  */
 fun JsonMapper.Builder.default(): JsonMapper.Builder =
     this
         .addModule(JavaTimeModule())
         .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
         .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-        .configure(JsonParser.Feature.INCLUDE_SOURCE_IN_LOCATION, Environment.current.tier != Environment.Tier.PROD)
+        .configure(JsonParser.Feature.INCLUDE_SOURCE_IN_LOCATION, !Environment.current.isProd)
 
 /**
  * Opprett [JsonMapper] med standardinnstillinger.

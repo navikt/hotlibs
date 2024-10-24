@@ -16,7 +16,7 @@ catalog {
 
         // Legg til hotlibs i katalogen med versjonen som bygges nå
         val hotlibs = version("hotlibs", "$version")
-        listOf("core", "database", "http", "nare").forEach { artifact ->
+        listOf("core", "database", "http", "kafka", "nare").forEach { artifact ->
             library("$hotlibs-$artifact", "$group", artifact).versionRef(hotlibs)
         }
     }

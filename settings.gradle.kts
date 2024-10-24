@@ -8,6 +8,7 @@ include(
     "core",
     "database",
     "http",
+    "kafka",
     "katalog",
     "nare",
 )
