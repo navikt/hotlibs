@@ -2,37 +2,42 @@ package no.nav.hjelpemidler.database.sql
 
 import org.intellij.lang.annotations.Language
 
+/**
+ * Inspirert av MyBatis SQL Builder.
+ *
+ * @see <a href="https://mybatis.org/mybatis-3/statement-builders.html">The SQL Builder Class</a>
+ */
+@Suppress("FunctionName")
 class SqlBuilder internal constructor(
     private val baseSql: Sql,
     private val conditions: MutableSet<SqlCondition> = mutableSetOf(),
     private var orderBy: MutableSet<SqlOrderBy> = mutableSetOf(),
 ) {
-    fun filter(condition: SqlCondition) {
+    fun WHERE(condition: SqlCondition) {
         conditions.add(condition)
     }
 
-    fun filter(@Language("SQL") condition: String) =
-        filter(SqlCondition(condition))
+    fun WHERE(@Language("SQL") condition: String) =
+        WHERE(SqlCondition(condition))
 
-    fun filter(filter: SqlFilter?) {
+    fun WHERE(filter: SqlFilter?) {
         val condition = filter?.condition ?: return
-        filter(condition)
+        WHERE(condition)
     }
 
-    fun orderBy(columnName: String, order: SqlOrderBy.Order = SqlOrderBy.Order.ASC) {
+    fun ORDER_BY(columnName: String, order: SqlOrderBy.Order = SqlOrderBy.Order.ASC) {
         orderBy.add(SqlOrderBy(columnName, order))
     }
 
-    fun orderBy(column: SqlColumn, order: SqlOrderBy.Order = SqlOrderBy.Order.ASC) =
-        orderBy(column.columnName, order)
+    fun ORDER_BY(column: SqlColumn, order: SqlOrderBy.Order = SqlOrderBy.Order.ASC) =
+        ORDER_BY(column.columnName, order)
 
-    fun orderBy(orderBy: SqlOrderBy?) {
+    fun ORDER_BY(orderBy: SqlOrderBy?) {
         val (columnName, order) = orderBy ?: return
-        orderBy(columnName, order)
+        ORDER_BY(columnName, order)
     }
 
-    fun copy(): SqlBuilder =
-        SqlBuilder(baseSql, conditions.toMutableSet(), orderBy)
+    fun copy(): SqlBuilder = SqlBuilder(baseSql, conditions.toMutableSet(), orderBy)
 
     fun toSql(): Sql = buildString {
         append(baseSql)
