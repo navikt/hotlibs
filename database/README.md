@@ -9,7 +9,6 @@ PostgreSQL:
 ```kotlin
 dependencies {
     // Database
-    implementation(libs.hm.database)
     implementation(libs.hm.database) {
         capabilities {
             requireCapability("no.nav.hjelpemidler:database-postgresql")
@@ -30,7 +29,6 @@ Oracle:
 ```kotlin
 dependencies {
     // Database
-    implementation(libs.hm.database)
     implementation(libs.hm.database) {
         capabilities {
             requireCapability("no.nav.hjelpemidler:database-oracle")
