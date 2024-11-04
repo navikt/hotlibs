@@ -61,7 +61,6 @@ testing {
 
         val postgresqlTest by registering(JvmTestSuite::class) {
             dependencies {
-                implementation(project(path))
                 implementation(project(path)) {
                     capabilities {
                         requireCapability("${project.group}:${project.name}-${postgresql.name}")

@@ -21,15 +21,15 @@ dependencies {
     api(libs.hikaricp)
 
     // H2
-    h2Implementation(project(path))
+    h2Api(project(path))
     h2RuntimeOnly(libs.h2)
 
     // Oracle
-    oracleImplementation(project(path))
+    oracleApi(project(path))
     oracleRuntimeOnly(libs.ojdbc11)
 
     // PostgreSQL
-    postgresqlImplementation(project(path))
+    postgresqlApi(project(path))
     postgresqlImplementation(libs.postgresql)
 
     // PostgreSQL - Flyway
@@ -37,7 +37,7 @@ dependencies {
     postgresqlRuntimeOnly(libs.flyway.database.postgresql)
 
     // Testcontainers
-    testcontainersImplementation(project(path))
+    testcontainersApi(project(path))
     testcontainersRuntimeOnly(libs.testcontainers.postgresql) // fixme -> kunne vi valgt oracle hvis oracle-capability?
     constraints {
         testRuntimeOnly(libs.commons.compress)
