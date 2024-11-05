@@ -151,6 +151,7 @@ ktor-server-rate-limit = { group = "io.ktor", name = "ktor-server-rate-limit-jvm
 ktor-server-request-validation = { group = "io.ktor", name = "ktor-server-request-validation-jvm", version.ref = "ktor" }
 ktor-server-resources = { group = "io.ktor", name = "ktor-server-resources-jvm", version.ref = "ktor" }
 ktor-server-status-pages = { group = "io.ktor", name = "ktor-server-status-pages-jvm", version.ref = "ktor" }
+ktor-server-swagger = { group = "io.ktor", name = "ktor-server-swagger", version.ref = "ktor" }
 ktor-server-test-host = { group = "io.ktor", name = "ktor-server-test-host-jvm", version.ref = "ktor" }
 
 # JWT
