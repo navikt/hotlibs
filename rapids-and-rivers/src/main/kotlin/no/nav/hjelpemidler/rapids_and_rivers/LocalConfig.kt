@@ -1,7 +1,6 @@
 package no.nav.hjelpemidler.rapids_and_rivers
 
 import com.github.navikt.tbd_libs.kafka.Config
-import no.nav.hjelpemidler.collections.propertiesOf
 import no.nav.hjelpemidler.configuration.Configuration
 import org.apache.kafka.clients.CommonClientConfigs
 import org.apache.kafka.clients.consumer.ConsumerConfig
@@ -22,19 +21,13 @@ class LocalConfig(
         check(brokers.isNotEmpty())
     }
 
-    override fun producerConfig(properties: Properties) = properties.apply {
-        putAll(mapOf(
-            ProducerConfig.ACKS_CONFIG to "1",
-        ))
-    }
-
-        /*Properties().apply {
+    override fun producerConfig(properties: Properties) = Properties().apply {
         putAll(kafkaBaseConfig())
         put(ProducerConfig.ACKS_CONFIG, "1")
         put(ProducerConfig.LINGER_MS_CONFIG, "0")
         put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, "1")
         putAll(properties)
-    }*/
+    }
 
     override fun consumerConfig(groupId: String, properties:  Properties) = Properties().apply {
         putAll(kafkaBaseConfig())
