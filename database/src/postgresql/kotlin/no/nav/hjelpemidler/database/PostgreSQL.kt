@@ -10,8 +10,8 @@ object PostgreSQL : DataSourceConfigurationFactory<PostgreSQLDataSourceConfigura
         PostgreSQLDataSourceConfiguration()
             .apply(block)
             .apply {
-                if (envVarPrefix != null && cluster !in setOf("local", "test")) {
-                    log.info("Overskriver konfigurasjon med miljøvariabler, cluster: $cluster, envVarPrefix: $envVarPrefix")
+                if (envVarPrefix != null) {
+                    log.info("Overskriver konfigurasjon med miljøvariabler, envVarPrefix: $envVarPrefix")
                     hostname = fromEnvVar("HOST") ?: hostname
                     port = fromEnvVar("PORT")?.toInt() ?: port
                     databaseName = fromEnvVar("DATABASE")

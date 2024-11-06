@@ -1,5 +1,7 @@
 package no.nav.hjelpemidler.database
 
+import no.nav.hjelpemidler.configuration.Configuration
+
 class PostgreSQLDataSourceConfiguration internal constructor() : DataSourceConfiguration() {
     var envVarPrefix: String? = null
 
@@ -16,12 +18,11 @@ class PostgreSQLDataSourceConfiguration internal constructor() : DataSourceConfi
         connectionInitSql = "SET TIMEZONE TO 'UTC'"
     }
 
-    // fixme -> lag en løsning i hm-core for dette
     internal fun fromEnvVar(envVarSuffix: String, optional: Boolean = false): String? {
         val name = checkNotNull(envVarPrefix) {
             "Miljøvariabel-prefix (envVarPrefix i nais.yaml) er ikke satt"
         } + "_" + envVarSuffix
-        val value = System.getenv(name)
+        val value = Configuration.current[name]
         if (optional) return value
         return checkNotNull(value) {
             "Miljøvariabelen '$name' mangler"
