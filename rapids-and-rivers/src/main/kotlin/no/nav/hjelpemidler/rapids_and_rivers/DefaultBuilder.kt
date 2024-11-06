@@ -14,8 +14,8 @@ import java.util.UUID
 fun RapidApplication.DefaultBuilder(
     env: Map<String, String> = Configuration.current,
     consumerProducerFactory: ConsumerProducerFactory = ConsumerProducerFactory(AutoConfig()),
+    meterRegistry: PrometheusMeterRegistry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT, PrometheusRegistry.defaultRegistry, Clock.SYSTEM),
 ): RapidApplication.Builder {
-    val meterRegistry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT, PrometheusRegistry.defaultRegistry, Clock.SYSTEM)
 
     val kafkaRapid = createDefaultKafkaRapidFromEnv(
         factory = consumerProducerFactory,
