@@ -11,12 +11,11 @@ import no.nav.hjelpemidler.configuration.Configuration
 import java.net.InetAddress
 import java.util.UUID
 
-fun RapidApplication.DefaultBuilder(
+fun RapidApplication.Companion.DefaultBuilder(
     env: Map<String, String> = Configuration.current,
     consumerProducerFactory: ConsumerProducerFactory = ConsumerProducerFactory(AutoConfig()),
     meterRegistry: PrometheusMeterRegistry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT, PrometheusRegistry.defaultRegistry, Clock.SYSTEM),
 ): RapidApplication.Builder {
-
     val kafkaRapid = createDefaultKafkaRapidFromEnv(
         factory = consumerProducerFactory,
         meterRegistry = meterRegistry,
