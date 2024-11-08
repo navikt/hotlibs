@@ -6,15 +6,17 @@ import org.apache.kafka.clients.CommonClientConfigs
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.security.auth.SecurityProtocol
-import java.util.*
+import java.util.Properties
 
 class LocalConfig(
     private val brokers: List<String>,
 ) : Config {
     companion object {
-        val default get() = LocalConfig(
-            brokers = requireNotNull(Configuration.current["KAFKA_BROKERS"]) { "Expected KAFKA_BROKERS" }.split(',').map(String::trim),
-        )
+        val default
+            get() = LocalConfig(
+                brokers = requireNotNull(Configuration.current["KAFKA_BROKERS"]) { "Expected KAFKA_BROKERS" }.split(',')
+                    .map(String::trim),
+            )
     }
 
     init {
@@ -29,7 +31,7 @@ class LocalConfig(
         putAll(properties)
     }
 
-    override fun consumerConfig(groupId: String, properties:  Properties) = Properties().apply {
+    override fun consumerConfig(groupId: String, properties: Properties) = Properties().apply {
         putAll(kafkaBaseConfig())
         put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false")
         putAll(properties)
