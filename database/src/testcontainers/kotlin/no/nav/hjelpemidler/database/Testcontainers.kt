@@ -5,6 +5,6 @@ object Testcontainers : DataSourceConfigurationFactory<TestcontainersDataSourceC
         TestcontainersDataSourceConfiguration()
             .apply(block)
             .apply {
-                jdbcUrl = "jdbc:tc:postgresql:$tag:///${databaseName ?: "test"}?TC_TMPFS=/testtmpfs:rw"
+                jdbcUrl = "jdbc:tc:postgresql:$tag:///${databaseName ?: "test"}?TC_TMPFS=/testtmpfs:rw&reWriteBatchedInserts=true"
             }
 }
