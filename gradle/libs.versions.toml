@@ -1,7 +1,7 @@
 [versions]
 # DigiHoT
 # Nyeste versjon finner du her: https://github.com/navikt/hm-soknadsbehandling-db/packages
-behovsmeldingsmodell = "24.329.134409"
+behovsmeldingsmodell = "24.331.094911"
 contractPdlAvro = "1.0.2"
 
 # Third party
