@@ -8,16 +8,16 @@ import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
 import io.prometheus.metrics.model.registry.PrometheusRegistry
 import no.nav.helse.rapids_rivers.RapidApplication
 import no.nav.hjelpemidler.configuration.Configuration
+import no.nav.hjelpemidler.domain.id.UUID
 import java.net.InetAddress
-import java.util.UUID
 
 fun RapidApplication.Companion.DefaultBuilder(
     env: Map<String, String> = Configuration.current,
-    consumerProducerFactory: ConsumerProducerFactory = ConsumerProducerFactory(AutoConfig()),
+    consumerProducerFactory: ConsumerProducerFactory = ConsumerProducerFactory(autoConfig()),
     meterRegistry: PrometheusMeterRegistry = PrometheusMeterRegistry(
         PrometheusConfig.DEFAULT,
         PrometheusRegistry.defaultRegistry,
-        Clock.SYSTEM
+        Clock.SYSTEM,
     ),
 ): RapidApplication.Builder {
     val kafkaRapid = createDefaultKafkaRapidFromEnv(
@@ -28,10 +28,7 @@ fun RapidApplication.Companion.DefaultBuilder(
 
     return RapidApplication.Builder(
         appName = Configuration.current["RAPID_APP_NAME"],
-        instanceId = when (env.containsKey("NAIS_APP_NAME")) {
-            true -> InetAddress.getLocalHost().hostName
-            false -> UUID.randomUUID().toString()
-        },
+        instanceId = if ("NAIS_APP_NAME" in env) InetAddress.getLocalHost().hostName else UUID().toString(),
         rapid = kafkaRapid,
         meterRegistry = meterRegistry,
     )
