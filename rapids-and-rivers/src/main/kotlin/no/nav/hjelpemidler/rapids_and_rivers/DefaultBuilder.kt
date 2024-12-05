@@ -8,8 +8,8 @@ import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
 import io.prometheus.metrics.model.registry.PrometheusRegistry
 import no.nav.helse.rapids_rivers.RapidApplication
 import no.nav.hjelpemidler.configuration.Configuration
-import no.nav.hjelpemidler.domain.id.UUID
 import java.net.InetAddress
+import java.util.UUID
 
 fun RapidApplication.Companion.DefaultBuilder(
     env: Map<String, String> = Configuration.current,
@@ -28,7 +28,7 @@ fun RapidApplication.Companion.DefaultBuilder(
 
     return RapidApplication.Builder(
         appName = Configuration.current["RAPID_APP_NAME"],
-        instanceId = if ("NAIS_APP_NAME" in env) InetAddress.getLocalHost().hostName else UUID().toString(),
+        instanceId = if ("NAIS_APP_NAME" in env) InetAddress.getLocalHost().hostName else UUID.randomUUID().toString(),
         rapid = kafkaRapid,
         meterRegistry = meterRegistry,
     )

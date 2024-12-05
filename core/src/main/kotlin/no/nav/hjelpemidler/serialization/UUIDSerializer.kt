@@ -1,4 +1,4 @@
-package no.nav.hjelpemidler.domain.id
+package no.nav.hjelpemidler.serialization
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -10,10 +10,10 @@ import java.util.UUID
 
 object UUIDSerializer : KSerializer<UUID> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor(
-        serialName = "no.nav.hjelpemidler.domain.id.UUIDSerializer",
+        serialName = "no.nav.hjelpemidler.serialization.UUIDSerializer",
         kind = PrimitiveKind.STRING,
     )
 
-    override fun deserialize(decoder: Decoder): UUID = UUID(decoder.decodeString())
+    override fun deserialize(decoder: Decoder): UUID = UUID.fromString(decoder.decodeString())
     override fun serialize(encoder: Encoder, value: UUID) = encoder.encodeString(value.toString())
 }
