@@ -1,5 +1,8 @@
 #!/usr/bin/env bun
 
+/// <reference lib="dom" />
+
+// @ts-ignore
 import { $ } from "bun"
 
 await $`bun --version`
@@ -72,7 +75,7 @@ async function readVersionCatalog(file: string): Promise<{
 const {
   versionCatalog: { plugins, libraries },
   getVersion,
-} = await readVersionCatalog("./gradle/libs.versions.toml")
+} = await readVersionCatalog("../gradle/libs.versions.toml")
 
 const result = await search(Object.values(libraries).slice(0, 1))
 

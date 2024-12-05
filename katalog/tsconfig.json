@@ -1,10 +1,14 @@
 {
   "compilerOptions": {
-    "lib": ["ESNext"],
+    "lib": [
+      "ESNext"
+    ],
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "noEmit": true,
     "target": "ESNext"
   },
-  "include": ["update.mts"]
+  "include": [
+    "update.mts"
+  ]
 }
