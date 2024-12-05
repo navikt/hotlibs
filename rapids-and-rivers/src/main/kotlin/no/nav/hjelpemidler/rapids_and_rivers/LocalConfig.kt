@@ -1,26 +1,22 @@
 package no.nav.hjelpemidler.rapids_and_rivers
 
 import com.github.navikt.tbd_libs.kafka.Config
-import no.nav.hjelpemidler.configuration.Configuration
+import no.nav.hjelpemidler.configuration.KafkaEnvironmentVariable
 import org.apache.kafka.clients.CommonClientConfigs
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.security.auth.SecurityProtocol
 import java.util.Properties
 
-class LocalConfig(
-    private val brokers: List<String>,
-) : Config {
+class LocalConfig(private val brokers: List<String>) : Config {
+    constructor(broker: String) : this(broker.split(',').map(String::trim))
+
     companion object {
-        val default
-            get() = LocalConfig(
-                brokers = requireNotNull(Configuration.current["KAFKA_BROKERS"]) { "Expected KAFKA_BROKERS" }.split(',')
-                    .map(String::trim),
-            )
+        val default get() = LocalConfig(KafkaEnvironmentVariable.KAFKA_BROKERS)
     }
 
     init {
-        check(brokers.isNotEmpty())
+        require(brokers.isNotEmpty())
     }
 
     override fun producerConfig(properties: Properties) = Properties().apply {

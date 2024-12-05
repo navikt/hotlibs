@@ -7,7 +7,10 @@ import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import java.util.UUID
 
 fun JsonNode.uuidValue(): UUID = UUID(textValue())
+fun JsonNode.uuidValueOrNull(): UUID? = textValue()?.let(::UUID)
+
 fun JsonNode.fødselsnummerValue(): Fødselsnummer = Fødselsnummer(textValue())
+fun JsonNode.fødselsnummerValueOrNull(): Fødselsnummer? = textValue()?.let(::Fødselsnummer)
 
 val JsonMessage.eventId: UUID get() = this["eventId"].uuidValue()
 val JsonMessage.eventName: String get() = this["eventName"].textValue()

@@ -6,6 +6,12 @@ plugins {
 group = "no.nav.hjelpemidler"
 version = System.getenv("VERSION_TAG") ?: System.getenv("GITHUB_REF_NAME") ?: "local"
 
+buildscript {
+    dependencies {
+        classpath(libs.commons.text)
+    }
+}
+
 repositories {
     gradlePluginPortal()
 }
@@ -17,10 +23,7 @@ catalog {
         // Legg til hotlibs i katalogen med versjonen som bygges nå
         val hotlibs = version("hotlibs", "$version")
         listOf("core", "database", "http", "kafka", "rapids-and-rivers", "nare").forEach { artifact ->
-            when (artifact) {
-                "rapids-and-rivers" -> library("$hotlibs-rapidsAndRivers", "$group", artifact).versionRef(hotlibs)
-                else -> library("$hotlibs-$artifact", "$group", artifact).versionRef(hotlibs)
-            }
+            library("$hotlibs-${toCamelCase(artifact)}", "$group", artifact).versionRef(hotlibs)
         }
     }
 }
@@ -42,3 +45,5 @@ publishing {
         }
     }
 }
+
+fun toCamelCase(value: String): String = org.apache.commons.text.CaseUtils.toCamelCase(value, false, '-')
