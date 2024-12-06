@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.plugins.logging.LoggingConfig
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.serialization.jackson.JacksonConverter
@@ -18,7 +19,7 @@ fun HttpClientConfig<*>.jackson(objectMapper: ObjectMapper) =
 fun HttpClientConfig<*>.jackson(block: JsonMapper.Builder.() -> Unit = {}) =
     jackson(defaultJsonMapper(block))
 
-fun HttpClientConfig<*>.logging(configure: Logging.Config.() -> Unit = {}) =
+fun HttpClientConfig<*>.logging(configure: LoggingConfig.() -> Unit = {}) =
     install(Logging) {
         configure()
         sanitizeHeader { header ->
