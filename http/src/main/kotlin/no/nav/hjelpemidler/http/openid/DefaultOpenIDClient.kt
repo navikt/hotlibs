@@ -4,21 +4,20 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.oshai.kotlinlogging.coroutines.withLoggingContextAsync
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.engine.HttpClientEngine
-import io.ktor.client.engine.cio.CIO
 import io.ktor.client.request.forms.submitForm
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.Parameters
 import io.ktor.http.ParametersBuilder
-import no.nav.hjelpemidler.http.createHttpClient
+import no.nav.hjelpemidler.http.DefaultHttpClientFactory
+import no.nav.hjelpemidler.http.HttpClientFactory
 
 private val log = KotlinLogging.logger {}
 
 internal class DefaultOpenIDClient(
     private val configuration: OpenIDClientConfiguration,
-    engine: HttpClientEngine = CIO.create(),
+    httpClientFactory: HttpClientFactory = DefaultHttpClientFactory,
 ) : OpenIDClient {
-    private val client: HttpClient = createHttpClient(engine = engine) {
+    private val client: HttpClient = httpClientFactory {
         expectSuccess = false
     }
 

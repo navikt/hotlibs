@@ -3,7 +3,7 @@ package no.nav.hjelpemidler.http.openid
 import com.github.benmanes.caffeine.cache.Expiry
 import io.ktor.http.Parameters
 
-internal val ExpireImmediately: Expiry<Parameters, TokenSet> = object : Expiry<Parameters, TokenSet> {
+internal object ExpireImmediately : Expiry<Parameters, TokenSet> {
     override fun expireAfterCreate(key: Parameters?, value: TokenSet?, currentTime: Long): Long =
         0
 

@@ -1,19 +1,18 @@
 package no.nav.hjelpemidler.http.slack
 
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.HttpClientEngine
-import io.ktor.client.engine.cio.CIO
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
-import no.nav.hjelpemidler.http.createHttpClient
+import no.nav.hjelpemidler.http.DefaultHttpClientFactory
+import no.nav.hjelpemidler.http.HttpClientFactory
 
 internal class DefaultSlackClient(
     private val configuration: SlackConfiguration,
-    engine: HttpClientEngine = CIO.create(),
+    httpClientFactory: HttpClientFactory = DefaultHttpClientFactory,
 ) : SlackClient {
-    private val client: HttpClient = createHttpClient(engine = engine) {
+    private val client: HttpClient = httpClientFactory {
         expectSuccess = true
     }
 
@@ -23,7 +22,7 @@ internal class DefaultSlackClient(
         channel: String,
         message: String,
     ) {
-        // Compose json body
+        // Compose JSON body
         val values = mutableMapOf(
             "text" to message,
             "channel" to channel,

@@ -26,7 +26,8 @@ include(
     "database",
     "http",
     "kafka",
-    "rapids-and-rivers",
     "katalog",
     "nare",
+    "rapids-and-rivers",
+    "serialization",
 )

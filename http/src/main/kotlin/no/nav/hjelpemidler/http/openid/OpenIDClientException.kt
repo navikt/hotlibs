@@ -4,7 +4,7 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.Parameters
 
-internal class OpenIDClientException(message: String, cause: Throwable? = null) :
+class OpenIDClientException internal constructor(message: String, cause: Throwable? = null) :
     RuntimeException(message, cause)
 
 internal fun openIDError(message: String, cause: Throwable? = null): Nothing =

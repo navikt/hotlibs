@@ -10,7 +10,7 @@ class SlackTest {
 
     @Test
     fun `Send testmelding til slack`() = runTest {
-        val client = slack(DefaultSlackConfiguration(slackWebHook))
+        val client = slack(configuration = DefaultSlackConfiguration(slackWebHook))
 
         client.sendMessage(
             username = "hm-http",

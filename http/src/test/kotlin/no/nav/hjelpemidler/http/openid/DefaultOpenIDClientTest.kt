@@ -87,7 +87,7 @@ class DefaultOpenIDClientTest {
         createOpenIDClient(
             engine = MockEngine {
                 handler(this, it)
-            }
+            },
         ) {
             tokenEndpoint = "https://issuer/token"
             clientId = "clientId"

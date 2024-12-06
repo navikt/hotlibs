@@ -22,7 +22,15 @@ catalog {
 
         // Legg til hotlibs i katalogen med versjonen som bygges nå
         val hotlibs = version("hotlibs", "$version")
-        listOf("core", "database", "http", "kafka", "rapids-and-rivers", "nare").forEach { artifact ->
+        listOf(
+            "core",
+            "database",
+            "http",
+            "kafka",
+            "nare",
+            "rapids-and-rivers",
+            "serialization",
+        ).forEach { artifact ->
             library("$hotlibs-${toCamelCase(artifact)}", "$group", artifact).versionRef(hotlibs)
         }
     }
