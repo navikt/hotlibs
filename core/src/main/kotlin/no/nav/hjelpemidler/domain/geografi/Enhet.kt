@@ -26,7 +26,7 @@ class Enhet(
          * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/2103">NORG2</a>
          */
         val NAV_VIKAFOSSEN =
-            Enhet(nummer = "2103", navn = "NAV Vikafossen")
+            Enhet(nummer = "2103", navn = "Nav Vikafossen")
 
         /**
          * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/2970">NORG2</a>
@@ -35,33 +35,39 @@ class Enhet(
             Enhet(nummer = "2970", navn = "IT-avdelingen")
 
         /**
+         * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/4485">NORG2</a>
+         */
+        val AY_HJELPEMIDLER =
+            Enhet(nummer = "4485", navn = "Nav arbeid og ytelser - hjelpemidler")
+
+        /**
          * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/4303">NORG2</a>
          */
         val NAV_ID_OG_FORDELING =
-            Enhet(nummer = "4303", navn = "NAV Id og fordeling")
+            Enhet(nummer = "4303", navn = "Nav id og fordeling")
 
         /**
          * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/4703">NORG2</a>
          */
         val NAV_HJELPEMIDDELSENTRAL_OSLO =
-            Enhet(nummer = "4703", navn = "NAV Hjelpemiddelsentral Oslo")
+            Enhet(nummer = "4703", navn = "Nav hjelpemiddelsentral Oslo")
 
         /**
          * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/4710">NORG2</a>
          */
         val NAV_HJELPEMIDDELSENTRAL_AGDER =
-            Enhet(nummer = "4710", navn = "NAV Hjelpemiddelsentral Agder")
+            Enhet(nummer = "4710", navn = "Nav hjelpemiddelsentral Agder")
 
         /**
          * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/4712">NORG2</a>
          */
         val NAV_HJELPEMIDDELSENTRAL_VESTLAND_BERGEN =
-            Enhet(nummer = "4712", navn = "NAV Hjelpemiddelsentral Vestland-Bergen")
+            Enhet(nummer = "4712", navn = "Nav hjelpemiddelsentral Vestland-Bergen")
 
         /**
          * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/9999">NORG2</a>
          */
         val ANDRE_EKSTERNE =
-            Enhet(nummer = "9999", navn = "ANDRE EKSTERNE")
+            Enhet(nummer = "9999", navn = "Andre eksterne")
     }
 }
