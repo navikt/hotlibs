@@ -5,20 +5,21 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.MissingNode
 import com.fasterxml.jackson.databind.node.NullNode
 import com.fasterxml.jackson.module.kotlin.readValue
-import kotlin.reflect.full.isSubclassOf
+import java.nio.file.Path
 
-inline fun <reified T> ObjectMapper.readResource(name: String): T {
-    val inputStream = requireNotNull(this::class.java.getResourceAsStream(name)) {
-        "Fant ikke resource: '$name'"
+fun ObjectMapper.readResourceAsTree(name: String): JsonNode =
+    requireNotNull(this::class.java.getResourceAsStream(name)) { "Fant ikke resource: '$name'" }.use {
+        readTree(it)
     }
-    return inputStream.use {
-        if (T::class.isSubclassOf(JsonNode::class)) {
-            readTree(it) as T
-        } else {
-            readValue<T>(it)
-        }
+
+inline fun <reified T> ObjectMapper.readResourceAsValue(name: String): T =
+    requireNotNull(this::class.java.getResourceAsStream(name)) { "Fant ikke resource: '$name'" }.use {
+        readValue<T>(it)
     }
-}
+
+fun ObjectMapper.readTree(path: Path): JsonNode = readTree(path.toFile())
+
+inline fun <reified T> ObjectMapper.readValue(path: Path): T = readValue<T>(path.toFile())
 
 fun <T> ObjectMapper.writeValueAsStringOrNull(value: T): String? = when (value) {
     null, is NullNode, is MissingNode -> null
