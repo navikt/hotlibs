@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
     api(project(":core"))
-    implementation(libs.bundles.jackson)
+    api(libs.bundles.jackson)
     implementation(libs.kotlin.logging)
 
     // Testing

@@ -52,38 +52,27 @@ en java.util.ServiceLoader.
 Opprett følgende fil:
 
 ```text
-src/main/resources/META-INF/services/no.nav.hjelpemidler.database.JsonMapper
+src/main/resources/META-INF/services/no.nav.hjelpemidler.serialization.jackson.JacksonObjectMapperProvider
 ```
 
-Filen skal inneholde fully qualified name for en klasse som implmenterer interfacet
-no.nav.hjelpemidler.database.JsonMapper, e.g.:
+Filen skal inneholde fully qualified name for en klasse som implementerer interfacet
+no.nav.hjelpemidler.serialization.jackson.JacksonObjectMapperProvider, e.g.:
 
 ```text
-no.nav.hjelpemidler.app.MyJsonMapper
+no.nav.hjelpemidler.app.MyJacksonObjectMapperProviderProxy
 ```
 
 Eksempel på implementasjon:
 
 ```kotlin
-class MyJsonMapper : JsonMapper {
-    private val wrapped = jacksonMapperBuilder()
-        .addModule(JavaTimeModule())
-        .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-        .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-        .build()
-
-    override fun <T> writeValueAsString(value: T): String =
-        wrapped.writeValueAsString(value)
-
-    override fun <T> readValue(content: String?, valueTypeRef: TypeReference<T>): T =
-        wrapped.readValue(content, valueTypeRef)
-
-    override fun <T> readValue(src: ByteArray?, valueTypeRef: TypeReference<T>): T =
-        wrapped.readValue(src, valueTypeRef)
-
-    override fun <T> convertValue(fromValue: Any?, toValueTypeRef: TypeReference<T>): T =
-        wrapped.convertValue(fromValue, toValueTypeRef)
+object MyJacksonObjectMapperProvider : JacksonObjectMapperProvider {
+    private val objectMapper: ObjectMapper = defaultJsonMapper() // tilpass ObjectMapper her
+    override fun invoke(): ObjectMapper = objectMapper
 }
+
+@LoadOrder(0)
+class MyJacksonObjectMapperProviderProxy :
+    JacksonObjectMapperProvider by DefaultJacksonObjectMapperProvider
 ```
 
 ### Lage DataSource

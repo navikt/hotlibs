@@ -9,7 +9,7 @@ import io.ktor.client.plugins.logging.LoggingConfig
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.serialization.jackson.JacksonConverter
-import no.nav.hjelpemidler.serialization.defaultJsonMapper
+import no.nav.hjelpemidler.serialization.jackson.defaultJsonMapper
 
 fun HttpClientConfig<*>.jackson(objectMapper: ObjectMapper) =
     install(ContentNegotiation) {

@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     api(project(":core"))
+    api(project(":serialization"))
 
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlin.reflect)
@@ -12,9 +13,6 @@ dependencies {
 
     // Logging
     implementation(libs.slf4j.api)
-
-    // Jackson
-    implementation(libs.bundles.jackson)
 
     // JDBC
     api(libs.kotliquery)

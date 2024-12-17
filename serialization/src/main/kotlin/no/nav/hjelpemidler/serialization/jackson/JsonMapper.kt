@@ -7,7 +7,10 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
+import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.hjelpemidler.configuration.Environment
+
+private val log = KotlinLogging.logger {}
 
 /**
  * Definerer standardinnstillinger for [JsonMapper].
@@ -34,6 +37,7 @@ fun defaultJsonMapper(block: JsonMapper.Builder.() -> Unit = {}): ObjectMapper =
         .default()
         .apply(block)
         .build()
+        .also { log.debug { "Opprettet ObjectMapper: ${it.hashCode()}" } }
 
 /**
  * [ObjectMapper] som bruker [JacksonObjectMapperProvider] for å opprette en instans.

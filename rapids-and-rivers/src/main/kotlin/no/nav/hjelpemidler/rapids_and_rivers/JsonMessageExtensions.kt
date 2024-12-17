@@ -1,15 +1,8 @@
 package no.nav.hjelpemidler.rapids_and_rivers
 
-import com.fasterxml.jackson.databind.JsonNode
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
-import no.nav.hjelpemidler.domain.person.Fødselsnummer
+import no.nav.hjelpemidler.serialization.jackson.uuidValue
 import java.util.UUID
-
-fun JsonNode.uuidValue(): UUID = UUID.fromString(textValue())
-fun JsonNode.uuidValueOrNull(): UUID? = textValue()?.let(UUID::fromString)
-
-fun JsonNode.fødselsnummerValue(): Fødselsnummer = Fødselsnummer(textValue())
-fun JsonNode.fødselsnummerValueOrNull(): Fødselsnummer? = textValue()?.let(::Fødselsnummer)
 
 val JsonMessage.eventId: UUID get() = this["eventId"].uuidValue()
 val JsonMessage.eventName: String get() = this["eventName"].textValue()

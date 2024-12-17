@@ -11,6 +11,7 @@ import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.Personnavn
 import no.nav.hjelpemidler.domain.person.toAktørId
 import no.nav.hjelpemidler.domain.person.toFødselsnummer
+import no.nav.hjelpemidler.serialization.jackson.jsonMapper
 import java.util.UUID
 
 typealias Row = kotliquery.Row

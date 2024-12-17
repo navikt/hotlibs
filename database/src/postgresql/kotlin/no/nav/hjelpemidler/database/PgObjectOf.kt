@@ -1,5 +1,7 @@
 package no.nav.hjelpemidler.database
 
+import no.nav.hjelpemidler.serialization.jackson.jsonMapper
+import no.nav.hjelpemidler.serialization.jackson.writeValueAsStringOrNull
 import org.postgresql.util.PGobject
 
 fun pgObjectOf(type: String, value: String?): Any =

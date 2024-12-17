@@ -3,17 +3,14 @@ package no.nav.hjelpemidler.http.test
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTCreator
 import com.auth0.jwt.algorithms.Algorithm
-import com.fasterxml.jackson.databind.json.JsonMapper
 import io.ktor.client.engine.mock.MockRequestHandleScope
 import io.ktor.client.engine.mock.respond
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
-import no.nav.hjelpemidler.serialization.defaultJsonMapper
+import no.nav.hjelpemidler.serialization.jackson.jsonMapper
 import org.intellij.lang.annotations.Language
-
-val jsonMapper: JsonMapper = defaultJsonMapper()
 
 fun MockRequestHandleScope.respondJson(
     @Language("JSON") content: String,

@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     api(project(":core"))
+    api(project(":serialization"))
 
     // Logging
     implementation(libs.kotlin.logging)
@@ -21,11 +22,6 @@ dependencies {
     api(libs.ktor.client.mock)
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.jackson)
-
-    // Jackson
-    api(libs.jackson.databind)
-    implementation(libs.jackson.datatype.jsr310)
-    implementation(libs.jackson.module.kotlin)
 
     // JWT
     implementation(libs.java.jwt)
