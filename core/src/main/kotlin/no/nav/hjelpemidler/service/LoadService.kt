@@ -8,6 +8,9 @@ import kotlin.reflect.full.findAnnotation
 
 private val log = KotlinLogging.logger {}
 
+/**
+ * Last tjeneste med [ServiceLoader]. Ved flere implementasjoner på classpath, vil den med laveste [LoadOrder] ha presedens.
+ */
 fun <S : Any> loadService(kClass: KClass<S>): Lazy<S> = lazy {
     val serviceName = kClass.qualifiedName ?: ""
     try {
@@ -16,7 +19,7 @@ fun <S : Any> loadService(kClass: KClass<S>): Lazy<S> = lazy {
             .minByOrNull { service ->
                 service::class.findAnnotation<LoadOrder>()?.value ?: Integer.MAX_VALUE
             } ?: throw NoSuchElementException("Kunne ikke opprette tjeneste: $serviceName")
-        log.info { "Lastet tjeneste: $serviceName" }
+        log.info { "Lastet tjeneste: $serviceName, implementasjon: ${service::class.qualifiedName}" }
         service
     } catch (e: ServiceConfigurationError) {
         throw RuntimeException("Kunne ikke opprette tjeneste: $serviceName", e)
