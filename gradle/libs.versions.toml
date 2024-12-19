@@ -17,6 +17,7 @@ cyclonedx = "1.10.0"
 ehcache = "3.10.8"
 flyway = "11.1.0"
 graphql = "8.2.1"
+graphql-java = "22.3"
 h2 = "2.3.232"
 handlebars = "4.4.0"
 hikaricp = "6.2.1"
@@ -244,6 +245,7 @@ hm-behovsmeldingsmodell = { group = "no.nav.hjelpemidler", name = "hm-behovsmeld
 hm-contract-pdl-avro = { group = "no.nav.hjelpemidler", name = "hm-contract-pdl-avro", version.ref = "contractPdlAvro" }
 
 # GraphQL
+graphql-java = { group = "com.graphql-java", name = "graphql-java", version.ref = "graphql-java" }
 graphql-client-jackson = { group = "com.expediagroup", name = "graphql-kotlin-client-jackson", version.ref = "graphql" }
 graphql-gradle-plugin = { group = "com.expediagroup", name = "graphql-kotlin-gradle-plugin", version.ref = "graphql" }
 graphql-ktor-client = { group = "com.expediagroup", name = "graphql-kotlin-ktor-client", version.ref = "graphql" }
