@@ -14,5 +14,5 @@ inline fun <reified E : Enum<E>> JsonNode.enumValueOrNull(): E? = textValue()?.l
 fun JsonNode.fødselsnummerValue(): Fødselsnummer = Fødselsnummer(textValue())
 fun JsonNode.fødselsnummerValueOrNull(): Fødselsnummer? = textValue()?.let(::Fødselsnummer)
 
-inline fun <reified T : Any> JsonNode.value(): T = jsonMapper.treeToValue(this)
-inline fun <reified T : Any> JsonNode?.valueOrNull(): T? = this?.let(jsonMapper::treeToValue)
+inline fun <reified T : Any> JsonNode.value(): T = jsonMapper.treeToValue<T>(this)
+inline fun <reified T : Any> JsonNode?.valueOrNull(): T? = this?.let<JsonNode, T>(jsonMapper::treeToValue)
