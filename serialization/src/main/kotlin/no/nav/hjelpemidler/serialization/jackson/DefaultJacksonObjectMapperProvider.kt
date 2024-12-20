@@ -9,7 +9,8 @@ private val log = KotlinLogging.logger {}
 
 /**
  * Default [JacksonObjectMapperProvider] som benyttes hvis ikke det defineres andre implementasjoner i
- * <code>META-INF/services/no.nav.hjelpemidler.serialization.jackson.JacksonObjectMapperProvider</code>.
+ * <code>META-INF/services/no.nav.hjelpemidler.serialization.jackson.JacksonObjectMapperProvider</code>
+ * med lavere [LoadOrder].
  * Benytter [defaultJsonMapper] uten modifikasjon.
  *
  * @see [defaultJsonMapper]
