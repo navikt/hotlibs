@@ -12,6 +12,7 @@ val libs = the<LibrariesForLibs>()
 
 dependencies {
     implementation(platform(libs.kotlin.bom))
+    implementation(platform(libs.kotlinx.coroutines.bom))
 
     constraints {
         // CVE-2024-25710

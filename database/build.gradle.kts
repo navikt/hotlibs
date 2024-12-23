@@ -22,6 +22,10 @@ dependencies {
     h2Api(project(path))
     h2RuntimeOnly(libs.h2)
 
+    // Ktor
+    ktorApi(project(path))
+    ktorApi(libs.ktor.server.core)
+
     // Oracle
     oracleApi(project(path))
     oracleRuntimeOnly(libs.ojdbc11)

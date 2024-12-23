@@ -15,6 +15,7 @@ plugins {
 val libs = the<LibrariesForLibs>()
 
 val h2: SourceSet = sourceSets.create("h2")
+val ktor: SourceSet = sourceSets.create("ktor")
 val oracle: SourceSet = sourceSets.create("oracle")
 val postgresql: SourceSet = sourceSets.create("postgresql") // inkluderer flyway
 val testcontainers: SourceSet = sourceSets.create("testcontainers")
@@ -26,6 +27,12 @@ java {
     registerFeature(h2.name) {
         usingSourceSet(h2)
         capability(capabilityGroup, "${project.name}-${h2.name}", capabilityVersion)
+        withSourcesJar()
+    }
+
+    registerFeature(ktor.name) {
+        usingSourceSet(ktor)
+        capability(capabilityGroup, "${project.name}-${ktor.name}", capabilityVersion)
         withSourcesJar()
     }
 

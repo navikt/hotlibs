@@ -27,6 +27,7 @@ include(
     "http",
     "kafka",
     "katalog",
+    "metrics",
     "nare",
     "rapids-and-rivers",
     "serialization",
