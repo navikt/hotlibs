@@ -10,8 +10,9 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.serialization.jackson.JacksonConverter
 import no.nav.hjelpemidler.serialization.jackson.defaultJsonMapper
+import no.nav.hjelpemidler.serialization.jackson.jsonMapper
 
-fun HttpClientConfig<*>.jackson(objectMapper: ObjectMapper) =
+fun HttpClientConfig<*>.jackson(objectMapper: ObjectMapper = jsonMapper) =
     install(ContentNegotiation) {
         register(ContentType.Application.Json, JacksonConverter(objectMapper, streamRequestBody = true))
     }
