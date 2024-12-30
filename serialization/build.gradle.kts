@@ -4,9 +4,7 @@ plugins {
 
 dependencies {
     api(project(":core"))
-    api(libs.bundles.jackson)
-    implementation(libs.kotlin.logging)
 
-    // Testing
-    testRuntimeOnly(libs.slf4j.simple)
+    // Jackson
+    api(libs.bundles.jackson)
 }

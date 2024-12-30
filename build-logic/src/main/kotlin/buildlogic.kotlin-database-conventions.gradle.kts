@@ -58,14 +58,7 @@ java {
 @Suppress("UnstableApiUsage")
 testing {
     suites {
-        withType<JvmTestSuite> {
-            dependencies {
-                runtimeOnly(libs.slf4j.simple)
-            }
-        }
-
-        val test by getting(JvmTestSuite::class) {}
-
+        val test by getting(JvmTestSuite::class)
         val postgresqlTest by registering(JvmTestSuite::class) {
             dependencies {
                 implementation(project(path)) {

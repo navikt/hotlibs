@@ -6,7 +6,6 @@ plugins {
 
 dependencies {
     implementation(libs.kotlin.reflect)
-    implementation(libs.kotlin.logging)
     implementation(libs.nocommons)
 
     // Jackson
@@ -19,9 +18,6 @@ dependencies {
     // Fixtures
     testFixturesCompileOnly(libs.jackson.annotations)
     testFixturesCompileOnly(libs.kotlinx.serialization.core)
-
-    // Testing
-    testRuntimeOnly(libs.slf4j.simple)
 }
 
 @Suppress("UnstableApiUsage")
@@ -31,7 +27,6 @@ testing {
             dependencies {
                 implementation(project())
                 implementation(testFixtures(project()))
-                runtimeOnly(libs.slf4j.simple)
             }
         }
 

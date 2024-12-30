@@ -29,6 +29,8 @@ include(
     "katalog",
     "metrics",
     "nare",
+    "platform",
     "rapids-and-rivers",
     "serialization",
+    "test",
 )

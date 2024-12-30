@@ -7,7 +7,6 @@ dependencies {
     api(project(":serialization"))
 
     // Logging
-    implementation(libs.kotlin.logging)
     runtimeOnly(libs.slf4j.jdk.platform.logging)
 
     // Kotlinx
@@ -28,7 +27,4 @@ dependencies {
 
     // Cache
     api(libs.caffeine)
-
-    // Testing
-    testRuntimeOnly(libs.logback.classic)
 }

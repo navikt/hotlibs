@@ -3,10 +3,9 @@ plugins {
 }
 
 dependencies {
-    // Kafka
     api(project(":kafka"))
     api(project(":serialization"))
 
-    // Rapid and rivers
+    // Rapids and rivers
     api(libs.rapidsAndRivers)
 }

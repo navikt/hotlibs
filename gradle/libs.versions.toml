@@ -273,6 +273,7 @@ slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4
 kotlin-logging = { group = "io.github.oshai", name = "kotlin-logging", version.ref = "kotlin-logging" }
 kotlin-logging-deprecated = { group = "io.github.microutils", name = "kotlin-logging", version.ref = "kotlin-logging-deprecated" }
 logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
+logback-core = { group = "ch.qos.logback", name = "logback-core", version.ref = "logback" }
 logback-syslog4j = { group = "com.papertrailapp", name = "logback-syslog4j", version.ref = "logback-syslog4j" }
 logstash-logback-encoder = { group = "net.logstash.logback", name = "logstash-logback-encoder", version.ref = "logback-logstash" }
 

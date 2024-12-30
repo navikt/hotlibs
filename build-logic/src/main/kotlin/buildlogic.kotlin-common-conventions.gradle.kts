@@ -3,7 +3,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
     kotlin("jvm")
-    kotlin(("plugin.serialization"))
+    kotlin("plugin.serialization")
 }
 
 // Gjør det mulig å bruke versjonskatalogen i convention plugins
@@ -11,13 +11,10 @@ plugins {
 val libs = the<LibrariesForLibs>()
 
 dependencies {
-    implementation(platform(libs.kotlin.bom))
-    implementation(platform(libs.kotlinx.coroutines.bom))
+    api(platform(project(":platform")))
 
-    constraints {
-        // CVE-2024-25710
-        implementation(libs.commons.compress)
-    }
+    // Logging
+    implementation(libs.kotlin.logging)
 }
 
 @Suppress("UnstableApiUsage")
@@ -27,9 +24,7 @@ testing {
             useKotlinTest(libs.versions.kotlin.asProvider())
 
             dependencies {
-                implementation(libs.kotlinx.coroutines.test)
-                implementation(libs.kotest.assertions.core)
-                implementation(libs.mockk)
+                implementation(project(":test"))
             }
 
             targets.configureEach {

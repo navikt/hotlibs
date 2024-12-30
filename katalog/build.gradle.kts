@@ -1,19 +1,13 @@
 plugins {
-    `maven-publish`
+    id("buildlogic.kotlin-publish-conventions")
+
     `version-catalog`
 }
-
-group = "no.nav.hjelpemidler"
-version = System.getenv("VERSION_TAG") ?: System.getenv("GITHUB_REF_NAME") ?: "local"
 
 buildscript {
     dependencies {
         classpath(libs.commons.text)
     }
-}
-
-repositories {
-    gradlePluginPortal()
 }
 
 catalog {
@@ -28,8 +22,10 @@ catalog {
             "http",
             "kafka",
             "nare",
+            "platform",
             "rapids-and-rivers",
             "serialization",
+            "test",
         ).forEach { artifact ->
             library("$hotlibs-${toCamelCase(artifact)}", "$group", artifact).versionRef(hotlibs)
         }
@@ -40,16 +36,6 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             from(components["versionCatalog"])
-        }
-    }
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/navikt/hotlibs")
-            credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
-            }
         }
     }
 }

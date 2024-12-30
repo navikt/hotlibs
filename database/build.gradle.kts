@@ -6,13 +6,9 @@ dependencies {
     api(project(":core"))
     api(project(":serialization"))
 
-    implementation(libs.kotlin.stdlib)
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlinx.coroutines.core)
     compileOnly(libs.jetbrains.annotations)
-
-    // Logging
-    implementation(libs.slf4j.api)
 
     // JDBC
     api(libs.kotliquery)
@@ -41,9 +37,6 @@ dependencies {
     // Testcontainers
     testcontainersApi(project(path))
     testcontainersRuntimeOnly(libs.testcontainers.postgresql) // fixme -> kunne vi valgt oracle hvis oracle-capability?
-    constraints {
-        testRuntimeOnly(libs.commons.compress)
-    }
 }
 
 

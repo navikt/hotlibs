@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
     api(project(":core"))
+
+    // InfluxDB
     implementation(libs.influxdb.client.kotlin)
-    implementation(libs.kotlin.logging)
-    testRuntimeOnly(libs.slf4j.simple)
 }
