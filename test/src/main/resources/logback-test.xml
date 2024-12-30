@@ -5,8 +5,12 @@
             <pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
-    <root level="WARN">
+
+    <root level="${ROOT_LOG_LEVEL:-WARN}">
         <appender-ref ref="STDOUT" />
     </root>
-    <logger name="com.github.benmanes.caffeine" level="ERROR" />
+
+    <logger name="tjenestekall" level="${SECURE_LOG_LEVEL:-WARN}" />
+
+    <include optional="true" resource="logback-test-include.xml" />
 </configuration>
