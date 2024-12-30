@@ -217,6 +217,7 @@ kafka-streams-avro-serde = { group = "io.confluent", name = "kafka-streams-avro-
 # Google
 google-cloud-bigquery = { group = "com.google.cloud", name = "google-cloud-bigquery", version.ref = "bigquery" }
 owasp-java-html-sanitizer = { group = "com.googlecode.owasp-java-html-sanitizer", name = "owasp-java-html-sanitizer", version = "20240325.1" }
+protobuf-bom = { group = "com.google.protobuf", name = "protobuf-bom", version = "4.29.2" }
 
 # JDBC
 flyway-core = { group = "org.flywaydb", name = "flyway-core", version.ref = "flyway" }
