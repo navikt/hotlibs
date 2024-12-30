@@ -27,6 +27,7 @@ include(
     "http",
     "kafka",
     "katalog",
+    "logging",
     "metrics",
     "nare",
     "platform",
