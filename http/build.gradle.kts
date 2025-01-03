@@ -11,7 +11,6 @@ dependencies {
 
     // Kotlinx
     api(libs.kotlinx.coroutines.core)
-    implementation(libs.kotlinx.coroutines.jdk8)
     implementation(libs.kotlinx.coroutines.slf4j)
 
     // Ktor
