@@ -32,22 +32,26 @@ sealed interface Environment {
     }
 }
 
-object TestEnvironment : Environment {
-    override val cluster: String = "test"
-    override val tier: Environment.Tier = Environment.Tier.TEST
+sealed class DefaultEnvironment() : Environment {
     override fun toString(): String = cluster
 }
 
-object LocalEnvironment : Environment {
+object TestEnvironment : DefaultEnvironment() {
+    override val cluster: String = "test"
+    override val tier: Environment.Tier = Environment.Tier.TEST
+}
+
+object LocalEnvironment : DefaultEnvironment() {
     override val cluster: String = "local"
     override val tier: Environment.Tier = Environment.Tier.LOCAL
-    override fun toString(): String = cluster
 }
+
+sealed interface ClusterEnvironment : Environment
 
 enum class FssEnvironment(
     override val cluster: String,
     override val tier: Environment.Tier,
-) : Environment {
+) : ClusterEnvironment {
     DEV("dev-fss", Environment.Tier.DEV),
     PROD("prod-fss", Environment.Tier.PROD);
 
@@ -57,7 +61,7 @@ enum class FssEnvironment(
 enum class GcpEnvironment(
     override val cluster: String,
     override val tier: Environment.Tier,
-) : Environment {
+) : ClusterEnvironment {
     DEV("dev-gcp", Environment.Tier.DEV),
     PROD("prod-gcp", Environment.Tier.PROD);
 
