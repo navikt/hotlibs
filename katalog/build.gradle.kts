@@ -22,6 +22,7 @@ catalog {
             "http",
             "kafka",
             "logging",
+            "metrics",
             "nare",
             "platform",
             "rapids-and-rivers",
