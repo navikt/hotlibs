@@ -12,6 +12,7 @@ dependencies {
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
     implementation(libs.kotlin.gradle.plugin)
     implementation(libs.kotlin.serialization)
+    implementation(libs.spotless.gradle.plugin)
 }
 
 java {

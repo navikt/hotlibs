@@ -4,6 +4,8 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
+
+    id("com.diffplug.spotless")
 }
 
 // Gjør det mulig å bruke versjonskatalogen i convention plugins
