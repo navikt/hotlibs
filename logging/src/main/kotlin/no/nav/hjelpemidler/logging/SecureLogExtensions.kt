@@ -2,10 +2,7 @@ package no.nav.hjelpemidler.logging
 
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KMarkerFactory
-import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.oshai.kotlinlogging.Marker
-
-val secureLog: KLogger = KotlinLogging.logger("tjenestekall")
 
 val secureLogMarker: Marker = KMarkerFactory.getMarker("secureLog")
 fun KLogger.secureTrace(throwable: Throwable? = null, message: () -> Any?) = trace(throwable, secureLogMarker, message)
