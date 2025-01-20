@@ -4,12 +4,12 @@ import com.github.benmanes.caffeine.cache.Expiry
 import io.ktor.http.Parameters
 
 internal object ExpireImmediately : Expiry<Parameters, TokenSet> {
-    override fun expireAfterCreate(key: Parameters?, value: TokenSet?, currentTime: Long): Long =
+    override fun expireAfterCreate(key: Parameters, value: TokenSet, currentTime: Long): Long =
         0
 
-    override fun expireAfterUpdate(key: Parameters?, value: TokenSet?, currentTime: Long, currentDuration: Long): Long =
+    override fun expireAfterUpdate(key: Parameters, value: TokenSet, currentTime: Long, currentDuration: Long): Long =
         0
 
-    override fun expireAfterRead(key: Parameters?, value: TokenSet?, currentTime: Long, currentDuration: Long): Long =
+    override fun expireAfterRead(key: Parameters, value: TokenSet, currentTime: Long, currentDuration: Long): Long =
         0
 }
