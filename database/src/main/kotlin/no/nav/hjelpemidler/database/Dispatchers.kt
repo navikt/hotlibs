@@ -13,3 +13,10 @@ internal val VirtualCoroutineDispatcher: ExecutorCoroutineDispatcher =
 @Suppress("UnusedReceiverParameter")
 val Dispatchers.Virtual: @BlockingExecutor CoroutineDispatcher
     get() = VirtualCoroutineDispatcher
+
+internal val TransactionCoroutineDispatcher: ExecutorCoroutineDispatcher =
+    Executors.newSingleThreadExecutor().asCoroutineDispatcher()
+
+@Suppress("UnusedReceiverParameter")
+val Dispatchers.Transaction: @BlockingExecutor CoroutineDispatcher
+    get() = TransactionCoroutineDispatcher

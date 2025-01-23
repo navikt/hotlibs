@@ -1,5 +1,6 @@
 package no.nav.hjelpemidler.database
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.withContext
 import javax.sql.DataSource
@@ -29,8 +30,10 @@ suspend fun <T> transactionAsync(
         createSession(dataSource, returnGeneratedKeys, strict, queryTimeout).use { session ->
             session.transaction {
                 val tx = SessionJdbcOperations(it)
-                withContext(TransactionContext(tx, Thread.currentThread().name)) {
-                    block(tx)
+                withContext(Dispatchers.Transaction) {
+                    withContext(TransactionContext(tx, Thread.currentThread().name)) {
+                        block(tx)
+                    }
                 }
             }
         }
