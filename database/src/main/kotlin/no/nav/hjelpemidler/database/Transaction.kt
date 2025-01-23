@@ -1,6 +1,5 @@
 package no.nav.hjelpemidler.database
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.withContext
 import javax.sql.DataSource
@@ -28,19 +27,19 @@ suspend fun <T> transactionAsync(
 ): T {
     val context = currentCoroutineContext()[TransactionContext] ?: return withDatabaseContext {
         createSession(dataSource, returnGeneratedKeys, strict, queryTimeout).use { session ->
-            session.transaction {
-                val tx = SessionJdbcOperations(it)
-                withContext(Dispatchers.Transaction) {
-                    withContext(TransactionContext(tx, Thread.currentThread().name)) {
+            withTransactionContext {
+                session.transaction {
+                    val tx = SessionJdbcOperations(it)
+                    withContext(TransactionContext(tx, Thread.currentThread().threadId())) {
                         block(tx)
                     }
                 }
             }
         }
     }
-    val currentThreadName = Thread.currentThread().name
-    check(currentThreadName == context.threadName) {
-        "Nestet transaksjon i ny tråd: '$currentThreadName' != '${context.threadName}'"
+    val currentThreadId = Thread.currentThread().threadId()
+    check(currentThreadId == context.threadId) {
+        "Nestet transaksjon i ny tråd: $currentThreadId != ${context.threadId}"
     }
     return block(context.tx)
 }
