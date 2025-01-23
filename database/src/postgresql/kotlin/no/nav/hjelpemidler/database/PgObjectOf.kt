@@ -10,8 +10,8 @@ fun pgObjectOf(type: String, value: String?): Any =
         this.value = value
     }
 
-fun <T> pgJsonOf(value: T): Any =
+fun pgJsonOf(value: Any?): Any =
     pgObjectOf(type = "json", value = jsonMapper.writeValueAsStringOrNull(value))
 
-fun <T> pgJsonbOf(value: T): Any =
+fun pgJsonbOf(value: Any?): Any =
     pgObjectOf(type = "jsonb", value = jsonMapper.writeValueAsStringOrNull(value))
