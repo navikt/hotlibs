@@ -1,6 +1,12 @@
 package no.nav.hjelpemidler.database
 
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.withContext
 import javax.sql.DataSource
+
+interface Transaction<S : Any> {
+    suspend operator fun <T> invoke(block: suspend S.() -> T): T
+}
 
 fun <T> transaction(
     dataSource: DataSource,
@@ -9,7 +15,7 @@ fun <T> transaction(
     queryTimeout: Int? = null,
     block: (JdbcOperations) -> T,
 ): T = createSession(dataSource, returnGeneratedKeys, strict, queryTimeout).use { session ->
-    session.transaction { tx -> block(SessionJdbcOperations(tx)) }
+    session.transaction { block(SessionJdbcOperations(it)) }
 }
 
 suspend fun <T> transactionAsync(
@@ -18,13 +24,20 @@ suspend fun <T> transactionAsync(
     strict: Boolean = true,
     queryTimeout: Int? = null,
     block: suspend (JdbcOperations) -> T,
-): T = withDatabaseContext {
-    createSession(dataSource, returnGeneratedKeys, strict, queryTimeout).use { session ->
-        session.transaction { tx -> block(SessionJdbcOperations(tx)) }
+): T {
+    val context = currentCoroutineContext()[TransactionContext] ?: return withDatabaseContext {
+        createSession(dataSource, returnGeneratedKeys, strict, queryTimeout).use { session ->
+            session.transaction {
+                val tx = SessionJdbcOperations(it)
+                withContext(TransactionContext(tx, Thread.currentThread().name)) {
+                    block(tx)
+                }
+            }
+        }
     }
-}
-
-interface Transaction<S : Any> {
-    suspend operator fun <T> invoke(block: suspend S.() -> T): T
-    suspend fun <T> transaction(block: suspend S.() -> T): T = invoke(block)
+    val currentThreadName = Thread.currentThread().name
+    check(currentThreadName == context.threadName) {
+        "Nestet transaksjon i ny tråd: '$currentThreadName' != '${context.threadName}'"
+    }
+    return block(context.tx)
 }
