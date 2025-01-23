@@ -14,6 +14,7 @@ private val log = KotlinLogging.logger {}
 
 internal class InfluxDBMetricsProducer(client: InfluxDBClientKotlin) : MetricsProducer, Closeable by client {
     private val writeApi: WriteKotlinApi = client.getWriteKotlinApi()
+
     override suspend fun writeEvent(event: MetricsEvent) {
         try {
             writeApi.writePoint(
@@ -28,4 +29,7 @@ internal class InfluxDBMetricsProducer(client: InfluxDBClientKotlin) : MetricsPr
             log.warn(e) { "Feil under overføring av metrikk til InfluxDB" }
         }
     }
+
+    override val history: Collection<MetricsEvent>
+        get() = throw UnsupportedOperationException("InfluxDBMetricsProducer tar ikke vare på hendelser")
 }

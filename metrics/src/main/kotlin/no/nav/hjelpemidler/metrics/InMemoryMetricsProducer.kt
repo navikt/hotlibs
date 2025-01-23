@@ -12,6 +12,8 @@ internal class InMemoryMetricsProducer private constructor(
         events.add(event)
     }
 
+    override val history: Collection<MetricsEvent> get() = this
+
     override fun close() {
         events.clear()
     }

@@ -18,6 +18,8 @@ interface MetricsProducer : Closeable {
     suspend fun writeEvent(measurementName: String, fields: Map<String, Any?>, tags: Map<String, String?>) =
         writeEvent(MetricsEvent(measurementName, fields, tags))
 
+    val history: Collection<MetricsEvent>
+
     companion object {
         val DEFAULT_TAGS: Map<String, String> = mapOf(
             "application" to NaisEnvironmentVariable.NAIS_APP_NAME,

@@ -1,6 +1,8 @@
 package no.nav.hjelpemidler.http.slack
 
 import io.ktor.client.engine.HttpClientEngine
+import no.nav.hjelpemidler.configuration.ClusterEnvironment
+import no.nav.hjelpemidler.configuration.Environment
 import no.nav.hjelpemidler.configuration.EnvironmentVariable
 import no.nav.hjelpemidler.http.DefaultHttpClientFactory
 import no.nav.hjelpemidler.http.HttpClientFactory
@@ -26,7 +28,11 @@ fun slackEnvironmentConfiguration(): SlackConfiguration = DefaultSlackConfigurat
 fun slack(
     httpClientFactory: HttpClientFactory = DefaultHttpClientFactory,
     configuration: SlackConfiguration = slackEnvironmentConfiguration(),
-): SlackClient = DefaultSlackClient(configuration = configuration, httpClientFactory = httpClientFactory)
+): SlackClient = if (Environment.current is ClusterEnvironment) {
+    DefaultSlackClient(configuration = configuration, httpClientFactory = httpClientFactory)
+} else {
+    InMemorySlackClient()
+}
 
 /**
  * Creates the default slack client
@@ -37,4 +43,4 @@ fun slack(
 fun slack(
     engine: HttpClientEngine,
     configuration: SlackConfiguration = slackEnvironmentConfiguration(),
-): SlackClient = DefaultSlackClient(configuration = configuration, httpClientFactory = createHttpClientFactory(engine))
+): SlackClient = slack(createHttpClientFactory(engine), configuration)

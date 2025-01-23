@@ -7,4 +7,6 @@ interface SlackClient {
         channel: String,
         message: String,
     )
+
+    val history: Collection<SlackMessage>
 }

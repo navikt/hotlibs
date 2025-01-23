@@ -40,4 +40,7 @@ internal class DefaultSlackClient(
             setBody(values)
         }
     }
+
+    override val history: Collection<SlackMessage>
+        get() = throw UnsupportedOperationException("DefaultSlackClient tar ikke vare på meldinger")
 }
