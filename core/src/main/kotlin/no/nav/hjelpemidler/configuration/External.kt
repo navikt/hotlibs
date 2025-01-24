@@ -7,4 +7,9 @@ package no.nav.hjelpemidler.configuration
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.PROPERTY)
 @MustBeDocumented
-annotation class External(val secret: String = "")
+annotation class External(
+    /**
+     * Spesifiserer hvilken mounted secret miljøvariabelen er definert i.
+     */
+    val secret: String = "",
+)
