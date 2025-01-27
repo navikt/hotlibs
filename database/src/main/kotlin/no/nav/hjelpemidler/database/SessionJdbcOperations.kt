@@ -34,13 +34,16 @@ internal class SessionJdbcOperations(private val session: Session) : JdbcOperati
         totalElementsLabel: String,
         mapper: ResultMapper<T>,
     ): Page<T> {
-        val limitParameter = "no_nav_hjelpemidler_database_limit"
-        val offsetParameter = "no_nav_hjelpemidler_database_offset"
         val limit = pageRequest.limit
         val offset = pageRequest.offset
         var totalElements: Long = -1
 
-        val content = session.list(
+        val query = if (pageRequest === PageRequest.ALL) {
+            queryOf(sql, queryParameters)
+        } else {
+            val limitParameter = "no_nav_hjelpemidler_database_limit"
+            val offsetParameter = "no_nav_hjelpemidler_database_offset"
+
             queryOf(
                 sql = """
                     $sql
@@ -52,7 +55,9 @@ internal class SessionJdbcOperations(private val session: Session) : JdbcOperati
                     offsetParameter to offset,
                 )
             )
-        ) { row ->
+        }
+
+        val content = session.list(query) { row ->
             totalElements = row.longOrNull(totalElementsLabel) ?: -1
             mapper(row)
         }
