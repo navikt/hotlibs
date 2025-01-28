@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test
 import java.util.concurrent.Executors
 import javax.sql.DataSource
 
-class TransactionContextTest {
+class TransactionTest {
     private val dataSource = mockk<DataSource>(relaxed = true)
     private val dispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
 

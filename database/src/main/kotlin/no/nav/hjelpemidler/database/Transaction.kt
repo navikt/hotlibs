@@ -33,27 +33,27 @@ suspend fun <T> transactionAsync(
 ): T {
     val context = currentCoroutineContext()[TransactionContext] ?: return withContext(Dispatchers.IO) {
         createSession(dataSource, returnGeneratedKeys, strict, queryTimeout).use { session ->
-            withContext(TransactionCoroutineDispatcher) {
+            withContext(transactionCoroutineDispatcher()) {
                 session.transaction {
                     val tx = SessionJdbcOperations(it)
-                    withContext(TransactionContext(tx, Thread.currentThread().threadId())) {
+                    withContext(TransactionContext(tx, Thread.currentThread())) {
                         block(tx)
                     }
                 }
             }
         }
     }
-    val currentThreadId = Thread.currentThread().threadId()
-    check(currentThreadId == context.threadId) {
-        "Nestet transaksjon i ny tråd: $currentThreadId != ${context.threadId}"
+    val currentThread = Thread.currentThread()
+    check(currentThread == context.thread) {
+        "Nestet transaksjon i ny tråd: $currentThread != ${context.thread}"
     }
     return block(context.tx)
 }
 
-private val TransactionCoroutineDispatcher: CoroutineDispatcher =
+private fun transactionCoroutineDispatcher(): CoroutineDispatcher =
     Executors.newSingleThreadExecutor().asCoroutineDispatcher()
 
-private class TransactionContext(val tx: JdbcOperations, val threadId: Long) :
+private class TransactionContext(val tx: JdbcOperations, val thread: Thread) :
     AbstractCoroutineContextElement(TransactionContext) {
     companion object Key : CoroutineContext.Key<TransactionContext>
 }
