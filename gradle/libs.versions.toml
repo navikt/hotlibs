@@ -6,6 +6,7 @@ cacheApi = "1.1.1"
 caffeine = "3.2.0"
 classgraph = "4.8.179"
 commons-compress = "1.27.1"
+commons-csv = "1.13.0"
 commons-io = "2.18.0"
 commons-text = "1.13.0"
 confluent = "7.8.0"
@@ -23,7 +24,7 @@ htmlSanitizer = "20240325.1"
 influxdb = "7.2.0"
 jackson = "2.18.2"
 java = "21"
-javaJwt = "4.4.0"
+javaJwt = "4.5.0"
 jedis = "5.2.0"
 jetbrains-annotations = "26.0.2"
 joseJwt = "10.0.1"
@@ -95,6 +96,7 @@ cache-api = { module = "javax.cache:cache-api", version.ref = "cacheApi" }
 caffeine = { module = "com.github.ben-manes.caffeine:caffeine", version.ref = "caffeine" }
 classgraph = { module = "io.github.classgraph:classgraph", version.ref = "classgraph" }
 commons-compress = { module = "org.apache.commons:commons-compress", version.ref = "commons-compress" }
+commons-csv = { module = "org.apache.commons:commons-csv", version.ref = "commons-csv" }
 commons-io = { module = "commons-io:commons-io", version.ref = "commons-io" }
 commons-text = { module = "org.apache.commons:commons-text", version.ref = "commons-text" }
 ehcache = { module = "org.ehcache:ehcache", version.ref = "ehcache" }
@@ -119,6 +121,7 @@ jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations
 jackson-bom = { module = "com.fasterxml.jackson:jackson-bom", version.ref = "jackson" }
 jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
 jackson-dataformat-cbor = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor", version.ref = "jackson" }
+jackson-dataformat-csv = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-csv", version.ref = "jackson" }
 jackson-dataformat-xml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-xml", version.ref = "jackson" }
 jackson-dataformat-yaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jackson" }
 jackson-datatype-jsr310 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version.ref = "jackson" }
