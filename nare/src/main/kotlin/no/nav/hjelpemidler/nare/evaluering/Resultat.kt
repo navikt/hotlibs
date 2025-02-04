@@ -14,16 +14,8 @@ enum class Resultat {
     },
 
     KANSKJE {
-        override infix fun og(annen: Resultat): Resultat = when (annen) {
-            JA -> KANSKJE
-            else -> annen
-        }
-
-        override infix fun eller(annen: Resultat): Resultat = when (annen) {
-            NEI -> KANSKJE
-            else -> annen
-        }
-
+        override infix fun og(annen: Resultat): Resultat = if (annen == JA) KANSKJE else annen
+        override infix fun eller(annen: Resultat): Resultat = if (annen == NEI) KANSKJE else annen
         override fun ikke(): Resultat = KANSKJE
     },
     ;
