@@ -1,59 +1,57 @@
 package no.nav.hjelpemidler.nare.spesifikasjon
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import no.nav.hjelpemidler.nare.dokumentasjon.Metadata
+import no.nav.hjelpemidler.nare.core.LogiskOperand
+import no.nav.hjelpemidler.nare.core.MetadataLov
 import no.nav.hjelpemidler.nare.evaluering.Evaluering
-import no.nav.hjelpemidler.nare.evaluering.Evalueringer
 
 data class Spesifikasjon<T>(
     override val beskrivelse: String,
-    override val identifikator: String = "",
+    override val id: String = "",
     override val lovreferanse: String = "",
     override val lovdataUrl: String = "",
     val grunnlag: Map<String, String> = emptyMap(),
     val barn: List<Spesifikasjon<T>> = emptyList(),
-    @JsonIgnore val implementasjon: Evalueringer.(T) -> Evaluering,
-) : Metadata {
+    @JsonIgnore val implementasjon: Evaluering.Companion.(context: T) -> Evaluering,
+) : MetadataLov, LogiskOperand<Spesifikasjon<T>> {
     fun evaluer(t: T): Evaluering =
-        Evalueringer().implementasjon(t)
+        Evaluering.implementasjon(t)
             .copy(
-                identifikator = identifikator,
                 beskrivelse = beskrivelse,
+                id = id,
                 lovreferanse = lovreferanse,
                 lovdataUrl = lovdataUrl
             )
 
-    infix fun og(annen: Spesifikasjon<T>): Spesifikasjon<T> =
+    override infix fun og(annen: Spesifikasjon<T>): Spesifikasjon<T> =
         Spesifikasjon(
             beskrivelse = "$beskrivelse OG ${annen.beskrivelse}",
             barn = this.spesifikasjonEllerBarn() + annen.spesifikasjonEllerBarn(),
             implementasjon = { evaluer(it) og annen.evaluer(it) }
         )
 
-    infix fun eller(annen: Spesifikasjon<T>): Spesifikasjon<T> =
+    override infix fun eller(annen: Spesifikasjon<T>): Spesifikasjon<T> =
         Spesifikasjon(
             beskrivelse = "$beskrivelse ELLER ${annen.beskrivelse}",
             barn = this.spesifikasjonEllerBarn() + annen.spesifikasjonEllerBarn(),
             implementasjon = { evaluer(it) eller annen.evaluer(it) }
         )
 
-    fun ikke(): Spesifikasjon<T> =
+    override fun ikke(): Spesifikasjon<T> =
         Spesifikasjon(
             beskrivelse = "IKKE $beskrivelse",
-            identifikator = "IKKE $identifikator",
+            id = "IKKE $id",
             barn = listOf(this),
             implementasjon = { evaluer(it).ikke() }
         )
 
-    fun med(identifikator: String, beskrivelse: String): Spesifikasjon<T> =
-        copy(identifikator = identifikator, beskrivelse = beskrivelse)
+    fun med(beskrivelse: String, id: String): Spesifikasjon<T> =
+        copy(beskrivelse = beskrivelse, id = id)
 
     private fun spesifikasjonEllerBarn(): List<Spesifikasjon<T>> =
-        when {
-            identifikator.isBlank() && barn.isNotEmpty() -> barn
-            else -> listOf(this)
+        if (id.isBlank() && barn.isNotEmpty()) {
+            barn
+        } else {
+            listOf(this)
         }
 }
-
-fun <T> ikke(spesifikasjon: Spesifikasjon<T>): Spesifikasjon<T> =
-    spesifikasjon.ikke()

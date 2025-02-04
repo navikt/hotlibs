@@ -1,6 +1,8 @@
 package no.nav.hjelpemidler.nare.evaluering
 
-enum class Resultat {
+import no.nav.hjelpemidler.nare.core.LogiskOperand
+
+enum class Resultat : LogiskOperand<Resultat> {
     JA {
         override infix fun og(annen: Resultat): Resultat = annen
         override infix fun eller(annen: Resultat): Resultat = JA
@@ -18,9 +20,4 @@ enum class Resultat {
         override infix fun eller(annen: Resultat): Resultat = if (annen == NEI) KANSKJE else annen
         override fun ikke(): Resultat = KANSKJE
     },
-    ;
-
-    abstract infix fun og(annen: Resultat): Resultat
-    abstract infix fun eller(annen: Resultat): Resultat
-    abstract fun ikke(): Resultat
 }
