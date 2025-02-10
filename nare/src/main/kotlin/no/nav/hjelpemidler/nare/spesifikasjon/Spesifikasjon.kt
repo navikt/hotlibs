@@ -1,5 +1,7 @@
 package no.nav.hjelpemidler.nare.spesifikasjon
 
-interface Spesifikasjon<in T : Any, out R : Any> {
+import no.nav.hjelpemidler.nare.core.LogiskOperand
+
+interface Spesifikasjon<in T : Any, R : LogiskOperand<R>> {
     fun evaluer(kontekst: T): R
 }

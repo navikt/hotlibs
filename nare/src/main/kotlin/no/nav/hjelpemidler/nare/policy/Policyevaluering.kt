@@ -1,16 +1,17 @@
 package no.nav.hjelpemidler.nare.policy
 
 import no.nav.hjelpemidler.nare.core.Node
+import no.nav.hjelpemidler.nare.evaluering.Evaluering
 import no.nav.hjelpemidler.nare.evaluering.Operator
 
 class Policyevaluering(
-    val resultat: Policyavgjørelse,
-    val begrunnelse: String,
-    val operator: Operator = Operator.INGEN,
+    override val resultat: Policyavgjørelse,
+    override val begrunnelse: String,
+    override val operator: Operator = Operator.INGEN,
     beskrivelse: String = "",
     id: String = "",
     barn: List<Policyevaluering> = emptyList(),
-) : Node<Policyevaluering>(beskrivelse, id, barn) {
+) : Node<Policyevaluering>(beskrivelse, id, barn), Evaluering<Policyavgjørelse> {
     override fun og(annen: Policyevaluering): Policyevaluering =
         Policyevaluering(
             resultat = resultat og annen.resultat,
@@ -32,7 +33,7 @@ class Policyevaluering(
             resultat = resultat.ikke(),
             begrunnelse = "(IKKE $begrunnelse)",
             operator = Operator.IKKE,
-            barn = singletonList()
+            barn = listOf(this)
         )
 
     override fun med(beskrivelse: String, id: String): Policyevaluering =
@@ -45,9 +46,7 @@ class Policyevaluering(
             barn = barn,
         )
 
-    override fun singletonList(): List<Policyevaluering> = listOf(this)
-
-    override fun toString(): String = """"${super.toString()}" -> $resultat("$begrunnelse")"""
+    override fun toString(): String = "${super.toString()} -> $resultat(begrunnelse: '$begrunnelse')"
 
     companion object {
         fun tillat(begrunnelse: String) = Policyevaluering(Policyavgjørelse.TILLAT, begrunnelse)

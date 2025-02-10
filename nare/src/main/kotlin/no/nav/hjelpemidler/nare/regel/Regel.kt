@@ -34,7 +34,7 @@ class Regel<T : Any>(
         Regel(
             beskrivelse = "IKKE $beskrivelse",
             id = "IKKE $id",
-            barn = singletonList(),
+            barn = listOf(this),
             implementasjon = { evaluer(it).ikke() }
         )
 
@@ -49,6 +49,4 @@ class Regel<T : Any>(
             lovreferanse = lovreferanse,
             implementasjon = implementasjon,
         )
-
-    override fun singletonList(): List<Regel<T>> = listOf(this)
 }

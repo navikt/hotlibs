@@ -2,19 +2,20 @@ package no.nav.hjelpemidler.nare.regel
 
 import no.nav.hjelpemidler.nare.core.Grunnlag
 import no.nav.hjelpemidler.nare.core.Node
+import no.nav.hjelpemidler.nare.evaluering.Evaluering
 import no.nav.hjelpemidler.nare.evaluering.Operator
 
 class Regelevaluering(
-    val resultat: Regelutfall,
-    val begrunnelse: String,
+    override val resultat: Regelutfall,
+    override val begrunnelse: String,
+    override val operator: Operator = Operator.INGEN,
     val grunnlag: Grunnlag? = emptyMap(),
     val årsak: Årsak? = null,
-    val operator: Operator = Operator.INGEN,
     val lovreferanse: Lovreferanse? = null,
     beskrivelse: String = "",
     id: String = "",
     barn: List<Regelevaluering> = emptyList(),
-) : Node<Regelevaluering>(beskrivelse, id, barn) {
+) : Node<Regelevaluering>(beskrivelse, id, barn), Evaluering<Regelutfall> {
     override fun og(annen: Regelevaluering): Regelevaluering =
         Regelevaluering(
             resultat = resultat og annen.resultat,
@@ -36,7 +37,7 @@ class Regelevaluering(
             resultat = resultat.ikke(),
             begrunnelse = "(IKKE $begrunnelse)",
             operator = Operator.IKKE,
-            barn = singletonList()
+            barn = listOf(this)
         )
 
     override fun med(beskrivelse: String, id: String): Regelevaluering =
@@ -46,28 +47,26 @@ class Regelevaluering(
         Regelevaluering(
             resultat = resultat,
             begrunnelse = begrunnelse,
+            operator = operator,
             grunnlag = grunnlag,
             årsak = årsak,
-            operator = operator,
             lovreferanse = lovreferanse,
             beskrivelse = beskrivelse,
             id = id,
             barn = barn,
         )
 
-    override fun singletonList(): List<Regelevaluering> = listOf(this)
-
-    override fun toString(): String = """"${super.toString()}" -> $resultat("$begrunnelse")"""
+    override fun toString(): String = "${super.toString()} -> $resultat(begrunnelse: '$begrunnelse')"
 
     companion object {
         fun ja(begrunnelse: String, grunnlag: Grunnlag? = emptyMap()): Regelevaluering =
-            Regelevaluering(Regelutfall.JA, begrunnelse, grunnlag)
+            Regelevaluering(Regelutfall.JA, begrunnelse, grunnlag = grunnlag)
 
         fun nei(begrunnelse: String, grunnlag: Grunnlag? = emptyMap()): Regelevaluering =
-            Regelevaluering(Regelutfall.NEI, begrunnelse, grunnlag)
+            Regelevaluering(Regelutfall.NEI, begrunnelse, grunnlag = grunnlag)
 
         fun nei(begrunnelse: String, grunnlag: Grunnlag? = emptyMap(), årsak: Årsak): Regelevaluering =
-            Regelevaluering(Regelutfall.NEI, begrunnelse, grunnlag, årsak)
+            Regelevaluering(Regelutfall.NEI, begrunnelse, grunnlag = grunnlag, årsak = årsak)
 
         fun kanskje(begrunnelse: String): Regelevaluering =
             Regelevaluering(Regelutfall.KANSKJE, begrunnelse)

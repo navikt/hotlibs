@@ -33,7 +33,7 @@ class Policy<T : Any>(
         Policy(
             beskrivelse = "IKKE $beskrivelse",
             id = "IKKE $id",
-            barn = singletonList(),
+            barn = listOf(this),
             implementasjon = { evaluer(it).ikke() }
         )
 
@@ -44,6 +44,4 @@ class Policy<T : Any>(
             barn = barn,
             implementasjon = implementasjon
         )
-
-    override fun singletonList(): List<Policy<T>> = listOf(this)
 }

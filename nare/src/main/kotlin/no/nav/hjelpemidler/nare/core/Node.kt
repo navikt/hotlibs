@@ -11,14 +11,13 @@ abstract class Node<T : Node<T>>(
 ) : LogiskOperand<T> {
     abstract fun med(beskrivelse: String, id: String): T
 
-    abstract fun singletonList(): List<T>
-
     protected fun toList(): List<T> =
         if (id.isBlank() && barn.isNotEmpty()) {
             barn
         } else {
-            singletonList()
+            @Suppress("UNCHECKED_CAST")
+            listOf(this as T)
         }
 
-    override fun toString(): String = """"$beskrivelse" (id: "$id")"""
+    override fun toString(): String = "'$beskrivelse' (id: '$id')"
 }
