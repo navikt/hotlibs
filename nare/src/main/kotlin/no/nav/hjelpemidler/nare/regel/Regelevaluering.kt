@@ -1,5 +1,7 @@
 package no.nav.hjelpemidler.nare.regel
 
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonInclude.Include
 import no.nav.hjelpemidler.nare.core.Grunnlag
 import no.nav.hjelpemidler.nare.core.Node
 import no.nav.hjelpemidler.nare.evaluering.Evaluering
@@ -9,6 +11,7 @@ class Regelevaluering(
     override val resultat: Regelutfall,
     override val begrunnelse: String,
     override val operator: Operator = Operator.INGEN,
+    @get:JsonInclude(Include.NON_EMPTY)
     val grunnlag: Grunnlag? = emptyMap(),
     val årsak: Årsak? = null,
     val lovreferanse: Lovreferanse? = null,
