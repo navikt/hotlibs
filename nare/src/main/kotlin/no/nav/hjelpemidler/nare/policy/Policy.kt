@@ -1,29 +1,31 @@
 package no.nav.hjelpemidler.nare.policy
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import no.nav.hjelpemidler.nare.core.LogiskOperand
-import no.nav.hjelpemidler.nare.core.Metadata
+import no.nav.hjelpemidler.nare.core.Node
+import no.nav.hjelpemidler.nare.spesifikasjon.Spesifikasjon
 
-data class Policy<T>(
-    override val beskrivelse: String,
-    override val id: String = "",
-    val barn: List<Policy<T>> = emptyList(),
-    @JsonIgnore val implementasjon: PolicyEvaluering.Companion.(context: T) -> PolicyEvaluering,
-) : Metadata, LogiskOperand<Policy<T>> {
-    fun evaluer(t: T): PolicyEvaluering =
-        PolicyEvaluering.implementasjon(t).copy(beskrivelse = beskrivelse, id = id)
+class Policy<T : Any>(
+    beskrivelse: String,
+    id: String = "",
+    barn: List<Policy<T>> = emptyList(),
+    @get:JsonIgnore val implementasjon: Policyevaluering.Companion.(kontekst: T) -> Policyevaluering,
+) : Node<Policy<T>>(beskrivelse, id, barn), Spesifikasjon<T, Policyevaluering> {
+    override fun evaluer(kontekst: T): Policyevaluering =
+        Policyevaluering
+            .implementasjon(kontekst)
+            .med(beskrivelse, id)
 
-    override infix fun og(annen: Policy<T>): Policy<T> =
+    override fun og(annen: Policy<T>): Policy<T> =
         Policy(
             beskrivelse = "$beskrivelse OG ${annen.beskrivelse}",
-            barn = this.policyEllerBarn() + annen.policyEllerBarn(),
+            barn = toList() + annen.toList(),
             implementasjon = { evaluer(it) og annen.evaluer(it) }
         )
 
-    override infix fun eller(annen: Policy<T>): Policy<T> =
+    override fun eller(annen: Policy<T>): Policy<T> =
         Policy(
             beskrivelse = "$beskrivelse ELLER ${annen.beskrivelse}",
-            barn = this.policyEllerBarn() + annen.policyEllerBarn(),
+            barn = toList() + annen.toList(),
             implementasjon = { evaluer(it) eller annen.evaluer(it) }
         )
 
@@ -31,17 +33,17 @@ data class Policy<T>(
         Policy(
             beskrivelse = "IKKE $beskrivelse",
             id = "IKKE $id",
-            barn = listOf(this),
+            barn = singletonList(),
             implementasjon = { evaluer(it).ikke() }
         )
 
-    fun med(beskrivelse: String, id: String): Policy<T> =
-        copy(beskrivelse = beskrivelse, id = id)
+    override fun med(beskrivelse: String, id: String): Policy<T> =
+        Policy(
+            beskrivelse = beskrivelse,
+            id = id,
+            barn = barn,
+            implementasjon = implementasjon
+        )
 
-    private fun policyEllerBarn(): List<Policy<T>> =
-        if (id.isBlank() && barn.isNotEmpty()) {
-            barn
-        } else {
-            listOf(this)
-        }
+    override fun singletonList(): List<Policy<T>> = listOf(this)
 }

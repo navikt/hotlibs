@@ -1,6 +1,6 @@
 package no.nav.hjelpemidler.nare.policy
 
-class PolicyEvalueringException(
-    evaluering: PolicyEvaluering,
+class PolicyevalueringException(
+    evaluering: Policyevaluering,
     cause: Throwable? = null,
 ) : RuntimeException("Evaluering av policy feilet med: ${evaluering.begrunnelse}", cause)
