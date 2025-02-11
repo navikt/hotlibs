@@ -1,10 +1,12 @@
 package no.nav.hjelpemidler.nare.core
 
+import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonInclude.Include
 
 abstract class Node<T : Node<T>>(
     val beskrivelse: String,
+    @get:JsonAlias("identifikator")
     val id: String,
     @get:JsonInclude(Include.NON_EMPTY)
     val barn: List<T>,

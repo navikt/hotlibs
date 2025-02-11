@@ -5,6 +5,7 @@ plugins {
 dependencies {
     // Jackson
     implementation(libs.jackson.annotations)
+    compileOnly(libs.jackson.databind)
 }
 
 @Suppress("UnstableApiUsage")
