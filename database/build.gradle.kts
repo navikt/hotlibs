@@ -36,7 +36,9 @@ dependencies {
 
     // Testcontainers
     testcontainersApi(project(path))
-    testcontainersRuntimeOnly(libs.testcontainers.postgresql) // fixme -> kunne vi valgt oracle hvis oracle-capability?
+    testcontainersRuntimeOnly(libs.testcontainers.postgresql) { // fixme -> kunne vi valgt oracle hvis oracle-capability?
+        exclude("junit", "junit")
+    }
 }
 
 
