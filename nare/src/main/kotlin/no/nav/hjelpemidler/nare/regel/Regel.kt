@@ -9,11 +9,11 @@ class Regel<T : Any>(
     id: String = "",
     barn: List<Regel<T>> = emptyList(),
     val lovreferanse: Lovreferanse? = null,
-    @get:JsonIgnore val implementasjon: Regelevaluering.Companion.(kontekst: T) -> Regelevaluering,
+    @get:JsonIgnore val implementasjon: Regelevaluering.Companion.(context: T) -> Regelevaluering,
 ) : Node<Regel<T>>(beskrivelse, id, barn), Spesifikasjon<T, Regelevaluering> {
-    override fun evaluer(kontekst: T): Regelevaluering =
+    override fun evaluer(context: T): Regelevaluering =
         Regelevaluering
-            .implementasjon(kontekst)
+            .implementasjon(context)
             .med(beskrivelse, id, lovreferanse)
 
     override fun og(annen: Regel<T>): Regel<T> =

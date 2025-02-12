@@ -8,11 +8,11 @@ class Policy<T : Any>(
     beskrivelse: String,
     id: String = "",
     barn: List<Policy<T>> = emptyList(),
-    @get:JsonIgnore val implementasjon: Policyevaluering.Companion.(kontekst: T) -> Policyevaluering,
+    @get:JsonIgnore val implementasjon: Policyevaluering.Companion.(context: T) -> Policyevaluering,
 ) : Node<Policy<T>>(beskrivelse, id, barn), Spesifikasjon<T, Policyevaluering> {
-    override fun evaluer(kontekst: T): Policyevaluering =
+    override fun evaluer(context: T): Policyevaluering =
         Policyevaluering
-            .implementasjon(kontekst)
+            .implementasjon(context)
             .med(beskrivelse, id)
 
     override fun og(annen: Policy<T>): Policy<T> =

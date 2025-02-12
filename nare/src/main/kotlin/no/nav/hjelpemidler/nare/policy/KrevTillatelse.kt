@@ -1,10 +1,10 @@
 package no.nav.hjelpemidler.nare.policy
 
-infix fun <T : Any> T.kan(policy: Policy<T>): Policyevaluering = policy.evaluer(this)
-infix fun <T : Any> T.kanIkke(policy: Policy<T>): Policyevaluering = policy.evaluer(this).ikke()
+infix fun <T : PolicyContext> T.kan(policy: Policy<T>): Policyevaluering = policy.evaluer(this)
+infix fun <T : PolicyContext> T.kanIkke(policy: Policy<T>): Policyevaluering = policy.evaluer(this).ikke()
 
-inline fun <T : Any, R> Policy<T>.krevTillatelseEllerKast(kontekst: T, block: (Policyevaluering) -> R): R =
-    evaluer(kontekst).let {
+inline fun <T : Any, R> Policy<T>.krevTillatelseEllerKast(context: T, block: (Policyevaluering) -> R): R =
+    evaluer(context).let {
         if (it.resultat == Policyavgjørelse.TILLAT) {
             block(it)
         } else {
@@ -12,17 +12,17 @@ inline fun <T : Any, R> Policy<T>.krevTillatelseEllerKast(kontekst: T, block: (P
         }
     }
 
-inline fun <T : Any, R> Policy<T>.krevTillatelse(kontekst: T, block: (Policyevaluering) -> R): Any =
-    evaluer(kontekst).let {
+inline fun <T : Any, R> Policy<T>.krevTillatelse(context: T, block: (Policyevaluering) -> R): Result<R> =
+    evaluer(context).let {
         if (it.resultat == Policyavgjørelse.TILLAT) {
-            block(it)
+            Result.success(block(it))
         } else {
-            it
+            Result.failure(PolicyevalueringException(it))
         }
-    } ?: Policyevaluering.nekt("Kunne ikke evaluere policy")
+    }
 
-inline fun <T : Any, R> krevTillatelseEllerKast(kontekst: T, policy: Policy<T>, block: (Policyevaluering) -> R): R =
-    policy.krevTillatelseEllerKast(kontekst, block)
+inline fun <T : Any, R> krevTillatelseEllerKast(context: T, policy: Policy<T>, block: (Policyevaluering) -> R): R =
+    policy.krevTillatelseEllerKast(context, block)
 
-inline fun <T : Any, R> krevTillatelse(kontekst: T, policy: Policy<T>, block: (Policyevaluering) -> R): Any =
-    policy.krevTillatelse(kontekst, block)
+inline fun <T : Any, R> krevTillatelse(context: T, policy: Policy<T>, block: (Policyevaluering) -> R): Result<R> =
+    policy.krevTillatelse(context, block)
