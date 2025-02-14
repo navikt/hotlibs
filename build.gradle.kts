@@ -9,6 +9,7 @@ versionCatalogUpdate {
         versions.addAll(
             "kotest",
             "kotlin",
+            "protobuf",
             "slf4j",
             "tbdLibs",
         )
