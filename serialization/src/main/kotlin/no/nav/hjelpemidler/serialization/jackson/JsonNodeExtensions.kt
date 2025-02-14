@@ -1,6 +1,7 @@
 package no.nav.hjelpemidler.serialization.jackson
 
 import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.node.MissingNode
 import com.fasterxml.jackson.module.kotlin.treeToValue
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import java.util.UUID
@@ -15,4 +16,7 @@ fun JsonNode.fødselsnummerValue(): Fødselsnummer = Fødselsnummer(textValue())
 fun JsonNode.fødselsnummerValueOrNull(): Fødselsnummer? = textValue()?.let(::Fødselsnummer)
 
 inline fun <reified T : Any> JsonNode.value(): T = jsonMapper.treeToValue<T>(this)
-inline fun <reified T> JsonNode?.valueOrNull(): T? = this?.let<JsonNode, T>(jsonMapper::treeToValue)
+inline fun <reified T> JsonNode?.valueOrNull(): T? =
+    this
+        ?.takeIf { it !is MissingNode }
+        ?.let<JsonNode, T>(jsonMapper::treeToValue)
