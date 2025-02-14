@@ -10,11 +10,17 @@ interface QueryParameter<out T> {
 
 typealias QueryParameters = Map<String, Any?>
 
+fun Boolean?.toQueryParameters(key: String): QueryParameters = mapOf(key to this)
+fun Id<*>?.toQueryParameters(key: String = "id"): QueryParameters = mapOf(key to this?.value)
 fun Int?.toQueryParameters(key: String = "id"): QueryParameters = mapOf(key to this)
 fun Long?.toQueryParameters(key: String = "id"): QueryParameters = mapOf(key to this)
-fun String?.toQueryParameters(key: String = "id"): QueryParameters = mapOf(key to this)
-fun Id<*>?.toQueryParameters(key: String = "id"): QueryParameters = mapOf(key to this)
-fun <T> QueryParameter<T>?.toQueryParameters(key: String = "id"): QueryParameters = mapOf(key to this)
+fun String?.toQueryParameters(key: String): QueryParameters = mapOf(key to this)
+
+fun <E : Enum<E>> Enum<E>?.toQueryParameters(key: String): QueryParameters = mapOf(key to this?.name)
+fun <T> QueryParameter<T>?.toQueryParameters(key: String): QueryParameters = mapOf(key to this?.queryParameter)
+
+inline fun <reified T : Comparable<T>> Collection<Id<T>>?.toQueryParameters(key: String = "id"): QueryParameters =
+    mapOf(key to this?.map(Id<T>::value)?.toTypedArray())
 
 /**
  * Transformer til verdier som støttes av JDBC direkte.
