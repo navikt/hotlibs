@@ -13,7 +13,7 @@ abstract class Node<T : Node<T>>(
 ) : LogiskOperand<T> {
     abstract fun med(beskrivelse: String, id: String): T
 
-    protected fun toList(): List<T> =
+    fun toList(): List<T> =
         if (id.isBlank() && barn.isNotEmpty()) {
             barn
         } else {

@@ -20,4 +20,9 @@ enum class Regelutfall : LogiskOperand<Regelutfall> {
         override fun eller(annen: Regelutfall): Regelutfall = if (annen == NEI) KANSKJE else annen
         override fun ikke(): Regelutfall = KANSKJE
     },
+    ;
+
+    val ja: Boolean get() = this == JA
+    val nei: Boolean get() = this == NEI
+    val kanskje: Boolean get() = this == KANSKJE
 }

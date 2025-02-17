@@ -20,4 +20,9 @@ enum class Policyavgjørelse : LogiskOperand<Policyavgjørelse> {
         override fun eller(annen: Policyavgjørelse): Policyavgjørelse = if (annen == NEKT) IKKE_AKTUELT else annen
         override fun ikke(): Policyavgjørelse = IKKE_AKTUELT
     },
+    ;
+
+    val tillat: Boolean get() = this == TILLAT
+    val nekt: Boolean get() = this == NEKT
+    val ikkeAktuelt: Boolean get() = this == IKKE_AKTUELT
 }
