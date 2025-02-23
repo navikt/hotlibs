@@ -5,10 +5,10 @@ import kotlin.test.Test
 
 class RegelTest {
     private val r1 = Regel<String>("r1", lovreferanse = Lovreferanse("$1", "http://lovdata/1")) {
-        ja("JA")
+        Regelevaluering.ja("JA")
     }
     private val r2 = Regel<String>("r2", lovreferanse = Lovreferanse("$2", "http://lovdata/2")) {
-        nei("NEI")
+        Regelevaluering.nei("NEI")
     }
     private val r3 = r1 og r2
     private val r4 = r1 eller r2

@@ -9,25 +9,23 @@ class Regel<T : Any>(
     id: String = "",
     barn: List<Regel<T>> = emptyList(),
     val lovreferanse: Lovreferanse? = null,
-    @get:JsonIgnore val implementasjon: Regelevaluering.Companion.(context: T) -> Regelevaluering,
+    @get:JsonIgnore val block: (context: T) -> Regelevaluering,
 ) : Node<Regel<T>>(beskrivelse, id, barn), Spesifikasjon<T, Regelevaluering> {
     override fun evaluer(context: T): Regelevaluering =
-        Regelevaluering
-            .implementasjon(context)
-            .med(beskrivelse, id, lovreferanse)
+        block(context).med(beskrivelse, id, lovreferanse)
 
     override fun og(annen: Regel<T>): Regel<T> =
         Regel(
             beskrivelse = "$beskrivelse OG ${annen.beskrivelse}",
             barn = toList() + annen.toList(),
-            implementasjon = { evaluer(it) og annen.evaluer(it) }
+            block = { evaluer(it) og annen.evaluer(it) }
         )
 
     override fun eller(annen: Regel<T>): Regel<T> =
         Regel(
             beskrivelse = "$beskrivelse ELLER ${annen.beskrivelse}",
             barn = toList() + annen.toList(),
-            implementasjon = { evaluer(it) eller annen.evaluer(it) }
+            block = { evaluer(it) eller annen.evaluer(it) }
         )
 
     override fun ikke(): Regel<T> =
@@ -35,7 +33,7 @@ class Regel<T : Any>(
             beskrivelse = "IKKE $beskrivelse",
             id = "IKKE $id",
             barn = listOf(this),
-            implementasjon = { evaluer(it).ikke() }
+            block = { evaluer(it).ikke() }
         )
 
     override fun med(beskrivelse: String, id: String): Regel<T> =
@@ -47,6 +45,6 @@ class Regel<T : Any>(
             id = id,
             barn = barn,
             lovreferanse = lovreferanse,
-            implementasjon = implementasjon,
+            block = block,
         )
 }

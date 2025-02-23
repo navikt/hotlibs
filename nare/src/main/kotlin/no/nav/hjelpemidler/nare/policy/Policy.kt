@@ -8,25 +8,23 @@ class Policy<T : Any>(
     beskrivelse: String,
     id: String = "",
     barn: List<Policy<T>> = emptyList(),
-    @get:JsonIgnore val implementasjon: Policyevaluering.Companion.(context: T) -> Policyevaluering,
+    @get:JsonIgnore val block: (context: T) -> Policyevaluering,
 ) : Node<Policy<T>>(beskrivelse, id, barn), Spesifikasjon<T, Policyevaluering> {
     override fun evaluer(context: T): Policyevaluering =
-        Policyevaluering
-            .implementasjon(context)
-            .med(beskrivelse, id)
+        block(context).med(beskrivelse, id)
 
     override fun og(annen: Policy<T>): Policy<T> =
         Policy(
             beskrivelse = "$beskrivelse OG ${annen.beskrivelse}",
             barn = toList() + annen.toList(),
-            implementasjon = { evaluer(it) og annen.evaluer(it) }
+            block = { evaluer(it) og annen.evaluer(it) }
         )
 
     override fun eller(annen: Policy<T>): Policy<T> =
         Policy(
             beskrivelse = "$beskrivelse ELLER ${annen.beskrivelse}",
             barn = toList() + annen.toList(),
-            implementasjon = { evaluer(it) eller annen.evaluer(it) }
+            block = { evaluer(it) eller annen.evaluer(it) }
         )
 
     override fun ikke(): Policy<T> =
@@ -34,7 +32,7 @@ class Policy<T : Any>(
             beskrivelse = "IKKE $beskrivelse",
             id = "IKKE $id",
             barn = listOf(this),
-            implementasjon = { evaluer(it).ikke() }
+            block = { evaluer(it).ikke() }
         )
 
     override fun med(beskrivelse: String, id: String): Policy<T> =
@@ -42,6 +40,6 @@ class Policy<T : Any>(
             beskrivelse = beskrivelse,
             id = id,
             barn = barn,
-            implementasjon = implementasjon
+            block = block
         )
 }

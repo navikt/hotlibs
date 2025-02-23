@@ -6,10 +6,10 @@ infix fun <T : PolicyContext> T.kanIkke(policy: Policy<T>): Policyevaluering = p
 @JvmName("krevTillatelseExt")
 inline fun <T : Any, R> Policy<T>.krevTillatelse(context: T, block: (Policyevaluering) -> R): Result<R> =
     evaluer(context).let {
-        if (it.resultat.tillat) {
-            Result.success(block(it))
-        } else {
+        if (it.resultat.nekt) {
             Result.failure(PolicyevalueringException(it))
+        } else {
+            Result.success(block(it))
         }
     }
 
@@ -22,3 +22,12 @@ inline fun <T : Any, R> krevTillatelse(policy: Policy<T>, context: T, block: (Po
 
 inline fun <T : Any, R> krevTillatelseEllerKast(policy: Policy<T>, context: T, block: (Policyevaluering) -> R): R =
     policy.krevTillatelseEllerKast(context, block)
+
+inline fun <T : Any, R> krevTillatelse(policy: Policy<T>, contexts: Iterable<T>, block: () -> R) {
+    val policyevaluering = contexts.map(policy::evaluer).firstOrNull { it.resultat.nekt }
+    if (policyevaluering != null) {
+        Result.failure(PolicyevalueringException(policyevaluering))
+    } else {
+        Result.success(block())
+    }
+}
