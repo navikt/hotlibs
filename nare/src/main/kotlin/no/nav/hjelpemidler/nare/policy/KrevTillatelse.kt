@@ -23,11 +23,16 @@ inline fun <T : Any, R> krevTillatelse(policy: Policy<T>, context: T, block: (Po
 inline fun <T : Any, R> krevTillatelseEllerKast(policy: Policy<T>, context: T, block: (Policyevaluering) -> R): R =
     policy.krevTillatelseEllerKast(context, block)
 
-inline fun <T : Any, R> krevTillatelse(policy: Policy<T>, contexts: Iterable<T>, block: () -> R) {
-    val policyevaluering = contexts.map(policy::evaluer).firstOrNull { it.resultat.nekt }
-    if (policyevaluering != null) {
-        Result.failure(PolicyevalueringException(policyevaluering))
+inline fun <T : Any, R> krevTillatelse(
+    policy: Policy<T>,
+    contexts: Iterable<T>,
+    block: (List<Policyevaluering>) -> R,
+): Result<R> {
+    val policyevalueringer = contexts.map(policy::evaluer)
+    val nekt = policyevalueringer.firstOrNull { it.resultat.nekt }
+    return if (nekt != null) {
+        Result.failure(PolicyevalueringException(nekt))
     } else {
-        Result.success(block())
+        Result.success(block(policyevalueringer))
     }
 }
