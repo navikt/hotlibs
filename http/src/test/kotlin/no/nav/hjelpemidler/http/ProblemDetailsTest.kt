@@ -57,8 +57,8 @@ class ProblemDetailsTest {
         detailsJson shouldEqualSpecifiedJson """
             {
               "type" : "no.nav.hjelpemidler.http.TestException",
-              "title" : "Noe gikk galt!",
-              "status" : 409,
+              "title" : "TestException",
+              "status" : 503,
               "detail" : "Kunne ikke kontakte ekstern tjeneste!",
               "cause" : "java.lang.RuntimeException: Og dette er grunnen!"
             }
@@ -69,5 +69,5 @@ class ProblemDetailsTest {
 
 private class TestException(override val cause: Throwable?) : RuntimeException("Noe gikk galt!", cause),
     HttpStatusCodeProvider {
-    override val status: HttpStatusCode get() = HttpStatusCode.Conflict
+    override val status: HttpStatusCode get() = HttpStatusCode.ServiceUnavailable
 }

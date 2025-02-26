@@ -32,7 +32,7 @@ data class ProblemDetails(
     @get:JsonSerialize(using = HttpStatusCodeSerializer::class)
     @get:JsonDeserialize(using = HttpStatusCodeDeserializer::class)
     val status: HttpStatusCode? = null,
-    val detail: String? = status?.description,
+    val detail: String? = null,
     val instance: URI? = null,
     @get:JsonAnyGetter
     @set:JsonAnySetter
@@ -41,9 +41,9 @@ data class ProblemDetails(
 ) {
     constructor(
         throwable: Throwable,
-        title: String? = throwable.message,
+        title: String? = throwable.title,
         status: HttpStatusCode? = throwable.status,
-        detail: String? = status?.description,
+        detail: String? = throwable.message,
         instance: URI? = null,
         extensions: Map<String, Any?> = emptyMap(),
     ) : this(
@@ -96,12 +96,18 @@ private class HttpStatusCodeDeserializer : StdDeserializer<HttpStatusCode>(HttpS
 }
 
 private val Throwable.type: URI
-    get() = javaClass.name
-        .replace("Kt$", "/")
-        .replace('$', '/')
-        .split('/')
-        .joinToString("/") { URLEncoder.encode(it, Charsets.UTF_8) }
-        .let(::URI)
+    get() {
+        val qualifiedName = this::class.qualifiedName ?: return ProblemDetails.DEFAULT_TYPE
+        return qualifiedName
+            .replace("Kt$", "/")
+            .replace('$', '/')
+            .split('/')
+            .joinToString("/") { URLEncoder.encode(it, Charsets.UTF_8) }
+            .let(::URI)
+    }
+
+private val Throwable.title: String?
+    get() = this::class.simpleName
 
 private val Throwable.status: HttpStatusCode
     get() = if (this is HttpStatusCodeProvider) status else HttpStatusCode.InternalServerError
