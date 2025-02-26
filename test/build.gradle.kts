@@ -5,6 +5,7 @@ plugins {
 dependencies {
     api(libs.kotlinx.coroutines.test)
     api(libs.kotest.assertions.core)
+    api(libs.kotest.assertions.json)
     api(libs.mockk) {
         exclude("junit", "junit")
     }
