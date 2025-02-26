@@ -58,6 +58,14 @@ data class ProblemDetails(
         ).plus(extensions).filterNot { it.value == null },
     )
 
+    fun toSpecification(): Map<String, Any?> = mapOf(
+        "type" to type.toString(),
+        "title" to title,
+        "status" to status?.value,
+        "detail" to detail,
+        "instance" to instance?.toString(),
+    ) + extensions
+
     companion object {
         val DEFAULT_TYPE: URI = URI.create("about:blank")
         val INCLUDE_STACK_TRACE: Boolean = !Environment.current.isProd
