@@ -49,20 +49,25 @@ class ProblemDetailsTest {
 
     @Test
     fun `Lager forventet JSON`() {
-        val throwable = IllegalStateException("Noe gikk galt!", RuntimeException("Og dette er grunnen!"))
+        val throwable = TestException(RuntimeException("Og dette er grunnen!"))
         val details = ProblemDetails(throwable, detail = "Kunne ikke kontakte ekstern tjeneste!")
 
         val detailsJson = valueToJson(details)
 
         detailsJson shouldEqualSpecifiedJson """
             {
-              "type" : "java.lang.IllegalStateException",
+              "type" : "no.nav.hjelpemidler.http.TestException",
               "title" : "Noe gikk galt!",
-              "status" : 500,
+              "status" : 409,
               "detail" : "Kunne ikke kontakte ekstern tjeneste!",
               "cause" : "java.lang.RuntimeException: Og dette er grunnen!"
             }
         """.trimIndent()
         detailsJson.shouldContainJsonKey("stackTrace")
     }
+}
+
+private class TestException(override val cause: Throwable?) : RuntimeException("Noe gikk galt!", cause),
+    HttpStatusCodeProvider {
+    override val status: HttpStatusCode get() = HttpStatusCode.Conflict
 }
