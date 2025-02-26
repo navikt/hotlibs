@@ -32,7 +32,7 @@ data class ProblemDetails(
     @get:JsonSerialize(using = HttpStatusCodeSerializer::class)
     @get:JsonDeserialize(using = HttpStatusCodeDeserializer::class)
     val status: HttpStatusCode? = null,
-    val detail: String? = null,
+    val detail: String? = status?.description,
     val instance: URI? = null,
     @get:JsonAnyGetter
     @set:JsonAnySetter
