@@ -42,7 +42,7 @@ data class ProblemDetails(
     constructor(
         throwable: Throwable,
         title: String? = throwable.message,
-        status: HttpStatusCode? = if (throwable is HttpStatusCodeProvider) throwable.status else HttpStatusCode.InternalServerError,
+        status: HttpStatusCode? = throwable.status,
         detail: String? = status?.description,
         instance: URI? = null,
         extensions: Map<String, Any?> = emptyMap(),
@@ -52,10 +52,10 @@ data class ProblemDetails(
         status = status,
         detail = detail,
         instance = instance,
-        extensions = extensions + mapOf(
+        extensions = mapOf(
             "cause" to throwable.cause?.toString(),
             "stackTrace" to if (INCLUDE_STACK_TRACE) throwable.stackTraceToString() else null,
-        ).filterNot { it.value == null },
+        ).plus(extensions).filterNot { it.value == null },
     )
 
     companion object {
@@ -92,5 +92,8 @@ private val Throwable.type: URI
         .replace("Kt$", "/")
         .replace('$', '/')
         .split('/')
-        .joinToString("/") { URLEncoder.encode(it, Charsets.UTF_8.name()) }
+        .joinToString("/") { URLEncoder.encode(it, Charsets.UTF_8) }
         .let(::URI)
+
+private val Throwable.status: HttpStatusCode
+    get() = if (this is HttpStatusCodeProvider) status else HttpStatusCode.InternalServerError
