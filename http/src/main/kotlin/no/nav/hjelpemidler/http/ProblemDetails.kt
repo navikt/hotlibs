@@ -41,16 +41,14 @@ data class ProblemDetails(
 ) {
     constructor(
         throwable: Throwable,
-        title: String? = throwable.title,
         status: HttpStatusCode? = throwable.status,
-        detail: String? = throwable.message,
         instance: URI? = null,
         extensions: Map<String, Any?> = emptyMap(),
     ) : this(
         type = throwable.type,
-        title = title,
+        title = throwable.title,
         status = status,
-        detail = detail,
+        detail = throwable.message,
         instance = instance,
         extensions = mapOf(
             "cause" to throwable.cause?.toString(),
@@ -96,18 +94,15 @@ private class HttpStatusCodeDeserializer : StdDeserializer<HttpStatusCode>(HttpS
 }
 
 private val Throwable.type: URI
-    get() {
-        val qualifiedName = this::class.qualifiedName ?: return ProblemDetails.DEFAULT_TYPE
-        return qualifiedName
-            .replace("Kt$", "/")
-            .replace('$', '/')
-            .split('/')
-            .joinToString("/") { URLEncoder.encode(it, Charsets.UTF_8) }
-            .let(::URI)
-    }
+    get() = javaClass.name
+        .replace("Kt$", "/")
+        .replace('$', '/')
+        .split('/')
+        .joinToString("/") { URLEncoder.encode(it, Charsets.UTF_8) }
+        .let(::URI)
 
 private val Throwable.title: String?
-    get() = this::class.simpleName
+    get() = javaClass.simpleName
 
 private val Throwable.status: HttpStatusCode
     get() = if (this is HttpStatusCodeProvider) status else HttpStatusCode.InternalServerError

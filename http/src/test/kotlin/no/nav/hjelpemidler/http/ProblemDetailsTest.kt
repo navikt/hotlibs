@@ -50,7 +50,7 @@ class ProblemDetailsTest {
     @Test
     fun `Lager forventet JSON`() {
         val throwable = TestException(RuntimeException("Og dette er grunnen!"))
-        val details = ProblemDetails(throwable, detail = "Kunne ikke kontakte ekstern tjeneste!")
+        val details = ProblemDetails(throwable)
 
         val detailsJson = valueToJson(details)
 
@@ -59,7 +59,7 @@ class ProblemDetailsTest {
               "type" : "no.nav.hjelpemidler.http.TestException",
               "title" : "TestException",
               "status" : 503,
-              "detail" : "Kunne ikke kontakte ekstern tjeneste!",
+              "detail" : "Noe gikk galt!",
               "cause" : "java.lang.RuntimeException: Og dette er grunnen!"
             }
         """.trimIndent()
