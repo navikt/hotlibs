@@ -60,6 +60,11 @@ class Kommune(
         val BERGEN = Kommune("4601", "Bergen")
 
         /**
+         * @see <a href="https://digihot-oppslag.intern.dev.nav.no/api/geografi/kommuner/4647">DigiHoT Oppslag</a>
+         */
+        val SUNNFJORD = Kommune("4647", "Sunnfjord")
+
+        /**
          * @see <a href="https://digihot-oppslag.intern.dev.nav.no/api/geografi/kommuner/5001">DigiHoT Oppslag</a>
          */
         val TRONDHEIM = Kommune("5001", "Trondheim")
