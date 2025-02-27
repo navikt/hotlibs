@@ -18,7 +18,6 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
-import no.nav.hjelpemidler.collections.filterNotNull
 import no.nav.hjelpemidler.collections.mapOfNotNull
 import no.nav.hjelpemidler.configuration.Environment
 import java.net.URI
@@ -69,7 +68,7 @@ data class ProblemDetails(
         extensions = mapOfNotNull(
             "cause" to throwable.cause?.toString(),
             "stackTrace" to if (DEBUG) throwable.stackTraceToString() else null,
-        ).plus(extensions)
+        ) + extensions
     )
 
     /**
@@ -89,7 +88,7 @@ data class ProblemDetails(
         "status" to status?.value,
         "detail" to detail,
         "instance" to instance?.toString(),
-    ) + extensions.filterNotNull()
+    ) + extensions
 
     companion object {
         val DEFAULT_TYPE: URI = URI.create("about:blank")
