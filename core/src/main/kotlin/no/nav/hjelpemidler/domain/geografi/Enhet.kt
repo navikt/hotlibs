@@ -18,6 +18,8 @@ class Enhet(
 
     /**
      * NB! Ikke alle sentraler er lagt til her pt. Kun de som brukes i logikk og/eller tester.
+     *
+     * @see [no.nav.hjelpemidler.domain.geografi.EnhetTest]
      */
     companion object {
         private val validator = nummerValidator(lengde = 4)

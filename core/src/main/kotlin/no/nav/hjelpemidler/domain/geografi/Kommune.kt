@@ -15,6 +15,8 @@ class Kommune(
 
     /**
      * NB! Ikke alle kommuner er lagt til her pt. Kun de som brukes i logikk og/eller tester.
+     *
+     * @see [no.nav.hjelpemidler.domain.geografi.KommuneTest]
      */
     companion object {
         private val validator = nummerValidator(lengde = 4)
