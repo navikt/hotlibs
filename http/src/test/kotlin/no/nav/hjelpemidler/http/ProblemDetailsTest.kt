@@ -48,7 +48,23 @@ class ProblemDetailsTest {
     }
 
     @Test
-    fun `Lager forventet JSON`() {
+    fun `Lager forventet JSON for status`() {
+        val details = ProblemDetails(HttpStatusCode.Forbidden, "Ingen tilgang!", extensions = mapOf("test" to null))
+
+        val detailsJson = valueToJson(details)
+
+        detailsJson shouldEqualSpecifiedJson """
+            {
+              "type" : "io.ktor.http.HttpStatusCode",
+              "title" : "Forbidden",
+              "status" : 403,
+              "detail": "Ingen tilgang!"
+            }
+        """.trimIndent()
+    }
+
+    @Test
+    fun `Lager forventet JSON for throwable`() {
         val throwable = TestException(RuntimeException("Og dette er grunnen!"))
         val details = ProblemDetails(throwable)
 

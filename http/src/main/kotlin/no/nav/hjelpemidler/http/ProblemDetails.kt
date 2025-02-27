@@ -18,6 +18,7 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
+import no.nav.hjelpemidler.collections.filterNotNull
 import no.nav.hjelpemidler.configuration.Environment
 import java.net.URI
 import java.net.URLEncoder
@@ -36,9 +37,23 @@ data class ProblemDetails(
     val instance: URI? = null,
     @get:JsonAnyGetter
     @set:JsonAnySetter
-    @get:JsonInclude(Include.NON_EMPTY)
+    @get:JsonInclude(Include.NON_EMPTY, content = Include.NON_NULL)
     var extensions: Map<String, Any?> = emptyMap(),
 ) {
+    constructor(
+        status: HttpStatusCode,
+        detail: String? = null,
+        instance: URI? = null,
+        extensions: Map<String, Any?> = emptyMap(),
+    ) : this(
+        type = HTTP_STATUS_CODE_TYPE,
+        title = status.description,
+        status = status,
+        detail = detail,
+        instance = instance,
+        extensions = extensions,
+    )
+
     constructor(
         throwable: Throwable,
         status: HttpStatusCode? = throwable.status,
@@ -52,9 +67,20 @@ data class ProblemDetails(
         instance = instance,
         extensions = mapOf(
             "cause" to throwable.cause?.toString(),
-            "stackTrace" to if (INCLUDE_STACK_TRACE) throwable.stackTraceToString() else null,
-        ).plus(extensions).filterNot { it.value == null },
+            "stackTrace" to if (DEBUG) throwable.stackTraceToString() else null,
+        ).plus(extensions)
     )
+
+    /**
+     * Fjern [detail] hvis [HttpStatusCode.Unauthorized] eller [HttpStatusCode.Forbidden].
+     */
+    fun sanitize(): ProblemDetails {
+        if (DEBUG) return this
+        return when (status) {
+            HttpStatusCode.Unauthorized, HttpStatusCode.Forbidden -> copy(detail = null)
+            else -> this
+        }
+    }
 
     fun toSpecification(): Map<String, Any?> = mapOf(
         "type" to type.toString(),
@@ -62,11 +88,13 @@ data class ProblemDetails(
         "status" to status?.value,
         "detail" to detail,
         "instance" to instance?.toString(),
-    ) + extensions
+    ) + extensions.filterNotNull()
 
     companion object {
         val DEFAULT_TYPE: URI = URI.create("about:blank")
-        val INCLUDE_STACK_TRACE: Boolean = !Environment.current.isProd
+        val HTTP_STATUS_CODE_TYPE: URI = URI("io.ktor.http.HttpStatusCode")
+
+        private val DEBUG: Boolean = !Environment.current.isProd
     }
 }
 
