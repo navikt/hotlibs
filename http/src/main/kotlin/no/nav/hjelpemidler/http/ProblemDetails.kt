@@ -19,6 +19,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import no.nav.hjelpemidler.collections.filterNotNull
+import no.nav.hjelpemidler.collections.mapOfNotNull
 import no.nav.hjelpemidler.configuration.Environment
 import java.net.URI
 import java.net.URLEncoder
@@ -65,7 +66,7 @@ data class ProblemDetails(
         status = status,
         detail = throwable.message,
         instance = instance,
-        extensions = mapOf(
+        extensions = mapOfNotNull(
             "cause" to throwable.cause?.toString(),
             "stackTrace" to if (DEBUG) throwable.stackTraceToString() else null,
         ).plus(extensions)
@@ -82,7 +83,7 @@ data class ProblemDetails(
         }
     }
 
-    fun toSpecification(): Map<String, Any?> = mapOf(
+    fun toSpecification(): Map<String, Any?> = mapOfNotNull(
         "type" to type.toString(),
         "title" to title,
         "status" to status?.value,
