@@ -6,16 +6,16 @@ import kotlin.test.Test
 class SqlConditionTest {
     @Test
     fun `SQL AND`() {
-        (SqlCondition.TRUE and SqlCondition.FALSE).toString() shouldBe "(TRUE AND FALSE)"
+        (SqlCondition.TRUE AND SqlCondition.FALSE).toString() shouldBe "(TRUE AND FALSE)"
     }
 
     @Test
     fun `SQL OR`() {
-        (SqlCondition.TRUE or SqlCondition.FALSE).toString() shouldBe "(TRUE OR FALSE)"
+        (SqlCondition.TRUE OR SqlCondition.FALSE).toString() shouldBe "(TRUE OR FALSE)"
     }
 
     @Test
     fun `SQL NOT`() {
-        SqlCondition.TRUE.not().toString() shouldBe "(NOT (TRUE))"
+        SqlCondition.TRUE.NOT().toString() shouldBe "(NOT (TRUE))"
     }
 }

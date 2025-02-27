@@ -2,15 +2,17 @@ package no.nav.hjelpemidler.database.sql
 
 import org.intellij.lang.annotations.Language
 
+@Suppress("FunctionName")
 @JvmInline
-value class SqlCondition(@Language("SQL") private val value: String) : Comparable<SqlCondition> {
-    infix fun and(other: SqlCondition): SqlCondition =
+value class SqlCondition(@Language("SQL", prefix = "SELECT ") private val value: String) :
+    Comparable<SqlCondition> {
+    infix fun AND(other: SqlCondition): SqlCondition =
         SqlCondition("($value AND ${other.value})")
 
-    infix fun or(other: SqlCondition): SqlCondition =
+    infix fun OR(other: SqlCondition): SqlCondition =
         SqlCondition("($value OR ${other.value})")
 
-    operator fun not(): SqlCondition =
+    fun NOT(): SqlCondition =
         SqlCondition("(NOT ($value))")
 
     override fun compareTo(other: SqlCondition): Int =

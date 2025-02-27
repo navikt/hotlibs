@@ -9,7 +9,7 @@ class SqlBuilderTest {
         val sql = buildSql("SELECT * FROM foobar") {
             WHERE("foo = 'bar'")
             WHERE("bar = 'foo'")
-            WHERE(SqlCondition("x > 10") or SqlCondition("y < 10"))
+            WHERE(SqlCondition("x > 10") OR SqlCondition("y < 10"))
             ORDER_BY("foo", SqlOrderBy.Order.DESC)
             ORDER_BY("bar")
         }

@@ -17,7 +17,7 @@ class SqlBuilder internal constructor(
         conditions.add(condition)
     }
 
-    fun WHERE(@Language("SQL") condition: String) =
+    fun WHERE(@Language("SQL", prefix = "SELECT ") condition: String) =
         WHERE(SqlCondition(condition))
 
     fun WHERE(filter: SqlFilter?) {
