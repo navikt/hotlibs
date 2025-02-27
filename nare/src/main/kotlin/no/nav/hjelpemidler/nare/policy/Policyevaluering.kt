@@ -1,5 +1,6 @@
 package no.nav.hjelpemidler.nare.policy
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import no.nav.hjelpemidler.nare.core.Node
 import no.nav.hjelpemidler.nare.evaluering.Evaluering
 import no.nav.hjelpemidler.nare.evaluering.Operator
@@ -45,6 +46,10 @@ class Policyevaluering(
             id = id,
             barn = barn,
         )
+
+    val nekt: Boolean @JsonIgnore get() = resultat.nekt
+    val tillat: Boolean @JsonIgnore get() = resultat.tillat
+    val ikkeAktuelt: Boolean @JsonIgnore get() = resultat.ikkeAktuelt
 
     override fun toString(): String = "${super.toString()} -> $resultat(begrunnelse: '$begrunnelse')"
 

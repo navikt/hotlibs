@@ -1,6 +1,7 @@
 package no.nav.hjelpemidler.nare.regel
 
 import com.fasterxml.jackson.annotation.JsonAlias
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonInclude.Include
 import com.fasterxml.jackson.databind.DeserializationContext
@@ -65,6 +66,10 @@ class Regelevaluering(
             id = id,
             barn = barn,
         )
+
+    val ja: Boolean @JsonIgnore get() = resultat.ja
+    val nei: Boolean @JsonIgnore get() = resultat.nei
+    val kanskje: Boolean @JsonIgnore get() = resultat.kanskje
 
     override fun toString(): String = "${super.toString()} -> $resultat(begrunnelse: '$begrunnelse')"
 
