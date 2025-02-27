@@ -25,6 +25,16 @@ class Kommune(
         val OSLO = Kommune("0301", "Oslo")
 
         /**
+         * @see <a href="https://digihot-oppslag.intern.dev.nav.no/api/geografi/kommuner/1508">DigiHoT Oppslag</a>
+         */
+        val ÅLESUND = Kommune("1508", "Ålesund")
+
+        /**
+         * @see <a href="https://digihot-oppslag.intern.dev.nav.no/api/geografi/kommuner/3120">DigiHoT Oppslag</a>
+         */
+        val RAKKESTAD = Kommune("3120", "Rakkestad")
+
+        /**
          * @see <a href="https://digihot-oppslag.intern.dev.nav.no/api/geografi/kommuner/3201">DigiHoT Oppslag</a>
          */
         val BÆRUM = Kommune("3201", "Bærum")
@@ -35,9 +45,9 @@ class Kommune(
         val ASKER = Kommune("3203", "Asker")
 
         /**
-         * @see <a href="https://digihot-oppslag.intern.dev.nav.no/api/geografi/kommuner/3120">DigiHoT Oppslag</a>
+         * @see <a href="https://digihot-oppslag.intern.dev.nav.no/api/geografi/kommuner/3907">DigiHoT Oppslag</a>
          */
-        val RAKKESTAD = Kommune("3120", "Rakkestad")
+        val SANDEFJORD = Kommune("3907", "Sandefjord")
 
         /**
          * @see <a href="https://digihot-oppslag.intern.dev.nav.no/api/geografi/kommuner/4204">DigiHoT Oppslag</a>
