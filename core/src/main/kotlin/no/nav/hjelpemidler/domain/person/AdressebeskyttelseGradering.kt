@@ -1,51 +1,59 @@
 package no.nav.hjelpemidler.domain.person
 
+import no.nav.hjelpemidler.domain.person.AdressebeskyttelseGradering.Kategori
+
 /**
  * @see <a href="https://pdl-docs.ansatt.nav.no/ekstern/index.html#_adressebeskyttelse_2">Persondataløsningen (PDL) - Adressebeskyttelse</a>
  */
-enum class AdressebeskyttelseGradering {
+enum class AdressebeskyttelseGradering(val kategori: Kategori) {
     /**
      * Tidligere diskresjonskode 6 + utland.
      */
-    STRENGT_FORTROLIG_UTLAND,
+    STRENGT_FORTROLIG_UTLAND(Kategori.STRENGT_FORTROLIG),
 
     /**
      * Tidligere diskresjonskode 6.
      */
-    STRENGT_FORTROLIG,
+    STRENGT_FORTROLIG(Kategori.STRENGT_FORTROLIG),
 
     /**
      * Tidligere diskresjonskode 7.
      */
-    FORTROLIG,
+    FORTROLIG(Kategori.FORTROLIG),
 
     /**
      * NB! "Ingen tilfeller per i dag i produksjon" i følge Persondataløsningens (PDL) dokumentasjon.
      */
-    UGRADERT,
+    UGRADERT(Kategori.UGRADERT),
+    ;
+
+    val erStrengtFortrolig: Boolean get() = kategori.erStrengtFortrolig
+    val erFortrolig: Boolean get() = kategori.erFortrolig
+    val erGradert: Boolean get() = kategori.erGradert
+
+    enum class Kategori(internal val kode: Int) {
+        STRENGT_FORTROLIG(kode = 6),
+        FORTROLIG(kode = 7),
+        UGRADERT(kode = Int.MAX_VALUE),
+        ;
+
+        val erStrengtFortrolig: Boolean get() = this == STRENGT_FORTROLIG
+        val erFortrolig: Boolean get() = this == FORTROLIG
+        val erGradert: Boolean get() = this != UGRADERT
+    }
 }
 
-/**
- * Tidligere diskresjonskode 6.
- *
- * @see [AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND]
- * @see [AdressebeskyttelseGradering.STRENGT_FORTROLIG]
- */
-val Collection<AdressebeskyttelseGradering>.erStrengtFortrolig: Boolean
-    get() = AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND in this || AdressebeskyttelseGradering.STRENGT_FORTROLIG in this
+val AdressebeskyttelseGradering?.kategori: Kategori get() = this?.kategori ?: Kategori.UGRADERT
+
+val AdressebeskyttelseGradering?.erStrengtFortrolig: Boolean get() = kategori.erStrengtFortrolig
+val AdressebeskyttelseGradering?.erFortrolig: Boolean get() = kategori.erFortrolig
+val AdressebeskyttelseGradering?.erGradert: Boolean get() = kategori.erGradert
 
 /**
- * Tidligere diskresjonskode 7.
- *
- * @see [AdressebeskyttelseGradering.FORTROLIG]
+ * Finn strengeste kategori basert på laveste [Kategori.kode].
  */
-val Collection<AdressebeskyttelseGradering>.erFortrolig: Boolean
-    get() = AdressebeskyttelseGradering.FORTROLIG in this
+val Collection<AdressebeskyttelseGradering>.kategori: Kategori
+    get() = map(AdressebeskyttelseGradering::kategori).minByOrNull(Kategori::kode) ?: Kategori.UGRADERT
 
-/**
- * Ingen gradering eller kun [AdressebeskyttelseGradering.UGRADERT].
- *
- * @see [AdressebeskyttelseGradering.UGRADERT]
- */
-val Collection<AdressebeskyttelseGradering>.erUgradert: Boolean
-    get() = minus(AdressebeskyttelseGradering.UGRADERT).isEmpty()
+val Collection<AdressebeskyttelseGradering>.erGradert: Boolean
+    get() = kategori.erGradert
