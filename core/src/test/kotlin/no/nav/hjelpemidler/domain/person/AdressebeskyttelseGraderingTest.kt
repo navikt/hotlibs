@@ -17,25 +17,25 @@ class AdressebeskyttelseGraderingTest {
         ).forAll { gradering ->
             gradering.kategori shouldBe Kategori.STRENGT_FORTROLIG
 
-            gradering.erStrengtFortrolig shouldBe true
-            gradering.erFortrolig shouldBe false
-            gradering.erGradert shouldBe true
+            gradering.strengtFortrolig shouldBe true
+            gradering.fortrolig shouldBe false
+            gradering.gradert shouldBe true
         }
 
         AdressebeskyttelseGradering.FORTROLIG.should { gradering ->
             gradering.kategori shouldBe Kategori.FORTROLIG
 
-            gradering.erStrengtFortrolig shouldBe false
-            gradering.erFortrolig shouldBe true
-            gradering.erGradert shouldBe true
+            gradering.strengtFortrolig shouldBe false
+            gradering.fortrolig shouldBe true
+            gradering.gradert shouldBe true
         }
 
         setOf(AdressebeskyttelseGradering.UGRADERT, null).forAll { gradering ->
             gradering.kategori shouldBe Kategori.UGRADERT
 
-            gradering.erStrengtFortrolig shouldBe false
-            gradering.erFortrolig shouldBe false
-            gradering.erGradert shouldBe false
+            gradering.strengtFortrolig shouldBe false
+            gradering.fortrolig shouldBe false
+            gradering.gradert shouldBe false
         }
     }
 
@@ -49,11 +49,11 @@ class AdressebeskyttelseGraderingTest {
         ).should { gradering ->
             gradering.kategori shouldBe Kategori.STRENGT_FORTROLIG
 
-            gradering.kategori.erStrengtFortrolig shouldBe true
-            gradering.kategori.erFortrolig shouldBe false
-            gradering.kategori.erGradert shouldBe true
+            gradering.kategori.strengtFortrolig shouldBe true
+            gradering.kategori.fortrolig shouldBe false
+            gradering.kategori.gradert shouldBe true
 
-            gradering.erGradert shouldBe true
+            gradering.gradert shouldBe true
         }
     }
 
@@ -66,11 +66,11 @@ class AdressebeskyttelseGraderingTest {
         ).should { gradering ->
             gradering.kategori shouldBe Kategori.STRENGT_FORTROLIG
 
-            gradering.kategori.erStrengtFortrolig shouldBe true
-            gradering.kategori.erFortrolig shouldBe false
-            gradering.kategori.erGradert shouldBe true
+            gradering.kategori.strengtFortrolig shouldBe true
+            gradering.kategori.fortrolig shouldBe false
+            gradering.kategori.gradert shouldBe true
 
-            gradering.erGradert shouldBe true
+            gradering.gradert shouldBe true
         }
     }
 
@@ -82,11 +82,11 @@ class AdressebeskyttelseGraderingTest {
         ).should { gradering ->
             gradering.kategori shouldBe Kategori.FORTROLIG
 
-            gradering.kategori.erStrengtFortrolig shouldBe false
-            gradering.kategori.erFortrolig shouldBe true
-            gradering.kategori.erGradert shouldBe true
+            gradering.kategori.strengtFortrolig shouldBe false
+            gradering.kategori.fortrolig shouldBe true
+            gradering.kategori.gradert shouldBe true
 
-            gradering.erGradert shouldBe true
+            gradering.gradert shouldBe true
         }
     }
 
@@ -95,11 +95,11 @@ class AdressebeskyttelseGraderingTest {
         setOf(emptyEnumSet(), enumSetOf(AdressebeskyttelseGradering.UGRADERT)).forAll { gradering ->
             gradering.kategori shouldBe Kategori.UGRADERT
 
-            gradering.kategori.erStrengtFortrolig shouldBe false
-            gradering.kategori.erFortrolig shouldBe false
-            gradering.kategori.erGradert shouldBe false
+            gradering.kategori.strengtFortrolig shouldBe false
+            gradering.kategori.fortrolig shouldBe false
+            gradering.kategori.gradert shouldBe false
 
-            gradering.erGradert shouldBe false
+            gradering.gradert shouldBe false
         }
     }
 }

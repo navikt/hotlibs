@@ -27,9 +27,9 @@ enum class AdressebeskyttelseGradering(val kategori: Kategori) {
     UGRADERT(Kategori.UGRADERT),
     ;
 
-    val erStrengtFortrolig: Boolean get() = kategori.erStrengtFortrolig
-    val erFortrolig: Boolean get() = kategori.erFortrolig
-    val erGradert: Boolean get() = kategori.erGradert
+    val strengtFortrolig: Boolean get() = kategori.strengtFortrolig
+    val fortrolig: Boolean get() = kategori.fortrolig
+    val gradert: Boolean get() = kategori.gradert
 
     enum class Kategori(internal val kode: Int) {
         STRENGT_FORTROLIG(kode = 6),
@@ -37,17 +37,17 @@ enum class AdressebeskyttelseGradering(val kategori: Kategori) {
         UGRADERT(kode = Int.MAX_VALUE),
         ;
 
-        val erStrengtFortrolig: Boolean get() = this == STRENGT_FORTROLIG
-        val erFortrolig: Boolean get() = this == FORTROLIG
-        val erGradert: Boolean get() = this != UGRADERT
+        val strengtFortrolig: Boolean get() = this == STRENGT_FORTROLIG
+        val fortrolig: Boolean get() = this == FORTROLIG
+        val gradert: Boolean get() = this != UGRADERT
     }
 }
 
 val AdressebeskyttelseGradering?.kategori: Kategori get() = this?.kategori ?: Kategori.UGRADERT
 
-val AdressebeskyttelseGradering?.erStrengtFortrolig: Boolean get() = kategori.erStrengtFortrolig
-val AdressebeskyttelseGradering?.erFortrolig: Boolean get() = kategori.erFortrolig
-val AdressebeskyttelseGradering?.erGradert: Boolean get() = kategori.erGradert
+val AdressebeskyttelseGradering?.strengtFortrolig: Boolean get() = kategori.strengtFortrolig
+val AdressebeskyttelseGradering?.fortrolig: Boolean get() = kategori.fortrolig
+val AdressebeskyttelseGradering?.gradert: Boolean get() = kategori.gradert
 
 /**
  * Finn strengeste kategori basert på laveste [Kategori.kode].
@@ -55,5 +55,5 @@ val AdressebeskyttelseGradering?.erGradert: Boolean get() = kategori.erGradert
 val Collection<AdressebeskyttelseGradering>.kategori: Kategori
     get() = map(AdressebeskyttelseGradering::kategori).minByOrNull(Kategori::kode) ?: Kategori.UGRADERT
 
-val Collection<AdressebeskyttelseGradering>.erGradert: Boolean
-    get() = kategori.erGradert
+val Collection<AdressebeskyttelseGradering>.gradert: Boolean
+    get() = kategori.gradert
