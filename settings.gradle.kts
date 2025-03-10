@@ -28,7 +28,6 @@ include(
     "kafka",
     "katalog",
     "logging",
-    "metrics",
     "nare",
     "platform",
     "rapids-and-rivers",

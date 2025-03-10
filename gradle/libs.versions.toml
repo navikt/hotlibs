@@ -313,10 +313,6 @@ logging-runtime = [
     "logback-classic",
     "logstash-logback-encoder",
 ]
-metrics = [
-    "influxdb-client-kotlin",
-    "micrometer-registry-prometheus",
-]
 test = [
     "kotest-assertions-core",
     "kotest-assertions-json",
