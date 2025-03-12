@@ -10,6 +10,10 @@ interface QueryParameter<out T> {
 
 typealias QueryParameters = Map<String, Any?>
 
+interface QueryParametersProvider {
+    fun toQueryParameters(): QueryParameters
+}
+
 fun Boolean?.toQueryParameters(key: String): QueryParameters = mapOf(key to this)
 fun Id<*>?.toQueryParameters(key: String = "id"): QueryParameters = mapOf(key to this?.value)
 fun Int?.toQueryParameters(key: String = "id"): QueryParameters = mapOf(key to this)

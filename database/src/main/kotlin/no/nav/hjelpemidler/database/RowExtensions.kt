@@ -95,9 +95,9 @@ fun Row.toPersonnavn(prefix: String? = null): Personnavn = Personnavn(
 fun Enhet.toQueryParameters(): QueryParameters =
     mapOf("enhetsnummer" to nummer, "enhetsnavn" to navn)
 
-fun Row.toEnhet(): Enhet = Enhet(
-    nummer = string("enhetsnummer"),
-    navn = string("enhetsnavn"),
+fun Row.toEnhet(prefix: String? = null): Enhet = Enhet(
+    nummer = string(columnLabelOf("enhetsnummer", prefix)),
+    navn = string(columnLabelOf("enhetsnavn", prefix)),
 )
 
 // Kommune
