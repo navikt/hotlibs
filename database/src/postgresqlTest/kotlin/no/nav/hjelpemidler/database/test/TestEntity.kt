@@ -7,8 +7,8 @@ import no.nav.hjelpemidler.database.aktørIdOrNull
 import no.nav.hjelpemidler.database.enum
 import no.nav.hjelpemidler.database.fødselsnummerOrNull
 import no.nav.hjelpemidler.database.json
-import no.nav.hjelpemidler.database.jsonOrNull
 import no.nav.hjelpemidler.database.pgJsonbOf
+import no.nav.hjelpemidler.database.treeOrNull
 import no.nav.hjelpemidler.domain.person.AktørId
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.år
@@ -41,7 +41,7 @@ fun Row.toTestEntity(): TestEntity = TestEntity(
     integer = int("integer"),
     enum = enum("enum"),
     data1 = json("data_1"),
-    data2 = jsonOrNull("data_2"),
+    data2 = treeOrNull("data_2"),
     fnr = fødselsnummerOrNull("fnr"),
     aktørId = aktørIdOrNull("aktor_id"),
 )

@@ -1,5 +1,6 @@
 package no.nav.hjelpemidler.database
 
+import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import no.nav.hjelpemidler.collections.emptyEnumSet
 import no.nav.hjelpemidler.collections.toEnumSet
@@ -17,12 +18,16 @@ import java.util.UUID
 typealias Row = kotliquery.Row
 
 inline fun <reified T> Row.json(columnLabel: String): T =
-    jsonMapper.readValue(string(columnLabel), jacksonTypeRef())
+    jsonMapper.readValue(string(columnLabel), jacksonTypeRef<T>())
 
 inline fun <reified T> Row.jsonOrNull(columnLabel: String): T? =
-    stringOrNull(columnLabel)?.let {
-        jsonMapper.readValue(it, jacksonTypeRef())
-    }
+    stringOrNull(columnLabel)?.let { jsonMapper.readValue(it, jacksonTypeRef<T>()) }
+
+fun Row.tree(columnLabel: String): JsonNode =
+    jsonMapper.readTree(string(columnLabel))
+
+fun Row.treeOrNull(columnLabel: String): JsonNode? =
+    stringOrNull(columnLabel)?.let<String, JsonNode?>(jsonMapper::readTree)
 
 inline fun <reified E : Enum<E>> Row.enum(columnLabel: String): E =
     enumValueOf(string((columnLabel)))
