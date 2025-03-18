@@ -57,6 +57,12 @@ class Fødselsnummer(value: String) : PersonIdent(value) {
 fun String.toFødselsnummer(): Fødselsnummer = Fødselsnummer(this)
 
 /**
+ * Konverter til [Fødselsnummer].
+ */
+@JvmName("toFødselsnummerOrNull")
+fun String?.toFødselsnummer(): Fødselsnummer? = this?.toFødselsnummer()
+
+/**
  * Settes til `true` for å tillate syntetiske fødselsnumre.
  *
  * @see [FodselsnummerValidator.ALLOW_SYNTHETIC_NUMBERS]

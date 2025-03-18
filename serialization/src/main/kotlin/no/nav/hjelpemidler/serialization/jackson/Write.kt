@@ -1,3 +1,17 @@
 package no.nav.hjelpemidler.serialization.jackson
 
-fun valueToJson(value: Any?): String = jsonMapper.writerWithDefaultPrettyPrinter().writeValueAsString(value)
+import com.fasterxml.jackson.databind.JsonNode
+import no.nav.hjelpemidler.serialization.Json
+
+fun valueToTree(value: Any?): JsonNode = jsonMapper.valueToTree(value)
+
+fun valueToJson(value: Any?, pretty: Boolean = false): String =
+    if (pretty) {
+        jsonMapper.writerWithDefaultPrettyPrinter().writeValueAsString(value)
+    } else {
+        jsonMapper.writeValueAsString(value)
+    }
+
+fun Any?.toTree(): JsonNode = valueToTree(this)
+
+fun Any?.toJson(pretty: Boolean = false): Json = Json(valueToJson(this, pretty))

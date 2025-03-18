@@ -5,17 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.MissingNode
 import com.fasterxml.jackson.databind.node.NullNode
 import com.fasterxml.jackson.module.kotlin.readValue
+import no.nav.hjelpemidler.io.useResourceAsStream
 import java.nio.file.Path
 
 fun ObjectMapper.readResourceAsTree(name: String): JsonNode =
-    requireNotNull(this::class.java.getResourceAsStream(name)) { "Fant ikke resource: '$name'" }.use {
-        readTree(it)
-    }
+    this::class.useResourceAsStream<JsonNode>(name, ::readTree)
 
 inline fun <reified T> ObjectMapper.readResourceAsValue(name: String): T =
-    requireNotNull(this::class.java.getResourceAsStream(name)) { "Fant ikke resource: '$name'" }.use {
-        readValue<T>(it)
-    }
+    this::class.useResourceAsStream(name, ::readValue)
 
 fun ObjectMapper.readTree(path: Path): JsonNode = readTree(path.toFile())
 

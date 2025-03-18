@@ -1,12 +1,12 @@
 package no.nav.hjelpemidler.serialization.jackson
 
 import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.module.kotlin.readValue
+import no.nav.hjelpemidler.serialization.Json
 import org.intellij.lang.annotations.Language
 
-fun jsonToTree(@Language("JSON") content: String): JsonNode = jsonMapper.readTree(content)
+fun jsonToTree(@Language("JSON") content: String): JsonNode = Json(content).toTree()
 
-inline fun <reified T> jsonToValue(@Language("JSON") content: String): T = jsonMapper.readValue<T>(content)
+inline fun <reified T> jsonToValue(@Language("JSON") content: String): T = Json(content).toValue<T>()
 
 fun jsonResourceToTree(name: String): JsonNode = jsonMapper.readResourceAsTree(name)
 
