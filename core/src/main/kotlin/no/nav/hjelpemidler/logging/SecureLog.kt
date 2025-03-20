@@ -7,15 +7,18 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.oshai.kotlinlogging.Level
 import io.github.oshai.kotlinlogging.Marker
 
+/**
+ * Logger for `tjenestekall` som alltid bruker marker `secureLog` i tilfelle appender skulle kreve det.
+ */
 val secureLog: KLogger = object : KLogger {
     private val wrapped = KotlinLogging.logger("tjenestekall")
-    private val marker = KMarkerFactory.getMarker("secureLog")
+    private val secureLogMarker: Marker = KMarkerFactory.getMarker("secureLog")
 
     override val name: String = wrapped.name
 
     override fun at(level: Level, marker: Marker?, block: KLoggingEventBuilder.() -> Unit) =
-        wrapped.at(level, marker ?: this.marker, block)
+        wrapped.at(level, secureLogMarker, block)
 
     override fun isLoggingEnabledFor(level: Level, marker: Marker?): Boolean =
-        wrapped.isLoggingEnabledFor(level, marker ?: this.marker)
+        wrapped.isLoggingEnabledFor(level, secureLogMarker)
 }
