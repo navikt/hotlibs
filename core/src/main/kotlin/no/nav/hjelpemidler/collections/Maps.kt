@@ -9,12 +9,12 @@ inline fun <reified K : Enum<K>, V> enumMapOf(vararg pairs: Pair<K, V>): Map<K, 
 fun <K, V> Map<K, V?>.filterNotNull(): Map<K, V> =
     filterNot { it.value == null } as Map<K, V>
 
-fun <K : Any, V> mapOfNotNull(pair: Pair<K, V?>): Map<K, V> {
+fun <K : Any, V : Any> mapOfNotNull(pair: Pair<K, V?>): Map<K, V> {
     val (key, value) = pair
     return if (value == null) emptyMap() else mapOf(key to value)
 }
 
-fun <K : Any, V> mapOfNotNull(vararg pairs: Pair<K, V?>): Map<K, V> =
+fun <K : Any, V : Any> mapOfNotNull(vararg pairs: Pair<K, V?>): Map<K, V> =
     pairs.mapNotNull { (key, value) -> if (value == null) null else key to value }.toMap()
 
 
