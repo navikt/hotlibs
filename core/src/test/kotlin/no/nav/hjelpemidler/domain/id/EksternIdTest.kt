@@ -13,6 +13,7 @@ class EksternIdTest {
         eksternId.parameters.should { parameters ->
             parameters.shouldContain("sakId", listOf("1"))
             parameters.shouldContain("saksnotatId", listOf("2"))
+            parameters.shouldContain("brevsendingId", emptyList())
         }
 
         eksternId["sakId"] shouldBe "1"

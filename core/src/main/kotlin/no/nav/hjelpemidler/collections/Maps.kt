@@ -27,8 +27,10 @@ fun Map<String, Any?>.joinToString(
 fun Map<String, List<String>>.toQueryString(): String {
     if (isEmpty()) return ""
     return entries.joinToString("&", prefix = "?") { (key, value) ->
-        value.joinToString("&") {
-            "$key=$it"
+        if (value.isEmpty()) {
+            "$key="
+        } else {
+            value.joinToString("&") { "$key=$it" }
         }
     }
 }

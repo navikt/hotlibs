@@ -26,6 +26,9 @@ val uuidIdJsonString = """"$uuidId""""
 val eksternId = EksternId(
     application = "hotsak",
     resource = "saksnotat",
-    "sakId" to "1",
-    "saksnotatId" to "2",
+    parameters = mapOf(
+        "sakId" to listOf("1"),
+        "saksnotatId" to listOf("2"),
+        "brevsendingId" to emptyList(),
+    )
 )
