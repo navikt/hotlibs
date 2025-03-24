@@ -23,3 +23,12 @@ fun Map<String, Any?>.joinToString(
     prefix: CharSequence = "",
     postfix: CharSequence = "",
 ): String = entries.joinToString(separator, prefix, postfix) { "${it.key}: ${it.value}" }
+
+fun Map<String, List<String>>.toQueryString(): String {
+    if (isEmpty()) return ""
+    return entries.joinToString("&", prefix = "?") { (key, value) ->
+        value.joinToString("&") {
+            "$key=$it"
+        }
+    }
+}

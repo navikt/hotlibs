@@ -22,3 +22,10 @@ val numberIdJsonNumber = "$numberId"
 val numberIdJsonString = """"$numberId""""
 val stringIdJsonString = """"$stringId""""
 val uuidIdJsonString = """"$uuidId""""
+
+val eksternId = EksternId(
+    application = "hotsak",
+    resource = "saksnotat",
+    "sakId" to "1",
+    "saksnotatId" to "2",
+)
