@@ -18,6 +18,7 @@ class EksternIdTest {
 
         eksternId["sakId"] shouldBe "1"
         eksternId["saksnotatId"] shouldBe "2"
+        eksternId["brevsendingId"] shouldBe null
 
         eksternId.toURI().scheme shouldBe EksternId.SCHEME
     }

@@ -26,8 +26,14 @@ class EksternId private constructor(private val uri: URI) {
     constructor(
         application: String,
         resource: String,
-        vararg parameters: Pair<String, String>,
-    ) : this(application, resource, parameters.groupBy({ (key, _) -> key }, { (_, value) -> value }))
+        vararg parameters: Pair<String, String?>,
+    ) : this(
+        application = application,
+        resource = resource,
+        parameters = parameters
+            .map { (key, value) -> key to (value ?: "") }
+            .groupBy({ (key, _) -> key }, { (_, value) -> value })
+    )
 
     val application: String get() = uri.host
     val resource: String get() = uri.path
