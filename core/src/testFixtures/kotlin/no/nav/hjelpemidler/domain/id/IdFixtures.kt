@@ -1,5 +1,7 @@
 package no.nav.hjelpemidler.domain.id
 
+import no.nav.hjelpemidler.configuration.BehovsmeldingApplicationId
+import no.nav.hjelpemidler.configuration.HotsakApplicationId
 import java.util.UUID
 
 class TestNumberId(value: Long) : NumberId(value) {
@@ -23,10 +25,15 @@ val numberIdJsonString = """"$numberId""""
 val stringIdJsonString = """"$stringId""""
 val uuidIdJsonString = """"$uuidId""""
 
-val eksternId = EksternId(
-    application = "hotsak",
+val eksternIdHotsak = EksternId(
+    applicationId = HotsakApplicationId,
     resource = "saksnotat",
-    "sakId" to "1",
-    "saksnotatId" to "2",
-    "brevsendingId" to null,
+    id = 1,
+)
+
+val behovsmeldingId = UUID.randomUUID()
+val eksternIdBehovsmelding = EksternId(
+    applicationId = BehovsmeldingApplicationId,
+    resource = "behovsmelding",
+    id = behovsmeldingId,
 )

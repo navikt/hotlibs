@@ -2,60 +2,97 @@ package no.nav.hjelpemidler.domain.id
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonValue
-import no.nav.hjelpemidler.collections.toQueryString
-import no.nav.hjelpemidler.net.parameters
-import java.net.URI
+import no.nav.hjelpemidler.configuration.ApplicationId
+import java.util.UUID
 
 /**
- * ID-implementasjon basert på [URI].
+ * ID-implementasjon basert på [URN].
  *
  * Gjør det lettere å kombinere ulike informasjonselementer i én string.
  *
  * Kan f.eks. benyttes som `eksternReferanseId` mot Joark.
  */
-class EksternId private constructor(private val uri: URI) {
+class EksternId private constructor(private val urn: URN) {
     @JsonCreator
-    constructor(uri: String) : this(URI(uri))
+    constructor(urn: String) : this(URN(urn))
 
     constructor(
         application: String,
         resource: String,
-        parameters: Map<String, List<String>>,
-    ) : this("$SCHEME://$application/$resource${parameters.toQueryString()}")
+        id: String,
+    ) : this(URN(application, resource, id))
 
     constructor(
         application: String,
         resource: String,
-        vararg parameters: Pair<String, String?>,
-    ) : this(
-        application = application,
-        resource = resource,
-        parameters = parameters
-            .map { (key, value) -> key to (value ?: "") }
-            .groupBy({ (key, _) -> key }, { (_, value) -> value })
-    )
+        id: Number,
+    ) : this(application, resource, id.toString())
 
-    val application: String get() = uri.host
-    val resource: String get() = uri.path
-    val parameters: Map<String, List<String>> get() = uri.parameters
+    constructor(
+        application: String,
+        resource: String,
+        id: UUID,
+    ) : this(application, resource, id.toString())
 
-    operator fun get(key: String): String? = parameters[key]?.firstOrNull()
+    constructor(
+        application: String,
+        resource: String,
+        id: Id<*>,
+    ) : this(application, resource, id.toString())
 
-    fun toURI(): URI = uri
+    constructor(
+        applicationId: ApplicationId,
+        resource: String,
+        id: String,
+    ) : this(applicationId.application, resource, id)
+
+    constructor(
+        applicationId: ApplicationId,
+        resource: String,
+        id: Number,
+    ) : this(applicationId.application, resource, id)
+
+    constructor(
+        applicationId: ApplicationId,
+        resource: String,
+        id: UUID,
+    ) : this(applicationId.application, resource, id)
+
+    constructor(
+        applicationId: ApplicationId,
+        resource: String,
+        id: Id<*>,
+    ) : this(applicationId.application, resource, id)
+
+    init {
+        val value = toString()
+        require(value.matches(regex)) {
+            "Ugyldig id: '$value'"
+        }
+    }
+
+    val application: String get() = urn.nid
+    val resource: String get() = urn.nss.substringBeforeLast(':')
+    val id: String get() = urn.nss.substringAfterLast(':')
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
         other as EksternId
-        return uri == other.uri
+        return urn == other.urn
     }
 
-    override fun hashCode(): Int = uri.hashCode()
+    override fun hashCode(): Int = urn.hashCode()
 
     @JsonValue
-    override fun toString(): String = uri.toString()
+    override fun toString(): String = urn.toString()
+
+    fun toURN(): URN = urn
 
     companion object {
-        const val SCHEME = "app"
+        /**
+         * Hentet herfra: [CommonValidator.java](https://github.com/navikt/dokarkiv/blob/master/journalpost/src/main/java/no/nav/dokarkiv/journalpost/v1/validators/CommonValidator.java)
+         */
+        private val regex = Regex("^[a-zA-Z0-9-._~!$&\"\\\\*+,;=:@]+$")
     }
 }

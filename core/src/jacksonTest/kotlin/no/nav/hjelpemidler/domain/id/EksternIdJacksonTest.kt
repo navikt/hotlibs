@@ -8,11 +8,11 @@ import kotlin.test.Test
 class EksternIdJacksonTest {
     @Test
     fun `Serialiser til JSON med Jackson`() {
-        valueToJson(eksternId) shouldBe "\"$eksternId\""
+        valueToJson(eksternIdHotsak) shouldBe "\"$eksternIdHotsak\""
     }
 
     @Test
     fun `Deserialiser til Kotlin med Jackson`() {
-        jsonToValue<EksternId>("\"$eksternId\"") shouldBe eksternId
+        jsonToValue<EksternId>("\"$eksternIdHotsak\"") shouldBe eksternIdHotsak
     }
 }
