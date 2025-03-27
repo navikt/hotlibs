@@ -5,14 +5,16 @@ import no.nav.hjelpemidler.test.jsonToValue
 import no.nav.hjelpemidler.test.valueToJson
 import kotlin.test.Test
 
-class EksternIdJacksonTest {
+class URNJacksonTest {
+    private val urn = URN("hotlibs", "test", "1")
+
     @Test
     fun `Serialiser til JSON med Jackson`() {
-        valueToJson(eksternIdHotsak) shouldBe "\"$eksternIdHotsak\""
+        valueToJson(urn) shouldBe "\"urn:hotlibs:test:1\""
     }
 
     @Test
     fun `Deserialiser til Kotlin med Jackson`() {
-        jsonToValue<EksternId>("\"$eksternIdHotsak\"") shouldBe eksternIdHotsak
+        jsonToValue<URN>("\"urn:hotlibs:test:1\"") shouldBe urn
     }
 }
