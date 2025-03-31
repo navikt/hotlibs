@@ -16,7 +16,7 @@ import kotlin.reflect.KClass
 
 private val log = KotlinLogging.logger {}
 
-abstract class KafkaMessageListener<T : KafkaMessage>(
+abstract class KafkaMessageListener<in T : KafkaMessage>(
     private val messageClass: KClass<T>,
 
     /**
