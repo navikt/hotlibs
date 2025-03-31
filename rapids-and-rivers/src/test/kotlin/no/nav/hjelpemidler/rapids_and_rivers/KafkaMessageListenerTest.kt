@@ -15,7 +15,7 @@ import no.nav.hjelpemidler.serialization.jackson.valueToJson
 import java.util.UUID
 import kotlin.test.Test
 
-class KafkaEventListenerTest {
+class KafkaMessageListenerTest {
     private val rapid = TestRapid()
     private val listener = rapid.let(::TestKafkaEventListener)
 
@@ -30,7 +30,7 @@ class KafkaEventListenerTest {
             "soknadId" to søknadId,
             "fnrBruker" to fnrBruker,
             "eventId" to UUID.randomUUID(),
-            "eventName" to TestKafkaEvent.EVENT_NAME,
+            "eventName" to TestMessage.EVENT_NAME,
         )
 
         listener.preconditionErrors.shouldBeEmpty()
@@ -40,7 +40,7 @@ class KafkaEventListenerTest {
             it.vedtakId shouldBe "2"
             it.søknadId shouldBe søknadId
             it.brukerFnr shouldBe fnrBruker.toString()
-            it.eventName shouldBe TestKafkaEvent.EVENT_NAME
+            it.eventName shouldBe TestMessage.EVENT_NAME
         }
     }
 
@@ -52,7 +52,7 @@ class KafkaEventListenerTest {
             "soknadId" to søknadId,
             "fnrBruker" to fnrBruker,
             "eventId" to UUID.randomUUID(),
-            "eventName" to TestKafkaEvent.EVENT_NAME,
+            "eventName" to TestMessage.EVENT_NAME,
         )
 
         listener.preconditionErrors.shouldBeEmpty()
@@ -62,7 +62,7 @@ class KafkaEventListenerTest {
             it.vedtakId shouldBe null
             it.søknadId shouldBe søknadId
             it.brukerFnr shouldBe fnrBruker.toString()
-            it.eventName shouldBe TestKafkaEvent.EVENT_NAME
+            it.eventName shouldBe TestMessage.EVENT_NAME
         }
     }
 
@@ -88,7 +88,7 @@ class KafkaEventListenerTest {
             "soknadId" to søknadId,
             "fnrBruker" to fnrBruker,
             "eventId" to UUID.randomUUID(),
-            "eventName" to TestKafkaEvent.EVENT_NAME,
+            "eventName" to TestMessage.EVENT_NAME,
         )
 
         listener.preconditionErrors.shouldBeEmpty()
@@ -102,12 +102,12 @@ class KafkaEventListenerTest {
         rapid.sendTestMessage(valueToJson(mapOf(*pairs)))
 }
 
-private class TestKafkaEventListener(connection: RapidsConnection) : KafkaEventListener<TestKafkaEvent>(
-    eventClass = TestKafkaEvent::class,
+private class TestKafkaEventListener(connection: RapidsConnection) : KafkaEventListener<TestMessage>(
+    eventClass = TestMessage::class,
     failOnError = false,
 ) {
     init {
-        connection.register<TestKafkaEvent>(this)
+        connection.register<TestMessage>(this)
     }
 
     override fun skipEvent(packet: JsonMessage, context: MessageContext): Boolean = false
@@ -121,11 +121,11 @@ private class TestKafkaEventListener(connection: RapidsConnection) : KafkaEventL
         errors.add(problems)
     }
 
-    override suspend fun onEvent(event: TestKafkaEvent, context: MessageContext) {
+    override suspend fun onEvent(event: TestMessage, context: MessageContext) {
         events.add(event)
     }
 
     val preconditionErrors = mutableListOf<MessageProblems>()
     val errors = mutableListOf<MessageProblems>()
-    val events = mutableListOf<TestKafkaEvent>()
+    val events = mutableListOf<TestMessage>()
 }

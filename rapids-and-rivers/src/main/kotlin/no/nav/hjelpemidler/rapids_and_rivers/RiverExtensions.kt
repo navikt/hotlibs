@@ -2,17 +2,16 @@ package no.nav.hjelpemidler.rapids_and_rivers
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.River
 import no.nav.hjelpemidler.kafka.KafkaEvent
-import no.nav.hjelpemidler.kafka.KafkaEventName
-import no.nav.hjelpemidler.kafka.kafkaEventNameOf
+import no.nav.hjelpemidler.kafka.KafkaMessage
 
-inline fun <reified T : KafkaEvent> River.event(): River {
-    val eventName = kafkaEventNameOf<T>()
+inline fun <reified T : KafkaMessage> River.event(): River {
+    val event = KafkaEvent.from(T::class)
     return this
         .precondition {
-            if (eventName.alternatives.isEmpty()) {
-                it.requireValue(KafkaEventName.KEY, eventName.value)
+            if (event.alternativeNames.isEmpty()) {
+                it.requireValue(KafkaEvent.KEY, event.name)
             } else {
-                it.requireAny(KafkaEventName.KEY, listOf(eventName.value, *eventName.alternatives))
+                it.requireAny(KafkaEvent.KEY, listOf(event.name, *event.alternativeNames))
             }
         }
         .validate {

@@ -19,21 +19,21 @@ class JsonMessageExtensionsTest {
             "soknadId" to søknadId,
             "fnrBruker" to brukerFnr,
             "eventId" to UUID.randomUUID(),
-            "eventName" to TestKafkaEvent.EVENT_NAME,
+            "eventName" to TestMessage.EVENT_NAME,
         )
 
-        message.require<TestKafkaEvent>()
+        message.require<TestMessage>()
 
-        val event = message.value<TestKafkaEvent>()
+        val event = message.value<TestMessage>()
         event.should {
             it.id shouldBe "1"
             it.søknadId shouldBe søknadId
             it.brukerFnr shouldBe brukerFnr.toString()
-            it.eventName shouldBe TestKafkaEvent.EVENT_NAME
+            it.eventName shouldBe TestMessage.EVENT_NAME
         }
 
         event.toJson().should {
-            it.shouldContainJsonKeyValue("eventName", TestKafkaEvent.EVENT_NAME)
+            it.shouldContainJsonKeyValue("eventName", TestMessage.EVENT_NAME)
         }
     }
 }

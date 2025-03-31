@@ -9,14 +9,14 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import io.micrometer.core.instrument.MeterRegistry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import no.nav.hjelpemidler.kafka.KafkaEvent
+import no.nav.hjelpemidler.kafka.KafkaMessage
 import no.nav.hjelpemidler.logging.secureLog
 import no.nav.hjelpemidler.serialization.jackson.jsonMapper
 import kotlin.reflect.KClass
 
 private val log = KotlinLogging.logger {}
 
-abstract class KafkaEventListener<T : KafkaEvent>(
+abstract class KafkaEventListener<T : KafkaMessage>(
     private val eventClass: KClass<T>,
 
     /**

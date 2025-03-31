@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.PropertyName
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import no.nav.hjelpemidler.collections.mapOfNotNull
-import no.nav.hjelpemidler.kafka.KafkaEvent
+import no.nav.hjelpemidler.kafka.KafkaMessage
 import no.nav.hjelpemidler.serialization.jackson.jsonMapper
 import no.nav.hjelpemidler.serialization.jackson.jsonToValue
 import no.nav.hjelpemidler.serialization.jackson.uuidValue
@@ -13,12 +13,12 @@ import java.util.UUID
 fun jsonMessageOf(vararg pairs: Pair<String, Any?>): JsonMessage =
     JsonMessage.newMessage(mapOfNotNull(*pairs))
 
-val JsonMessage.eventId: UUID get() = this["eventId"].uuidValue()
-val JsonMessage.eventName: String get() = this["eventName"].textValue()
+val JsonMessage.eventId: UUID get() = this[KafkaMessage.EVENT_ID_KEY].uuidValue()
+val JsonMessage.eventName: String get() = this[KafkaMessage.EVENT_NAME_KEY].textValue()
 
 inline fun <reified T : Any> JsonMessage.value(): T = jsonToValue<T>(toJson())
 
-inline fun <reified T : KafkaEvent> JsonMessage.require() {
+inline fun <reified T : KafkaMessage> JsonMessage.require() {
     val description = jsonMapper.deserializationConfig.run {
         introspect(constructType(jacksonTypeRef<T>()))
     }
