@@ -4,10 +4,8 @@ plugins {
 
 dependencies {
     api(project(":core"))
-
-    // Kafka
     api(libs.kafka.clients)
-
-    // Kotlinx
+    implementation(libs.kotlin.reflect)
+    implementation(libs.jackson.annotations)
     implementation(libs.kotlinx.coroutines.core)
 }
