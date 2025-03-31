@@ -1,7 +1,6 @@
 package no.nav.hjelpemidler.serialization.jackson
 
 import com.fasterxml.jackson.databind.JsonNode
-import no.nav.hjelpemidler.serialization.Json
 
 fun valueToTree(value: Any?): JsonNode = jsonMapper.valueToTree(value)
 
@@ -14,4 +13,4 @@ fun valueToJson(value: Any?, pretty: Boolean = false): String =
 
 fun Any?.toTree(): JsonNode = valueToTree(this)
 
-fun Any?.toJson(pretty: Boolean = false): Json = Json(valueToJson(this, pretty))
+fun Any?.toJson(pretty: Boolean = false): String = valueToJson(this, pretty)

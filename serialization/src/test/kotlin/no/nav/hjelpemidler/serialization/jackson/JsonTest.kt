@@ -1,4 +1,4 @@
-package no.nav.hjelpemidler.serialization
+package no.nav.hjelpemidler.serialization.jackson
 
 import com.fasterxml.jackson.databind.node.ArrayNode
 import com.fasterxml.jackson.databind.node.BooleanNode
