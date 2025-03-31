@@ -1,6 +1,7 @@
 package no.nav.hjelpemidler.rapids_and_rivers
 
 import com.fasterxml.jackson.databind.PropertyName
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import no.nav.hjelpemidler.collections.mapOfNotNull
 import no.nav.hjelpemidler.kafka.Event
@@ -8,7 +9,6 @@ import no.nav.hjelpemidler.serialization.jackson.jsonMapper
 import no.nav.hjelpemidler.serialization.jackson.jsonToValue
 import no.nav.hjelpemidler.serialization.jackson.uuidValue
 import java.util.UUID
-import kotlin.reflect.KClass
 
 fun jsonMessageOf(vararg pairs: Pair<String, Any?>): JsonMessage =
     JsonMessage.newMessage(mapOfNotNull(*pairs))
@@ -18,9 +18,9 @@ val JsonMessage.eventName: String get() = this["eventName"].textValue()
 
 inline fun <reified T : Any> JsonMessage.value(): T = jsonToValue<T>(toJson())
 
-fun <T : Event> JsonMessage.require(eventClass: KClass<T>) {
+inline fun <reified T : Event> JsonMessage.require() {
     val description = jsonMapper.deserializationConfig.run {
-        introspect(constructType(eventClass.java))
+        introspect(constructType(jacksonTypeRef<T>()))
     }
 
     description.findProperties()
@@ -42,6 +42,3 @@ fun <T : Event> JsonMessage.require(eventClass: KClass<T>) {
             }
         }
 }
-
-inline fun <reified T : Event> JsonMessage.require() =
-    require(T::class)

@@ -4,14 +4,34 @@ import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.River.PacketListener
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageContext
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageMetadata
+import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageProblems
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.micrometer.core.instrument.MeterRegistry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import no.nav.hjelpemidler.kafka.Event
+import no.nav.hjelpemidler.logging.secureLog
 import no.nav.hjelpemidler.serialization.jackson.jsonMapper
 import kotlin.reflect.KClass
 
-abstract class EventListener<T : Event>(private val eventClass: KClass<T>) : PacketListener {
+private val log = KotlinLogging.logger {}
+
+abstract class EventListener<T : Event>(
+    private val eventClass: KClass<T>,
+
+    /**
+     * Settes til `true` hvis meldinger som ikke passerer validering skal få [EventListener] til å krasje.
+     */
+    private val failOnError: Boolean = false,
+) : PacketListener {
+    override fun onError(problems: MessageProblems, context: MessageContext, metadata: MessageMetadata) {
+        log.info { "Validering av melding feilet, se secureLog for detaljer" }
+        secureLog.info { "Validering av melding feilet: '${problems.toExtendedReport()}'" }
+        if (failOnError) {
+            error("Validering av melding feilet, se secureLog for detaljer")
+        }
+    }
+
     override fun onPacket(
         packet: JsonMessage,
         context: MessageContext,

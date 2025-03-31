@@ -4,10 +4,9 @@ import com.github.navikt.tbd_libs.rapids_and_rivers.River
 import no.nav.hjelpemidler.kafka.Event
 import no.nav.hjelpemidler.kafka.EventName
 import no.nav.hjelpemidler.kafka.eventNameOf
-import kotlin.reflect.KClass
 
-fun <T : Event> River.event(eventClass: KClass<T>): River {
-    val eventName = eventNameOf(eventClass)
+inline fun <reified T : Event> River.event(): River {
+    val eventName = eventNameOf<T>()
     return this
         .precondition {
             if (eventName.alternatives.isEmpty()) {
@@ -17,9 +16,6 @@ fun <T : Event> River.event(eventClass: KClass<T>): River {
             }
         }
         .validate {
-            it.require(eventClass)
+            it.require<T>()
         }
 }
-
-inline fun <reified T : Event> River.event(): River =
-    event(T::class)

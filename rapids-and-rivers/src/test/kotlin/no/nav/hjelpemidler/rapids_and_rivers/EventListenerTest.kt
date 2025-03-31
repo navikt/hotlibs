@@ -102,7 +102,10 @@ class EventListenerTest {
         rapid.sendTestMessage(valueToJson(mapOf(*pairs)))
 }
 
-private class TestEventListener(connection: RapidsConnection) : EventListener<TestEvent>(TestEvent::class) {
+private class TestEventListener(connection: RapidsConnection) : EventListener<TestEvent>(
+    eventClass = TestEvent::class,
+    failOnError = false,
+) {
     init {
         connection.register<TestEvent>(this)
     }
@@ -114,6 +117,7 @@ private class TestEventListener(connection: RapidsConnection) : EventListener<Te
     }
 
     override fun onError(problems: MessageProblems, context: MessageContext, metadata: MessageMetadata) {
+        super.onError(problems, context, metadata)
         errors.add(problems)
     }
 
