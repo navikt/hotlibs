@@ -15,22 +15,22 @@ import no.nav.hjelpemidler.serialization.jackson.valueToJson
 import java.util.UUID
 import kotlin.test.Test
 
-class EventListenerTest {
+class KafkaEventListenerTest {
     private val rapid = TestRapid()
-    private val listener = rapid.let(::TestEventListener)
+    private val listener = rapid.let(::TestKafkaEventListener)
 
     private val søknadId = UUID.randomUUID()
     private val fnrBruker = Fødselsnummer(50.år)
 
     @Test
-    fun `onEvent() blir kalt med TestEvent`() {
+    fun `onEvent() blir kalt med TestKafkaEvent`() {
         sendTestMessage(
             "id" to "1",
             "vedtakId" to "2",
             "soknadId" to søknadId,
             "fnrBruker" to fnrBruker,
             "eventId" to UUID.randomUUID(),
-            "eventName" to "hm-test-event",
+            "eventName" to TestKafkaEvent.EVENT_NAME,
         )
 
         listener.preconditionErrors.shouldBeEmpty()
@@ -40,19 +40,19 @@ class EventListenerTest {
             it.vedtakId shouldBe "2"
             it.søknadId shouldBe søknadId
             it.brukerFnr shouldBe fnrBruker.toString()
-            it.eventName shouldBe "hm-test-event"
+            it.eventName shouldBe TestKafkaEvent.EVENT_NAME
         }
     }
 
     @Test
-    fun `onEvent() blir kalt med TestEvent, mangler vedtakId`() {
+    fun `onEvent() blir kalt med TestKafkaEvent, mangler vedtakId`() {
         sendTestMessage(
             "id" to "1",
             "vedtakId" to null,
             "soknadId" to søknadId,
             "fnrBruker" to fnrBruker,
             "eventId" to UUID.randomUUID(),
-            "eventName" to "hm-test-event",
+            "eventName" to TestKafkaEvent.EVENT_NAME,
         )
 
         listener.preconditionErrors.shouldBeEmpty()
@@ -62,7 +62,7 @@ class EventListenerTest {
             it.vedtakId shouldBe null
             it.søknadId shouldBe søknadId
             it.brukerFnr shouldBe fnrBruker.toString()
-            it.eventName shouldBe "hm-test-event"
+            it.eventName shouldBe TestKafkaEvent.EVENT_NAME
         }
     }
 
@@ -88,7 +88,7 @@ class EventListenerTest {
             "soknadId" to søknadId,
             "fnrBruker" to fnrBruker,
             "eventId" to UUID.randomUUID(),
-            "eventName" to "hm-test-event",
+            "eventName" to TestKafkaEvent.EVENT_NAME,
         )
 
         listener.preconditionErrors.shouldBeEmpty()
@@ -102,12 +102,12 @@ class EventListenerTest {
         rapid.sendTestMessage(valueToJson(mapOf(*pairs)))
 }
 
-private class TestEventListener(connection: RapidsConnection) : EventListener<TestEvent>(
-    eventClass = TestEvent::class,
+private class TestKafkaEventListener(connection: RapidsConnection) : KafkaEventListener<TestKafkaEvent>(
+    eventClass = TestKafkaEvent::class,
     failOnError = false,
 ) {
     init {
-        connection.register<TestEvent>(this)
+        connection.register<TestKafkaEvent>(this)
     }
 
     override fun skipEvent(packet: JsonMessage, context: MessageContext): Boolean = false
@@ -121,11 +121,11 @@ private class TestEventListener(connection: RapidsConnection) : EventListener<Te
         errors.add(problems)
     }
 
-    override suspend fun onEvent(event: TestEvent, context: MessageContext) {
+    override suspend fun onEvent(event: TestKafkaEvent, context: MessageContext) {
         events.add(event)
     }
 
     val preconditionErrors = mutableListOf<MessageProblems>()
     val errors = mutableListOf<MessageProblems>()
-    val events = mutableListOf<TestEvent>()
+    val events = mutableListOf<TestKafkaEvent>()
 }

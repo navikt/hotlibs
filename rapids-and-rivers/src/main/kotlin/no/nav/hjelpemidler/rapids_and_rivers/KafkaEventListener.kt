@@ -9,18 +9,18 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import io.micrometer.core.instrument.MeterRegistry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import no.nav.hjelpemidler.kafka.Event
+import no.nav.hjelpemidler.kafka.KafkaEvent
 import no.nav.hjelpemidler.logging.secureLog
 import no.nav.hjelpemidler.serialization.jackson.jsonMapper
 import kotlin.reflect.KClass
 
 private val log = KotlinLogging.logger {}
 
-abstract class EventListener<T : Event>(
+abstract class KafkaEventListener<T : KafkaEvent>(
     private val eventClass: KClass<T>,
 
     /**
-     * Settes til `true` hvis meldinger som ikke passerer validering skal få [EventListener] til å krasje.
+     * Settes til `true` hvis meldinger som ikke passerer validering skal få listener til å krasje.
      */
     private val failOnError: Boolean = false,
 ) : PacketListener {
