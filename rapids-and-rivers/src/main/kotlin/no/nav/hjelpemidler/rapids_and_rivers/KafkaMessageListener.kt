@@ -45,7 +45,7 @@ abstract class KafkaMessageListener<T : KafkaMessage>(
         }
     }
 
-    abstract fun skipMessage(packet: JsonMessage, context: MessageContext): Boolean
+    abstract fun skipMessage(message: JsonMessage, context: MessageContext): Boolean
 
-    abstract suspend fun onMessage(event: T, context: MessageContext)
+    abstract suspend fun onMessage(message: T, context: MessageContext)
 }

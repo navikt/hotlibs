@@ -110,7 +110,7 @@ private class TestKafkaMessageListener(connection: RapidsConnection) : KafkaMess
         connection.register<TestMessage>(this)
     }
 
-    override fun skipMessage(packet: JsonMessage, context: MessageContext): Boolean = false
+    override fun skipMessage(message: JsonMessage, context: MessageContext): Boolean = false
 
     override fun onPreconditionError(error: MessageProblems, context: MessageContext, metadata: MessageMetadata) {
         preconditionErrors.add(error)
@@ -121,8 +121,8 @@ private class TestKafkaMessageListener(connection: RapidsConnection) : KafkaMess
         errors.add(problems)
     }
 
-    override suspend fun onMessage(event: TestMessage, context: MessageContext) {
-        messages.add(event)
+    override suspend fun onMessage(message: TestMessage, context: MessageContext) {
+        messages.add(message)
     }
 
     val preconditionErrors = mutableListOf<MessageProblems>()
