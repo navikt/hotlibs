@@ -17,13 +17,13 @@ import kotlin.test.Test
 
 class KafkaMessageListenerTest {
     private val rapid = TestRapid()
-    private val listener = rapid.let(::TestKafkaEventListener)
+    private val listener = rapid.let(::TestKafkaMessageListener)
 
     private val søknadId = UUID.randomUUID()
     private val fnrBruker = Fødselsnummer(50.år)
 
     @Test
-    fun `onEvent() blir kalt med TestKafkaEvent`() {
+    fun `onMessage() blir kalt med TestKafkaEvent`() {
         sendTestMessage(
             "id" to "1",
             "vedtakId" to "2",
@@ -35,7 +35,7 @@ class KafkaMessageListenerTest {
 
         listener.preconditionErrors.shouldBeEmpty()
         listener.errors.shouldBeEmpty()
-        listener.events.shouldBeSingleton {
+        listener.messages.shouldBeSingleton {
             it.id shouldBe "1"
             it.vedtakId shouldBe "2"
             it.søknadId shouldBe søknadId
@@ -45,7 +45,7 @@ class KafkaMessageListenerTest {
     }
 
     @Test
-    fun `onEvent() blir kalt med TestKafkaEvent, mangler vedtakId`() {
+    fun `onMessage() blir kalt med TestKafkaEvent, mangler vedtakId`() {
         sendTestMessage(
             "id" to "1",
             "vedtakId" to null,
@@ -57,7 +57,7 @@ class KafkaMessageListenerTest {
 
         listener.preconditionErrors.shouldBeEmpty()
         listener.errors.shouldBeEmpty()
-        listener.events.shouldBeSingleton {
+        listener.messages.shouldBeSingleton {
             it.id shouldBe "1"
             it.vedtakId shouldBe null
             it.søknadId shouldBe søknadId
@@ -77,7 +77,7 @@ class KafkaMessageListenerTest {
             it.hasErrors() shouldBe true
         }
         listener.errors.shouldBeEmpty()
-        listener.events.shouldBeEmpty()
+        listener.messages.shouldBeEmpty()
     }
 
     @Test
@@ -95,22 +95,22 @@ class KafkaMessageListenerTest {
         listener.errors.shouldBeSingleton {
             it.hasErrors() shouldBe true
         }
-        listener.events.shouldBeEmpty()
+        listener.messages.shouldBeEmpty()
     }
 
     private fun sendTestMessage(vararg pairs: Pair<String, Any?>) =
         rapid.sendTestMessage(valueToJson(mapOf(*pairs)))
 }
 
-private class TestKafkaEventListener(connection: RapidsConnection) : KafkaEventListener<TestMessage>(
-    eventClass = TestMessage::class,
+private class TestKafkaMessageListener(connection: RapidsConnection) : KafkaMessageListener<TestMessage>(
+    messageClass = TestMessage::class,
     failOnError = false,
 ) {
     init {
         connection.register<TestMessage>(this)
     }
 
-    override fun skipEvent(packet: JsonMessage, context: MessageContext): Boolean = false
+    override fun skipMessage(packet: JsonMessage, context: MessageContext): Boolean = false
 
     override fun onPreconditionError(error: MessageProblems, context: MessageContext, metadata: MessageMetadata) {
         preconditionErrors.add(error)
@@ -121,11 +121,11 @@ private class TestKafkaEventListener(connection: RapidsConnection) : KafkaEventL
         errors.add(problems)
     }
 
-    override suspend fun onEvent(event: TestMessage, context: MessageContext) {
-        events.add(event)
+    override suspend fun onMessage(event: TestMessage, context: MessageContext) {
+        messages.add(event)
     }
 
     val preconditionErrors = mutableListOf<MessageProblems>()
     val errors = mutableListOf<MessageProblems>()
-    val events = mutableListOf<TestMessage>()
+    val messages = mutableListOf<TestMessage>()
 }

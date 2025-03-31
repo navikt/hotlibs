@@ -9,9 +9,9 @@ inline fun <reified T : KafkaMessage> River.event(): River {
     return this
         .precondition {
             if (event.alternativeNames.isEmpty()) {
-                it.requireValue(KafkaEvent.KEY, event.name)
+                it.requireValue(KafkaEvent.NAME_KEY, event.name)
             } else {
-                it.requireAny(KafkaEvent.KEY, listOf(event.name, *event.alternativeNames))
+                it.requireAny(KafkaEvent.NAME_KEY, listOf(event.name, *event.alternativeNames))
             }
         }
         .validate {

@@ -8,6 +8,6 @@ interface KafkaMessage {
 
     companion object {
         const val EVENT_ID_KEY: String = "eventId"
-        const val EVENT_NAME_KEY: String = KafkaEvent.KEY
+        const val EVENT_NAME_KEY: String = KafkaEvent.NAME_KEY
     }
 }

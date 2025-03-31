@@ -8,9 +8,9 @@ import kotlin.reflect.full.findAnnotation
 @MustBeDocumented
 annotation class KafkaEvent(val name: String, vararg val alternativeNames: String) {
     companion object {
-        const val KEY: String = "eventName"
+        const val NAME_KEY: String = "eventName"
 
-        fun <T : KafkaMessage> from(eventClass: KClass<T>): KafkaEvent =
-            eventClass.findAnnotation<KafkaEvent>() ?: error("'$eventClass' mangler KafkaEvent-annotasjon")
+        fun <T : KafkaMessage> from(messageClass: KClass<T>): KafkaEvent =
+            messageClass.findAnnotation<KafkaEvent>() ?: error("'$messageClass' mangler KafkaEvent-annotasjon")
     }
 }

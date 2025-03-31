@@ -16,8 +16,8 @@ import kotlin.reflect.KClass
 
 private val log = KotlinLogging.logger {}
 
-abstract class KafkaEventListener<T : KafkaMessage>(
-    private val eventClass: KClass<T>,
+abstract class KafkaMessageListener<T : KafkaMessage>(
+    private val messageClass: KClass<T>,
 
     /**
      * Settes til `true` hvis meldinger som ikke passerer validering skal få listener til å krasje.
@@ -38,14 +38,14 @@ abstract class KafkaEventListener<T : KafkaMessage>(
         metadata: MessageMetadata,
         meterRegistry: MeterRegistry,
     ) {
-        if (skipEvent(packet, context)) return
-        val event = jsonMapper.readValue(packet.toJson(), eventClass.java)
+        if (skipMessage(packet, context)) return
+        val message = jsonMapper.readValue(packet.toJson(), messageClass.java)
         runBlocking(Dispatchers.IO) {
-            onEvent(event, context)
+            onMessage(message, context)
         }
     }
 
-    abstract fun skipEvent(packet: JsonMessage, context: MessageContext): Boolean
+    abstract fun skipMessage(packet: JsonMessage, context: MessageContext): Boolean
 
-    abstract suspend fun onEvent(event: T, context: MessageContext)
+    abstract suspend fun onMessage(event: T, context: MessageContext)
 }
