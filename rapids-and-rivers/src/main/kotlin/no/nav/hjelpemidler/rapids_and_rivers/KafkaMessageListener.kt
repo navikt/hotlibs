@@ -16,6 +16,29 @@ import kotlin.reflect.KClass
 
 private val log = KotlinLogging.logger {}
 
+/**
+ * [PacketListener] for meldinger av type [T].
+ *
+ * Eksempel på implementasjon:
+ * ```kotlin
+ *     class SakOpprettetListener(connection: RapidsConnection) : KafkaMessageListener<SakOpprettetMessage>(
+ *         SakOpprettetMessage::class,
+ *         failOnError = true,
+ *     ) {
+ *         init {
+ *             connection.register<SakOpprettetMessage>(this)
+ *         }
+ *
+ *         override fun skipMessage(message: JsonMessage, context: MessageContext): Boolean = false
+ *
+ *         override suspend fun onMessage(message: SakOpprettetMessage, context: MessageContext) {
+ *             // håndter melding her
+ *         }
+ *     }
+ * ```
+ *
+ * @see [register]
+ */
 abstract class KafkaMessageListener<in T : KafkaMessage>(
     private val messageClass: KClass<T>,
 
@@ -45,6 +68,9 @@ abstract class KafkaMessageListener<in T : KafkaMessage>(
         }
     }
 
+    /**
+     * Returner `true` hvis meldingen skal ignoreres.
+     */
     abstract fun skipMessage(message: JsonMessage, context: MessageContext): Boolean
 
     abstract suspend fun onMessage(message: T, context: MessageContext)

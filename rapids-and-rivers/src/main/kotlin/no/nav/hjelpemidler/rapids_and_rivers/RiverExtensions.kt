@@ -4,6 +4,12 @@ import com.github.navikt.tbd_libs.rapids_and_rivers.River
 import no.nav.hjelpemidler.kafka.KafkaEvent
 import no.nav.hjelpemidler.kafka.KafkaMessage
 
+/**
+ * Konfigurer [River.precondition] og [River.validate] basert på klasse annotert med [KafkaEvent].
+ *
+ * @see [KafkaEvent]
+ * @see [KafkaMessage]
+ */
 inline fun <reified T : KafkaMessage> River.event(): River {
     val event = KafkaEvent.from(T::class)
     return this

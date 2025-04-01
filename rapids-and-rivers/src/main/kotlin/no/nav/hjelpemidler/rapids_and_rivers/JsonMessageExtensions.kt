@@ -16,8 +16,22 @@ fun jsonMessageOf(vararg pairs: Pair<String, Any?>): JsonMessage =
 val JsonMessage.eventId: UUID get() = this[KafkaMessage.EVENT_ID_KEY].uuidValue()
 val JsonMessage.eventName: String get() = this[KafkaMessage.EVENT_NAME_KEY].textValue()
 
+/**
+ * Gjør om JSON i melding til instans av klasse [T].
+ */
 inline fun <reified T : Any> JsonMessage.value(): T = jsonToValue<T>(toJson())
 
+/**
+ * Finn ut hvilke felter som kreves og hvilke vi er interessert i basert på type [T]. Implementasjonen baserer
+ * seg på [com.fasterxml.jackson.databind.BeanDescription] fra Jackson. Annotasjonene
+ * [com.fasterxml.jackson.annotation.JsonAlias] og [com.fasterxml.jackson.annotation.JsonProperty] blir tatt høyde for.
+ *
+ * NB! Felter fra nestede objekter blir ikke håndtert pt. Kun nøkkelen for objektet blir registrert.
+ *
+ * @see [JsonMessage.requireKey]
+ * @see [JsonMessage.interestedIn]
+ * @see [com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition.isRequired]
+ */
 inline fun <reified T : KafkaMessage> JsonMessage.require() {
     val description = jsonMapper.deserializationConfig.run {
         introspect(constructType(jacksonTypeRef<T>()))
