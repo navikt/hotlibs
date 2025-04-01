@@ -29,9 +29,9 @@ private val log = KotlinLogging.logger {}
  *             connection.register<SakOpprettetMessage>(this)
  *         }
  *
- *         override fun skipMessage(message: JsonMessage, context: MessageContext): Boolean = false
+ *         override fun skipMessage(message: JsonMessage, context: ExtendedMessageContext): Boolean = false
  *
- *         override suspend fun onMessage(message: SakOpprettetMessage, context: MessageContext) {
+ *         override suspend fun onMessage(message: SakOpprettetMessage, context: ExtendedMessageContext) {
  *             // håndter melding her
  *         }
  *     }
@@ -61,17 +61,18 @@ abstract class KafkaMessageListener<in T : KafkaMessage>(
         metadata: MessageMetadata,
         meterRegistry: MeterRegistry,
     ) {
-        if (skipMessage(packet, context)) return
+        val messageContext = ExtendedMessageContext(context)
+        if (skipMessage(packet, messageContext)) return
         val message = jsonMapper.readValue(packet.toJson(), messageClass.java)
         runBlocking(Dispatchers.IO) {
-            onMessage(message, context)
+            onMessage(message, messageContext)
         }
     }
 
     /**
      * Returner `true` hvis meldingen skal ignoreres.
      */
-    abstract fun skipMessage(message: JsonMessage, context: MessageContext): Boolean
+    abstract fun skipMessage(message: JsonMessage, context: ExtendedMessageContext): Boolean
 
-    abstract suspend fun onMessage(message: T, context: MessageContext)
+    abstract suspend fun onMessage(message: T, context: ExtendedMessageContext)
 }
