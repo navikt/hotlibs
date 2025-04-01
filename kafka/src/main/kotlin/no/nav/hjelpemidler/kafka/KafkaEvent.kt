@@ -13,7 +13,7 @@ annotation class KafkaEvent(
      */
     val name: String,
     /**
-     * Alternative `eventName` for melding, f.eks. tidligere brukte verdier.
+     * Andre `eventName` for melding, f.eks. tidligere brukte verdier.
      */
     vararg val alternativeNames: String,
 ) {
