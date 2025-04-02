@@ -17,7 +17,6 @@ fun <K : Any, V : Any> mapOfNotNull(pair: Pair<K, V?>): Map<K, V> {
 fun <K : Any, V : Any> mapOfNotNull(vararg pairs: Pair<K, V?>): Map<K, V> =
     pairs.mapNotNull { (key, value) -> if (value == null) null else key to value }.toMap()
 
-
 fun Map<String, Any?>.joinToString(
     separator: CharSequence = ", ",
     prefix: CharSequence = "",
