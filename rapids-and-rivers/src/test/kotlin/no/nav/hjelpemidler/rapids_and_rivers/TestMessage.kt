@@ -6,7 +6,7 @@ import no.nav.hjelpemidler.kafka.KafkaEvent
 import no.nav.hjelpemidler.kafka.KafkaMessage
 import java.util.UUID
 
-@KafkaEvent(TestMessage.EVENT_NAME)
+@KafkaEvent(TestMessage.EVENT_NAME, TestMessage.ALTERNATIVE_EVENT_NAME)
 data class TestMessage(
     val id: String,
     val vedtakId: String?,
@@ -18,5 +18,6 @@ data class TestMessage(
 ) : KafkaMessage {
     companion object {
         const val EVENT_NAME = "hm-test-kafka-event"
+        const val ALTERNATIVE_EVENT_NAME = "hm-test-kafka-event-legacy"
     }
 }

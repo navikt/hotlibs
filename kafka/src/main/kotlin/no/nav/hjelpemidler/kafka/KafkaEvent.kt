@@ -20,7 +20,7 @@ annotation class KafkaEvent(
     companion object {
         const val NAME_KEY: String = "eventName"
 
-        fun <T : KafkaMessage> from(messageClass: KClass<T>): KafkaEvent = eventByClass.computeIfAbsent(messageClass) {
+        fun <T : KafkaMessage> of(messageClass: KClass<T>): KafkaEvent = eventByClass.computeIfAbsent(messageClass) {
             it.findAnnotation<KafkaEvent>() ?: error("'$it' mangler KafkaEvent-annotasjon")
         }
 

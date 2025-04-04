@@ -1,5 +1,6 @@
 package no.nav.hjelpemidler.rapids_and_rivers
 
+import com.fasterxml.jackson.core.type.TypeReference
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.River.PacketListener
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageContext
@@ -12,7 +13,6 @@ import kotlinx.coroutines.runBlocking
 import no.nav.hjelpemidler.kafka.KafkaMessage
 import no.nav.hjelpemidler.logging.secureLog
 import no.nav.hjelpemidler.serialization.jackson.jsonMapper
-import kotlin.reflect.KClass
 
 private val log = KotlinLogging.logger {}
 
@@ -21,32 +21,27 @@ private val log = KotlinLogging.logger {}
  *
  * Eksempel på implementasjon:
  * ```kotlin
- *     class SakOpprettetListener(connection: RapidsConnection) : KafkaMessageListener<SakOpprettetMessage>(
- *         SakOpprettetMessage::class,
- *         failOnError = true,
- *     ) {
- *         init {
- *             connection.register<SakOpprettetMessage>(this)
- *         }
- *
+ *     class SakOpprettetListener : KafkaMessageListener<SakOpprettetMessage>(failOnError = true) {
  *         override fun skipMessage(message: JsonMessage, context: ExtendedMessageContext): Boolean = false
  *
  *         override suspend fun onMessage(message: SakOpprettetMessage, context: ExtendedMessageContext) {
  *             // håndter melding her
  *         }
  *     }
+ *
+ *     RapidApplication.create(Configuration.current).apply {
+ *         register(SakOpprettetListener())
+ *     }
  * ```
  *
  * @see [register]
  */
-abstract class KafkaMessageListener<in T : KafkaMessage>(
-    private val messageClass: KClass<T>,
-
+abstract class KafkaMessageListener<T : KafkaMessage>(
     /**
      * Settes til `true` hvis meldinger som ikke passerer validering skal få listener til å krasje.
      */
     private val failOnError: Boolean = false,
-) : PacketListener {
+) : PacketListener, TypeReference<T>() {
     override fun onError(problems: MessageProblems, context: MessageContext, metadata: MessageMetadata) {
         log.info { "Validering av melding feilet, se secureLog for detaljer" }
         secureLog.info { "Validering av melding feilet: '${problems.toExtendedReport()}'" }
@@ -62,17 +57,32 @@ abstract class KafkaMessageListener<in T : KafkaMessage>(
         meterRegistry: MeterRegistry,
     ) {
         val messageContext = ExtendedMessageContext(context)
-        if (skipMessage(packet, messageContext)) return
-        val message = jsonMapper.readValue(packet.toJson(), messageClass.java)
+        if (skipMessage(packet, messageContext, metadata, meterRegistry)) {
+            val eventId: String? = packet[KafkaMessage.EVENT_ID_KEY].textValue()
+            val eventName: String? = packet[KafkaMessage.EVENT_NAME_KEY].textValue()
+            log.info { "skipMessage() returnerte true, eventId: '$eventId', eventName: '$eventName'" }
+            return
+        }
+        val message = jsonMapper.readValue(packet.toJson(), this)
         runBlocking(Dispatchers.IO) {
-            onMessage(message, messageContext)
+            onMessage(message, messageContext, metadata, meterRegistry)
         }
     }
 
     /**
      * Returner `true` hvis meldingen skal ignoreres.
      */
-    abstract fun skipMessage(message: JsonMessage, context: ExtendedMessageContext): Boolean
+    abstract fun skipMessage(
+        message: JsonMessage,
+        context: ExtendedMessageContext,
+        metadata: MessageMetadata,
+        meterRegistry: MeterRegistry,
+    ): Boolean
 
-    abstract suspend fun onMessage(message: T, context: ExtendedMessageContext)
+    abstract suspend fun onMessage(
+        message: T,
+        context: ExtendedMessageContext,
+        metadata: MessageMetadata,
+        meterRegistry: MeterRegistry,
+    )
 }

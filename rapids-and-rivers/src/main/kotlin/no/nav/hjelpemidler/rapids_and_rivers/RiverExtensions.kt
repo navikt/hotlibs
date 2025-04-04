@@ -11,7 +11,7 @@ import no.nav.hjelpemidler.kafka.KafkaMessage
  * @see [KafkaMessage]
  */
 inline fun <reified T : KafkaMessage> River.event(): River {
-    val event = KafkaEvent.from(T::class)
+    val event = KafkaEvent.of(T::class)
     return this
         .precondition {
             if (event.alternativeNames.isEmpty()) {

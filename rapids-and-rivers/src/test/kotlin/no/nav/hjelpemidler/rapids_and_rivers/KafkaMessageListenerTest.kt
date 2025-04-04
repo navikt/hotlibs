@@ -5,10 +5,10 @@ import com.github.navikt.tbd_libs.rapids_and_rivers.test_support.TestRapid
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageContext
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageMetadata
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageProblems
-import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldBeSingleton
 import io.kotest.matchers.shouldBe
+import io.micrometer.core.instrument.MeterRegistry
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.år
 import no.nav.hjelpemidler.serialization.jackson.valueToJson
@@ -16,18 +16,17 @@ import java.util.UUID
 import kotlin.test.Test
 
 class KafkaMessageListenerTest {
-    private val rapid = TestRapid()
-    private val listener = rapid.let(::TestKafkaMessageListener)
+    private val listener = RecordingKafkaMessageListener()
 
     private val søknadId = UUID.randomUUID()
     private val fnrBruker = Fødselsnummer(50.år)
 
     @Test
-    fun `onMessage() blir kalt med TestKafkaEvent`() {
+    fun `onMessage() blir kalt med TestMessage`() {
         sendTestMessage(
             "id" to "1",
             "vedtakId" to "2",
-            "soknadId" to søknadId,
+            "søknadId" to søknadId,
             "fnrBruker" to fnrBruker,
             "eventId" to UUID.randomUUID(),
             "eventName" to TestMessage.EVENT_NAME,
@@ -40,12 +39,33 @@ class KafkaMessageListenerTest {
             it.vedtakId shouldBe "2"
             it.søknadId shouldBe søknadId
             it.brukerFnr shouldBe fnrBruker.toString()
-            it.eventName shouldBe TestMessage.EVENT_NAME
+        }
+    }
+
+
+    @Test
+    fun `onMessage() blir kalt med TestMessage, alternativt eventName`() {
+        sendTestMessage(
+            "id" to "1",
+            "vedtakId" to "2",
+            "soknadId" to søknadId,
+            "fnrBruker" to fnrBruker,
+            "eventId" to UUID.randomUUID(),
+            "eventName" to TestMessage.ALTERNATIVE_EVENT_NAME,
+        )
+
+        listener.preconditionErrors.shouldBeEmpty()
+        listener.errors.shouldBeEmpty()
+        listener.messages.shouldBeSingleton {
+            it.id shouldBe "1"
+            it.vedtakId shouldBe "2"
+            it.søknadId shouldBe søknadId
+            it.brukerFnr shouldBe fnrBruker.toString()
         }
     }
 
     @Test
-    fun `onMessage() blir kalt med TestKafkaEvent, mangler vedtakId`() {
+    fun `onMessage() blir kalt med TestMessage, mangler vedtakId som er optional`() {
         sendTestMessage(
             "id" to "1",
             "vedtakId" to null,
@@ -62,7 +82,6 @@ class KafkaMessageListenerTest {
             it.vedtakId shouldBe null
             it.søknadId shouldBe søknadId
             it.brukerFnr shouldBe fnrBruker.toString()
-            it.eventName shouldBe TestMessage.EVENT_NAME
         }
     }
 
@@ -98,20 +117,14 @@ class KafkaMessageListenerTest {
         listener.messages.shouldBeEmpty()
     }
 
-    private fun sendTestMessage(vararg pairs: Pair<String, Any?>) =
-        rapid.sendTestMessage(valueToJson(mapOf(*pairs)))
+    private fun sendTestMessage(vararg pairs: Pair<String, Any?>) {
+        val connection = TestRapid()
+        connection.register<TestMessage>(listener)
+        connection.sendTestMessage(valueToJson(mapOf(*pairs)))
+    }
 }
 
-private class TestKafkaMessageListener(connection: RapidsConnection) : KafkaMessageListener<TestMessage>(
-    messageClass = TestMessage::class,
-    failOnError = false,
-) {
-    init {
-        connection.register<TestMessage>(this)
-    }
-
-    override fun skipMessage(message: JsonMessage, context: ExtendedMessageContext): Boolean = false
-
+private class RecordingKafkaMessageListener : KafkaMessageListener<TestMessage>(failOnError = false) {
     override fun onPreconditionError(error: MessageProblems, context: MessageContext, metadata: MessageMetadata) {
         preconditionErrors.add(error)
     }
@@ -121,7 +134,19 @@ private class TestKafkaMessageListener(connection: RapidsConnection) : KafkaMess
         errors.add(problems)
     }
 
-    override suspend fun onMessage(message: TestMessage, context: ExtendedMessageContext) {
+    override fun skipMessage(
+        message: JsonMessage,
+        context: ExtendedMessageContext,
+        metadata: MessageMetadata,
+        meterRegistry: MeterRegistry,
+    ): Boolean = false
+
+    override suspend fun onMessage(
+        message: TestMessage,
+        context: ExtendedMessageContext,
+        metadata: MessageMetadata,
+        meterRegistry: MeterRegistry,
+    ) {
         messages.add(message)
     }
 
