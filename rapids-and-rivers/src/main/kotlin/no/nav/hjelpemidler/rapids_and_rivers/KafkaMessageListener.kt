@@ -22,9 +22,19 @@ private val log = KotlinLogging.logger {}
  * Eksempel på implementasjon:
  * ```kotlin
  *     class SakOpprettetListener : KafkaMessageListener<SakOpprettetMessage>(failOnError = true) {
- *         override fun skipMessage(message: JsonMessage, context: ExtendedMessageContext): Boolean = false
+ *         override fun skipMessage(
+ *             message: JsonMessage,
+ *             context: ExtendedMessageContext,
+ *             metadata: MessageMetadata,
+ *             meterRegistry: MeterRegistry,
+ *         ): Boolean = false
  *
- *         override suspend fun onMessage(message: SakOpprettetMessage, context: ExtendedMessageContext) {
+ *         override suspend fun onMessage(
+ *             message: Any,
+ *             context: ExtendedMessageContext,
+ *             metadata: MessageMetadata,
+ *             meterRegistry: MeterRegistry,
+ *         ) {
  *             // håndter melding her
  *         }
  *     }
