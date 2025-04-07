@@ -21,7 +21,6 @@ h2 = "2.3.232"
 handlebars = "4.4.0"
 hikaricp = "6.3.0"
 htmlSanitizer = "20240325.1"
-influxdb = "7.2.0"
 jackson = "2.18.3"
 java = "21"
 javaJwt = "4.5.0"
@@ -116,7 +115,6 @@ hm-behovsmeldingsmodell = { module = "no.nav.hjelpemidler:hm-behovsmeldingsmodel
 hm-contract-pdl-avro = { module = "no.nav.hjelpemidler:hm-contract-pdl-avro", version.ref = "contractPdlAvro" }
 idporten-sidecar = { module = "no.nav.tms.token.support:idporten-sidecar", version.ref = "tmsKtorTokenSupport" }
 idporten-sidecar-mock = { module = "no.nav.tms.token.support:idporten-sidecar-mock", version.ref = "tmsKtorTokenSupport" }
-influxdb-client-kotlin = { module = "com.influxdb:influxdb-client-kotlin", version.ref = "influxdb" }
 jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jackson" }
 jackson-bom = { module = "com.fasterxml.jackson:jackson-bom", version.ref = "jackson" }
 jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
