@@ -5,7 +5,7 @@ infix fun <T : PolicyContext> T.kanIkke(policy: Policy<T>): Policyevaluering = p
 
 @JvmName("krevTillatelseExt")
 inline fun <T : Any, R> Policy<T>.krevTillatelse(context: T, block: (Policyevaluering) -> R): Result<R> =
-    evaluer(context).let { policyevaluering ->
+    autoriser(context) { policyevaluering ->
         if (policyevaluering.nekt) {
             Result.failure(PolicyevalueringException(policyevaluering))
         } else {
