@@ -15,21 +15,21 @@ class Policy<T : Any>(
 
     override fun og(annen: Policy<T>): Policy<T> =
         Policy(
-            beskrivelse = "$beskrivelse OG ${annen.beskrivelse}",
+            beskrivelse = "($beskrivelse OG ${annen.beskrivelse})",
             barn = toList() + annen.toList(),
             block = { evaluer(it) og annen.evaluer(it) }
         )
 
     override fun eller(annen: Policy<T>): Policy<T> =
         Policy(
-            beskrivelse = "$beskrivelse ELLER ${annen.beskrivelse}",
+            beskrivelse = "($beskrivelse ELLER ${annen.beskrivelse})",
             barn = toList() + annen.toList(),
             block = { evaluer(it) eller annen.evaluer(it) }
         )
 
     override fun ikke(): Policy<T> =
         Policy(
-            beskrivelse = "IKKE $beskrivelse",
+            beskrivelse = "(IKKE $beskrivelse)",
             id = "IKKE $id",
             barn = listOf(this),
             block = { evaluer(it).ikke() }

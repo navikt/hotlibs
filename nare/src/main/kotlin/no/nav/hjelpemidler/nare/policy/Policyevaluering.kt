@@ -51,8 +51,6 @@ class Policyevaluering(
     val tillat: Boolean @JsonIgnore get() = resultat.tillat
     val ikkeAktuelt: Boolean @JsonIgnore get() = resultat.ikkeAktuelt
 
-    override fun toString(): String = "${super.toString()} -> $resultat(begrunnelse: '$begrunnelse')"
-
     companion object {
         fun tillat(begrunnelse: String) = Policyevaluering(Policyavgjørelse.TILLAT, begrunnelse)
         fun nekt(begrunnelse: String) = Policyevaluering(Policyavgjørelse.NEKT, begrunnelse)
