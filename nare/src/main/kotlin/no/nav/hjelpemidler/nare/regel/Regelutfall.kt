@@ -25,4 +25,6 @@ enum class Regelutfall : LogiskOperand<Regelutfall> {
     val ja: Boolean get() = this == JA
     val nei: Boolean get() = this == NEI
     val kanskje: Boolean get() = this == KANSKJE
+
+    operator fun invoke(begrunnelse: String): Regelevaluering = Regelevaluering(resultat = this, begrunnelse)
 }

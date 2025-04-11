@@ -1,6 +1,9 @@
 package no.nav.hjelpemidler.nare.policy
 
 import io.kotest.matchers.shouldBe
+import no.nav.hjelpemidler.nare.policy.Policyavgjørelse.IKKE_AKTUELT
+import no.nav.hjelpemidler.nare.policy.Policyavgjørelse.NEKT
+import no.nav.hjelpemidler.nare.policy.Policyavgjørelse.TILLAT
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 import java.util.stream.Stream
@@ -10,125 +13,35 @@ import kotlin.test.Test
 class PolicyavgjørelseTest {
     @TestFactory
     fun og(): Stream<DynamicTest> = test(
-        Case(
-            x = Policyavgjørelse.TILLAT,
-            operator = Policyavgjørelse::og,
-            y = Policyavgjørelse.TILLAT,
-            expected = Policyavgjørelse.TILLAT
-        ),
-        Case(
-            x = Policyavgjørelse.TILLAT,
-            operator = Policyavgjørelse::og,
-            y = Policyavgjørelse.NEKT,
-            expected = Policyavgjørelse.NEKT
-        ),
-        Case(
-            x = Policyavgjørelse.TILLAT,
-            operator = Policyavgjørelse::og,
-            y = Policyavgjørelse.IKKE_AKTUELT,
-            expected = Policyavgjørelse.IKKE_AKTUELT
-        ),
-        Case(
-            x = Policyavgjørelse.NEKT,
-            operator = Policyavgjørelse::og,
-            y = Policyavgjørelse.TILLAT,
-            expected = Policyavgjørelse.NEKT
-        ),
-        Case(
-            x = Policyavgjørelse.NEKT,
-            operator = Policyavgjørelse::og,
-            y = Policyavgjørelse.NEKT,
-            expected = Policyavgjørelse.NEKT
-        ),
-        Case(
-            x = Policyavgjørelse.NEKT,
-            operator = Policyavgjørelse::og,
-            y = Policyavgjørelse.IKKE_AKTUELT,
-            expected = Policyavgjørelse.NEKT
-        ),
-        Case(
-            x = Policyavgjørelse.IKKE_AKTUELT,
-            operator = Policyavgjørelse::og,
-            y = Policyavgjørelse.TILLAT,
-            expected = Policyavgjørelse.IKKE_AKTUELT
-        ),
-        Case(
-            x = Policyavgjørelse.IKKE_AKTUELT,
-            operator = Policyavgjørelse::og,
-            y = Policyavgjørelse.NEKT,
-            expected = Policyavgjørelse.NEKT
-        ),
-        Case(
-            x = Policyavgjørelse.IKKE_AKTUELT,
-            operator = Policyavgjørelse::og,
-            y = Policyavgjørelse.IKKE_AKTUELT,
-            expected = Policyavgjørelse.IKKE_AKTUELT
-        ),
+        Case(x = TILLAT, operator = Policyavgjørelse::og, y = TILLAT, expected = TILLAT),
+        Case(x = TILLAT, operator = Policyavgjørelse::og, y = NEKT, expected = NEKT),
+        Case(x = TILLAT, operator = Policyavgjørelse::og, y = IKKE_AKTUELT, expected = IKKE_AKTUELT),
+        Case(x = NEKT, operator = Policyavgjørelse::og, y = TILLAT, expected = NEKT),
+        Case(x = NEKT, operator = Policyavgjørelse::og, y = NEKT, expected = NEKT),
+        Case(x = NEKT, operator = Policyavgjørelse::og, y = IKKE_AKTUELT, expected = NEKT),
+        Case(x = IKKE_AKTUELT, operator = Policyavgjørelse::og, y = TILLAT, expected = IKKE_AKTUELT),
+        Case(x = IKKE_AKTUELT, operator = Policyavgjørelse::og, y = NEKT, expected = NEKT),
+        Case(x = IKKE_AKTUELT, operator = Policyavgjørelse::og, y = IKKE_AKTUELT, expected = IKKE_AKTUELT),
     )
 
     @TestFactory
     fun eller(): Stream<DynamicTest> = test(
-        Case(
-            x = Policyavgjørelse.TILLAT,
-            operator = Policyavgjørelse::eller,
-            y = Policyavgjørelse.TILLAT,
-            expected = Policyavgjørelse.TILLAT
-        ),
-        Case(
-            x = Policyavgjørelse.TILLAT,
-            operator = Policyavgjørelse::eller,
-            y = Policyavgjørelse.NEKT,
-            expected = Policyavgjørelse.TILLAT
-        ),
-        Case(
-            x = Policyavgjørelse.TILLAT,
-            operator = Policyavgjørelse::eller,
-            y = Policyavgjørelse.IKKE_AKTUELT,
-            expected = Policyavgjørelse.TILLAT
-        ),
-        Case(
-            x = Policyavgjørelse.NEKT,
-            operator = Policyavgjørelse::eller,
-            y = Policyavgjørelse.TILLAT,
-            expected = Policyavgjørelse.TILLAT
-        ),
-        Case(
-            x = Policyavgjørelse.NEKT,
-            operator = Policyavgjørelse::eller,
-            y = Policyavgjørelse.NEKT,
-            expected = Policyavgjørelse.NEKT
-        ),
-        Case(
-            x = Policyavgjørelse.NEKT,
-            operator = Policyavgjørelse::eller,
-            y = Policyavgjørelse.IKKE_AKTUELT,
-            expected = Policyavgjørelse.IKKE_AKTUELT
-        ),
-        Case(
-            x = Policyavgjørelse.IKKE_AKTUELT,
-            operator = Policyavgjørelse::eller,
-            y = Policyavgjørelse.TILLAT,
-            expected = Policyavgjørelse.TILLAT
-        ),
-        Case(
-            x = Policyavgjørelse.IKKE_AKTUELT,
-            operator = Policyavgjørelse::eller,
-            y = Policyavgjørelse.NEKT,
-            expected = Policyavgjørelse.IKKE_AKTUELT
-        ),
-        Case(
-            x = Policyavgjørelse.IKKE_AKTUELT,
-            operator = Policyavgjørelse::eller,
-            y = Policyavgjørelse.IKKE_AKTUELT,
-            expected = Policyavgjørelse.IKKE_AKTUELT
-        ),
+        Case(x = TILLAT, operator = Policyavgjørelse::eller, y = TILLAT, expected = TILLAT),
+        Case(x = TILLAT, operator = Policyavgjørelse::eller, y = NEKT, expected = TILLAT),
+        Case(x = TILLAT, operator = Policyavgjørelse::eller, y = IKKE_AKTUELT, expected = TILLAT),
+        Case(x = NEKT, operator = Policyavgjørelse::eller, y = TILLAT, expected = TILLAT),
+        Case(x = NEKT, operator = Policyavgjørelse::eller, y = NEKT, expected = NEKT),
+        Case(x = NEKT, operator = Policyavgjørelse::eller, y = IKKE_AKTUELT, expected = IKKE_AKTUELT),
+        Case(x = IKKE_AKTUELT, operator = Policyavgjørelse::eller, y = TILLAT, expected = TILLAT),
+        Case(x = IKKE_AKTUELT, operator = Policyavgjørelse::eller, y = NEKT, expected = IKKE_AKTUELT),
+        Case(x = IKKE_AKTUELT, operator = Policyavgjørelse::eller, y = IKKE_AKTUELT, expected = IKKE_AKTUELT),
     )
 
     @Test
     fun ikke() {
-        Policyavgjørelse.TILLAT.ikke() shouldBe Policyavgjørelse.NEKT
-        Policyavgjørelse.NEKT.ikke() shouldBe Policyavgjørelse.TILLAT
-        Policyavgjørelse.IKKE_AKTUELT.ikke() shouldBe Policyavgjørelse.IKKE_AKTUELT
+        TILLAT.ikke() shouldBe NEKT
+        NEKT.ikke() shouldBe TILLAT
+        IKKE_AKTUELT.ikke() shouldBe IKKE_AKTUELT
     }
 
     private fun test(vararg cases: Case): Stream<DynamicTest> = DynamicTest.stream(cases.iterator(), Case::toString) {

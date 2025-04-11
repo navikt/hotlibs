@@ -25,4 +25,6 @@ enum class Policyavgjørelse : LogiskOperand<Policyavgjørelse> {
     val tillat: Boolean get() = this == TILLAT
     val nekt: Boolean get() = this == NEKT
     val ikkeAktuelt: Boolean get() = this == IKKE_AKTUELT
+
+    operator fun invoke(begrunnelse: String): Policyevaluering = Policyevaluering(resultat = this, begrunnelse)
 }
