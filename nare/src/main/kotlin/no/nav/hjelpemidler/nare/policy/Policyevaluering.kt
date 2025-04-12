@@ -5,7 +5,7 @@ import no.nav.hjelpemidler.nare.core.Node
 import no.nav.hjelpemidler.nare.evaluering.Evaluering
 import no.nav.hjelpemidler.nare.evaluering.Operator
 
-class Policyevaluering(
+class Policyevaluering internal constructor(
     override val resultat: Policyavgjørelse,
     override val begrunnelse: String,
     override val operator: Operator = Operator.INGEN,

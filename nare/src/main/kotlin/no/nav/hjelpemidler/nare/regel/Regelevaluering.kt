@@ -10,7 +10,7 @@ import no.nav.hjelpemidler.nare.evaluering.Evaluering
 import no.nav.hjelpemidler.nare.evaluering.Operator
 
 @JsonDeserialize(using = RegelevalueringDeserializer::class)
-class Regelevaluering(
+class Regelevaluering internal constructor(
     override val resultat: Regelutfall,
     override val begrunnelse: String,
     override val operator: Operator = Operator.INGEN,
