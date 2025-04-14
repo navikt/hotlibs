@@ -1,7 +1,5 @@
 package no.nav.hjelpemidler.nare.regel
 
-import com.fasterxml.jackson.annotation.JsonIgnore
-import no.nav.hjelpemidler.nare.core.Node
 import no.nav.hjelpemidler.nare.spesifikasjon.Spesifikasjon
 
 class Regel<T : Any>(
@@ -9,42 +7,20 @@ class Regel<T : Any>(
     id: String = "",
     barn: List<Regel<T>> = emptyList(),
     val lovreferanse: Lovreferanse? = null,
-    @get:JsonIgnore val block: (context: T) -> Regelevaluering,
-) : Node<Regel<T>>(beskrivelse, id, barn), Spesifikasjon<T, Regelevaluering> {
-    override fun evaluer(context: T): Regelevaluering =
-        block(context).med(beskrivelse, id, lovreferanse)
+    block: (context: T) -> Regelevaluering,
+) : Spesifikasjon<T, Regelevaluering, Regel<T>>(beskrivelse, id, barn, block) {
+    override val self: Regel<T> get() = this
 
-    override fun og(annen: Regel<T>): Regel<T> =
-        Regel(
-            beskrivelse = "($beskrivelse OG ${annen.beskrivelse})",
-            barn = toList() + annen.toList(),
-            block = { evaluer(it) og annen.evaluer(it) }
-        )
+    override fun lagSpesifikasjon(
+        beskrivelse: String,
+        id: String,
+        barn: List<Regel<T>>,
+        block: (context: T) -> Regelevaluering,
+    ): Regel<T> = Regel(beskrivelse, id, barn, null, block)
 
-    override fun eller(annen: Regel<T>): Regel<T> =
-        Regel(
-            beskrivelse = "($beskrivelse ELLER ${annen.beskrivelse})",
-            barn = toList() + annen.toList(),
-            block = { evaluer(it) eller annen.evaluer(it) }
-        )
+    override fun onEvaluer(evaluering: Regelevaluering): Regelevaluering =
+        Regelevaluering(this, evaluering)
 
-    override fun ikke(): Regel<T> =
-        Regel(
-            beskrivelse = "(IKKE $beskrivelse)",
-            id = "IKKE $id",
-            barn = listOf(this),
-            block = { evaluer(it).ikke() }
-        )
-
-    override fun med(beskrivelse: String, id: String): Regel<T> =
-        med(beskrivelse, id, lovreferanse)
-
-    fun med(beskrivelse: String, id: String, lovreferanse: Lovreferanse?): Regel<T> =
-        Regel(
-            beskrivelse = beskrivelse,
-            id = id,
-            barn = barn,
-            lovreferanse = lovreferanse,
-            block = block,
-        )
+    fun med(beskrivelse: String, id: String, lovreferanse: Lovreferanse? = null): Regel<T> =
+        Regel(beskrivelse, id, barn, lovreferanse ?: this.lovreferanse, block)
 }

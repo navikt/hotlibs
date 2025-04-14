@@ -1,6 +1,7 @@
 package no.nav.hjelpemidler.nare.core
 
 import com.fasterxml.jackson.annotation.JsonAlias
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonInclude.Include
 import no.nav.hjelpemidler.nare.evaluering.Evaluering
@@ -12,24 +13,30 @@ abstract class Node<T : Node<T>> internal constructor(
     @get:JsonInclude(Include.NON_EMPTY)
     val barn: List<T>,
 ) : LogiskOperand<T> {
-    abstract fun med(beskrivelse: String, id: String): T
+    protected val beskrivelseQuoted: String
+        @JsonIgnore
+        get() = beskrivelse.singleQuoted()
+
+    @get:JsonIgnore
+    protected abstract val self: T
 
     fun toList(): List<T> =
         if (id.isBlank() && barn.isNotEmpty()) {
             barn
         } else {
-            @Suppress("UNCHECKED_CAST")
-            listOf(this as T)
+            listOf(self)
         }
 
     override fun toString(): String = toString(1)
 
     private fun toString(level: Int): String =
         buildString {
-            if (this@Node is Evaluering<*>) {
-                append("$beskrivelse (id: '$id') -> $resultat(begrunnelse: $begrunnelse)")
-            } else {
-                append("$beskrivelse (id: '$id')")
+            append(beskrivelseQuoted)
+            if (id.isNotBlank()) {
+                append(" (id: '$id')")
+            }
+            if (this@Node is Evaluering<*, *>) {
+                append(" -> $resultat(begrunnelse: $begrunnelse)")
             }
             barn.forEach {
                 appendLine()
