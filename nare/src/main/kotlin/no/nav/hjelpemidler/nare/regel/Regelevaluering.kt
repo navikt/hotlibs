@@ -56,16 +56,13 @@ class Regelevaluering internal constructor(
         )
 
     companion object {
-        fun ja(begrunnelse: String, grunnlag: Grunnlag? = emptyMap()): Regelevaluering =
-            Regelevaluering(Regelutfall.JA, begrunnelse, grunnlag = grunnlag)
+        fun ja(begrunnelse: String, grunnlag: Grunnlag? = emptyMap(), årsak: Årsak? = null): Regelevaluering =
+            Regelevaluering(Regelutfall.JA, begrunnelse, grunnlag = grunnlag, årsak = årsak)
 
-        fun nei(begrunnelse: String, grunnlag: Grunnlag? = emptyMap()): Regelevaluering =
-            Regelevaluering(Regelutfall.NEI, begrunnelse, grunnlag = grunnlag)
-
-        fun nei(begrunnelse: String, grunnlag: Grunnlag? = emptyMap(), årsak: Årsak): Regelevaluering =
+        fun nei(begrunnelse: String, grunnlag: Grunnlag? = emptyMap(), årsak: Årsak? = null): Regelevaluering =
             Regelevaluering(Regelutfall.NEI, begrunnelse, grunnlag = grunnlag, årsak = årsak)
 
-        fun kanskje(begrunnelse: String): Regelevaluering =
-            Regelevaluering(Regelutfall.KANSKJE, begrunnelse)
+        fun kanskje(begrunnelse: String, grunnlag: Grunnlag? = emptyMap(), årsak: Årsak? = null): Regelevaluering =
+            Regelevaluering(Regelutfall.KANSKJE, begrunnelse, grunnlag = grunnlag, årsak = årsak)
     }
 }
