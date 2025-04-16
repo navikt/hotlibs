@@ -4,6 +4,7 @@ import com.github.benmanes.caffeine.cache.Expiry
 import io.ktor.http.Parameters
 import no.nav.hjelpemidler.cache.CacheConfiguration
 import no.nav.hjelpemidler.configuration.EntraIDEnvironmentVariable
+import no.nav.hjelpemidler.configuration.MaskinportenEnvironmentVariable
 import no.nav.hjelpemidler.configuration.TokenXEnvironmentVariable
 import kotlin.time.Duration
 
@@ -22,6 +23,13 @@ class OpenIDClientConfiguration internal constructor() {
         tokenEndpoint = TokenXEnvironmentVariable.TOKEN_X_TOKEN_ENDPOINT
         clientId = TokenXEnvironmentVariable.TOKEN_X_CLIENT_ID
         clientSecret = null
+    }
+
+    fun maskinportenEnvironmentConfiguration() {
+        tokenEndpoint = MaskinportenEnvironmentVariable.MASKINPORTEN_TOKEN_ENDPOINT
+        // Merk: Disse er ikke relevante for maskinporten backend'en, men kreves av hotlibs-http sin openid client
+        clientId = MaskinportenEnvironmentVariable.MASKINPORTEN_CLIENT_ID
+        clientSecret = ""
     }
 
     internal var expiry: Expiry<Parameters, TokenSet> = ExpireImmediately

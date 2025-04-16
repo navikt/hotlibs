@@ -53,3 +53,11 @@ fun HttpClientConfig<*>.tokenX(
     engine: HttpClientEngine = CIO.create(),
     block: OpenIDClientConfiguration.() -> Unit = {},
 ) = openID(tokenXClient(engine, block).withScope(scope))
+
+fun HttpClientConfig<*>.maskinporten(
+    scope: String,
+    engine: HttpClientEngine = CIO.create(),
+    block: OpenIDClientConfiguration.() -> Unit = {},
+) {
+    openID(maskinportenClient(engine, block).withMaskinportenAssertion(scope))
+}

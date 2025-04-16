@@ -23,6 +23,7 @@ dependencies {
 
     // JWT
     implementation(libs.java.jwt)
+    implementation(libs.nimbus.jose.jwt)
 
     // Cache
     api(libs.caffeine)
