@@ -10,6 +10,7 @@ dependencies {
 
     // Jackson
     compileOnly(libs.jackson.annotations)
+    compileOnly(libs.jackson.databind)
 
     // kotlinx.serialization
     compileOnly(libs.kotlinx.serialization.core)
