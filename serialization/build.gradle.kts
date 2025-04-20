@@ -7,4 +7,7 @@ dependencies {
 
     // Jackson
     api(libs.bundles.jackson)
+
+    // kotlinx-serialization
+    compileOnly(libs.kotlinx.serialization.core)
 }

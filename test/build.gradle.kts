@@ -3,6 +3,7 @@ plugins {
 }
 
 dependencies {
+    api(libs.kotlin.test.junit5)
     api(libs.kotlinx.coroutines.test)
     api(libs.kotest.assertions.core)
     api(libs.kotest.assertions.json)

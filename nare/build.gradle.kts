@@ -13,8 +13,7 @@ testing {
     suites {
         withType<JvmTestSuite> {
             dependencies {
-                implementation(libs.jackson.databind)
-                implementation(libs.jackson.module.kotlin)
+                implementation(project(":serialization"))
             }
         }
     }

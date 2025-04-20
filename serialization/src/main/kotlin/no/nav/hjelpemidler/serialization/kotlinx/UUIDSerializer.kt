@@ -1,4 +1,4 @@
-package no.nav.hjelpemidler.serialization
+package no.nav.hjelpemidler.serialization.kotlinx
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -10,7 +10,7 @@ import java.util.UUID
 
 object UUIDSerializer : KSerializer<UUID> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor(
-        serialName = "no.nav.hjelpemidler.serialization.UUIDSerializer",
+        serialName = "no.nav.hjelpemidler.serialization.kotlinx.UUIDSerializer",
         kind = PrimitiveKind.STRING,
     )
 

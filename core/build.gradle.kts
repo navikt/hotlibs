@@ -12,7 +12,7 @@ dependencies {
     compileOnly(libs.jackson.annotations)
     compileOnly(libs.jackson.databind)
 
-    // kotlinx.serialization
+    // kotlinx-serialization
     compileOnly(libs.kotlinx.serialization.core)
     compileOnly(libs.kotlinx.serialization.json)
 
@@ -33,8 +33,7 @@ testing {
 
         val jacksonTest by registering(JvmTestSuite::class) {
             dependencies {
-                implementation(libs.jackson.databind)
-                implementation(libs.jackson.module.kotlin)
+                implementation(project(":serialization"))
             }
         }
         val serializationTest by registering(JvmTestSuite::class) {

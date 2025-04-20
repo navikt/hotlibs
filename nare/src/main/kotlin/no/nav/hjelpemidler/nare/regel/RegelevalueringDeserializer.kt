@@ -34,6 +34,8 @@ internal class RegelevalueringDeserializer : StdNodeBasedDeserializer<Regelevalu
         )
     }
 
+    override fun isCachable(): Boolean = true
+
     private data class RegelevalueringAdapter(
         val resultat: Regelutfall,
         val begrunnelse: String,

@@ -3,33 +3,40 @@ package no.nav.hjelpemidler.domain.kodeverk
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.BeanProperty
 import com.fasterxml.jackson.databind.DeserializationContext
-import com.fasterxml.jackson.databind.JavaType
 import com.fasterxml.jackson.databind.JsonDeserializer
+import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.deser.ContextualDeserializer
 import com.fasterxml.jackson.databind.deser.std.StdScalarDeserializer
+import com.fasterxml.jackson.databind.exc.InvalidFormatException
 import com.fasterxml.jackson.databind.type.LogicalType
-import com.fasterxml.jackson.databind.util.ClassUtil
 
-class KodeverkDeserializer(type: JavaType? = null) : StdScalarDeserializer<Kodeverk<*>>(type), ContextualDeserializer {
+class KodeverkDeserializer(
+    private val wrapped: JsonDeserializer<*>? = null,
+) : StdScalarDeserializer<Kodeverk<*>>(Kodeverk::class.java), ContextualDeserializer {
     override fun logicalType(): LogicalType = LogicalType.Enum
 
     override fun deserialize(parser: JsonParser, context: DeserializationContext): Kodeverk<*> {
-        val text = parser.text
-        if (valueType == null) {
-            return UkjentKode(text)
+        if (wrapped == null) {
+            throw JsonMappingException(parser, "KodeverkDeserializer.wrapped ikke satt")
         }
         return try {
-            val enumType = ClassUtil.findEnumType(valueType.rawClass)
-            java.lang.Enum.valueOf(enumType, text) as Kodeverk<*>
-        } catch (e: IllegalArgumentException) {
-            UkjentKode(text)
+            wrapped.deserialize(parser, context) as Kodeverk<*>
+        } catch (e: InvalidFormatException) {
+            UkjentKode(e.value.toString())
         }
     }
 
     override fun createContextual(context: DeserializationContext, property: BeanProperty?): JsonDeserializer<*> {
         if (property == null) return this
-        val wrapperType = property.type
-        val valueType = wrapperType.containedType(0)
-        return KodeverkDeserializer(valueType)
+        val valueType = property.type.containedType(0)
+        return KodeverkDeserializer(
+            context.factory.createEnumDeserializer(
+                context,
+                valueType,
+                context.config.introspect(valueType),
+            ),
+        )
     }
+
+    override fun isCachable(): Boolean = true
 }
