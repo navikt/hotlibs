@@ -29,7 +29,7 @@ class EnhetTest {
 
     @TestFactory
     fun `Enhetsnummer består av fire siffer`() = testFactory(
-        listOf(
+        sequenceOf(
             "",
             "    ",
             "999",

@@ -4,15 +4,15 @@ import io.kotest.matchers.shouldBe
 import no.nav.hjelpemidler.nare.regel.Regelutfall.JA
 import no.nav.hjelpemidler.nare.regel.Regelutfall.KANSKJE
 import no.nav.hjelpemidler.nare.regel.Regelutfall.NEI
-import org.junit.jupiter.api.DynamicTest
+import no.nav.hjelpemidler.test.NamedTestCase
+import no.nav.hjelpemidler.test.testFactory
 import org.junit.jupiter.api.TestFactory
-import java.util.stream.Stream
 import kotlin.reflect.KFunction2
 import kotlin.test.Test
 
 class RegelutfallTest {
     @TestFactory
-    fun og(): Stream<DynamicTest> = test(
+    fun og() = sequenceOf(
         Case(x = JA, operator = Regelutfall::og, y = JA, expected = JA),
         Case(x = JA, operator = Regelutfall::og, y = NEI, expected = NEI),
         Case(x = JA, operator = Regelutfall::og, y = KANSKJE, expected = KANSKJE),
@@ -22,10 +22,10 @@ class RegelutfallTest {
         Case(x = KANSKJE, operator = Regelutfall::og, y = JA, expected = KANSKJE),
         Case(x = KANSKJE, operator = Regelutfall::og, y = NEI, expected = NEI),
         Case(x = KANSKJE, operator = Regelutfall::og, y = KANSKJE, expected = KANSKJE),
-    )
+    ).testFactory()
 
     @TestFactory
-    fun eller(): Stream<DynamicTest> = test(
+    fun eller() = sequenceOf(
         Case(x = JA, operator = Regelutfall::eller, y = JA, expected = JA),
         Case(x = JA, operator = Regelutfall::eller, y = NEI, expected = JA),
         Case(x = JA, operator = Regelutfall::eller, y = KANSKJE, expected = JA),
@@ -35,7 +35,7 @@ class RegelutfallTest {
         Case(x = KANSKJE, operator = Regelutfall::eller, y = JA, expected = JA),
         Case(x = KANSKJE, operator = Regelutfall::eller, y = NEI, expected = KANSKJE),
         Case(x = KANSKJE, operator = Regelutfall::eller, y = KANSKJE, expected = KANSKJE),
-    )
+    ).testFactory()
 
     @Test
     fun ikke() {
@@ -44,16 +44,17 @@ class RegelutfallTest {
         KANSKJE.ikke() shouldBe KANSKJE
     }
 
-    private fun test(vararg cases: Case): Stream<DynamicTest> = DynamicTest.stream(cases.iterator(), Case::toString) {
-        it.operator(it.x, it.y) shouldBe it.expected
-    }
-
-    class Case(
+    data class Case(
         val x: Regelutfall,
         val operator: KFunction2<Regelutfall, Regelutfall, Regelutfall>,
         val y: Regelutfall,
         val expected: Regelutfall,
-    ) {
-        override fun toString(): String = "$x ${operator.name} $y = $expected"
+    ) : NamedTestCase<Case> {
+        override fun getName(): String = "$x ${operator.name} $y = $expected"
+        override fun getPayload(): Case = this
+
+        override operator fun invoke() {
+            operator(x, y) shouldBe expected
+        }
     }
 }

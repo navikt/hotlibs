@@ -20,7 +20,7 @@ class BydelTest {
 
     @TestFactory
     fun `Bydelsnummer består av seks siffer`() = testFactory(
-        listOf(
+        sequenceOf(
             "",
             "    ",
             "99999",

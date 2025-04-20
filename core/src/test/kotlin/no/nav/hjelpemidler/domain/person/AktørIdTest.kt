@@ -16,7 +16,7 @@ class AktørIdTest {
 
     @TestFactory
     fun `AktørId som ikke består av tretten siffer er ugyldig`() = testFactory(
-        listOf(
+        sequenceOf(
             "",
             "             ",
             "abcdefghijklm",

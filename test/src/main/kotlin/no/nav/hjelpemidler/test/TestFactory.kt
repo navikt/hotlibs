@@ -21,3 +21,7 @@ fun <T : Any> testFactory(
 @JvmName("testFactoryExt")
 fun <T : Named<T>> Sequence<T>.testFactory(testExecutor: (T) -> Unit): Stream<DynamicTest> =
     testFactory(this, testExecutor)
+
+@JvmName("testFactoryExt")
+fun <T : NamedTestCase<T>> Sequence<T>.testFactory(): Stream<DynamicTest> =
+    testFactory(NamedTestCase<T>::invoke)

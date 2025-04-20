@@ -29,7 +29,7 @@ class KommuneTest {
 
     @TestFactory
     fun `Kommunenummer består av fire siffer`() = testFactory(
-        listOf(
+        sequenceOf(
             "",
             "    ",
             "999",
