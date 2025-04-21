@@ -10,14 +10,14 @@ class Bydel(
     override val navn: String,
 ) : GeografiskOmråde() {
     init {
-        require(validator(nummer)) { "Ugyldig bydelsnummer: '$nummer'" }
+        require(erGyldig(nummer)) { "Ugyldig bydelsnummer: '$nummer'" }
     }
 
     /**
      * NB! Ikke alle bydeler er lagt til her pt. Kun de som brukes i logikk og/eller tester.
      */
     companion object {
-        private val validator = nummerValidator(lengde = 6)
+        private val erGyldig = nummerValidator(lengde = 6)
 
         /**
          * @see <a href="https://digihot-oppslag.intern.dev.nav.no/api/geografi/bydeler/030105">DigiHoT Oppslag</a>

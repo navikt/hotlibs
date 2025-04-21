@@ -13,7 +13,7 @@ open class Enhet(
     val navn: String,
 ) {
     init {
-        require(validator(nummer)) { "Ugyldig enhetsnummer: '$nummer'" }
+        require(erGyldig(nummer)) { "Ugyldig enhetsnummer: '$nummer'" }
     }
 
     override fun equals(other: Any?): Boolean {
@@ -33,7 +33,7 @@ open class Enhet(
      * @see [no.nav.hjelpemidler.domain.geografi.EnhetTest]
      */
     companion object {
-        private val validator = nummerValidator(lengde = 4)
+        private val erGyldig = nummerValidator(lengde = 4)
 
         /**
          * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/2103">NORG2</a>

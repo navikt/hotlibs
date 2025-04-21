@@ -1,8 +1,6 @@
 package no.nav.hjelpemidler.domain.geografi
 
-sealed interface GeografiskTilknytning
-
-sealed class GeografiskOmråde : GeografiskTilknytning {
+sealed class GeografiskOmråde {
     abstract val nummer: String
     abstract val navn: String
 

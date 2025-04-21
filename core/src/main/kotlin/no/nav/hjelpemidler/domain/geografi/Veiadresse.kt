@@ -6,17 +6,17 @@ data class Veiadresse(
     val adresse: String,
     val postnummer: String,
     val poststed: String,
-) : GeografiskTilknytning {
+) {
     init {
         require(adresse.isNotBlank()) { "Ugyldig adresse: '$adresse'" }
-        require(postnummerValidator(postnummer)) { "Ugyldig postnummer: '$postnummer'" }
+        require(erGyldigPostnummer(postnummer)) { "Ugyldig postnummer: '$postnummer'" }
         require(poststed.isNotBlank()) { "Ugyldig poststed: '$poststed'" }
     }
 
     override fun toString(): String = "$adresse, $postnummer $poststed"
 
     companion object {
-        private val postnummerValidator = nummerValidator(lengde = 4)
+        private val erGyldigPostnummer = nummerValidator(lengde = 4)
     }
 }
 

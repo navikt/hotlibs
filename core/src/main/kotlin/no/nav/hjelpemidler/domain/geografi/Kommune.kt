@@ -10,7 +10,7 @@ class Kommune(
     override val navn: String,
 ) : GeografiskOmråde() {
     init {
-        require(validator(nummer)) { "Ugyldig kommunenummer: '$nummer'" }
+        require(erGyldig(nummer)) { "Ugyldig kommunenummer: '$nummer'" }
     }
 
     /**
@@ -19,7 +19,7 @@ class Kommune(
      * @see [no.nav.hjelpemidler.domain.geografi.KommuneTest]
      */
     companion object {
-        private val validator = nummerValidator(lengde = 4)
+        private val erGyldig = nummerValidator(lengde = 4)
 
         /**
          * @see <a href="https://digihot-oppslag.intern.dev.nav.no/api/geografi/kommuner/0301">DigiHoT Oppslag</a>
