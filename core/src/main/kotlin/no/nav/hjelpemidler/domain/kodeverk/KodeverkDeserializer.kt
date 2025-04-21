@@ -11,16 +11,16 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException
 import com.fasterxml.jackson.databind.type.LogicalType
 
 class KodeverkDeserializer(
-    private val wrapped: JsonDeserializer<*>? = null,
+    private val enumDeserializer: JsonDeserializer<*>? = null,
 ) : StdScalarDeserializer<Kodeverk<*>>(Kodeverk::class.java), ContextualDeserializer {
     override fun logicalType(): LogicalType = LogicalType.Enum
 
     override fun deserialize(parser: JsonParser, context: DeserializationContext): Kodeverk<*> {
-        if (wrapped == null) {
-            throw JsonMappingException(parser, "KodeverkDeserializer.wrapped ikke satt")
+        if (enumDeserializer == null) {
+            throw JsonMappingException.from(parser, "enumDeserializer var null")
         }
         return try {
-            wrapped.deserialize(parser, context) as Kodeverk<*>
+            enumDeserializer.deserialize(parser, context) as Kodeverk<*>
         } catch (e: InvalidFormatException) {
             UkjentKode(e.value.toString())
         }
@@ -28,7 +28,9 @@ class KodeverkDeserializer(
 
     override fun createContextual(context: DeserializationContext, property: BeanProperty?): JsonDeserializer<*> {
         if (property == null) return this
-        val valueType = property.type.containedType(0)
+        val propertyType = property.type
+        val valueType = propertyType.containedType(0)
+            ?: throw JsonMappingException.from(context, "valueType var null, propertyType: $propertyType")
         return KodeverkDeserializer(
             context.factory.createEnumDeserializer(
                 context,
