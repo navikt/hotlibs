@@ -6,7 +6,7 @@ import no.nav.hjelpemidler.serialization.jackson.Json
 import no.nav.hjelpemidler.serialization.jackson.toJson
 import kotlin.test.Test
 
-class EnhetTest {
+class EnhetJacksonTest {
     private val json = Json(
         """
             {
