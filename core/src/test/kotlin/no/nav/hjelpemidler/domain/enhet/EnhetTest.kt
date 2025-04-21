@@ -1,4 +1,4 @@
-package no.nav.hjelpemidler.domain.geografi
+package no.nav.hjelpemidler.domain.enhet
 
 import io.kotest.assertions.json.shouldContainJsonKeyValue
 import io.kotest.assertions.throwables.shouldThrow

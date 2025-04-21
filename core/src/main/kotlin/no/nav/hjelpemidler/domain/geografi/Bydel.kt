@@ -1,6 +1,7 @@
 package no.nav.hjelpemidler.domain.geografi
 
 import com.fasterxml.jackson.annotation.JsonAlias
+import no.nav.hjelpemidler.domain.enhet.AbstractEnhet
 import no.nav.hjelpemidler.validering.nummerValidator
 
 class Bydel(
@@ -8,7 +9,7 @@ class Bydel(
     override val nummer: String,
     @JsonAlias("bydelsnavn")
     override val navn: String,
-) : GeografiskOmråde() {
+) : AbstractEnhet() {
     init {
         require(erGyldig(nummer)) { "Ugyldig bydelsnummer: '$nummer'" }
     }

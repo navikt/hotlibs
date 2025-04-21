@@ -1,10 +1,7 @@
 package no.nav.hjelpemidler.domain.geografi
 
-import com.fasterxml.jackson.annotation.JsonIgnore
-
-interface TilknyttetEnhet {
-    val enhet: Enhet
-    val enhetsnummer: String
-        @JsonIgnore
-        get() = enhet.nummer
-}
+/**
+ * NB! Denne skal fjernes.
+ * Bruk [no.nav.hjelpemidler.domain.enhet.TilknyttetEnhet] direkte.
+ */
+typealias TilknyttetEnhet = no.nav.hjelpemidler.domain.enhet.TilknyttetEnhet
