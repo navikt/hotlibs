@@ -16,8 +16,4 @@ sealed class GeografiskOmråde : GeografiskTilknytning {
     override fun hashCode(): Int = nummer.hashCode()
 
     override fun toString(): String = "$navn ($nummer)"
-
-    operator fun component1(): String = nummer
-
-    operator fun component2(): String = navn
 }
