@@ -27,7 +27,7 @@ fun RapidApplication.Companion.DefaultBuilder(
     )
 
     return RapidApplication.Builder(
-        appName = Configuration.current["RAPID_APP_NAME"],
+        appName = Configuration["RAPID_APP_NAME"],
         instanceId = if ("NAIS_APP_NAME" in env) InetAddress.getLocalHost().hostName else UUID.randomUUID().toString(),
         rapid = kafkaRapid,
         meterRegistry = meterRegistry,

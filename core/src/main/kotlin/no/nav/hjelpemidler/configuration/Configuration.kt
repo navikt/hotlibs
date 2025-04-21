@@ -28,7 +28,11 @@ class Configuration internal constructor(
     override fun toString(): String = properties.toString()
 
     companion object {
-        val current by lazy { load() }
+        val current: Configuration by lazy { load() }
+
+        operator fun get(key: String): String? = current[key]
+
+        fun get(key: String, prefix: String): String? = this["$prefix$key"]
 
         fun load(environment: Environment = Environment.current): Configuration {
             val location = "/$environment.properties"

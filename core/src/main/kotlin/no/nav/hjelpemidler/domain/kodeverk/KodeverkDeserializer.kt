@@ -10,11 +10,9 @@ import com.fasterxml.jackson.databind.deser.std.StdScalarDeserializer
 import com.fasterxml.jackson.databind.exc.InvalidFormatException
 import com.fasterxml.jackson.databind.type.LogicalType
 
-class KodeverkDeserializer(
+internal class KodeverkDeserializer(
     private val enumDeserializer: JsonDeserializer<*>? = null,
 ) : StdScalarDeserializer<Kodeverk<*>>(Kodeverk::class.java), ContextualDeserializer {
-    override fun logicalType(): LogicalType = LogicalType.Enum
-
     override fun deserialize(parser: JsonParser, context: DeserializationContext): Kodeverk<*> {
         if (enumDeserializer == null) {
             throw JsonMappingException.from(parser, "enumDeserializer var null")
@@ -39,6 +37,8 @@ class KodeverkDeserializer(
             ),
         )
     }
+
+    override fun logicalType(): LogicalType = LogicalType.Enum
 
     override fun isCachable(): Boolean = true
 }

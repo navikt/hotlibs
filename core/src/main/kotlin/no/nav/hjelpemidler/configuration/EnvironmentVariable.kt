@@ -7,7 +7,7 @@ import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
 
 val EnvironmentVariable: ReadOnlyProperty<Any?, String> = ReadOnlyProperty { _, property ->
-    checkNotNull(Configuration.current[property.name]) {
+    checkNotNull(Configuration[property.name]) {
         "Miljøvariabelen '${property.name}' mangler"
     }
 }
@@ -16,7 +16,7 @@ inline fun <reified T> environmentVariable(prefix: String? = null): ReadOnlyProp
     ReadOnlyProperty { _, property ->
         val returnType = property.returnType
         val propertyName = if (prefix == null) property.name else "${prefix}_${property.name}"
-        val variable = Configuration.current[propertyName]
+        val variable = Configuration[propertyName]
         val value = when {
             returnType.isSubtypeOf(typeOf<Boolean?>()) -> variable?.toBoolean()
             returnType.isSubtypeOf(typeOf<Int?>()) -> variable?.toInt()

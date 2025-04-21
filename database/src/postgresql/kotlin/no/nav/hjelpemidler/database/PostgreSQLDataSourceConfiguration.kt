@@ -19,13 +19,13 @@ class PostgreSQLDataSourceConfiguration internal constructor() : DataSourceConfi
     }
 
     internal fun fromEnvVar(envVarSuffix: String, optional: Boolean = false): String? {
-        val name = checkNotNull(envVarPrefix) {
+        val key = checkNotNull(envVarPrefix) {
             "Miljøvariabel-prefix (envVarPrefix i nais.yaml) er ikke satt"
         } + "_" + envVarSuffix
-        val value = Configuration.current[name]
+        val value = Configuration[key]
         if (optional) return value
         return checkNotNull(value) {
-            "Miljøvariabelen '$name' mangler"
+            "Miljøvariabelen '$key' mangler"
         }
     }
 }
