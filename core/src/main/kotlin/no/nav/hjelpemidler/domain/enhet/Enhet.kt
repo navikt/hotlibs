@@ -3,14 +3,14 @@ package no.nav.hjelpemidler.domain.enhet
 import com.fasterxml.jackson.annotation.JsonAlias
 import no.nav.hjelpemidler.validering.nummerValidator
 
-class Enhet(
+open class Enhet(
     /**
      * Alias: "enhetNr" er bla. brukt i NORG2.
      */
     @JsonAlias("enhetsnummer", "enhetNr")
-    override val nummer: String,
+    final override val nummer: String,
     @JsonAlias("enhetsnavn")
-    override val navn: String,
+    final override val navn: String,
 ) : AbstractEnhet() {
     init {
         require(erGyldig(nummer)) { "Ugyldig enhetsnummer: '$nummer'" }
