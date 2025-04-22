@@ -1,6 +1,7 @@
 package no.nav.hjelpemidler.domain.enhet
 
 import com.fasterxml.jackson.annotation.JsonAlias
+import com.fasterxml.jackson.annotation.JsonIgnore
 import no.nav.hjelpemidler.validering.nummerValidator
 
 open class Enhet(
@@ -12,6 +13,9 @@ open class Enhet(
     @JsonAlias("enhetsnavn")
     final override val navn: String,
 ) : AbstractEnhet() {
+    @JsonIgnore
+    constructor(enhet: Enhet) : this(enhet.nummer, enhet.navn)
+
     init {
         require(erGyldig(nummer)) { "Ugyldig enhetsnummer: '$nummer'" }
     }
