@@ -21,7 +21,7 @@ open class Enhet(
     }
 
     /**
-     * NB! Ikke alle sentraler er lagt til her pt. Kun de som brukes i logikk og/eller tester.
+     * NB! Dette er ikke en fullstendig liste av enheter. Kun de som brukes i logikk og/eller tester.
      *
      * @see [no.nav.hjelpemidler.domain.enhet.EnhetTest]
      */
@@ -53,10 +53,22 @@ open class Enhet(
             Enhet(nummer = "4485", navn = "Nav arbeid og ytelser - hjelpemidler")
 
         /**
+         * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/4700">NORG2</a>
+         */
+        val STYRINGSENHETEN_FOR_NAV_HJELPEMIDLER_OG_TILRETTELEGGING =
+            Enhet(nummer = "4700", navn = "Styringsenheten for Nav hjelpemidler og tilrettelegging")
+
+        /**
          * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/4701">NORG2</a>
          */
         val NAV_HJELPEMIDDELSENTRAL_ØST_VIKEN =
             Enhet(nummer = "4701", navn = "Nav hjelpemiddelsentral Øst-Viken")
+
+        /**
+         * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/4702">NORG2</a>
+         */
+        val NAV_HJELPEMIDDELSENTRAL_AKERSHUS =
+            Enhet(nummer = "4702", navn = "Nav hjelpemiddelsentral Akershus")
 
         /**
          * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/4703">NORG2</a>
@@ -65,16 +77,54 @@ open class Enhet(
             Enhet(nummer = "4703", navn = "Nav hjelpemiddelsentral Oslo")
 
         /**
+         * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/4704">NORG2</a>
+         */
+        val NAV_HJELPEMIDDELSENTRAL_INNLANDET_ELVERUM =
+            Enhet(nummer = "4704", navn = "Nav hjelpemiddelsentral Innlandet-Elverum")
+
+        /**
+         * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/4705">NORG2</a>
+         */
+        val NAV_HJELPEMIDDELSENTRAL_INNLANDET_GJØVIK =
+            Enhet(nummer = "4705", navn = "Nav hjelpemiddelsentral Innlandet-Gjøvik")
+
+        /**
+         * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/4706">NORG2</a>
+         */
+        val NAV_HJELPEMIDDELSENTRAL_VEST_VIKEN =
+            Enhet(nummer = "4706", navn = "Nav hjelpemiddelsentral Vest-Viken")
+
+        /**
          * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/4707">NORG2</a>
          */
         val NAV_HJELPEMIDDELSENTRAL_VESTFOLD_OG_TELEMARK =
             Enhet(nummer = "4707", navn = "Nav hjelpemiddelsentral Vestfold og Telemark")
 
         /**
+         * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/4708">NORG2</a>
+         */
+        @Deprecated("Nedlagt")
+        val NAV_HJELPEMIDDELSENTRAL_VESTFOLD_OG_TELEMARK_SKIEN =
+            Enhet(nummer = "4708", navn = "NAV Hjelpemiddelsentral Vestfold og Telemark-Skien")
+
+        /**
+         * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/4709">NORG2</a>
+         */
+        @Deprecated("Nedlagt")
+        val NAV_HJELPEMIDDELSENTRAL_AGDER_ARENDAL =
+            Enhet(nummer = "4709", navn = "NAV Hjelpemiddelsentral Agder-Arendal")
+
+        /**
          * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/4710">NORG2</a>
          */
         val NAV_HJELPEMIDDELSENTRAL_AGDER =
             Enhet(nummer = "4710", navn = "Nav hjelpemiddelsentral Agder")
+
+        /**
+         * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/4711">NORG2</a>
+         */
+        val NAV_HJELPEMIDDELSENTRAL_ROGALAND =
+            Enhet(nummer = "4711", navn = "Nav hjelpemiddelsentral Rogaland")
 
         /**
          * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/4712">NORG2</a>
@@ -99,6 +149,25 @@ open class Enhet(
          */
         val NAV_HJELPEMIDDELSENTRAL_TRØNDELAG =
             Enhet(nummer = "4716", navn = "Nav hjelpemiddelsentral Trøndelag")
+
+        /**
+         * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/4718">NORG2</a>
+         */
+        val NAV_HJELPEMIDDELSENTRAL_NORDLAND =
+            Enhet(nummer = "4718", navn = "Nav hjelpemiddelsentral Nordland")
+
+        /**
+         * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/4719">NORG2</a>
+         */
+        val NAV_HJELPEMIDDELSENTRAL_TROMS_OG_FINNMARK =
+            Enhet(nummer = "4719", navn = "Nav hjelpemiddelsentral Troms og Finnmark")
+
+        /**
+         * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/4720">NORG2</a>
+         */
+        @Deprecated("Under avvikling")
+        val NAV_HJELPEMIDDELSENTRAL_TROMS_OG_FINNMARK_LAKSELV =
+            Enhet(nummer = "4720", navn = "Nav hjelpemiddelsentral Troms og Finnmark-Lakselv")
 
         /**
          * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/9999">NORG2</a>
