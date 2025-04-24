@@ -19,12 +19,32 @@ import kotlin.test.Test
 class EnhetTest {
     @Test
     fun `Enheter med likt nummer er like`() {
-        Enhet("1234", "A") shouldBe Enhet("1234", "B")
+        val enhetA = Enhet("1234", "A")
+        val enhetB = Enhet(enhetA.nummer, "B")
+
+        enhetA shouldBe enhetB
+
+        enhetA.compareTo(enhetB) shouldBe 0
     }
 
     @Test
     fun `Enheter med ulikt nummer er ulike`() {
-        Enhet("0001", "A") shouldNotBe Enhet("0002", "A")
+        val enhetA = Enhet("0001", "A")
+        val enhetB = Enhet("0002", enhetA.navn)
+
+        enhetA shouldNotBe enhetB
+
+        enhetA.compareTo(enhetB) shouldNotBe 0
+    }
+
+    @Test
+    fun `Ulike underklasser av Enhet er ulike`() {
+        val enhetA = object : Enhet("2050", "A") {}
+        val enhetB = object : Enhet(enhetA) {}
+
+        enhetA shouldNotBe enhetB
+
+        enhetA.compareTo(enhetB) shouldNotBe 0
     }
 
     @TestFactory
