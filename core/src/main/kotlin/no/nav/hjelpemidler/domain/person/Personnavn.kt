@@ -8,6 +8,10 @@ data class Personnavn(
     override fun toString(): String = listOfNotNull(fornavn, mellomnavn, etternavn)
         .filter(String::isNotBlank)
         .joinToString(" ", transform = String::trim)
+
+    companion object {
+        val UKJENT: Personnavn = Personnavn(fornavn = "Ukjent", etternavn = "Ukjent")
+    }
 }
 
 fun lagPersonnavn(fornavn: String, mellomnavn: String? = null, etternavn: String): Personnavn =
