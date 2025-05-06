@@ -22,7 +22,7 @@ val OpenIDPlugin = createClientPlugin("OpenIDPlugin", ::OpenIDPluginConfiguratio
         httpClientFactory = createHttpClientFactory(client.engine),
     ).withScope(pluginConfig.scope)
     onRequest { request, _ ->
-        request.bearerAuth(tokenSetProvider())
+        request.bearerAuth(tokenSetProvider(request))
     }
 }
 
@@ -42,11 +42,11 @@ fun HttpClientConfig<*>.openID(
     block: OpenIDPluginConfiguration.() -> Unit = {},
 ) = openID(openIDClient?.withScope(scope), block)
 
-fun HttpClientConfig<*>.azureAD(
+fun HttpClientConfig<*>.entraID(
     scope: String,
     engine: HttpClientEngine = CIO.create(),
     block: OpenIDClientConfiguration.() -> Unit = {},
-) = openID(azureADClient(engine, block).withScope(scope))
+) = openID(entraIDClient(engine, block).withScope(scope))
 
 fun HttpClientConfig<*>.tokenX(
     scope: String,

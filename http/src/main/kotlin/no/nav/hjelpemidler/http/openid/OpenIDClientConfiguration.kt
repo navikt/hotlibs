@@ -13,7 +13,7 @@ class OpenIDClientConfiguration internal constructor() {
     var clientId: String = ""
     var clientSecret: String? = null
 
-    fun azureADEnvironmentConfiguration() {
+    fun entraIDEnvironmentConfiguration() {
         tokenEndpoint = EntraIDEnvironmentVariable.AZURE_OPENID_CONFIG_TOKEN_ENDPOINT
         clientId = EntraIDEnvironmentVariable.AZURE_APP_CLIENT_ID
         clientSecret = EntraIDEnvironmentVariable.AZURE_APP_CLIENT_SECRET

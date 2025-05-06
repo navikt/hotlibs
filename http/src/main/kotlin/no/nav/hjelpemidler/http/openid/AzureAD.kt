@@ -5,26 +5,26 @@ import no.nav.hjelpemidler.configuration.EntraIDEnvironmentVariable
 import no.nav.hjelpemidler.http.DefaultHttpClientFactory
 import no.nav.hjelpemidler.http.HttpClientFactory
 
-fun azureADEnvironmentConfiguration(): OpenIDConfiguration = DefaultOpenIDConfiguration(
+fun entraIDEnvironmentConfiguration(): OpenIDConfiguration = DefaultOpenIDConfiguration(
     tokenEndpoint = EntraIDEnvironmentVariable.AZURE_OPENID_CONFIG_TOKEN_ENDPOINT,
     clientId = EntraIDEnvironmentVariable.AZURE_APP_CLIENT_ID,
     clientSecret = EntraIDEnvironmentVariable.AZURE_APP_CLIENT_SECRET,
 )
 
-fun azureADClient(
+fun entraIDClient(
     httpClientFactory: HttpClientFactory = DefaultHttpClientFactory,
     block: OpenIDClientConfiguration.() -> Unit = {},
 ): OpenIDClient =
     createOpenIDClient(httpClientFactory = httpClientFactory) {
-        azureADEnvironmentConfiguration()
+        entraIDEnvironmentConfiguration()
         block()
     }
 
-fun azureADClient(
+fun entraIDClient(
     engine: HttpClientEngine,
     block: OpenIDClientConfiguration.() -> Unit = {},
 ): OpenIDClient =
     createOpenIDClient(engine = engine) {
-        azureADEnvironmentConfiguration()
+        entraIDEnvironmentConfiguration()
         block()
     }
