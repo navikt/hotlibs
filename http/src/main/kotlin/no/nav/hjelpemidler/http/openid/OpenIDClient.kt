@@ -43,13 +43,15 @@ interface OpenIDClient {
     fun withScope(scope: String): TokenSetProvider = TokenSetProvider { grant(scope) }
 
     fun withMaskinportenAssertion(scope: String): TokenSetProvider {
+        val rsaKey = RSAKey.parse(MaskinportenEnvironmentVariable.MASKINPORTEN_CLIENT_JWK)
+        val header = JWSHeader.Builder(JWSAlgorithm.RS256)
+            .keyID(rsaKey.keyID)
+            .type(JOSEObjectType.JWT)
+            .build()
+        val signer = RSASSASigner(rsaKey.toPrivateKey())
         return TokenSetProvider {
-            val rsaKey = RSAKey.parse(MaskinportenEnvironmentVariable.MASKINPORTEN_CLIENT_JWK)
             val signedJWT = SignedJWT(
-                JWSHeader.Builder(JWSAlgorithm.RS256)
-                    .keyID(rsaKey.keyID)
-                    .type(JOSEObjectType.JWT)
-                    .build(),
+                header,
                 JWTClaimsSet.Builder()
                     .audience(MaskinportenEnvironmentVariable.MASKINPORTEN_ISSUER)
                     .issuer(MaskinportenEnvironmentVariable.MASKINPORTEN_CLIENT_ID)
@@ -59,9 +61,9 @@ interface OpenIDClient {
                     .jwtID(UUID.randomUUID().toString())
                     .build(),
             )
-            signedJWT.sign(RSASSASigner(rsaKey.toPrivateKey()))
-            val assertion = signedJWT.serialize()
+            signedJWT.sign(signer)
 
+            val assertion = signedJWT.serialize()
             grant(scope, assertion)
         }
     }
