@@ -1,11 +1,11 @@
 package no.nav.hjelpemidler.rapids_and_rivers
 
 import com.fasterxml.jackson.databind.PropertyName
-import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import no.nav.hjelpemidler.collections.filterNotNull
 import no.nav.hjelpemidler.collections.mapOfNotNull
 import no.nav.hjelpemidler.kafka.KafkaMessage
+import no.nav.hjelpemidler.serialization.jackson.introspectForDeserialization
 import no.nav.hjelpemidler.serialization.jackson.jsonMapper
 import no.nav.hjelpemidler.serialization.jackson.jsonToValue
 import no.nav.hjelpemidler.serialization.jackson.uuidValue
@@ -40,10 +40,7 @@ inline fun <reified T : Any> JsonMessage.value(): T = jsonToValue<T>(toJson())
 inline fun <reified T : KafkaMessage> JsonMessage.require() {
     requireKey(KafkaMessage.EVENT_ID_KEY, KafkaMessage.EVENT_NAME_KEY)
 
-    val description = jsonMapper.deserializationConfig.run {
-        introspect(constructType(jacksonTypeRef<T>()))
-    }
-
+    val description = jsonMapper.introspectForDeserialization<T>()
     description.findProperties()
         .forEach { property ->
             val aliases = property
