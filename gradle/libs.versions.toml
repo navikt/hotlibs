@@ -1,7 +1,7 @@
 [versions]
 # Nyeste versjon finner du her: https://github.com/navikt/hm-soknadsbehandling-db/packages
 behovsmeldingsmodell = "25.129.114734"
-bigquery = "2.49.2"
+bigquery = "2.50.0"
 cacheApi = "1.1.1"
 caffeine = "3.2.0"
 classgraph = "4.8.179"
@@ -14,7 +14,7 @@ confluent = "7.9.0"
 contractPdlAvro = "1.0.2"
 cyclonedx = "2.3.0"
 ehcache = "3.10.8"
-flyway = "11.8.0"
+flyway = "11.8.1"
 graphql = "8.7.0"
 graphql-java = "23.1"
 h2 = "2.3.232"
@@ -30,7 +30,7 @@ joseJwt = "10.2"
 jsoup = "1.20.1"
 junit = "5.12.2"
 kafka = "3.9.0"
-koin = "4.1.0-Beta8"
+koin = "4.1.0-Beta10"
 konfig = "1.6.10.0"
 kotest = "5.9.1"
 kotest-ktor = "2.0.0"
@@ -54,7 +54,7 @@ netty = "4.1.121.Final"
 nocommons = "0.16.0"
 openapi = "7.13.0"
 openhtmltopdf = "1.1.28"
-oracle = "23.7.0.25.01"
+oracle = "23.8.0.25.04"
 postgresql = "42.7.5"
 prometheus = "1.3.6"
 prometheus-deprecated = "0.16.0"
@@ -141,7 +141,7 @@ kafka-streams-avro-serde = { module = "io.confluent:kafka-streams-avro-serde", v
 kafka-streams-test-utils = { module = "org.apache.kafka:kafka-streams-test-utils", version.ref = "kafka" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-core-coroutines = { module = "io.insert-koin:koin-core-coroutines", version.ref = "koin" }
-koin-ktor3 = { module = "io.insert-koin:koin-ktor3", version.ref = "koin" }
+koin-ktor3 = "io.insert-koin:koin-ktor3:4.1.0-Beta8"
 koin-logger-slf4j = { module = "io.insert-koin:koin-logger-slf4j", version.ref = "koin" }
 koin-test-junit5 = { module = "io.insert-koin:koin-test-junit5", version.ref = "koin" }
 konfig-deprecated = { module = "com.natpryce:konfig", version.ref = "konfig" }
