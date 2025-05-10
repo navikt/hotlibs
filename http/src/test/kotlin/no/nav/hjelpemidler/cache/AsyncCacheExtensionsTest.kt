@@ -21,14 +21,15 @@ class AsyncCacheExtensionsTest {
     @Test
     fun `Skal kaste feil fra compute`() = runTest {
         shouldThrow<IllegalStateException> {
-            cache.computeAsync("test") { error("Error!") }
+            cache.computeAsync("test") { _, _ -> error("Error!") }
         }
     }
 
     @Test
     fun `Skal fjerne verdi fra cache`() = runTest {
         val key = "test"
-        val i1 = cache.computeAsync(key) { nå() }.shouldNotBeNull()
+        cache.computeAsync(key) { _, _ -> nå() }.shouldNotBeNull()
+        val i1 = cache.computeAsync(key) { _, value -> value!!.plusSeconds(60) }.shouldNotBeNull()
         val i2 = cache.removeAsync(key).shouldNotBeNull()
         i1 shouldBe i2
     }

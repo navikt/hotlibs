@@ -29,10 +29,10 @@ suspend fun <K : Any, V> AsyncCache<K, V>.getAllAsync(
 
 suspend fun <K : Any, V> AsyncCache<K, V>.computeAsync(
     key: K,
-    loader: suspend CoroutineScope.(K) -> V,
+    loader: suspend CoroutineScope.(K, V?) -> V,
 ): V? = coroutineScope {
-    asMap().compute(key) { key, _ ->
-        future { loader(key) }
+    asMap().compute(key) { key, value ->
+        future { loader(key, value?.await()) }
     }?.await()
 }
 
