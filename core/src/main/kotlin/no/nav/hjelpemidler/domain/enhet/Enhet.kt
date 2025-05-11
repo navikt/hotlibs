@@ -2,23 +2,21 @@ package no.nav.hjelpemidler.domain.enhet
 
 import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonIgnore
-import no.nav.hjelpemidler.validering.nummerValidator
 
 open class Enhet(
     /**
      * Alias: "enhetNr" er bla. brukt i NORG2.
      */
     @JsonAlias("enhetsnummer", "enhetNr")
-    final override val nummer: String,
+    final override val nummer: Enhetsnummer,
     @JsonAlias("enhetsnavn")
     final override val navn: String,
 ) : AbstractEnhet() {
     @JsonIgnore
-    constructor(enhet: Enhet) : this(enhet.nummer, enhet.navn)
+    constructor(nummer: String, navn: String) : this(Enhetsnummer(nummer), navn)
 
-    init {
-        require(erGyldig(nummer)) { "Ugyldig enhetsnummer: '$nummer'" }
-    }
+    @JsonIgnore
+    constructor(enhet: Enhet) : this(enhet.nummer, enhet.navn)
 
     /**
      * NB! Dette er ikke en fullstendig liste av enheter. Kun de som brukes i logikk og/eller tester.
@@ -26,8 +24,6 @@ open class Enhet(
      * @see [no.nav.hjelpemidler.domain.enhet.EnhetTest]
      */
     companion object {
-        private val erGyldig = nummerValidator(lengde = 4)
-
         /**
          * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/2103">NORG2</a>
          */

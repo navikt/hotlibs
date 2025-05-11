@@ -1,13 +1,13 @@
-package no.nav.hjelpemidler.domain.enhet
+package no.nav.hjelpemidler.domain.geografi
 
-abstract class AbstractEnhet : Comparable<AbstractEnhet> {
-    abstract val nummer: Enhetsnummer
+sealed class GeografiskEnhet : Comparable<GeografiskEnhet> {
+    abstract val nummer: String
     abstract val navn: String
 
-    operator fun component1(): Enhetsnummer = nummer
+    operator fun component1(): String = nummer
     operator fun component2(): String = navn
 
-    override fun compareTo(other: AbstractEnhet): Int {
+    override fun compareTo(other: GeografiskEnhet): Int {
         val nummerComparison = nummer.compareTo(other.nummer)
         return if (nummerComparison == 0) javaClass.name.compareTo(other.javaClass.name) else nummerComparison
     }
@@ -15,7 +15,7 @@ abstract class AbstractEnhet : Comparable<AbstractEnhet> {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
-        other as AbstractEnhet
+        other as GeografiskEnhet
         return nummer == other.nummer
     }
 

@@ -9,7 +9,7 @@ class Bydel(
     override val nummer: String,
     @JsonAlias("bydelsnavn")
     override val navn: String,
-) : AbstractEnhet() {
+) : GeografiskEnhet() {
     init {
         require(erGyldig(nummer)) { "Ugyldig bydelsnummer: '$nummer'" }
     }

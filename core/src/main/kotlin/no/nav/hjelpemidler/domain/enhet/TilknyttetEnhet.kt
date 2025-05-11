@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 
 interface TilknyttetEnhet {
     val enhet: Enhet
-    val enhetsnummer: String
+    val enhetsnummer: Enhetsnummer
         @JsonIgnore
         get() = enhet.nummer
 }
