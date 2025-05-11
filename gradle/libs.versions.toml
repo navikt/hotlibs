@@ -26,11 +26,11 @@ java = "21"
 javaJwt = "4.5.0"
 jedis = "6.0.0"
 jetbrains-annotations = "26.0.2"
-joseJwt = "10.2"
+joseJwt = "10.3"
 jsoup = "1.20.1"
 junit = "5.12.2"
 kafka = "3.9.0"
-koin = "4.1.0-Beta10"
+koin = "4.1.0-Beta11"
 konfig = "1.6.10.0"
 kotest = "5.9.1"
 kotest-ktor = "2.0.0"
@@ -71,6 +71,7 @@ tmsKtorTokenSupport = "5.0.1"
 tmsVarsel = "2.1.1"
 unleash = "10.2.2"
 unleash-deprecated = "4.4.1"
+valkey = "5.3.0"
 versionCatalogUpdate = "1.0.0"
 versions = "0.52.0"
 wiremock = "3.13.0"
@@ -262,6 +263,7 @@ tokenx-validation-mock = { module = "no.nav.tms.token.support:tokenx-validation-
 ucp11 = { module = "com.oracle.database.jdbc:ucp11", version.ref = "oracle" }
 unleash = { module = "io.getunleash:unleash-client-java", version.ref = "unleash" }
 unleash-deprecated = { module = "no.finn.unleash:unleash-client-java", version.ref = "unleash-deprecated" }
+valkey = { module = "io.valkey:valkey-java", version.ref = "valkey" }
 varsel-kotlin-builder = { module = "no.nav.tms.varsel:kotlin-builder", version.ref = "tmsVarsel" }
 wiremock = { module = "org.wiremock:wiremock", version.ref = "wiremock" }
 zjsonpatch = { module = "com.flipkart.zjsonpatch:zjsonpatch", version.ref = "zjsonpatch" }
