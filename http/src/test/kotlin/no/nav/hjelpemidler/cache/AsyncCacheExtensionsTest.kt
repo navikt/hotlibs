@@ -1,6 +1,7 @@
 package no.nav.hjelpemidler.cache
 
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.test.runTest
@@ -32,5 +33,14 @@ class AsyncCacheExtensionsTest {
         val i1 = cache.computeAsync(key) { _, value -> value!!.plusSeconds(60) }.shouldNotBeNull()
         val i2 = cache.removeAsync(key).shouldNotBeNull()
         i1 shouldBe i2
+    }
+
+    @Test
+    fun nullability() = runTest {
+        val key = "test"
+        val cache = createCache().buildAsync<String, Instant?>()
+        cache.getAsync(key) { null }.shouldBeNull()
+        cache.computeIfAbsentAsync(key) { nå() }.shouldNotBeNull()
+        cache.computeIfPresentAsync(key) { _, _ -> null }.shouldBeNull()
     }
 }

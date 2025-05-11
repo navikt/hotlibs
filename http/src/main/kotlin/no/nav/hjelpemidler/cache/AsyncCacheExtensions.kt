@@ -27,6 +27,24 @@ suspend fun <K : Any, V> AsyncCache<K, V>.getAllAsync(
     }.await()
 }
 
+suspend fun <K : Any, V> AsyncCache<K, V>.computeIfAbsentAsync(
+    key: K,
+    loader: suspend CoroutineScope.(K) -> V,
+): V? = coroutineScope {
+    asMap().computeIfAbsent(key) { key ->
+        future { loader(key) }
+    }?.await()
+}
+
+suspend fun <K : Any, V> AsyncCache<K, V>.computeIfPresentAsync(
+    key: K,
+    loader: suspend CoroutineScope.(K, V) -> V,
+): V? = coroutineScope {
+    asMap().computeIfPresent(key) { key, value ->
+        future { loader(key, value.await()) }
+    }?.await()
+}
+
 suspend fun <K : Any, V> AsyncCache<K, V>.computeAsync(
     key: K,
     loader: suspend CoroutineScope.(K, V?) -> V,
