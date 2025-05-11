@@ -1,7 +1,7 @@
 package no.nav.hjelpemidler.domain.geografi
 
 import com.fasterxml.jackson.annotation.JsonAlias
-import no.nav.hjelpemidler.validering.nummerValidator
+import no.nav.hjelpemidler.text.isInteger
 
 class Kommune(
     @JsonAlias("kommunenummer")
@@ -19,7 +19,7 @@ class Kommune(
      * @see [no.nav.hjelpemidler.domain.geografi.KommuneTest]
      */
     companion object {
-        private val erGyldig = nummerValidator(lengde = 4)
+        fun erGyldig(value: String): Boolean = value.length == 4 && value.isInteger()
 
         /**
          * @see <a href="https://digihot-oppslag.intern.dev.nav.no/api/geografi/kommuner/0301">DigiHoT Oppslag</a>

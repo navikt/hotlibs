@@ -1,6 +1,6 @@
 package no.nav.hjelpemidler.domain.geografi
 
-import no.nav.hjelpemidler.validering.nummerValidator
+import no.nav.hjelpemidler.text.isInteger
 
 data class Veiadresse(
     val adresse: String,
@@ -16,7 +16,7 @@ data class Veiadresse(
     override fun toString(): String = "$adresse, $postnummer $poststed"
 
     companion object {
-        private val erGyldigPostnummer = nummerValidator(lengde = 4)
+        fun erGyldigPostnummer(value: String): Boolean = value.length == 4 && value.isInteger()
     }
 }
 

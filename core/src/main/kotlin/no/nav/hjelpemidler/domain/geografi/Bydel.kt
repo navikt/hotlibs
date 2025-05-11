@@ -1,8 +1,7 @@
 package no.nav.hjelpemidler.domain.geografi
 
 import com.fasterxml.jackson.annotation.JsonAlias
-import no.nav.hjelpemidler.domain.enhet.AbstractEnhet
-import no.nav.hjelpemidler.validering.nummerValidator
+import no.nav.hjelpemidler.text.isInteger
 
 class Bydel(
     @JsonAlias("bydelsnummer")
@@ -18,7 +17,7 @@ class Bydel(
      * NB! Ikke alle bydeler er lagt til her pt. Kun de som brukes i logikk og/eller tester.
      */
     companion object {
-        private val erGyldig = nummerValidator(lengde = 6)
+        fun erGyldig(value: String): Boolean = value.length == 6 && value.isInteger()
 
         /**
          * @see <a href="https://digihot-oppslag.intern.dev.nav.no/api/geografi/bydeler/030105">DigiHoT Oppslag</a>
