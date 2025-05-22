@@ -9,7 +9,7 @@ private val log = KotlinLogging.logger {}
  * Inneholder alle miljøvariabler fra [System.getenv] i tillegg til variabler fra properties-fil for
  * gjeldende miljø (hvis denne finnes).
  *
- * NB! Variabler fra properties-fil overstyrer de fra [System.getenv].
+ * NB! Variabler fra [System.getenv] overstyrer de fra properties-fil.
  *
  * @see [System.getenv]
  */
