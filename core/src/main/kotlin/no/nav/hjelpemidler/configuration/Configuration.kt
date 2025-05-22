@@ -48,7 +48,7 @@ class Configuration internal constructor(
                 }
                 .mapKeys { it.key.toString() }
                 .mapValues { it.value.toString() }
-            return Configuration((System.getenv() + properties).toSortedMap())
+            return Configuration((properties + System.getenv()).toSortedMap())
         }
     }
 }
