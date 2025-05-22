@@ -16,4 +16,11 @@ class ConfigurationTest {
         val configuration = Configuration.load(GcpEnvironment.DEV)
         configuration shouldNotBe null
     }
+
+    @Test
+    fun `Envvar overstyrer properties`() {
+        val configuration = Configuration.load(TestEnvironment)
+        configuration["TEST_CONFIGURATION_ENVVAR_OVER_PROPERTIES"] shouldNotBe "9000"
+        configuration["TEST_CONFIGURATION_ENVVAR_OVER_PROPERTIES"] shouldBe "9001"
+    }
 }

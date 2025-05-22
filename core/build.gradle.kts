@@ -29,6 +29,13 @@ testing {
                 implementation(project())
                 implementation(testFixtures(project()))
             }
+            targets {
+                all {
+                    testTask.configure {
+                        environment("TEST_CONFIGURATION_ENVVAR_OVER_PROPERTIES", "9001")
+                    }
+                }
+            }
         }
 
         val jacksonTest by registering(JvmTestSuite::class) {
