@@ -1,6 +1,5 @@
 package no.nav.hjelpemidler.configuration
 
-import io.kotest.extensions.system.withEnvironment
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import kotlin.test.Test
@@ -19,11 +18,9 @@ class ConfigurationTest {
     }
 
     @Test
-    fun `Env overstyrer properties`() {
-        withEnvironment("PORT", "8081") {
-            val configuration = Configuration.load(TestEnvironment)
-            configuration["PORT"] shouldNotBe "8080"
-            configuration["PORT"] shouldBe "8081"
-        }
+    fun `Envvar overstyrer properties`() {
+        val configuration = Configuration.load(TestEnvironment)
+        configuration["TEST_CONFIGURATION_ENVVAR_OVER_PROPERTIES"] shouldNotBe "9000"
+        configuration["TEST_CONFIGURATION_ENVVAR_OVER_PROPERTIES"] shouldBe "9001"
     }
 }

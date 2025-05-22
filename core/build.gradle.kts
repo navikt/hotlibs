@@ -19,9 +19,6 @@ dependencies {
     // Fixtures
     testFixturesCompileOnly(libs.jackson.annotations)
     testFixturesCompileOnly(libs.kotlinx.serialization.core)
-
-    // Kotest extensions for withEnvironment("KEY", "VAL") { (...) }
-    testImplementation(libs.kotest.extensions.jvm)
 }
 
 @Suppress("UnstableApiUsage")
@@ -31,6 +28,13 @@ testing {
             dependencies {
                 implementation(project())
                 implementation(testFixtures(project()))
+            }
+            targets {
+                all {
+                    testTask.configure {
+                        environment("TEST_CONFIGURATION_ENVVAR_OVER_PROPERTIES", "9001")
+                    }
+                }
             }
         }
 
@@ -50,9 +54,4 @@ testing {
 @Suppress("UnstableApiUsage")
 tasks.named("check") {
     dependsOn(testing.suites.named("jacksonTest"), testing.suites.named("serializationTest"))
-}
-
-// Required for kotest extensions for withEnvironment("KEY", "VAL") { (...) }
-tasks.withType<Test>().configureEach {
-    jvmArgs("--add-opens=java.base/java.util=ALL-UNNAMED")
 }
