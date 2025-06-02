@@ -10,6 +10,7 @@ import io.github.oshai.kotlinlogging.Marker
 /**
  * Logger for `tjenestekall` som alltid bruker marker `secureLog` i tilfelle appender skulle kreve det.
  */
+@Deprecated("Bruk hotlibs.logging TeamLogsExtensions i stedet.")
 val secureLog: KLogger = object : KLogger {
     private val wrapped = KotlinLogging.logger("tjenestekall")
     private val secureLogMarker: Marker = KMarkerFactory.getMarker("secureLog")
