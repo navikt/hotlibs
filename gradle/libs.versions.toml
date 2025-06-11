@@ -1,6 +1,6 @@
 [versions]
 # Nyeste versjon finner du her: https://github.com/navikt/hm-soknadsbehandling-db/packages
-behovsmeldingsmodell = "25.155.101525"
+behovsmeldingsmodell = "25.161.104858"
 bigquery = "2.50.0"
 cacheApi = "1.1.1"
 caffeine = "3.2.0"
