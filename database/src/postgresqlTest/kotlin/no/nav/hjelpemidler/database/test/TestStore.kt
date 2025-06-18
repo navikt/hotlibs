@@ -5,7 +5,6 @@ import no.nav.hjelpemidler.database.Row
 import no.nav.hjelpemidler.database.Store
 import no.nav.hjelpemidler.database.UpdateResult
 import no.nav.hjelpemidler.database.sql.Sql
-import no.nav.hjelpemidler.database.toMap
 import no.nav.hjelpemidler.database.toQueryParameters
 
 class TestStore(private val tx: JdbcOperations) : Store {

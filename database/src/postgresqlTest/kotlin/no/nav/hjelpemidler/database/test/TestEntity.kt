@@ -3,12 +3,9 @@ package no.nav.hjelpemidler.database.test
 import com.fasterxml.jackson.databind.JsonNode
 import no.nav.hjelpemidler.database.QueryParameters
 import no.nav.hjelpemidler.database.Row
-import no.nav.hjelpemidler.database.aktørIdOrNull
 import no.nav.hjelpemidler.database.enum
-import no.nav.hjelpemidler.database.fødselsnummerOrNull
 import no.nav.hjelpemidler.database.json
 import no.nav.hjelpemidler.database.pgJsonbOf
-import no.nav.hjelpemidler.database.treeOrNull
 import no.nav.hjelpemidler.domain.person.AktørId
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.år

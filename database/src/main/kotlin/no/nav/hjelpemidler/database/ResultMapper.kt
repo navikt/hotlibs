@@ -1,3 +1,3 @@
 package no.nav.hjelpemidler.database
 
-typealias ResultMapper<T> = (Row) -> T?
+fun interface ResultMapper<T> : (Row) -> T?

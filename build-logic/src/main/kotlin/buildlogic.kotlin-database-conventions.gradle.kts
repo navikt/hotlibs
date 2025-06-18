@@ -15,6 +15,7 @@ plugins {
 val libs = the<LibrariesForLibs>()
 
 val h2: SourceSet = sourceSets.create("h2")
+val jpa: SourceSet = sourceSets.create("jpa")
 val ktor: SourceSet = sourceSets.create("ktor")
 val oracle: SourceSet = sourceSets.create("oracle")
 val postgresql: SourceSet = sourceSets.create("postgresql") // inkluderer flyway
@@ -27,6 +28,12 @@ java {
     registerFeature(h2.name) {
         usingSourceSet(h2)
         capability(capabilityGroup, "${project.name}-${h2.name}", capabilityVersion)
+        withSourcesJar()
+    }
+
+    registerFeature(jpa.name) {
+        usingSourceSet(jpa)
+        capability(capabilityGroup, "${project.name}-${jpa.name}", capabilityVersion)
         withSourcesJar()
     }
 
@@ -59,6 +66,33 @@ java {
 testing {
     suites {
         val test by getting(JvmTestSuite::class)
+        val jpaTest by registering(JvmTestSuite::class) {
+            dependencies {
+                implementation(project(path)) {
+                    capabilities {
+                        requireCapability("${project.group}:${project.name}-${postgresql.name}")
+                    }
+                }
+                implementation(project(path)) {
+                    capabilities {
+                        requireCapability("${project.group}:${project.name}-${testcontainers.name}")
+                    }
+                }
+                implementation(project(path)) {
+                    capabilities {
+                        requireCapability("${project.group}:${project.name}-${jpa.name}")
+                    }
+                }
+            }
+
+            targets {
+                all {
+                    testTask.configure {
+                        shouldRunAfter(test)
+                    }
+                }
+            }
+        }
         val postgresqlTest by registering(JvmTestSuite::class) {
             dependencies {
                 implementation(project(path)) {

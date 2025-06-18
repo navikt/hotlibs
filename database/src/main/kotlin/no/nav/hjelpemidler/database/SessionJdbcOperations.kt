@@ -1,34 +1,33 @@
 package no.nav.hjelpemidler.database
 
 import kotliquery.Session
-import no.nav.hjelpemidler.database.sql.Sql
 import java.io.Closeable
 
 internal class SessionJdbcOperations(private val session: Session) : JdbcOperations, Closeable by session {
     override fun <T : Any> single(
-        sql: Sql,
+        sql: CharSequence,
         queryParameters: QueryParameters,
         mapper: ResultMapper<T>,
     ): T = singleOrNull(sql, queryParameters, mapper)
         ?: throw NoSuchElementException("Spørringen ga ingen treff i databasen")
 
     override fun <T> singleOrNull(
-        sql: Sql,
+        sql: CharSequence,
         queryParameters: QueryParameters,
         mapper: ResultMapper<T>,
-    ): T? = session.single(queryOf(sql, queryParameters), mapper)
+    ): T? = session.single(queryOf(sql, queryParameters)) { mapper(ResultSetRow(it)) }
 
     override fun <T : Any> list(
-        sql: Sql,
+        sql: CharSequence,
         queryParameters: QueryParameters,
         mapper: ResultMapper<T>,
-    ): List<T> = session.list(queryOf(sql, queryParameters), mapper)
+    ): List<T> = session.list(queryOf(sql, queryParameters)) { mapper(ResultSetRow(it)) }
 
     /**
      * NB! Implementasjonen fungerer ikke med Oracle pt.
      */
     override fun <T : Any> page(
-        sql: Sql,
+        sql: CharSequence,
         queryParameters: QueryParameters,
         pageRequest: PageRequest,
         totalElementsLabel: String,
@@ -59,7 +58,7 @@ internal class SessionJdbcOperations(private val session: Session) : JdbcOperati
 
         val content = session.list(query) { row ->
             totalElements = row.longOrNull(totalElementsLabel) ?: -1
-            mapper(row)
+            mapper(ResultSetRow(row))
         }
 
         return pageOf(
@@ -70,40 +69,40 @@ internal class SessionJdbcOperations(private val session: Session) : JdbcOperati
     }
 
     override fun execute(
-        sql: Sql,
+        sql: CharSequence,
         queryParameters: QueryParameters,
     ): Boolean = session.execute(queryOf(sql, queryParameters))
 
     override fun update(
-        sql: Sql,
+        sql: CharSequence,
         queryParameters: QueryParameters,
     ): UpdateResult = UpdateResult(session.update(queryOf(sql, queryParameters)))
 
     override fun updateAndReturnGeneratedKey(
-        sql: Sql,
+        sql: CharSequence,
         queryParameters: QueryParameters,
     ): Long = checkNotNull(session.updateAndReturnGeneratedKey(queryOf(sql, queryParameters))) {
         "Generert nøkkel mangler"
     }
 
     override fun batch(
-        sql: Sql,
+        sql: CharSequence,
         queryParameters: Collection<QueryParameters>,
     ): List<Int> = session.batchPreparedNamedStatement(sql.toString(), queryParameters.prepare())
 
     override fun <T : Any> batch(
-        sql: Sql,
+        sql: CharSequence,
         items: Collection<T>,
         block: (T) -> QueryParameters,
     ): List<Int> = batch(sql, items.map(block))
 
     override fun batchAndReturnGeneratedKeys(
-        sql: Sql,
+        sql: CharSequence,
         queryParameters: Collection<QueryParameters>,
     ): List<Long> = session.batchPreparedNamedStatementAndReturnGeneratedKeys(sql.toString(), queryParameters.prepare())
 
     override fun <T : Any> batchAndReturnGeneratedKeys(
-        sql: Sql,
+        sql: CharSequence,
         items: Collection<T>,
         block: (T) -> QueryParameters,
     ): List<Long> = batchAndReturnGeneratedKeys(sql, items.map(block))

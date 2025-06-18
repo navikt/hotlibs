@@ -1,5 +1,7 @@
 plugins {
     id("buildlogic.kotlin-database-conventions")
+
+    alias(libs.plugins.kotlin.jpa)
 }
 
 dependencies {
@@ -11,12 +13,16 @@ dependencies {
     compileOnly(libs.jetbrains.annotations)
 
     // JDBC
-    api(libs.kotliquery)
     api(libs.hikaricp)
+    implementation(libs.kotliquery)
 
     // H2
     h2Api(project(path))
     h2RuntimeOnly(libs.h2)
+
+    // JPA
+    jpaApi(project(path))
+    jpaApi(libs.hibernate.core)
 
     // Ktor
     ktorApi(project(path))
@@ -44,5 +50,8 @@ dependencies {
 
 @Suppress("UnstableApiUsage")
 tasks.named("check") {
-    dependsOn(testing.suites.named("postgresqlTest"))
+    dependsOn(
+        testing.suites.named("jpaTest"),
+        testing.suites.named("postgresqlTest"),
+    )
 }

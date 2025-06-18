@@ -1,7 +1,6 @@
 package no.nav.hjelpemidler.database
 
 import kotliquery.Query
-import no.nav.hjelpemidler.database.sql.Sql
 import no.nav.hjelpemidler.domain.id.Id
 
 interface QueryParameter<out T> {
@@ -41,11 +40,8 @@ internal fun QueryParameters.prepare(): Map<String, Any?> = mapValues { (_, valu
 
 internal fun Collection<QueryParameters>.prepare(): List<Map<String, Any?>> = map(QueryParameters::prepare)
 
-fun queryOf(sql: Sql, queryParameters: QueryParameters): Query =
+fun queryOf(sql: CharSequence, queryParameters: QueryParameters): Query =
     Query(sql.toString(), listOf(), queryParameters.prepare())
-
-fun queryOf(sql: String, queryParameters: QueryParameters): Query =
-    queryOf(Sql(sql), queryParameters)
 
 /**
  * Legg til [prefix] og/eller [postfix] på [columnLabel].
