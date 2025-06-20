@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 
 data class PageRequest(
     val pageNumber: Int = 1,
-    val pageSize: Int = 25,
+    val pageSize: Int = 50,
 ) {
     init {
         require(pageNumber > 0) { "pageNumber: $pageNumber er ugyldig, må være positiv" }

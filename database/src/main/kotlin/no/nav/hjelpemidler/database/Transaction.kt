@@ -31,12 +31,12 @@ suspend fun <T> transactionAsync(
     queryTimeout: Int? = null,
     block: suspend (JdbcOperations) -> T,
 ): T {
-    val context = currentCoroutineContext()[TransactionContext] ?: return withContext(Dispatchers.IO) {
+    val context = currentCoroutineContext()[JdbcTransactionContext] ?: return withContext(Dispatchers.IO) {
         createSession(dataSource, returnGeneratedKeys, strict, queryTimeout).use { session ->
             withContext(transactionCoroutineDispatcher()) {
                 session.transaction {
                     val tx = SessionJdbcOperations(it)
-                    withContext(TransactionContext(tx, Thread.currentThread())) {
+                    withContext(JdbcTransactionContext(tx, Thread.currentThread())) {
                         block(tx)
                     }
                 }
@@ -50,10 +50,10 @@ suspend fun <T> transactionAsync(
     return block(context.tx)
 }
 
-private fun transactionCoroutineDispatcher(): CoroutineDispatcher =
+fun transactionCoroutineDispatcher(): CoroutineDispatcher =
     Executors.newSingleThreadExecutor().asCoroutineDispatcher()
 
-private class TransactionContext(val tx: JdbcOperations, val thread: Thread) :
-    AbstractCoroutineContextElement(TransactionContext) {
-    companion object Key : CoroutineContext.Key<TransactionContext>
+private class JdbcTransactionContext(val tx: JdbcOperations, val thread: Thread) :
+    AbstractCoroutineContextElement(JdbcTransactionContext) {
+    companion object Key : CoroutineContext.Key<JdbcTransactionContext>
 }

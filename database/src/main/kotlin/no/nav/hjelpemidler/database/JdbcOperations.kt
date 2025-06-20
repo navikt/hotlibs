@@ -3,9 +3,9 @@ package no.nav.hjelpemidler.database
 import org.intellij.lang.annotations.Language
 
 /**
- * Interface for kommunikasjon med en database.
+ * Interface for kommunikasjon med en database basert på JDBC.
  */
-interface JdbcOperations {
+interface JdbcOperations : DatabaseOperations {
     /**
      * @throws NoSuchElementException hvis spørringen ikke gir treff i databasen
      */
@@ -59,7 +59,7 @@ interface JdbcOperations {
         @Language("SQL") sql: CharSequence,
         items: Collection<T> = emptyList(),
         block: (T) -> QueryParameters,
-    ): List<Int>
+    ): List<Int> = batch(sql, items.map(block))
 
     fun batchAndReturnGeneratedKeys(
         @Language("SQL") sql: CharSequence,
@@ -70,5 +70,5 @@ interface JdbcOperations {
         @Language("SQL") sql: CharSequence,
         items: Collection<T> = emptyList(),
         block: (T) -> QueryParameters,
-    ): List<Long>
+    ): List<Long> = batchAndReturnGeneratedKeys(sql, items.map(block))
 }

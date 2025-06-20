@@ -28,4 +28,5 @@ fun <T> pageOf(
     pageRequest: PageRequest,
 ): Page<T> = DefaultPage(content, totalElements, pageRequest)
 
-fun <T> emptyPage(pageRequest: PageRequest = PageRequest()): Page<T> = pageOf(emptyList(), 0, pageRequest)
+fun <T> emptyPage(pageRequest: PageRequest = PageRequest()): Page<T> =
+    pageOf(emptyList(), 0, pageRequest)

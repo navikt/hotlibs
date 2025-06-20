@@ -1,7 +1,5 @@
 package no.nav.hjelpemidler.database
 
-import kotliquery.Session
-import kotliquery.sessionOf
 import javax.sql.DataSource
 
 internal fun createSession(
@@ -9,4 +7,4 @@ internal fun createSession(
     returnGeneratedKeys: Boolean = false,
     strict: Boolean = true,
     queryTimeout: Int? = null,
-): Session = sessionOf(dataSource, returnGeneratedKeys, strict, queryTimeout)
+): kotliquery.Session = kotliquery.sessionOf(dataSource, returnGeneratedKeys, strict, queryTimeout)

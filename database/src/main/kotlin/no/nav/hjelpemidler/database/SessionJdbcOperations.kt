@@ -1,9 +1,11 @@
 package no.nav.hjelpemidler.database
 
-import kotliquery.Session
 import java.io.Closeable
 
-internal class SessionJdbcOperations(private val session: Session) : JdbcOperations, Closeable by session {
+/**
+ * Implementasjon av [JdbcOperations] basert på [kotliquery.Session].
+ */
+internal class SessionJdbcOperations(private val session: kotliquery.Session) : JdbcOperations, Closeable by session {
     override fun <T : Any> single(
         sql: CharSequence,
         queryParameters: QueryParameters,
@@ -15,13 +17,13 @@ internal class SessionJdbcOperations(private val session: Session) : JdbcOperati
         sql: CharSequence,
         queryParameters: QueryParameters,
         mapper: ResultMapper<T>,
-    ): T? = session.single(queryOf(sql, queryParameters)) { mapper(ResultSetRow(it)) }
+    ): T? = session.single(queryOf(sql, queryParameters)) { mapper(Row(it)) }
 
     override fun <T : Any> list(
         sql: CharSequence,
         queryParameters: QueryParameters,
         mapper: ResultMapper<T>,
-    ): List<T> = session.list(queryOf(sql, queryParameters)) { mapper(ResultSetRow(it)) }
+    ): List<T> = session.list(queryOf(sql, queryParameters)) { mapper(Row(it)) }
 
     /**
      * NB! Implementasjonen fungerer ikke med Oracle pt.
@@ -56,9 +58,9 @@ internal class SessionJdbcOperations(private val session: Session) : JdbcOperati
             )
         }
 
-        val content = session.list(query) { row ->
-            totalElements = row.longOrNull(totalElementsLabel) ?: -1
-            mapper(ResultSetRow(row))
+        val content = session.list(query) {
+            totalElements = it.longOrNull(totalElementsLabel) ?: -1
+            mapper(Row(it))
         }
 
         return pageOf(
@@ -90,20 +92,8 @@ internal class SessionJdbcOperations(private val session: Session) : JdbcOperati
         queryParameters: Collection<QueryParameters>,
     ): List<Int> = session.batchPreparedNamedStatement(sql.toString(), queryParameters.prepare())
 
-    override fun <T : Any> batch(
-        sql: CharSequence,
-        items: Collection<T>,
-        block: (T) -> QueryParameters,
-    ): List<Int> = batch(sql, items.map(block))
-
     override fun batchAndReturnGeneratedKeys(
         sql: CharSequence,
         queryParameters: Collection<QueryParameters>,
     ): List<Long> = session.batchPreparedNamedStatementAndReturnGeneratedKeys(sql.toString(), queryParameters.prepare())
-
-    override fun <T : Any> batchAndReturnGeneratedKeys(
-        sql: CharSequence,
-        items: Collection<T>,
-        block: (T) -> QueryParameters,
-    ): List<Long> = batchAndReturnGeneratedKeys(sql, items.map(block))
 }
