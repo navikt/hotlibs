@@ -39,7 +39,7 @@ internal fun QueryParameters.prepare(): Map<String, Any?> = mapValues { (_, valu
 
 internal fun Collection<QueryParameters>.prepare(): List<Map<String, Any?>> = map(QueryParameters::prepare)
 
-fun queryOf(sql: CharSequence, queryParameters: QueryParameters): kotliquery.Query =
+internal fun queryOf(sql: CharSequence, queryParameters: QueryParameters): kotliquery.Query =
     kotliquery.Query(sql.toString(), listOf(), queryParameters.prepare())
 
 /**

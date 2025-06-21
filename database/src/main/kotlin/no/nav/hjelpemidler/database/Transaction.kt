@@ -1,17 +1,12 @@
 package no.nav.hjelpemidler.database
 
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.withContext
-import java.util.concurrent.Executors
 import javax.sql.DataSource
-import kotlin.coroutines.AbstractCoroutineContextElement
-import kotlin.coroutines.CoroutineContext
 
-interface Transaction<S : Any> {
-    suspend operator fun <T> invoke(block: suspend S.() -> T): T
+interface Transaction<T : Any> {
+    suspend operator fun <R> invoke(block: suspend T.() -> R): R
 }
 
 fun <T> transaction(
@@ -33,12 +28,10 @@ suspend fun <T> transactionAsync(
 ): T {
     val context = currentCoroutineContext()[JdbcTransactionContext] ?: return withContext(Dispatchers.IO) {
         createSession(dataSource, returnGeneratedKeys, strict, queryTimeout).use { session ->
-            withContext(transactionCoroutineDispatcher()) {
-                session.transaction {
-                    val tx = SessionJdbcOperations(it)
-                    withContext(JdbcTransactionContext(tx, Thread.currentThread())) {
-                        block(tx)
-                    }
+            session.transaction {
+                val tx = SessionJdbcOperations(it)
+                withContext(JdbcTransactionContext(tx, Thread.currentThread())) {
+                    block(tx)
                 }
             }
         }
@@ -48,12 +41,4 @@ suspend fun <T> transactionAsync(
         "Nestet transaksjon i ny tråd: $currentThread != ${context.thread}"
     }
     return block(context.tx)
-}
-
-fun transactionCoroutineDispatcher(): CoroutineDispatcher =
-    Executors.newSingleThreadExecutor().asCoroutineDispatcher()
-
-private class JdbcTransactionContext(val tx: JdbcOperations, val thread: Thread) :
-    AbstractCoroutineContextElement(JdbcTransactionContext) {
-    companion object Key : CoroutineContext.Key<JdbcTransactionContext>
 }

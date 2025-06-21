@@ -6,13 +6,12 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import no.nav.hjelpemidler.collections.emptyEnumSet
 import no.nav.hjelpemidler.collections.toEnumSet
 import no.nav.hjelpemidler.domain.enhet.Enhet
+import no.nav.hjelpemidler.domain.enhet.Enhetsnummer
 import no.nav.hjelpemidler.domain.geografi.Bydel
 import no.nav.hjelpemidler.domain.geografi.Kommune
 import no.nav.hjelpemidler.domain.person.AktørId
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.Personnavn
-import no.nav.hjelpemidler.domain.person.toAktørId
-import no.nav.hjelpemidler.domain.person.toFødselsnummer
 import no.nav.hjelpemidler.serialization.jackson.jsonMapper
 import java.io.InputStream
 import java.io.Reader
@@ -471,16 +470,22 @@ class Row(private val wrapped: kotliquery.Row) : DatabaseRecord {
         stringOrNull(columnLabel)?.let<String, JsonNode?>(jsonMapper::readTree)
 
     fun aktørId(columnLabel: String): AktørId =
-        string(columnLabel).toAktørId()
+        AktørId(string(columnLabel))
 
     fun aktørIdOrNull(columnLabel: String): AktørId? =
-        stringOrNull(columnLabel)?.toAktørId()
+        stringOrNull(columnLabel)?.let(::AktørId)
 
     fun fødselsnummer(columnLabel: String): Fødselsnummer =
-        string(columnLabel).toFødselsnummer()
+        Fødselsnummer(string(columnLabel))
 
     fun fødselsnummerOrNull(columnLabel: String): Fødselsnummer? =
-        stringOrNull(columnLabel)?.toFødselsnummer()
+        stringOrNull(columnLabel)?.let(::Fødselsnummer)
+
+    fun enhetsnummer(columnLabel: String): Enhetsnummer =
+        Enhetsnummer(string(columnLabel))
+
+    fun enhetsnummerOrNull(columnLabel: String): Enhetsnummer? =
+        stringOrNull(columnLabel)?.let(::Enhetsnummer)
 
     fun toPersonnavn(prefix: String? = null): Personnavn =
         Personnavn(
