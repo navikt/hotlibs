@@ -20,10 +20,6 @@ dependencies {
     h2Api(project(path))
     h2RuntimeOnly(libs.h2)
 
-    // JPA
-    jpaApi(project(path))
-    jpaApi(libs.hibernate.core)
-
     // Ktor
     ktorApi(project(path))
     ktorApi(libs.ktor.server.core)
@@ -40,6 +36,12 @@ dependencies {
     postgresqlApi(libs.flyway.core)
     postgresqlRuntimeOnly(libs.flyway.database.postgresql)
 
+    // Repository
+    repositoryApi(project(path))
+    repositoryApi(libs.hibernate.core)
+    repositoryImplementation(libs.kotlinx.coroutines.core)
+    repositoryRuntimeOnly(libs.slf4j.jdk.platform.logging)
+
     // Testcontainers
     testcontainersApi(project(path))
     testcontainersRuntimeOnly(libs.testcontainers.postgresql) { // fixme -> kunne vi valgt oracle hvis oracle-capability?
@@ -51,7 +53,7 @@ dependencies {
 @Suppress("UnstableApiUsage")
 tasks.named("check") {
     dependsOn(
-        testing.suites.named("jpaTest"),
         testing.suites.named("postgresqlTest"),
+        testing.suites.named("repositoryTest"),
     )
 }
