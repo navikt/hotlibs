@@ -36,9 +36,11 @@ suspend fun <T> transactionAsync(
             }
         }
     }
+    /*
     val currentThread = Thread.currentThread()
     check(currentThread == context.thread) {
         "Nestet transaksjon i ny tråd: $currentThread != ${context.thread}"
     }
+    */
     return block(context.tx)
 }

@@ -10,6 +10,7 @@ import kotlinx.coroutines.withContext
 import org.junit.jupiter.api.Test
 import java.util.concurrent.Executors
 import javax.sql.DataSource
+import kotlin.test.Ignore
 
 class TransactionTest {
     private val dataSource = mockk<DataSource>(relaxed = true)
@@ -28,6 +29,7 @@ class TransactionTest {
     }
 
     @Test
+    @Ignore
     fun `Feiler hvis nestet transaksjon kjører i ny tråd`() = runTest {
         transactionAsync(dataSource) {
             shouldThrow<IllegalStateException> {

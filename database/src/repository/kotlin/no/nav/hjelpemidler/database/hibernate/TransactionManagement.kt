@@ -4,24 +4,6 @@ import org.hibernate.Transaction
 import org.hibernate.TransactionManagementException
 
 /**
- * @see [org.hibernate.internal.TransactionManagement.manageTransaction]
- */
-internal inline fun <S : Any, T> manageTransaction(
-    session: S,
-    transaction: Transaction,
-    block: (S) -> T,
-): T {
-    try {
-        val result = block(session)
-        commit(transaction)
-        return result
-    } catch (e: RuntimeException) {
-        rollback(transaction, e)
-        throw e
-    }
-}
-
-/**
  * @see [org.hibernate.internal.TransactionManagement.rollback]
  */
 internal fun rollback(transaction: Transaction, exception: RuntimeException) {
