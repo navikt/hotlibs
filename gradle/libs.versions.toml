@@ -1,7 +1,7 @@
 [versions]
 # Nyeste versjon finner du her: https://github.com/navikt/hm-soknadsbehandling-db/packages
 behovsmeldingsmodell = "25.167.150855"
-bigquery = "2.51.0"
+bigquery = "2.52.0"
 cacheApi = "1.1.1"
 caffeine = "3.2.1"
 classgraph = "4.8.180"
@@ -14,7 +14,7 @@ confluent = "7.9.0"
 contractPdlAvro = "1.0.2"
 cyclonedx = "2.3.1"
 ehcache = "3.10.8"
-flyway = "11.9.2"
+flyway = "11.10.0"
 graphql = "8.8.1"
 graphql-java = "24.1"
 h2 = "2.3.232"
@@ -53,7 +53,7 @@ mockk = "1.14.4"
 mustache = "0.9.14"
 netty = "4.2.2.Final"
 nocommons = "0.16.0"
-openapi = "7.13.0"
+openapi = "7.14.0"
 openhtmltopdf = "1.1.28"
 oracle = "23.8.0.25.04"
 postgresql = "42.7.7"
@@ -80,7 +80,7 @@ zjsonpatch = "0.4.16"
 
 [plugins]
 bom = { id = "org.cyclonedx.bom", version.ref = "cyclonedx" }
-flyway = "org.flywaydb.flyway:11.9.1"
+flyway = { id = "org.flywaydb.flyway", version.ref = "flyway" }
 graphql = { id = "com.expediagroup.graphql", version.ref = "graphql" }
 kotlin-jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
