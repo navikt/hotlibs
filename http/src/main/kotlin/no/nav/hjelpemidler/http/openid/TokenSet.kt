@@ -17,7 +17,7 @@ data class TokenSet(
     val tokenType: String,
     val expiresIn: Long,
     val accessToken: String,
-    @JsonAnySetter @get:JsonAnyGetter val other: Map<String, Any> = linkedMapOf(),
+    @param:JsonAnySetter @get:JsonAnyGetter val other: Map<String, Any> = linkedMapOf(),
 ) {
     @JsonIgnore
     val expiresInDuration = expiresIn.seconds

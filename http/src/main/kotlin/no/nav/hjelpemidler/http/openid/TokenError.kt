@@ -9,5 +9,5 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming
 data class TokenError(
     val error: String,
     val errorDescription: String,
-    @JsonAnySetter @get:JsonAnyGetter val other: Map<String, Any> = linkedMapOf(),
+    @param:JsonAnySetter @get:JsonAnyGetter val other: Map<String, Any> = linkedMapOf(),
 )

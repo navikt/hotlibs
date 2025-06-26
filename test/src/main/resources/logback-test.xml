@@ -35,5 +35,7 @@
         <appender-ref ref="secureLog" />
     </logger>
 
+    <logger name="org.testcontainers.utility" level="ERROR" />
+
     <include optional="true" resource="logback-test-include.xml" />
 </configuration>

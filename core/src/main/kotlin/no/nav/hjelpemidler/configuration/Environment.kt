@@ -1,5 +1,6 @@
 package no.nav.hjelpemidler.configuration
 
+import no.nav.hjelpemidler.configuration.Environment.Tier
 import java.util.EnumSet
 
 sealed interface Environment {
@@ -7,9 +8,10 @@ sealed interface Environment {
     val tier: Tier
 
     companion object {
-        private val all: Set<Environment> = setOf(TestEnvironment, LocalEnvironment) +
-                EnumSet.allOf(FssEnvironment::class.java) +
-                EnumSet.allOf(GcpEnvironment::class.java)
+        private val all: Set<Environment>
+            get() = setOf(TestEnvironment, LocalEnvironment) +
+                    EnumSet.allOf(FssEnvironment::class.java) +
+                    EnumSet.allOf(GcpEnvironment::class.java)
 
         val current: Environment by lazy {
             val cluster = System.getenv("NAIS_CLUSTER_NAME")
@@ -32,38 +34,34 @@ sealed interface Environment {
     }
 }
 
-sealed class DefaultEnvironment() : Environment {
+sealed class DefaultEnvironment(
+    override val cluster: String,
+    override val tier: Tier,
+) : Environment {
     override fun toString(): String = cluster
 }
 
-object TestEnvironment : DefaultEnvironment() {
-    override val cluster: String = "test"
-    override val tier: Environment.Tier = Environment.Tier.TEST
-}
-
-object LocalEnvironment : DefaultEnvironment() {
-    override val cluster: String = "local"
-    override val tier: Environment.Tier = Environment.Tier.LOCAL
-}
+object TestEnvironment : DefaultEnvironment(cluster = "test", tier = Tier.TEST)
+object LocalEnvironment : DefaultEnvironment(cluster = "local", tier = Tier.LOCAL)
 
 sealed interface ClusterEnvironment : Environment
 
 enum class FssEnvironment(
     override val cluster: String,
-    override val tier: Environment.Tier,
+    override val tier: Tier,
 ) : ClusterEnvironment {
-    DEV("dev-fss", Environment.Tier.DEV),
-    PROD("prod-fss", Environment.Tier.PROD);
+    DEV("dev-fss", Tier.DEV),
+    PROD("prod-fss", Tier.PROD);
 
     override fun toString(): String = cluster
 }
 
 enum class GcpEnvironment(
     override val cluster: String,
-    override val tier: Environment.Tier,
+    override val tier: Tier,
 ) : ClusterEnvironment {
-    DEV("dev-gcp", Environment.Tier.DEV),
-    PROD("prod-gcp", Environment.Tier.PROD);
+    DEV("dev-gcp", Tier.DEV),
+    PROD("prod-gcp", Tier.PROD);
 
     override fun toString(): String = cluster
 }

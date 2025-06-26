@@ -5,7 +5,7 @@ import org.intellij.lang.annotations.Language
 @Suppress("FunctionName")
 @JvmInline
 value class SqlCondition(
-    @Language("SQL", prefix = "SELECT ") private val value: String,
+    @param:Language("SQL", prefix = "SELECT ") private val value: String,
 ) : Comparable<SqlCondition> {
     infix fun AND(other: SqlCondition): SqlCondition =
         SqlCondition("($value AND ${other.value})")

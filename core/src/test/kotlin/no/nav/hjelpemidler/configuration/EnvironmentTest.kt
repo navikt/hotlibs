@@ -27,20 +27,20 @@ class EnvironmentTest {
         Environment.Tier.DEV.shouldHaveFlag(isDev = true)
         Environment.Tier.PROD.shouldHaveFlag(isProd = true)
     }
+}
 
-    private infix fun Environment.shouldHaveTier(tier: Environment.Tier) {
-        this.tier shouldBe tier
-    }
+private infix fun Environment.shouldHaveTier(tier: Environment.Tier) {
+    this.tier shouldBe tier
+}
 
-    private fun Environment.Tier.shouldHaveFlag(
-        isTest: Boolean = false,
-        isLocal: Boolean = false,
-        isDev: Boolean = false,
-        isProd: Boolean = false,
-    ) = assertSoftly {
-        this.isTest shouldBe isTest
-        this.isLocal shouldBe isLocal
-        this.isDev shouldBe isDev
-        this.isProd shouldBe isProd
-    }
+private fun Environment.Tier.shouldHaveFlag(
+    isTest: Boolean = false,
+    isLocal: Boolean = false,
+    isDev: Boolean = false,
+    isProd: Boolean = false,
+) = assertSoftly {
+    this.isTest shouldBe isTest
+    this.isLocal shouldBe isLocal
+    this.isDev shouldBe isDev
+    this.isProd shouldBe isProd
 }

@@ -7,9 +7,9 @@ open class Enhet(
     /**
      * Alias: "enhetNr" er bla. brukt i NORG2.
      */
-    @JsonAlias("enhetsnummer", "enhetNr")
+    @param:JsonAlias("enhetsnummer", "enhetNr")
     final override val nummer: Enhetsnummer,
-    @JsonAlias("enhetsnavn")
+    @param:JsonAlias("enhetsnavn")
     final override val navn: String,
 ) : AbstractEnhet() {
     @JsonIgnore

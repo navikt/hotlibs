@@ -10,9 +10,9 @@ import java.util.UUID
 data class TestMessage(
     val id: String,
     val vedtakId: String?,
-    @JsonAlias("soknadId")
+    @param:JsonAlias("soknadId")
     val søknadId: UUID,
-    @JsonProperty("fnrBruker")
+    @param:JsonProperty("fnrBruker")
     val brukerFnr: String,
     override val eventId: UUID = UUID.randomUUID(),
 ) : KafkaMessage {
