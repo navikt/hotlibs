@@ -9,8 +9,8 @@ import kotlin.reflect.KClass
  * Implementasjon av [ReadOperations] basert på [org.hibernate.StatelessSession].
  */
 internal class StatelessSessionReadOperations<T : Any, ID : Any>(
-    private val entityClass: KClass<T>,
     private val session: StatelessSession,
+    private val entityClass: KClass<T>,
 ) : ReadOperations<T, ID>, AutoCloseable by session {
     override fun findById(id: ID, lockMode: LockMode): T =
         session.get<T>(entityClass.java, id, lockMode)

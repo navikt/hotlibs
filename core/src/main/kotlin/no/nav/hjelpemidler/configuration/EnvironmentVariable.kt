@@ -1,32 +1,28 @@
 package no.nav.hjelpemidler.configuration
 
-import java.net.URI
-import java.net.URL
 import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.full.isSubtypeOf
-import kotlin.reflect.typeOf
+import kotlin.reflect.KProperty
 
-val EnvironmentVariable: ReadOnlyProperty<Any?, String> = ReadOnlyProperty { _, property ->
-    checkNotNull(Configuration[property.name]) {
-        "Miljøvariabelen '${property.name}' mangler"
-    }
-}
-
-inline fun <reified T> environmentVariable(prefix: String? = null): ReadOnlyProperty<Any?, T> =
-    ReadOnlyProperty { _, property ->
-        val returnType = property.returnType
+class EnvironmentVariable<T>(
+    private val prefix: String? = null,
+    private val defaultValue: T? = null,
+    private val transform: (String) -> T,
+) : ReadOnlyProperty<Any?, T> {
+    @Suppress("UNCHECKED_CAST")
+    override fun getValue(thisRef: Any?, property: KProperty<*>): T {
         val propertyName = if (prefix == null) property.name else "${prefix}_${property.name}"
-        val variable = Configuration[propertyName]
-        val value = when {
-            returnType.isSubtypeOf(typeOf<Boolean?>()) -> variable?.toBoolean()
-            returnType.isSubtypeOf(typeOf<Int?>()) -> variable?.toInt()
-            returnType.isSubtypeOf(typeOf<String?>()) -> variable
-            returnType.isSubtypeOf(typeOf<URI?>()) -> variable?.let(URI::create)
-            returnType.isSubtypeOf(typeOf<URL?>()) -> variable?.let(URI::create)?.toURL()
-            else -> throw UnsupportedOperationException("Mangler støtte for type: $returnType")
-        }
-        check(returnType.isMarkedNullable || value != null) {
+        val rawValue = Configuration[propertyName]
+        val value = if (rawValue == null) defaultValue else transform(rawValue)
+        check(property.returnType.isMarkedNullable || value != null) {
             "Miljøvariabelen '$propertyName' mangler"
         }
-        value as T
+        return value as T
     }
+
+    companion object : ReadOnlyProperty<Any?, String> {
+        override fun getValue(thisRef: Any?, property: KProperty<*>): String =
+            checkNotNull(Configuration[property.name]) {
+                "Miljøvariabelen '${property.name}' mangler"
+            }
+    }
+}

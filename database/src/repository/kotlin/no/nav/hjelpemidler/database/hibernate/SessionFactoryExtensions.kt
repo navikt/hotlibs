@@ -30,7 +30,7 @@ suspend fun <T> SessionFactory.transaction(block: suspend (Session) -> T): T =
     }
 
 /**
- * @see [org.hibernate.Session]
+ * @see [org.hibernate.StatelessSession]
  * @see [org.hibernate.SessionFactory.fromStatelessTransaction]
  */
 suspend fun <T> SessionFactory.statelessTransaction(block: suspend (StatelessSession) -> T): T =

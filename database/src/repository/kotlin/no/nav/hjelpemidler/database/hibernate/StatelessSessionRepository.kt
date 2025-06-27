@@ -14,7 +14,7 @@ internal class StatelessSessionRepository<T : Any, ID : Any> private constructor
     private val writeOperations: WriteOperations<T, ID>,
 ) : Repository<T, ID>, ReadOperations<T, ID> by readOperations, WriteOperations<T, ID> by writeOperations {
     constructor(entityClass: KClass<T>, session: StatelessSession) : this(
-        readOperations = StatelessSessionReadOperations(entityClass, session),
+        readOperations = StatelessSessionReadOperations(session, entityClass),
         writeOperations = StatelessSessionWriteOperations(session)
     )
 }
