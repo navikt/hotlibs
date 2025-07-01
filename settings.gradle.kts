@@ -6,6 +6,7 @@ dependencyResolutionManagement {
     @Suppress("UnstableApiUsage")
     repositories {
         mavenCentral()
+        maven("https://packages.confluent.io/maven/")
         maven {
             url = uri("https://maven.pkg.github.com/navikt/*")
             credentials {
@@ -32,5 +33,6 @@ include(
     "platform",
     "rapids-and-rivers",
     "serialization",
+    "streams",
     "test",
 )

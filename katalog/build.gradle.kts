@@ -26,6 +26,7 @@ catalog {
             "platform",
             "rapids-and-rivers",
             "serialization",
+            "streams",
             "test",
         ).forEach { artifact ->
             library("$hotlibs-${toCamelCase(artifact)}", "$group", artifact).versionRef(hotlibs)
