@@ -50,19 +50,19 @@ class Row(private val wrapped: kotliquery.Row) : DatabaseRecord {
         wrapped.anyOrNull(columnLabel)
 
     inline fun <reified T> array(columnIndex: Int): Array<T> =
-        arrayOrNull(columnIndex)!!
+        arrayOrNull<T>(columnIndex)!!
 
     inline fun <reified T> array(columnLabel: String): Array<T> =
-        arrayOrNull(columnLabel)!!
+        arrayOrNull<T>(columnLabel)!!
 
     inline fun <reified T> arrayOrNull(columnIndex: Int): Array<T>? {
         val result = sqlArrayOrNull(columnIndex)?.array as Array<*>?
-        return result?.map { it as T }?.toTypedArray()
+        return result?.map { it as T }?.toTypedArray<T>()
     }
 
     inline fun <reified T> arrayOrNull(columnLabel: String): Array<T>? {
         val result = sqlArrayOrNull(columnLabel)?.array as Array<*>?
-        return result?.map { it as T }?.toTypedArray()
+        return result?.map { it as T }?.toTypedArray<T>()
     }
 
     fun asciiStream(columnIndex: Int): InputStream =
@@ -168,10 +168,10 @@ class Row(private val wrapped: kotliquery.Row) : DatabaseRecord {
         wrapped.doubleOrNull(columnLabel)
 
     inline fun <reified E : Enum<E>> enum(columnLabel: String): E =
-        enumValueOf(string((columnLabel)))
+        enumValueOf<E>(string((columnLabel)))
 
     inline fun <reified E : Enum<E>> enumOrNull(columnLabel: String): E? =
-        stringOrNull(columnLabel)?.let<String, E>(::enumValueOf)
+        stringOrNull(columnLabel)?.let { enumValueOf<E>(it) }
 
     inline fun <reified E : Enum<E>> enums(columnLabel: String): Set<E> =
         array<String>(columnLabel).toEnumSet()
@@ -452,16 +452,16 @@ class Row(private val wrapped: kotliquery.Row) : DatabaseRecord {
         wrapped.zonedDateTimeOrNull(columnLabel)
 
     fun <T : Any> json(columnLabel: String, typeReference: TypeReference<T>): T =
-        jsonMapper.readValue(string(columnLabel), typeReference)
+        jsonMapper.readValue<T>(string(columnLabel), typeReference)
 
     inline fun <reified T : Any> json(columnLabel: String): T =
-        json(columnLabel, jacksonTypeRef<T>())
+        json<T>(columnLabel, jacksonTypeRef<T>())
 
     fun <T> jsonOrNull(columnLabel: String, typeReference: TypeReference<T>): T? =
-        stringOrNull(columnLabel)?.let { jsonMapper.readValue(it, typeReference) }
+        stringOrNull(columnLabel)?.let { jsonMapper.readValue<T>(it, typeReference) }
 
     inline fun <reified T> jsonOrNull(columnLabel: String): T? =
-        jsonOrNull(columnLabel, jacksonTypeRef<T>())
+        jsonOrNull<T>(columnLabel, jacksonTypeRef<T>())
 
     fun tree(columnLabel: String): JsonNode =
         jsonMapper.readTree(string(columnLabel))

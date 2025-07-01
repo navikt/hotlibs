@@ -1,11 +1,22 @@
-package no.nav.hjelpemidler.database
+package no.nav.hjelpemidler.database.jdbc
 
+import kotliquery.Session
+import no.nav.hjelpemidler.database.JdbcOperations
+import no.nav.hjelpemidler.database.Page
+import no.nav.hjelpemidler.database.PageRequest
+import no.nav.hjelpemidler.database.QueryParameters
+import no.nav.hjelpemidler.database.ResultMapper
+import no.nav.hjelpemidler.database.Row
+import no.nav.hjelpemidler.database.UpdateResult
+import no.nav.hjelpemidler.database.pageOf
+import no.nav.hjelpemidler.database.prepare
+import no.nav.hjelpemidler.database.queryOf
 import java.io.Closeable
 
 /**
- * Implementasjon av [JdbcOperations] basert på [kotliquery.Session].
+ * Implementasjon av [no.nav.hjelpemidler.database.JdbcOperations] basert på [kotliquery.Session].
  */
-internal class SessionJdbcOperations(private val session: kotliquery.Session) : JdbcOperations, Closeable by session {
+internal class SessionJdbcOperations(private val session: Session) : JdbcOperations, Closeable by session {
     override fun <T : Any> single(
         sql: CharSequence,
         queryParameters: QueryParameters,
@@ -39,7 +50,7 @@ internal class SessionJdbcOperations(private val session: kotliquery.Session) : 
         val offset = pageRequest.offset
         var totalElements: Long = -1
 
-        val query = if (pageRequest === PageRequest.ALL) {
+        val query = if (pageRequest === PageRequest.Companion.ALL) {
             queryOf(sql, queryParameters)
         } else {
             val limitParameter = "no_nav_hjelpemidler_database_limit"

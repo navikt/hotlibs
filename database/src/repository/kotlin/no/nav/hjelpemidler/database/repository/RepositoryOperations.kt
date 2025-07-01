@@ -2,6 +2,8 @@ package no.nav.hjelpemidler.database.repository
 
 import jakarta.persistence.EntityGraph
 import no.nav.hjelpemidler.database.DatabaseOperations
+import no.nav.hjelpemidler.database.QueryParameters
+import no.nav.hjelpemidler.database.UpdateResult
 import org.hibernate.LockMode
 import org.hibernate.graph.GraphSemantic
 import org.hibernate.graph.RootGraph
@@ -40,8 +42,8 @@ interface RepositoryOperations : DatabaseOperations, WriteOperations<Any, Any> {
     fun <T : Any> findById(
         entityGraph: EntityGraph<T>,
         id: Any,
-        graphSemantic: GraphSemantic = GraphSemantic.LOAD,
         lockMode: LockMode = LockMode.NONE,
+        graphSemantic: GraphSemantic = GraphSemantic.LOAD,
     ): T
 
     /**
@@ -88,4 +90,30 @@ interface RepositoryOperations : DatabaseOperations, WriteOperations<Any, Any> {
     fun createNativeMutationQuery(@Language("HQL") sql: CharSequence): MutationQuery
 
     fun <T : Any, ID : Any> createRepository(entityClass: KClass<T>): Repository<T, ID>
+
+    /**
+     * @throws NoSuchElementException hvis spørringen ikke gir treff i databasen
+     */
+    fun <T : Any> single(
+        @Language("SQL") sql: CharSequence,
+        queryParameters: QueryParameters = emptyMap(),
+        resultClass: KClass<T>,
+    ): T
+
+    fun <T : Any> singleOrNull(
+        @Language("SQL") sql: CharSequence,
+        queryParameters: QueryParameters = emptyMap(),
+        resultClass: KClass<T>,
+    ): T?
+
+    fun <T : Any> list(
+        @Language("SQL") sql: CharSequence,
+        queryParameters: QueryParameters = emptyMap(),
+        resultClass: KClass<T>,
+    ): List<T>
+
+    fun update(
+        @Language("SQL") sql: CharSequence,
+        queryParameters: QueryParameters = emptyMap(),
+    ): UpdateResult
 }

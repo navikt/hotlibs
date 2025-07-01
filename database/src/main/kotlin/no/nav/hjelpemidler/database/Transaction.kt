@@ -1,7 +1,10 @@
 package no.nav.hjelpemidler.database
 
-import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.withContext
+import no.nav.hjelpemidler.database.jdbc.JdbcTransactionContext
+import no.nav.hjelpemidler.database.jdbc.SessionJdbcOperations
+import no.nav.hjelpemidler.database.jdbc.createSession
+import no.nav.hjelpemidler.database.jdbc.currentTransactionContext
 import javax.sql.DataSource
 
 interface Transaction<T : Any> {
@@ -25,13 +28,18 @@ suspend fun <T> transactionAsync(
     queryTimeout: Int? = null,
     block: suspend (JdbcOperations) -> T,
 ): T {
-    val context = currentCoroutineContext()[JdbcTransactionContext] ?: return withDatabaseContext {
-        createSession(dataSource, returnGeneratedKeys, strict, queryTimeout).use { session ->
-            session.transaction {
-                val tx = SessionJdbcOperations(it)
-                withContext(JdbcTransactionContext(tx)) {
-                    block(tx)
-                }
+    val context = currentTransactionContext() ?: return withTransactionContext(
+        createSession(
+            dataSource,
+            returnGeneratedKeys,
+            strict,
+            queryTimeout,
+        )
+    ) { session ->
+        session.transaction {
+            val tx = SessionJdbcOperations(it)
+            withContext(JdbcTransactionContext(tx)) {
+                block(tx)
             }
         }
     }

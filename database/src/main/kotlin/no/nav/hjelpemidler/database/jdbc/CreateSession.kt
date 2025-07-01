@@ -1,6 +1,5 @@
-package no.nav.hjelpemidler.database
+package no.nav.hjelpemidler.database.jdbc
 
-import kotliquery.Connection
 import javax.sql.DataSource
 
 internal fun createSession(
@@ -10,7 +9,7 @@ internal fun createSession(
     queryTimeout: Int? = null,
 ): kotliquery.Session =
     kotliquery.Session(
-        connection = Connection(dataSource.connection),
+        connection = kotliquery.Connection(dataSource.connection),
         returnGeneratedKeys = returnGeneratedKeys,
         strict = strict,
         queryTimeout = queryTimeout

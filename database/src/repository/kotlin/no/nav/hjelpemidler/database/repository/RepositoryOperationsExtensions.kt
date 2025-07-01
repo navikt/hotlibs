@@ -1,5 +1,6 @@
 package no.nav.hjelpemidler.database.repository
 
+import no.nav.hjelpemidler.database.QueryParameters
 import org.hibernate.LockMode
 import org.hibernate.graph.RootGraph
 import org.hibernate.query.NativeQuery
@@ -38,3 +39,27 @@ inline fun <reified T : Any> RepositoryOperations.createNativeQuery(@Language("S
  */
 inline fun <reified T : Any, ID : Any> RepositoryOperations.createRepository(): Repository<T, ID> =
     createRepository(T::class)
+
+/**
+ * @see [RepositoryOperations.single]
+ */
+inline fun <reified T : Any> RepositoryOperations.single(
+    @Language("SQL") sql: CharSequence,
+    queryParameters: QueryParameters = emptyMap(),
+): T = single(sql, queryParameters, T::class)
+
+/**
+ * @see [RepositoryOperations.single]
+ */
+inline fun <reified T : Any> RepositoryOperations.singleOrNull(
+    @Language("SQL") sql: CharSequence,
+    queryParameters: QueryParameters = emptyMap(),
+): T? = singleOrNull(sql, queryParameters, T::class)
+
+/**
+ * @see [RepositoryOperations.single]
+ */
+inline fun <reified T : Any> RepositoryOperations.list(
+    @Language("SQL") sql: CharSequence,
+    queryParameters: QueryParameters = emptyMap(),
+): List<T> = list(sql, queryParameters, T::class)

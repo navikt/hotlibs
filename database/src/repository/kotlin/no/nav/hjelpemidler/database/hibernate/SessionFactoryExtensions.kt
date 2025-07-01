@@ -1,5 +1,6 @@
 package no.nav.hjelpemidler.database.hibernate
 
+import no.nav.hjelpemidler.database.withTransactionContext
 import org.hibernate.Session
 import org.hibernate.SessionFactory
 import org.hibernate.SharedSessionContract
@@ -8,7 +9,7 @@ import org.hibernate.StatelessSession
 /**
  * @see [org.hibernate.internal.TransactionManagement.manageTransaction]
  */
-internal inline fun <T : SharedSessionContract, R> T.transaction(block: (T) -> R): R {
+internal inline fun <S : SharedSessionContract, T> S.transaction(block: (S) -> T): T {
     val transaction = beginTransaction()
     return try {
         val result = block(this)
@@ -25,7 +26,7 @@ internal inline fun <T : SharedSessionContract, R> T.transaction(block: (T) -> R
  * @see [org.hibernate.SessionFactory.fromTransaction]
  */
 suspend fun <T> SessionFactory.transaction(block: suspend (Session) -> T): T =
-    openSession().use { session ->
+    withTransactionContext(openSession()) { session ->
         session.transaction<Session, T> { block(it) }
     }
 
@@ -34,6 +35,6 @@ suspend fun <T> SessionFactory.transaction(block: suspend (Session) -> T): T =
  * @see [org.hibernate.SessionFactory.fromStatelessTransaction]
  */
 suspend fun <T> SessionFactory.statelessTransaction(block: suspend (StatelessSession) -> T): T =
-    openStatelessSession().use { session ->
+    withTransactionContext(openStatelessSession()) { session ->
         session.transaction<StatelessSession, T> { block(it) }
     }

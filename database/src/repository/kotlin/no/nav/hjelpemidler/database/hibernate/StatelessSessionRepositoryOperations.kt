@@ -1,6 +1,8 @@
 package no.nav.hjelpemidler.database.hibernate
 
 import jakarta.persistence.EntityGraph
+import no.nav.hjelpemidler.database.QueryParameters
+import no.nav.hjelpemidler.database.UpdateResult
 import no.nav.hjelpemidler.database.repository.Repository
 import no.nav.hjelpemidler.database.repository.RepositoryOperations
 import no.nav.hjelpemidler.database.repository.WriteOperations
@@ -41,8 +43,8 @@ internal class StatelessSessionRepositoryOperations private constructor(
     override fun <T : Any> findById(
         entityGraph: EntityGraph<T>,
         id: Any,
-        graphSemantic: GraphSemantic,
         lockMode: LockMode,
+        graphSemantic: GraphSemantic,
     ): T =
         session.get(entityGraph, graphSemantic, id, lockMode)
 
@@ -87,4 +89,40 @@ internal class StatelessSessionRepositoryOperations private constructor(
 
     override fun <T : Any, ID : Any> createRepository(entityClass: KClass<T>): Repository<T, ID> =
         StatelessSessionRepository(entityClass, session)
+
+    override fun <T : Any> single(
+        sql: CharSequence,
+        queryParameters: QueryParameters,
+        resultClass: KClass<T>,
+    ): T {
+        val query = createNativeQuery(sql, resultClass)
+        queryParameters.forEach(query::setParameter)
+        return query.singleResult
+    }
+
+    override fun <T : Any> singleOrNull(
+        sql: CharSequence,
+        queryParameters: QueryParameters,
+        resultClass: KClass<T>,
+    ): T? {
+        val query = createNativeQuery(sql, resultClass)
+        queryParameters.forEach(query::setParameter)
+        return query.singleResultOrNull
+    }
+
+    override fun <T : Any> list(
+        sql: CharSequence,
+        queryParameters: QueryParameters,
+        resultClass: KClass<T>,
+    ): List<T> {
+        val query = createNativeQuery(sql, resultClass)
+        queryParameters.forEach(query::setParameter)
+        return query.resultList
+    }
+
+    override fun update(sql: CharSequence, queryParameters: QueryParameters): UpdateResult {
+        val query = createNativeMutationQuery(sql)
+        queryParameters.forEach(query::setParameter)
+        return UpdateResult(query.executeUpdate())
+    }
 }
