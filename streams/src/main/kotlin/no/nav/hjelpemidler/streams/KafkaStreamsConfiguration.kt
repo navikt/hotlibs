@@ -14,7 +14,7 @@ internal fun kafkaSchemaRegistryConfiguration(): Map<String, String> = mapOf(
     SchemaRegistryClientConfig.USER_INFO_CONFIG to "${KafkaEnvironmentVariable.KAFKA_SCHEMA_REGISTRY_USER}:${KafkaEnvironmentVariable.KAFKA_SCHEMA_REGISTRY_PASSWORD}",
 )
 
-fun kafkaStreamsConfiguration(applicationId: String): Properties = createKafkaClientConfiguration {
+internal fun kafkaStreamsConfiguration(applicationId: String): Properties = createKafkaClientConfiguration {
     this[StreamsConfig.APPLICATION_ID_CONFIG] = applicationId
     this[StreamsConfig.DSL_STORE_SUPPLIERS_CLASS_CONFIG] = InMemoryDslStoreSuppliers::class.java.name
 }

@@ -13,11 +13,11 @@ import org.apache.kafka.streams.KafkaStreams.State
 
 private val log = KotlinLogging.logger {}
 
-class KafkaStreamsPluginConfiguration {
+internal class KafkaStreamsPluginConfiguration {
     lateinit var kafkaStreams: KafkaStreams
 }
 
-val KafkaStreamsPlugin = createApplicationPlugin("KafkaStreamsPlugin", ::KafkaStreamsPluginConfiguration) {
+internal val KafkaStreamsPlugin = createApplicationPlugin("KafkaStreamsPlugin", ::KafkaStreamsPluginConfiguration) {
     val kafkaStreams = pluginConfig.kafkaStreams
 
     kafkaStreams.setStateListener { newState, oldState ->
@@ -45,12 +45,12 @@ val KafkaStreamsPlugin = createApplicationPlugin("KafkaStreamsPlugin", ::KafkaSt
 
     onCall { _ ->
         when (val state = kafkaStreams.state()) {
-            State.RUNNING -> log.debug { "state: $state" }
+            State.RUNNING -> log.trace { "state: $state" }
             else -> log.info { "state: $state" }
         }
     }
 }
 
-data class KafkaStreamsStateTransition(val newState: State, val oldState: State)
+internal data class KafkaStreamsStateTransition(val newState: State, val oldState: State)
 
-val KafkaStreamsStateTransitionEvent: EventDefinition<KafkaStreamsStateTransition> = EventDefinition()
+internal val KafkaStreamsStateTransitionEvent: EventDefinition<KafkaStreamsStateTransition> = EventDefinition()
