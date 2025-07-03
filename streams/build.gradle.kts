@@ -15,7 +15,7 @@ dependencies {
 
     // Ktor
     api(libs.ktor.server.core)
-    implementation(libs.ktor.server.netty)
+    api(libs.ktor.server.netty)
     implementation(libs.ktor.server.metrics.micrometer)
 
     // Metrics
