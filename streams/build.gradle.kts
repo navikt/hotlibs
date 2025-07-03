@@ -12,6 +12,9 @@ dependencies {
     // Kafka Streams
     api(libs.kafka.streams)
     api(libs.kafka.streams.avro.serde)
+    constraints {
+        implementation(libs.commons.compress)
+    }
 
     // Ktor
     api(libs.ktor.server.core)
