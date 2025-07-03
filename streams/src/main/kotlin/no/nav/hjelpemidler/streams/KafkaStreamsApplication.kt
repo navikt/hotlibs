@@ -29,7 +29,7 @@ fun kafkaStreamsApplication(
         }
 
         routing {
-            health(kafkaStreams)
+            health(meterRegistry, kafkaStreams)
         }
 
         builder.applicationBlock?.invoke(this)

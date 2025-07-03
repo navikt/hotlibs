@@ -7,7 +7,7 @@ class KafkaStreamsApplicationBuilder internal constructor() {
     internal val streamsBuilder: StreamsBuilder = StreamsBuilder()
     internal var applicationBlock: (suspend Application.() -> Unit)? = null
 
-    fun streams(block: StreamsBuilder.() -> Unit) {
+    fun topology(block: StreamsBuilder.() -> Unit) {
         streamsBuilder.apply(block)
     }
 
