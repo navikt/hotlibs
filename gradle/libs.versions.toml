@@ -9,7 +9,7 @@ commons-compress = "1.27.1"
 commons-csv = "1.14.0"
 commons-io = "2.19.0"
 commons-text = "1.13.1"
-confluent = "8.0.0"
+confluent = "7.9.2"
 # Nyeste versjon finner du her: https://github.com/navikt/hm-contract-pdl-avro/packages
 contractPdlAvro = "1.0.2"
 cyclonedx = "2.3.1"
