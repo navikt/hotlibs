@@ -216,6 +216,7 @@ logback-core = { module = "ch.qos.logback:logback-core", version.ref = "logback"
 logback-syslog4j = { module = "com.papertrailapp:logback-syslog4j", version.ref = "logback-syslog4j" }
 logstash-logback-encoder = { module = "net.logstash.logback:logstash-logback-encoder", version.ref = "logback-logstash" }
 micrometer-bom = { module = "io.micrometer:micrometer-bom", version.ref = "micrometer" }
+micrometer-core = { module = "io.micrometer:micrometer-core", version.ref = "micrometer" }
 micrometer-registry-prometheus = { module = "io.micrometer:micrometer-registry-prometheus", version.ref = "micrometer" }
 micrometer-registry-prometheus-deprecated = { module = "io.micrometer:micrometer-registry-prometheus-simpleclient", version.ref = "micrometer" }
 microprofile-openapi = { module = "org.eclipse.microprofile.openapi:microprofile-openapi-api", version.ref = "microprofile" }

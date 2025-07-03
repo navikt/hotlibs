@@ -19,5 +19,6 @@ dependencies {
     implementation(libs.ktor.server.metrics.micrometer)
 
     // Metrics
+    api(libs.micrometer.core)
     implementation(libs.micrometer.registry.prometheus)
 }
