@@ -8,6 +8,8 @@ import io.ktor.server.application.ApplicationStarted
 import io.ktor.server.application.ApplicationStopped
 import io.ktor.server.application.createApplicationPlugin
 import io.ktor.server.application.hooks.MonitoringEvent
+import io.micrometer.core.instrument.MeterRegistry
+import io.micrometer.core.instrument.binder.kafka.KafkaStreamsMetrics
 import org.apache.kafka.streams.KafkaStreams
 import org.apache.kafka.streams.KafkaStreams.State
 
@@ -15,16 +17,22 @@ private val log = KotlinLogging.logger {}
 
 internal class KafkaStreamsPluginConfiguration {
     lateinit var kafkaStreams: KafkaStreams
+    lateinit var meterRegistry: MeterRegistry
 }
 
 internal val KafkaStreamsPlugin = createApplicationPlugin("KafkaStreamsPlugin", ::KafkaStreamsPluginConfiguration) {
     val kafkaStreams = pluginConfig.kafkaStreams
+    val meterRegistry = pluginConfig.meterRegistry
 
     kafkaStreams.setStateListener { newState, oldState ->
         application.monitor.raise(
             KafkaStreamsStateTransitionEvent,
             KafkaStreamsStateTransition(newState, oldState),
         )
+    }
+
+    val kafkaStreamsMetrics = KafkaStreamsMetrics(kafkaStreams).apply {
+        bindTo(meterRegistry)
     }
 
     val started: EventHandler<Application> = { _ ->
@@ -35,6 +43,7 @@ internal val KafkaStreamsPlugin = createApplicationPlugin("KafkaStreamsPlugin", 
     var stopped: EventHandler<Application> = {}
     stopped = { _ ->
         kafkaStreams.close()
+        kafkaStreamsMetrics.close()
         log.info { "Kafka Streams stoppet" }
         application.monitor.unsubscribe(ApplicationStarted, started)
         application.monitor.unsubscribe(ApplicationStopped, stopped)

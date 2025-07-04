@@ -6,6 +6,8 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.metrics.micrometer.MicrometerMetrics
 import io.ktor.server.netty.Netty
 import io.ktor.server.netty.NettyApplicationEngine
+import io.ktor.server.response.respond
+import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.prometheusmetrics.PrometheusConfig
@@ -26,10 +28,17 @@ fun kafkaStreamsApplication(
         val kafkaStreams = kafkaStreams(applicationId, builder = builder.streamsBuilder)
         install(KafkaStreamsPlugin) {
             this.kafkaStreams = kafkaStreams
+            this.meterRegistry = meterRegistry
         }
 
         routing {
-            health(meterRegistry, kafkaStreams)
+            health(kafkaStreams)
+
+            if (meterRegistry is PrometheusMeterRegistry) {
+                get("/metrics") {
+                    call.respond(meterRegistry.scrape())
+                }
+            }
         }
 
         builder.applicationBlock?.invoke(this)
