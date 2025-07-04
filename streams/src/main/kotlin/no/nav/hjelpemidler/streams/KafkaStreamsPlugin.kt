@@ -6,6 +6,7 @@ import io.ktor.events.EventHandler
 import io.ktor.server.application.Application
 import io.ktor.server.application.ApplicationStarted
 import io.ktor.server.application.ApplicationStopped
+import io.ktor.server.application.ApplicationStopping
 import io.ktor.server.application.createApplicationPlugin
 import io.ktor.server.application.hooks.MonitoringEvent
 import io.micrometer.core.instrument.MeterRegistry
@@ -50,7 +51,7 @@ internal val KafkaStreamsPlugin = createApplicationPlugin("KafkaStreamsPlugin", 
     }
 
     on(MonitoringEvent(ApplicationStarted), started)
-    on(MonitoringEvent(ApplicationStopped), stopped)
+    on(MonitoringEvent(ApplicationStopping), stopped)
 
     onCall { _ ->
         when (val state = kafkaStreams.state()) {
