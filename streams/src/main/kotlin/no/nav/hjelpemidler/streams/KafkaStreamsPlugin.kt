@@ -5,7 +5,6 @@ import io.ktor.events.EventDefinition
 import io.ktor.events.EventHandler
 import io.ktor.server.application.Application
 import io.ktor.server.application.ApplicationStarted
-import io.ktor.server.application.ApplicationStopped
 import io.ktor.server.application.ApplicationStopping
 import io.ktor.server.application.createApplicationPlugin
 import io.ktor.server.application.hooks.MonitoringEvent
@@ -41,17 +40,17 @@ internal val KafkaStreamsPlugin = createApplicationPlugin("KafkaStreamsPlugin", 
         kafkaStreams.start()
         log.info { "Kafka Streams startet" }
     }
-    var stopped: EventHandler<Application> = {}
-    stopped = { _ ->
+    var stopping: EventHandler<Application> = {}
+    stopping = { _ ->
         kafkaStreams.close()
         kafkaStreamsMetrics.close()
         log.info { "Kafka Streams stoppet" }
         application.monitor.unsubscribe(ApplicationStarted, started)
-        application.monitor.unsubscribe(ApplicationStopped, stopped)
+        application.monitor.unsubscribe(ApplicationStopping, stopping)
     }
 
     on(MonitoringEvent(ApplicationStarted), started)
-    on(MonitoringEvent(ApplicationStopping), stopped)
+    on(MonitoringEvent(ApplicationStopping), stopping)
 
     onCall { _ ->
         when (val state = kafkaStreams.state()) {
