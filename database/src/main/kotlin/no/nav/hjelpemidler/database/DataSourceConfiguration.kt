@@ -3,10 +3,7 @@ package no.nav.hjelpemidler.database
 import com.zaxxer.hikari.HikariConfig
 import no.nav.hjelpemidler.configuration.EnvironmentVariable
 
-internal val HIKARI_MAXIMUM_POOL_SIZE by EnvironmentVariable(
-    defaultValue = 10,
-    transform = String::toInt,
-)
+internal val HIKARI_MAXIMUM_POOL_SIZE by EnvironmentVariable.int(defaultValue = 10)
 
 abstract class DataSourceConfiguration : HikariConfig() {
     var databaseName: String? = null

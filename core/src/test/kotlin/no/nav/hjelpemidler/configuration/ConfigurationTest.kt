@@ -7,8 +7,7 @@ import kotlin.test.Test
 class ConfigurationTest {
     @Test
     fun `Skal lese konfigurasjon fra properties`() {
-        val configuration = Configuration.load(TestEnvironment)
-        configuration["PORT"] shouldBe "8080"
+        Configuration["PORT"] shouldBe "8080"
     }
 
     @Test
@@ -18,9 +17,8 @@ class ConfigurationTest {
     }
 
     @Test
-    fun `Envvar overstyrer properties`() {
-        val configuration = Configuration.load(TestEnvironment)
-        configuration["TEST_CONFIGURATION_ENVVAR_OVER_PROPERTIES"] shouldNotBe "9000"
-        configuration["TEST_CONFIGURATION_ENVVAR_OVER_PROPERTIES"] shouldBe "9001"
+    fun `Miljøvariabler overstyrer properties`() {
+        Configuration["TEST_CONFIGURATION_ENV_VAR_OVER_PROPERTIES"] shouldNotBe "9000"
+        Configuration["TEST_CONFIGURATION_ENV_VAR_OVER_PROPERTIES"] shouldBe "9001"
     }
 }

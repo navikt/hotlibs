@@ -26,4 +26,4 @@ fun <S : Any> loadService(kClass: KClass<S>): Lazy<S> = lazy {
     }
 }
 
-inline fun <reified S : Any> loadService() = loadService(S::class)
+inline fun <reified S : Any> loadService(): Lazy<S> = loadService(S::class)

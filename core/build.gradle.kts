@@ -32,7 +32,7 @@ testing {
             targets {
                 all {
                     testTask.configure {
-                        environment("TEST_CONFIGURATION_ENVVAR_OVER_PROPERTIES", "9001")
+                        environment("TEST_CONFIGURATION_ENV_VAR_OVER_PROPERTIES", "9001")
                     }
                 }
             }
