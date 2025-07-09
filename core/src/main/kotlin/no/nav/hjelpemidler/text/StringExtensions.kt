@@ -1,5 +1,7 @@
 package no.nav.hjelpemidler.text
 
+import java.math.BigDecimal
+import java.math.BigInteger
 import java.net.URI
 import java.net.URL
 import java.util.UUID
@@ -29,3 +31,19 @@ fun String.toURI(): URI =
  */
 fun String.toURL(): URL =
     toURI().toURL()
+
+inline fun <reified T : Any> String.parseTo(): T =
+    when (val type = T::class) {
+        BigDecimal::class -> toBigDecimal()
+        BigInteger::class -> toBigInteger()
+        Boolean::class -> toBoolean()
+        Double::class -> toDouble()
+        Float::class -> toFloat()
+        Int::class -> toInt()
+        Long::class -> toLong()
+        String::class -> this
+        URI::class -> toURI()
+        URL::class -> toURL()
+        UUID::class -> toUUID()
+        else -> error("Ukjent type: '$type'")
+    } as T

@@ -1,5 +1,6 @@
 package no.nav.hjelpemidler.configuration
 
+import no.nav.hjelpemidler.text.toURI
 import java.net.URI
 
 /**
@@ -12,7 +13,7 @@ data class ValkeyConfiguration(
 ) {
     val host: String get() = uri.host
     val port: Int get() = uri.port
-    val tls: Boolean get() = uri.scheme == "valkeys"
+    val tls: Boolean get() = uri.scheme == "valkeys" || uri.scheme == "rediss"
 
     val redisUri: URI
         get() = if (tls) {
@@ -22,29 +23,21 @@ data class ValkeyConfiguration(
         }
 
     constructor(instanceName: String) : this(
-        uri = Configuration.getOrDefault(instanceName.key("URI"), DEFAULT_URI, ::URI),
-        username = Configuration[instanceName.key("USERNAME")],
-        password = Configuration[instanceName.key("PASSWORD")],
+        uri = Configuration[key("URI", instanceName)]?.toURI() ?: DEFAULT_URI,
+        username = Configuration[key("USERNAME", instanceName)],
+        password = Configuration[key("PASSWORD", instanceName)],
     )
 
     override fun toString(): String = uri.toString()
 
     companion object {
-        const val PREFIX = "VALKEY"
-
         val DEFAULT_URI = URI("valkey://localhost:6379")
+
+        private fun key(key: String, instanceName: String) =
+            EnvironmentVariableKey(
+                key = key,
+                prefix = "VALKEY",
+                suffix = instanceName.uppercase(),
+            )
     }
 }
-
-/**
- * Lag [EnvironmentVariableKey] med følgende format:
- * ```kotlin
- * "VALKEY_$key_$instanceName" // e.g. VALKEY_URI_CACHE
- * ```
- */
-private fun String.key(key: String) =
-    EnvironmentVariableKey(
-        key = key,
-        prefix = ValkeyConfiguration.PREFIX,
-        suffix = uppercase(),
-    )

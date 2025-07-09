@@ -15,14 +15,7 @@ private val log = KotlinLogging.logger {}
  */
 class Configuration internal constructor(
     private val properties: Map<String, String>,
-) : Map<String, String> by properties {
-    operator fun get(key: EnvironmentVariableKey): String? = get(key.toString())
-
-    fun getOrDefault(key: EnvironmentVariableKey, defaultValue: String): String =
-        getOrDefault(key.toString(), defaultValue)
-
-    operator fun contains(key: EnvironmentVariableKey): Boolean = key.toString() in this
-
+) : ConfigurationMap, Map<String, String> by properties {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -34,34 +27,20 @@ class Configuration internal constructor(
 
     override fun toString(): String = properties.toString()
 
-    companion object {
+    companion object : ConfigurationMap {
         val current: Configuration by lazy(::load)
 
-        operator fun get(key: String): String? = current[key]
+        override val size: Int get() = current.size
+        override val keys: Set<String> get() = current.keys
+        override val values: Collection<String> get() = current.values
+        override val entries: Set<Map.Entry<String, String>> get() = current.entries
 
-        operator fun get(key: EnvironmentVariableKey): String? = current[key]
+        override fun containsKey(key: String): Boolean = current.containsKey(key)
+        override fun containsValue(value: String): Boolean = current.containsValue(value)
+        override fun get(key: String): String? = current[key]
+        override fun isEmpty(): Boolean = current.isEmpty()
 
-        inline fun <T> get(key: String, transform: (String) -> T): T? = current[key]?.let(transform)
-
-        inline fun <T> get(key: EnvironmentVariableKey, transform: (String) -> T): T? = current[key]?.let(transform)
-
-        fun getOrDefault(key: String, defaultValue: String): String =
-            current.getOrDefault(key, defaultValue)
-
-        fun getOrDefault(key: EnvironmentVariableKey, defaultValue: String): String =
-            current.getOrDefault(key, defaultValue)
-
-        inline fun <T> getOrDefault(key: String, defaultValue: T, transform: (String) -> T): T =
-            get(key, transform) ?: defaultValue
-
-        inline fun <T> getOrDefault(key: EnvironmentVariableKey, defaultValue: T, transform: (String) -> T): T =
-            get(key, transform) ?: defaultValue
-
-        operator fun contains(key: String): Boolean = key in current
-
-        operator fun contains(key: EnvironmentVariableKey): Boolean = key in current
-
-        fun load(environment: Environment = Environment.current): Configuration {
+        internal fun load(environment: Environment = Environment.current): Configuration {
             val location = "/$environment.properties"
             val properties = Properties()
                 .apply {
