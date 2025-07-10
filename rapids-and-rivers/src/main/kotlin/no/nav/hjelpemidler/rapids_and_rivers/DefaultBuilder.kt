@@ -12,7 +12,7 @@ import java.net.InetAddress
 import java.util.UUID
 
 fun RapidApplication.Companion.DefaultBuilder(
-    env: Map<String, String> = Configuration.current,
+    env: Map<String, String> = Configuration,
     consumerProducerFactory: ConsumerProducerFactory = ConsumerProducerFactory(autoConfig()),
     meterRegistry: PrometheusMeterRegistry = PrometheusMeterRegistry(
         PrometheusConfig.DEFAULT,

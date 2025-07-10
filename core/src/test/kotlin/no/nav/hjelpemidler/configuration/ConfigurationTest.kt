@@ -11,12 +11,6 @@ class ConfigurationTest {
     }
 
     @Test
-    fun `Feiler ikke hvis manglende properties`() {
-        val configuration = Configuration.load(GcpEnvironment.DEV)
-        configuration shouldNotBe null
-    }
-
-    @Test
     fun `Miljøvariabler overstyrer properties`() {
         Configuration["TEST_CONFIGURATION_ENV_VAR_OVER_PROPERTIES"] shouldNotBe "9000"
         Configuration["TEST_CONFIGURATION_ENV_VAR_OVER_PROPERTIES"] shouldBe "9001"

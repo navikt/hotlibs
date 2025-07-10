@@ -1,7 +1,8 @@
 package no.nav.hjelpemidler.configuration
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import java.util.Properties
+import no.nav.hjelpemidler.collections.propertiesOf
+import java.util.TreeMap
 
 private val log = KotlinLogging.logger {}
 
@@ -12,50 +13,36 @@ private val log = KotlinLogging.logger {}
  * NB! Variabler fra [System.getenv] overstyrer de fra properties-fil.
  *
  * @see [System.getenv]
+ * @see [EnvironmentVariable]
+ * @see [EnvironmentVariableKey]
  */
-class Configuration internal constructor(
-    private val properties: Map<String, String>,
-) : ConfigurationMap, Map<String, String> by properties {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-        other as Configuration
-        return properties == other.properties
-    }
+object Configuration : ConfigurationMap {
+    private val current: Map<String, String>
 
-    override fun hashCode(): Int = properties.hashCode()
-
-    override fun toString(): String = properties.toString()
-
-    companion object : ConfigurationMap {
-        val current: Configuration by lazy(::load)
-
-        override val size: Int get() = current.size
-        override val keys: Set<String> get() = current.keys
-        override val values: Collection<String> get() = current.values
-        override val entries: Set<Map.Entry<String, String>> get() = current.entries
-
-        override fun containsKey(key: String): Boolean = current.containsKey(key)
-        override fun containsValue(value: String): Boolean = current.containsValue(value)
-        override fun get(key: String): String? = current[key]
-        override fun isEmpty(): Boolean = current.isEmpty()
-
-        internal fun load(environment: Environment = Environment.current): Configuration {
-            val location = "/$environment.properties"
-            val properties = Properties()
-                .apply {
-                    Configuration::class.java.getResourceAsStream(location)
-                        .apply {
-                            if (this == null) {
-                                log.info { "Leser konfigurasjon fra miljøvariabler" }
-                            } else {
-                                log.info { "Leser konfigurasjon fra miljøvariabler og '$location'" }
-                            }
-                        }?.use(::load)
-                }
-                .mapKeys { it.key.toString() }
-                .mapValues { it.value.toString() }
-            return Configuration((properties + System.getenv()).toSortedMap())
+    init {
+        val environment = Environment.current
+        val location = "/$environment.properties"
+        val properties = javaClass.getResourceAsStream(location)?.use(::propertiesOf)
+        if (properties == null) {
+            log.info { "Leser konfigurasjon fra miljøvariabler" }
+            current = TreeMap(System.getenv())
+        } else {
+            log.info { "Leser konfigurasjon fra miljøvariabler og '$location'" }
+            current = TreeMap()
+            properties
+                .map { it.key.toString() to it.value.toString() }
+                .toMap(current)
+                .putAll(System.getenv())
         }
     }
+
+    override val size: Int get() = current.size
+    override val keys: Set<String> get() = current.keys
+    override val values: Collection<String> get() = current.values
+    override val entries: Set<Map.Entry<String, String>> get() = current.entries
+
+    override fun containsKey(key: String): Boolean = current.containsKey(key)
+    override fun containsValue(value: String): Boolean = current.containsValue(value)
+    override fun get(key: String): String? = current[key]
+    override fun isEmpty(): Boolean = current.isEmpty()
 }

@@ -17,10 +17,10 @@ data class ValkeyConfiguration(
 
     val redisUri: URI
         get() = if (tls) {
-            URI("rediss://$host:$port")
+            "rediss://$host:$port"
         } else {
-            URI("redis://$host:$port")
-        }
+            "redis://$host:$port"
+        }.toURI()
 
     constructor(instanceName: String) : this(
         uri = Configuration[key("URI", instanceName)]?.toURI() ?: DEFAULT_URI,
@@ -31,7 +31,7 @@ data class ValkeyConfiguration(
     override fun toString(): String = uri.toString()
 
     companion object {
-        val DEFAULT_URI = URI("valkey://localhost:6379")
+        val DEFAULT_URI: URI = URI("valkey://localhost:6379")
 
         private fun key(key: String, instanceName: String) =
             EnvironmentVariableKey(
