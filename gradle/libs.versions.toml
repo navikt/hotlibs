@@ -8,6 +8,7 @@ classgraph = "4.8.180"
 commons-compress = "1.27.1"
 commons-csv = "1.14.0"
 commons-io = "2.19.0"
+commons-lang = "3.18.0"
 commons-text = "1.13.1"
 confluent = "7.9.2"
 # Nyeste versjon finner du her: https://github.com/navikt/hm-contract-pdl-avro/packages
@@ -103,6 +104,7 @@ classgraph = { module = "io.github.classgraph:classgraph", version.ref = "classg
 commons-compress = { module = "org.apache.commons:commons-compress", version.ref = "commons-compress" }
 commons-csv = { module = "org.apache.commons:commons-csv", version.ref = "commons-csv" }
 commons-io = { module = "commons-io:commons-io", version.ref = "commons-io" }
+commons-lang = { module = "org.apache.commons:commons-lang3", version.ref = "commons-lang" }
 commons-text = { module = "org.apache.commons:commons-text", version.ref = "commons-text" }
 ehcache = { module = "org.ehcache:ehcache", version.ref = "ehcache" }
 flyway-core = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }

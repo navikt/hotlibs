@@ -20,6 +20,7 @@ dependencies {
     constraints {
         api(libs.commons.compress)
         api(libs.commons.io)
+        api(libs.commons.lang)
         api(libs.commons.text)
         api(libs.logback.classic)
         api(libs.logback.core)
