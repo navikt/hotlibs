@@ -51,13 +51,6 @@ internal val KafkaStreamsPlugin = createApplicationPlugin("KafkaStreamsPlugin", 
 
     on(MonitoringEvent(ApplicationStarted), started)
     on(MonitoringEvent(ApplicationStopping), stopping)
-
-    onCall { _ ->
-        when (val state = kafkaStreams.state()) {
-            State.RUNNING -> log.trace { "state: $state" }
-            else -> log.info { "state: $state" }
-        }
-    }
 }
 
 internal data class KafkaStreamsStateTransition(val newState: State, val oldState: State)
