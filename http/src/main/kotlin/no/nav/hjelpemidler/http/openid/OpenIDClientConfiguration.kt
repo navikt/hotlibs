@@ -27,7 +27,7 @@ class OpenIDClientConfiguration internal constructor() {
 
     fun maskinportenEnvironmentConfiguration() {
         tokenEndpoint = MaskinportenEnvironmentVariable.MASKINPORTEN_TOKEN_ENDPOINT
-        // Merk: Disse er ikke relevante for maskinporten backend'en, men kreves av hotlibs-http sin openid client
+        // NB! Disse er ikke relevante for Maskinporten, men kreves av [no.nav.hjelpemidler.http.openid.OpenIDClient].
         clientId = MaskinportenEnvironmentVariable.MASKINPORTEN_CLIENT_ID
         clientSecret = ""
     }
