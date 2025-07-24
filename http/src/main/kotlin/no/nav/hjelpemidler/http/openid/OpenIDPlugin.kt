@@ -4,7 +4,6 @@ import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.api.createClientPlugin
-import no.nav.hjelpemidler.http.createHttpClientFactory
 
 class OpenIDPluginConfiguration {
     var scope: String = ""
@@ -19,7 +18,7 @@ class OpenIDPluginConfiguration {
 val OpenIDPlugin = createClientPlugin("OpenIDPlugin", ::OpenIDPluginConfiguration) {
     val tokenSetProvider = pluginConfig.tokenSetProvider ?: createOpenIDClient(
         configuration = pluginConfig.openIDClientConfiguration,
-        httpClientFactory = createHttpClientFactory(client.engine),
+        engine = client.engine,
     ).withScope(pluginConfig.scope)
     onRequest { request, _ ->
         request.bearerAuth(tokenSetProvider(request))
@@ -58,6 +57,4 @@ fun HttpClientConfig<*>.maskinporten(
     scope: String,
     engine: HttpClientEngine = CIO.create(),
     block: OpenIDClientConfiguration.() -> Unit = {},
-) {
-    openID(maskinportenClient(engine, block).withMaskinportenAssertion(scope))
-}
+) = openID(maskinportenClient(engine, block).withMaskinportenAssertion(scope))

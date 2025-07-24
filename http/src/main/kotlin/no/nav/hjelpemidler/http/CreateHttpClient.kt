@@ -21,11 +21,11 @@ fun createHttpClient(
     }
 
 fun <T : HttpClientEngineConfig> createHttpClient(
-    engine: HttpClientEngineFactory<T>,
+    engineFactory: HttpClientEngineFactory<T>,
     objectMapper: ObjectMapper = jsonMapper,
     block: HttpClientConfig<T>.() -> Unit = {},
 ): HttpClient =
-    HttpClient(engine) {
+    HttpClient(engineFactory) {
         expectSuccess = false
         jackson(objectMapper)
         block()

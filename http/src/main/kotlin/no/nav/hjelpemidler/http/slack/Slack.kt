@@ -1,12 +1,10 @@
 package no.nav.hjelpemidler.http.slack
 
 import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.engine.cio.CIO
 import no.nav.hjelpemidler.configuration.ClusterEnvironment
 import no.nav.hjelpemidler.configuration.Environment
 import no.nav.hjelpemidler.configuration.EnvironmentVariable
-import no.nav.hjelpemidler.http.DefaultHttpClientFactory
-import no.nav.hjelpemidler.http.HttpClientFactory
-import no.nav.hjelpemidler.http.createHttpClientFactory
 
 object SlackEnvironmentVariable {
     /**
@@ -26,21 +24,10 @@ fun slackEnvironmentConfiguration(): SlackConfiguration = DefaultSlackConfigurat
  * @throws Exception
  */
 fun slack(
-    httpClientFactory: HttpClientFactory = DefaultHttpClientFactory,
+    engine: HttpClientEngine = CIO.create(),
     configuration: SlackConfiguration = slackEnvironmentConfiguration(),
 ): SlackClient = if (Environment.current is ClusterEnvironment) {
-    DefaultSlackClient(configuration = configuration, httpClientFactory = httpClientFactory)
+    DefaultSlackClient(configuration = configuration, engine = engine)
 } else {
     InMemorySlackClient()
 }
-
-/**
- * Creates the default slack client
- * @param configuration Specifies the webhook to use when sending messages to Slack. As a default the webhook is extracted
- *        from the env-var SLACK_HOOK (envFrom: hm-slack-hook)
- * @throws Exception
- */
-fun slack(
-    engine: HttpClientEngine,
-    configuration: SlackConfiguration = slackEnvironmentConfiguration(),
-): SlackClient = slack(createHttpClientFactory(engine), configuration)

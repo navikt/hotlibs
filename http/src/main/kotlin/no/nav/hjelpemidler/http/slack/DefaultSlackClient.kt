@@ -1,18 +1,19 @@
 package no.nav.hjelpemidler.http.slack
 
 import io.ktor.client.HttpClient
+import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.engine.cio.CIO
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
-import no.nav.hjelpemidler.http.DefaultHttpClientFactory
-import no.nav.hjelpemidler.http.HttpClientFactory
+import no.nav.hjelpemidler.http.createHttpClient
 
 internal class DefaultSlackClient(
     private val configuration: SlackConfiguration,
-    httpClientFactory: HttpClientFactory = DefaultHttpClientFactory,
+    engine: HttpClientEngine = CIO.create(),
 ) : SlackClient {
-    private val client: HttpClient = httpClientFactory {
+    private val client: HttpClient = createHttpClient(engine) {
         expectSuccess = true
     }
 
