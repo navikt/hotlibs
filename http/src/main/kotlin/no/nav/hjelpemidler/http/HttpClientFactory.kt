@@ -7,9 +7,7 @@ import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.cio.CIO
 import no.nav.hjelpemidler.serialization.jackson.jsonMapper
 
-fun interface HttpClientFactory {
-    operator fun invoke(block: HttpClientConfig<*>.() -> Unit): HttpClient
-}
+fun interface HttpClientFactory : (HttpClientConfig<*>.() -> Unit) -> HttpClient
 
 object DefaultHttpClientFactory : HttpClientFactory {
     private val engine: HttpClientEngine = CIO.create()
