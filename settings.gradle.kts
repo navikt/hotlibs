@@ -23,6 +23,7 @@ dependencyResolutionManagement {
 rootProject.name = "hotlibs"
 
 include(
+    "behovsmelding",
     "core",
     "database",
     "http",

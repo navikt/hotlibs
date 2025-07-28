@@ -17,6 +17,7 @@ catalog {
         // Legg til hotlibs i katalogen med versjonen som bygges nå
         val hotlibs = version("hotlibs", "$version")
         listOf(
+            "behovsmelding",
             "core",
             "database",
             "http",
