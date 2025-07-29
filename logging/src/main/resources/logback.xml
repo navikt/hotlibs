@@ -4,38 +4,10 @@
         <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
         <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
             <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
-                <marker>secureLog</marker>
-            </evaluator>
-            <OnMismatch>NEUTRAL</OnMismatch>
-            <OnMatch>DENY</OnMatch>
-        </filter>
-        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
-            <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
                 <marker>TEAM_LOGS</marker>
             </evaluator>
             <OnMismatch>NEUTRAL</OnMismatch>
             <OnMatch>DENY</OnMatch>
-        </filter>
-    </appender>
-
-    <!-- DEPRECATED: Benytt Team Logs i stedet. -->
-    <appender name="secureLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/secure-logs/secure.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-            <fileNamePattern>/secure-logs/secure.log.%i</fileNamePattern>
-            <minIndex>1</minIndex>
-            <maxIndex>1</maxIndex>
-        </rollingPolicy>
-        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-            <maxFileSize>128MB</maxFileSize>
-        </triggeringPolicy>
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
-        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
-            <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
-                <marker>secureLog</marker>
-            </evaluator>
-            <OnMismatch>DENY</OnMismatch>
-            <OnMatch>NEUTRAL</OnMatch>
         </filter>
     </appender>
 
@@ -56,13 +28,8 @@
 
     <root level="${ROOT_LOG_LEVEL:-INFO}">
         <appender-ref ref="appLog" />
-        <appender-ref ref="secureLog" />
         <appender-ref ref="teamLog" />
     </root>
-
-    <logger name="tjenestekall" level="${SECURE_LOG_LEVEL:-INFO}" additivity="false">
-        <appender-ref ref="secureLog" />
-    </logger>
 
     <logger name="team-logs-logger" level="INFO" additivity="false">
         <appender-ref ref="teamLog" />

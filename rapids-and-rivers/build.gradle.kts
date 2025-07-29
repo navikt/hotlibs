@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     api(project(":kafka"))
+    api(project(":logging"))
     api(project(":serialization"))
     api(libs.rapidsAndRivers)
 

@@ -1,7 +1,10 @@
 package no.nav.hjelpemidler.domain.person
 
-import no.nav.hjelpemidler.logging.secureLog
+import io.github.oshai.kotlinlogging.KotlinLogging
+import no.nav.hjelpemidler.logging.teamError
 import no.nav.hjelpemidler.text.isInteger
+
+private val log = KotlinLogging.logger {}
 
 /**
  * AktørId med 13 siffer.
@@ -9,7 +12,7 @@ import no.nav.hjelpemidler.text.isInteger
 class AktørId(value: String) : PersonIdent(value) {
     init {
         if (!erGyldig(value)) {
-            secureLog.error { "Ugyldig aktørId: '$value'" }
+            log.teamError { "Ugyldig aktørId: '$value'" }
             throw IllegalArgumentException("Ugyldig aktørId")
         }
     }

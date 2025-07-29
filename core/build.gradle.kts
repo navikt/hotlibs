@@ -5,6 +5,8 @@ plugins {
 }
 
 dependencies {
+    api(project(":logging"))
+
     implementation(libs.kotlin.reflect)
     implementation(libs.nocommons)
 

@@ -1,11 +1,14 @@
 package no.nav.hjelpemidler.domain.person
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import io.github.oshai.kotlinlogging.KotlinLogging
 import no.bekk.bekkopen.person.Fodselsnummer
 import no.bekk.bekkopen.person.FodselsnummerCalculator
 import no.bekk.bekkopen.person.FodselsnummerValidator
-import no.nav.hjelpemidler.logging.secureLog
+import no.nav.hjelpemidler.logging.teamError
 import no.nav.hjelpemidler.time.toDate
+
+private val log = KotlinLogging.logger {}
 
 /**
  * F-nummer/D-nummer med 11 siffer.
@@ -18,7 +21,7 @@ import no.nav.hjelpemidler.time.toDate
 class Fødselsnummer(value: String) : PersonIdent(value) {
     init {
         if (!erGyldig(value)) {
-            secureLog.error { "Ugyldig fødselsnummer: '$value'" }
+            log.teamError { "Ugyldig fødselsnummer: '$value'" }
             throw IllegalArgumentException("Ugyldig fødselsnummer")
         }
     }

@@ -6,33 +6,33 @@
         </encoder>
         <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
             <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
-                <marker>secureLog</marker>
+                <marker>TEAM_LOGS</marker>
             </evaluator>
             <OnMismatch>NEUTRAL</OnMismatch>
             <OnMatch>DENY</OnMatch>
         </filter>
     </appender>
 
-    <appender name="secureLog" class="ch.qos.logback.core.ConsoleAppender">
+    <appender name="teamLog" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
         <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
             <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
-                <marker>secureLog</marker>
+                <marker>TEAM_LOGS</marker>
             </evaluator>
-            <OnMismatch>NEUTRAL</OnMismatch>
-            <OnMatch>DENY</OnMatch>
+            <OnMismatch>DENY</OnMismatch>
+            <OnMatch>NEUTRAL</OnMatch>
         </filter>
     </appender>
 
     <root level="${ROOT_LOG_LEVEL:-WARN}">
         <appender-ref ref="appLog" />
-        <appender-ref ref="secureLog" />
+        <appender-ref ref="teamLog" />
     </root>
 
-    <logger name="tjenestekall" level="${SECURE_LOG_LEVEL:-WARN}" additivity="false">
-        <appender-ref ref="secureLog" />
+    <logger name="team-logs-logger" level="${TEAM_LOG_LEVEL:-WARN}" additivity="false">
+        <appender-ref ref="teamLog" />
     </logger>
 
     <logger name="org.testcontainers.utility" level="ERROR" />
