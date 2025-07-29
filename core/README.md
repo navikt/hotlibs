@@ -42,7 +42,7 @@ Inneholder funksjoner, klasser og konstanter for lokalisering av tekst, tid, bel
 
 ### `no.nav.hjelpemidler.logging`
 
-Inneholder bla. konstanten `secureLog` for logging til sikkerlogg ("tjenestekall").
+Inneholder bla. Kotlin extensions for logging til Team Logs.
 
 ### `no.nav.hjelpemidler.serialization`
 

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import no.bekk.bekkopen.person.Fodselsnummer
 import no.bekk.bekkopen.person.FodselsnummerCalculator
 import no.bekk.bekkopen.person.FodselsnummerValidator
-import no.nav.hjelpemidler.logging.secureLog
 import no.nav.hjelpemidler.time.toDate
 
 /**
@@ -18,7 +17,6 @@ import no.nav.hjelpemidler.time.toDate
 class Fødselsnummer(value: String) : PersonIdent(value) {
     init {
         if (!erGyldig(value)) {
-            secureLog.error { "Ugyldig fødselsnummer: '$value'" }
             throw IllegalArgumentException("Ugyldig fødselsnummer")
         }
     }

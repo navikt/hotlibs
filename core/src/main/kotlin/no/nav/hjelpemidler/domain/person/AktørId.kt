@@ -1,6 +1,5 @@
 package no.nav.hjelpemidler.domain.person
 
-import no.nav.hjelpemidler.logging.secureLog
 import no.nav.hjelpemidler.text.isInteger
 
 /**
@@ -9,7 +8,6 @@ import no.nav.hjelpemidler.text.isInteger
 class AktørId(value: String) : PersonIdent(value) {
     init {
         if (!erGyldig(value)) {
-            secureLog.error { "Ugyldig aktørId: '$value'" }
             throw IllegalArgumentException("Ugyldig aktørId")
         }
     }

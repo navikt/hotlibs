@@ -4,5 +4,5 @@ plugins {
 
 dependencies {
     api(libs.kotlin.logging)
-    runtimeOnly(libs.bundles.logging.runtime)
+    implementation(libs.bundles.logging.runtime)
 }

@@ -11,7 +11,7 @@ import io.micrometer.core.instrument.MeterRegistry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import no.nav.hjelpemidler.kafka.KafkaMessage
-import no.nav.hjelpemidler.logging.secureLog
+import no.nav.hjelpemidler.logging.teamInfo
 import no.nav.hjelpemidler.serialization.jackson.jsonMapper
 
 private val log = KotlinLogging.logger {}
@@ -53,10 +53,10 @@ abstract class KafkaMessageListener<T : KafkaMessage>(
     private val failOnError: Boolean = false,
 ) : PacketListener, TypeReference<T>() {
     override fun onError(problems: MessageProblems, context: MessageContext, metadata: MessageMetadata) {
-        log.info { "Validering av melding feilet, se secureLog for detaljer" }
-        secureLog.info { "Validering av melding feilet: '${problems.toExtendedReport()}'" }
+        log.info { "Validering av melding feilet, se Team Logs for detaljer" }
+        log.teamInfo { "Validering av melding feilet: '${problems.toExtendedReport()}'" }
         if (failOnError) {
-            error("Validering av melding feilet, se secureLog for detaljer")
+            error("Validering av melding feilet, se Team Logs for detaljer")
         }
     }
 

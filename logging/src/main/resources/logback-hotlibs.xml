@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <appender name="appLog" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
         <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
             <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
                 <marker>TEAM_LOGS</marker>
@@ -13,9 +11,13 @@
         </filter>
     </appender>
 
-    <appender name="teamLog" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    <appender name="teamLog" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>team-logs.nais-system:5170</destination>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <customFields>
+                {"google_cloud_project":"${GOOGLE_CLOUD_PROJECT}","nais_namespace_name":"${NAIS_NAMESPACE}","nais_pod_name":"${HOSTNAME}","nais_container_name":"${NAIS_APP_NAME}"}
+            </customFields>
+            <includeContext>false</includeContext>
         </encoder>
         <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
             <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
@@ -26,16 +28,14 @@
         </filter>
     </appender>
 
-    <root level="${ROOT_LOG_LEVEL:-WARN}">
+    <root level="${ROOT_LOG_LEVEL:-INFO}">
         <appender-ref ref="appLog" />
         <appender-ref ref="teamLog" />
     </root>
 
-    <logger name="tjenestekall" level="${SECURE_LOG_LEVEL:-WARN}" additivity="false">
+    <logger name="tjenestekall" level="${SECURE_LOG_LEVEL:-INFO}" additivity="false">
         <appender-ref ref="teamLog" />
     </logger>
 
-    <logger name="org.testcontainers.utility" level="ERROR" />
-
-    <include optional="true" resource="logback-test-include.xml" />
+    <include optional="true" resource="logback-include.xml" />
 </configuration>
