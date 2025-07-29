@@ -1,6 +1,4 @@
 [versions]
-# Nyeste versjon finner du her: https://github.com/navikt/hm-soknadsbehandling-db/packages
-behovsmeldingsmodell = "25.208.220900"
 bigquery = "2.53.0"
 cacheApi = "1.1.1"
 caffeine = "3.2.2"
@@ -120,7 +118,6 @@ h2 = { module = "com.h2database:h2", version.ref = "h2" }
 handlebars = { module = "com.github.jknack:handlebars", version.ref = "handlebars" }
 hibernate-core = { module = "org.hibernate.orm:hibernate-core", version.ref = "hibernate" }
 hikaricp = { module = "com.zaxxer:HikariCP", version.ref = "hikaricp" }
-hm-behovsmeldingsmodell = { module = "no.nav.hjelpemidler:hm-behovsmeldingsmodell", version.ref = "behovsmeldingsmodell" }
 hm-contract-pdl-avro = { module = "no.nav.hjelpemidler:hm-contract-pdl-avro", version.ref = "contractPdlAvro" }
 idporten-sidecar = { module = "no.nav.tms.token.support:idporten-sidecar", version.ref = "tmsKtorTokenSupport" }
 idporten-sidecar-mock = { module = "no.nav.tms.token.support:idporten-sidecar-mock", version.ref = "tmsKtorTokenSupport" }
