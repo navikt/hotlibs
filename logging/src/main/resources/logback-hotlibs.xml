@@ -11,7 +11,7 @@
         </filter>
     </appender>
 
-    <appender name="teamLog" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+    <appender name="teamLogs" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
         <destination>team-logs.nais-system:5170</destination>
         <encoder class="net.logstash.logback.encoder.LogstashEncoder">
             <customFields>
@@ -28,13 +28,25 @@
         </filter>
     </appender>
 
+    <!-- Deprecated: Fjernes når ingen app-er lenger bruker logger "tjenestekall". -->
+    <appender name="secureLog" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>team-logs.nais-system:5170</destination>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <customFields>
+                {"google_cloud_project":"${GOOGLE_CLOUD_PROJECT}","nais_namespace_name":"${NAIS_NAMESPACE}","nais_pod_name":"${HOSTNAME}","nais_container_name":"${NAIS_APP_NAME}"}
+            </customFields>
+            <includeContext>false</includeContext>
+        </encoder>
+    </appender>
+
     <root level="${ROOT_LOG_LEVEL:-INFO}">
         <appender-ref ref="appLog" />
-        <appender-ref ref="teamLog" />
+        <appender-ref ref="teamLogs" />
     </root>
 
+    <!-- Deprecated: Fjernes når ingen app-er lenger bruker logger "tjenestekall". -->
     <logger name="tjenestekall" level="${SECURE_LOG_LEVEL:-INFO}" additivity="false">
-        <appender-ref ref="teamLog" />
+        <appender-ref ref="secureLog" />
     </logger>
 
     <include optional="true" resource="logback-include.xml" />

@@ -13,7 +13,7 @@
         </filter>
     </appender>
 
-    <appender name="teamLog" class="ch.qos.logback.core.ConsoleAppender">
+    <appender name="teamLogs" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
@@ -26,13 +26,21 @@
         </filter>
     </appender>
 
+    <!-- Deprecated: Fjernes når ingen app-er lenger bruker logger "tjenestekall". -->
+    <appender name="secureLog" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
     <root level="${ROOT_LOG_LEVEL:-WARN}">
         <appender-ref ref="appLog" />
-        <appender-ref ref="teamLog" />
+        <appender-ref ref="teamLogs" />
     </root>
 
+    <!-- Deprecated: Fjernes når ingen app-er lenger bruker logger "tjenestekall". -->
     <logger name="tjenestekall" level="${SECURE_LOG_LEVEL:-WARN}" additivity="false">
-        <appender-ref ref="teamLog" />
+        <appender-ref ref="secureLog" />
     </logger>
 
     <logger name="org.testcontainers.utility" level="ERROR" />
