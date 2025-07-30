@@ -2,8 +2,9 @@ package no.nav.hjelpemidler.logging
 
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KMarkerFactory
+import io.github.oshai.kotlinlogging.Marker
 
-internal val teamLogsMarker = KMarkerFactory.getMarker("TEAM_LOGS")
+internal val teamLogsMarker: Marker = KMarkerFactory.getMarker("TEAM_LOGS")
 
 fun KLogger.teamTrace(throwable: Throwable? = null, message: () -> Any?) = trace(throwable, teamLogsMarker, message)
 fun KLogger.teamDebug(throwable: Throwable? = null, message: () -> Any?) = debug(throwable, teamLogsMarker, message)

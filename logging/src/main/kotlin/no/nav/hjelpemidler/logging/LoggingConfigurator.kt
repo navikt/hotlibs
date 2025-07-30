@@ -14,9 +14,10 @@ import java.net.URL
  * biblioteker, f.eks. rapids-and-rivers.
  */
 @ConfiguratorRank(value = ConfiguratorRank.CUSTOM_TOP_PRIORITY)
-internal class LoggingConfigurator : ContextAwareBase(), Configurator {
+internal class LoggingConfigurator(private val resourceName: String? = null) : ContextAwareBase(), Configurator {
     override fun configure(context: LoggerContext): ExecutionStatus {
-        val url = getResource(ClassicConstants.TEST_AUTOCONFIG_FILE)
+        val url = resourceName?.let(::getResource)
+            ?: getResource(TEST_AUTOCONFIG_FILE)
             ?: getResource(AUTOCONFIG_FILE)
             ?: error("$AUTOCONFIG_FILE mangler!")
         JoranConfigurator().also {
@@ -29,6 +30,10 @@ internal class LoggingConfigurator : ContextAwareBase(), Configurator {
     private fun getResource(name: String): URL? = javaClass.classLoader.getResource(name)
 
     companion object {
-        private const val AUTOCONFIG_FILE = "logback-hotlibs.xml"
+        /**
+         * @see [ch.qos.logback.classic.ClassicConstants.AUTOCONFIG_FILE]
+         */
+        const val AUTOCONFIG_FILE = "logback-hotlibs.xml"
+        const val TEST_AUTOCONFIG_FILE = ClassicConstants.TEST_AUTOCONFIG_FILE
     }
 }
