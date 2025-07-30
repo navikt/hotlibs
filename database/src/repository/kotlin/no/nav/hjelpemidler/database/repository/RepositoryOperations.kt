@@ -2,6 +2,7 @@ package no.nav.hjelpemidler.database.repository
 
 import jakarta.persistence.EntityGraph
 import no.nav.hjelpemidler.database.DatabaseOperations
+import no.nav.hjelpemidler.database.JdbcOperations
 import no.nav.hjelpemidler.database.QueryParameters
 import no.nav.hjelpemidler.database.UpdateResult
 import org.hibernate.LockMode
@@ -16,7 +17,7 @@ import kotlin.reflect.KClass
 /**
  * Interface for kommunikasjon med en database basert på JPA/Hibernate.
  */
-interface RepositoryOperations : DatabaseOperations, WriteOperations<Any, Any> {
+interface RepositoryOperations : DatabaseOperations, WriteOperations<Any, Any>, JdbcOperations {
     /**
      * @see [org.hibernate.StatelessSession.fetch]
      */
@@ -112,8 +113,8 @@ interface RepositoryOperations : DatabaseOperations, WriteOperations<Any, Any> {
         resultClass: KClass<T>,
     ): List<T>
 
-    fun update(
+    override fun update(
         @Language("SQL") sql: CharSequence,
-        queryParameters: QueryParameters = emptyMap(),
+        queryParameters: QueryParameters,
     ): UpdateResult
 }

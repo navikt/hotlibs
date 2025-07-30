@@ -1,6 +1,9 @@
 package no.nav.hjelpemidler.database
 
+import no.nav.hjelpemidler.database.jdbc.SessionJdbcOperations
+import no.nav.hjelpemidler.database.jdbc.createSession
 import org.intellij.lang.annotations.Language
+import java.sql.Connection
 
 /**
  * Interface for kommunikasjon med en database basert på JDBC.
@@ -72,3 +75,6 @@ interface JdbcOperations : DatabaseOperations {
         block: (T) -> QueryParameters,
     ): List<Long> = batchAndReturnGeneratedKeys(sql, items.map(block))
 }
+
+fun JdbcOperations(connection: Connection): JdbcOperations =
+    SessionJdbcOperations(createSession(connection))

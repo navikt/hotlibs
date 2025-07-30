@@ -1,8 +1,8 @@
 package no.nav.hjelpemidler.database.hibernate
 
 import jakarta.persistence.EntityGraph
+import no.nav.hjelpemidler.database.JdbcOperations
 import no.nav.hjelpemidler.database.QueryParameters
-import no.nav.hjelpemidler.database.UpdateResult
 import no.nav.hjelpemidler.database.repository.Repository
 import no.nav.hjelpemidler.database.repository.RepositoryOperations
 import no.nav.hjelpemidler.database.repository.WriteOperations
@@ -21,10 +21,15 @@ import kotlin.reflect.KClass
 internal class StatelessSessionRepositoryOperations private constructor(
     private val session: StatelessSession,
     private val writeOperations: WriteOperations<Any, Any>,
-) : RepositoryOperations, WriteOperations<Any, Any> by writeOperations, AutoCloseable by session {
+    private val jdbcOperations: JdbcOperations,
+) : RepositoryOperations,
+    WriteOperations<Any, Any> by writeOperations,
+    JdbcOperations by jdbcOperations,
+    AutoCloseable by session {
     constructor(session: StatelessSession) : this(
         session = session,
         writeOperations = StatelessSessionWriteOperations(session),
+        jdbcOperations = StatelessSessionJdbcOperations(session),
     )
 
     override fun fetch(association: Any) =
@@ -120,9 +125,11 @@ internal class StatelessSessionRepositoryOperations private constructor(
         return query.resultList
     }
 
+    /* blir implementert i StatelessSessionJdbcOperations pt.
     override fun update(sql: CharSequence, queryParameters: QueryParameters): UpdateResult {
         val query = createNativeMutationQuery(sql)
         queryParameters.forEach(query::setParameter)
         return UpdateResult(query.executeUpdate())
     }
+    */
 }
