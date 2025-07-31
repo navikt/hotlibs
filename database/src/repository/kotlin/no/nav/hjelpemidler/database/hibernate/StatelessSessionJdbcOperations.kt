@@ -8,7 +8,10 @@ import no.nav.hjelpemidler.database.ResultMapper
 import no.nav.hjelpemidler.database.UpdateResult
 import org.hibernate.StatelessSession
 
-class StatelessSessionJdbcOperations(
+/**
+ * Implementasjon av [JdbcOperations] basert på [org.hibernate.StatelessSession].
+ */
+internal class StatelessSessionJdbcOperations(
     private val session: StatelessSession,
 ) : JdbcOperations, AutoCloseable by session {
     override fun <T : Any> single(

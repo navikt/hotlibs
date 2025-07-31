@@ -4,6 +4,7 @@ import no.nav.hjelpemidler.database.QueryParameters
 import org.hibernate.LockMode
 import org.hibernate.graph.RootGraph
 import org.hibernate.query.NativeQuery
+import org.hibernate.query.Query
 import org.intellij.lang.annotations.Language
 
 /**
@@ -27,6 +28,12 @@ inline fun <reified T : Any> RepositoryOperations.findAllById(
  */
 inline fun <reified T : Any> RepositoryOperations.createEntityGraph(): RootGraph<T> =
     createEntityGraph(T::class)
+
+/**
+ * @see [RepositoryOperations.createQuery]
+ */
+inline fun <reified T : Any> RepositoryOperations.createQuery(@Language("HQL") hql: CharSequence): Query<T> =
+    createQuery(hql, T::class)
 
 /**
  * @see [RepositoryOperations.createNativeQuery]
