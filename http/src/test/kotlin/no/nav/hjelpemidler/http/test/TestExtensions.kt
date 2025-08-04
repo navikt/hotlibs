@@ -9,27 +9,25 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
-import no.nav.hjelpemidler.serialization.jackson.jsonMapper
+import no.nav.hjelpemidler.serialization.jackson.valueToJson
 import org.intellij.lang.annotations.Language
 
 fun MockRequestHandleScope.respondJson(
     @Language("JSON") content: String,
     status: HttpStatusCode = HttpStatusCode.OK,
-) =
-    respond(
-        content = content,
-        status = status,
-        headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-    )
+) = respond(
+    content = content,
+    status = status,
+    headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+)
 
 fun MockRequestHandleScope.respondJson(
     value: Any?,
     status: HttpStatusCode = HttpStatusCode.OK,
-) =
-    respondJson(
-        content = jsonMapper.writeValueAsString(value),
-        status = status,
-    )
+) = respondJson(
+    content = valueToJson(value),
+    status = status,
+)
 
 fun createJWT(block: JWTCreator.Builder.() -> Unit = {}): String =
     JWT.create()

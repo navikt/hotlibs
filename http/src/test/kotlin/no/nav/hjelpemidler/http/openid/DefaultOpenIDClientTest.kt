@@ -29,7 +29,7 @@ class DefaultOpenIDClientTest {
 
         val tokenSet = client.grant(scope = "test")
 
-        tokenSet.tokenType shouldBe "Bearer"
+        tokenSet.tokenType shouldBe TokenType.BEARER
         tokenSet.expiresIn shouldBe 3599
         tokenSet.accessToken shouldBe "token"
     }
@@ -52,7 +52,7 @@ class DefaultOpenIDClientTest {
 
         val tokenSet = client.grant(scope = "test", onBehalfOf = "test")
 
-        tokenSet.tokenType shouldBe "Bearer"
+        tokenSet.tokenType shouldBe TokenType.BEARER
         tokenSet.expiresIn shouldBe 3269
         tokenSet.accessToken shouldBe "token"
     }

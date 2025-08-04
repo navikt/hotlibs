@@ -14,16 +14,20 @@ import kotlin.time.Duration.Companion.seconds
 
 @JsonNaming(SnakeCaseStrategy::class)
 data class TokenSet(
-    val tokenType: String,
-    val expiresIn: Long,
     val accessToken: String,
-    @param:JsonAnySetter @get:JsonAnyGetter val other: Map<String, Any> = linkedMapOf(),
+    val expiresIn: Long,
+    val tokenType: TokenType = TokenType.BEARER,
+    @field:JsonAnyGetter @field:JsonAnySetter val additionalProperties: Map<String, Any?> = mutableMapOf(),
 ) {
-    @JsonIgnore
-    val expiresInDuration = expiresIn.seconds
+    val expiresInDuration: Duration @JsonIgnore get() = expiresIn.seconds
+    val expiresAt: Instant @JsonIgnore get() = nå() + expiresInDuration
 
     @JsonIgnore
-    val expiresAt: Instant = nå() + expiresInDuration
+    constructor(accessToken: String, expiresIn: Duration) : this(
+        accessToken = accessToken,
+        expiresIn = expiresIn.inWholeSeconds,
+        tokenType = TokenType.BEARER,
+    )
 
     @JsonIgnore
     fun expiresIn(leeway: Duration = TokenExpiry.DEFAULT_LEEWAY): Duration =
@@ -34,13 +38,4 @@ data class TokenSet(
         (expiresAt - leeway).let {
             it == at || it.isBefore(at)
         }
-
-    companion object {
-        fun bearer(expiresIn: Duration, accessToken: String): TokenSet =
-            TokenSet(
-                tokenType = "Bearer",
-                expiresIn = expiresIn.inWholeSeconds,
-                accessToken = accessToken,
-            )
-    }
 }

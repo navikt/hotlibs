@@ -22,7 +22,12 @@ class OpenIDPluginTest {
         val engine = MockEngine {
             when {
                 it.url.toString().endsWith("/token") ->
-                    respondJson(TokenSet.bearer(1.hours, "token"))
+                    respondJson(
+                        TokenSet(
+                            accessToken = "token",
+                            expiresIn = 1.hours,
+                        )
+                    )
 
                 it.url.toString().endsWith("/test") -> {
                     it.headers["Authorization"] shouldBe "Bearer token"

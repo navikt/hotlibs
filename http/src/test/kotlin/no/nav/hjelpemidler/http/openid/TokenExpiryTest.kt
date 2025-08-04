@@ -53,8 +53,8 @@ class TokenExpiryTest {
     }
 
     private fun tokenSetThat(expiresIn: Duration): TokenSet =
-        TokenSet.bearer(
-            expiresIn = expiresIn,
+        TokenSet(
             accessToken = "token",
+            expiresIn = expiresIn,
         )
 }

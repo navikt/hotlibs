@@ -52,8 +52,8 @@ class TokenSetTest {
     }
 
     private fun tokenSetThat(expiresIn: Duration): TokenSet =
-        TokenSet.bearer(
-            expiresIn = expiresIn,
+        TokenSet(
             accessToken = createJWT(),
+            expiresIn = expiresIn,
         )
 }
