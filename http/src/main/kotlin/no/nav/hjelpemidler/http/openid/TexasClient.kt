@@ -6,7 +6,6 @@ import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.request.forms.submitForm
-import io.ktor.http.ParametersBuilder
 import io.ktor.http.parameters
 import io.ktor.util.appendAll
 import no.nav.hjelpemidler.configuration.TexasEnvironmentVariable
@@ -24,19 +23,14 @@ class TexasClient(
         expectSuccess = true
     }
 
-    fun asOpenIDClient(identityProvider: IdentityProvider): OpenIDClient =
-        TexasOpenIDClient(this, identityProvider)
-
-    fun asTokenSetProvider(identityProvider: IdentityProvider, target: String): TokenSetProvider =
-        TokenSetProvider { token(identityProvider, target) }
-
     /**
-     * M2M-token for [target].
+     * Utsted Machine-To-Machine-token (M2M-token) for [target].
      */
     suspend fun token(identityProvider: IdentityProvider, target: String): TokenSet {
-        log.debug { "token, url: '$tokenUrl', identityProvider: '$identityProvider', target: '$target'" }
+        val url = tokenUrl
+        log.debug { "token, url: '$url', identityProvider: '$identityProvider', target: '$target'" }
         return execute(
-            url = tokenUrl,
+            url = url,
             identityProvider = identityProvider,
             parameters = mapOf(
                 // "resource" to "",
@@ -47,12 +41,13 @@ class TexasClient(
     }
 
     /**
-     * OBO-token for [target].
+     * Utsted On-Behalf-Of-token (OBO-token) for [target].
      */
     suspend fun exchange(identityProvider: IdentityProvider, target: String, userToken: String): TokenSet {
-        log.debug { "exchange, url: '$tokenExchangeUrl', identityProvider: '$identityProvider', target: '$target'" }
+        val url = tokenExchangeUrl
+        log.debug { "exchange, url: '$url', identityProvider: '$identityProvider', target: '$target'" }
         return execute(
-            url = tokenExchangeUrl,
+            url = url,
             identityProvider = identityProvider,
             parameters = mapOf(
                 // "skip_cache" to "true",
@@ -66,15 +61,22 @@ class TexasClient(
      * Valider [token].
      */
     suspend fun introspection(identityProvider: IdentityProvider, token: String): TokenIntrospection {
-        log.debug { "introspection, url: '$tokenIntrospectionUrl', identityProvider: '$identityProvider'" }
+        val url = tokenIntrospectionUrl
+        log.debug { "introspection, url: '$url', identityProvider: '$identityProvider'" }
         return execute(
-            url = tokenIntrospectionUrl,
+            url = url,
             identityProvider = identityProvider,
             parameters = mapOf(
                 "token" to token,
             )
         )
     }
+
+    fun asOpenIDClient(identityProvider: IdentityProvider): OpenIDClient =
+        TexasOpenIDClient(this, identityProvider)
+
+    fun asTokenSetProvider(identityProvider: IdentityProvider, target: String): TokenSetProvider =
+        TokenSetProvider { token(identityProvider, target) }
 
     private suspend inline fun <reified T : Any> execute(
         url: String,
@@ -105,32 +107,3 @@ fun texasRequestOf(block: TexasRequest.() -> Unit): TexasRequest {
     return TexasRequest().apply(block)
 }
 */
-
-class TexasOpenIDClient(
-    private val client: TexasClient,
-    private val identityProvider: IdentityProvider,
-) : OpenIDClient {
-    constructor(identityProvider: IdentityProvider, engine: HttpClientEngine = CIO.create()) : this(
-        client = TexasClient(engine),
-        identityProvider = identityProvider,
-    )
-
-    override suspend fun grant(builder: ParametersBuilder.() -> Unit): TokenSet {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun grant(scope: String): TokenSet =
-        client.token(identityProvider, target = scope)
-
-    override suspend fun grant(scope: String, onBehalfOf: String): TokenSet =
-        client.exchange(identityProvider, target = scope, userToken = onBehalfOf)
-
-    override fun withMaskinportenAssertion(scope: String): TokenSetProvider {
-        check(identityProvider == IdentityProvider.MASKINPORTEN) {
-            "identityProvider var $identityProvider, forventet: ${IdentityProvider.MASKINPORTEN}"
-        }
-        return TokenSetProvider {
-            client.token(identityProvider, target = scope)
-        }
-    }
-}

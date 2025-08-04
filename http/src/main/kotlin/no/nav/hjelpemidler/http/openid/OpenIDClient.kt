@@ -8,7 +8,6 @@ import com.nimbusds.jose.crypto.RSASSASigner
 import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.SignedJWT
-import io.ktor.http.ParametersBuilder
 import no.nav.hjelpemidler.configuration.MaskinportenEnvironmentVariable
 import no.nav.hjelpemidler.time.toDate
 import java.time.LocalDateTime
@@ -16,22 +15,20 @@ import java.util.Date
 import java.util.UUID
 
 interface OpenIDClient {
-    suspend fun grant(builder: ParametersBuilder.() -> Unit): TokenSet
+    /**
+     * Utsted Machine-To-Machine-token (M2M-token) med [scope].
+     */
+    suspend fun grant(scope: String): TokenSet
 
-    suspend fun grant(scope: String): TokenSet = grant {
-        grantType(GrantType.CLIENT_CREDENTIALS)
-        scope(scope)
-    }
+    /**
+     * Utsted On-Behalf-Of-token (OBO-token) med [scope].
+     */
+    suspend fun grant(scope: String, onBehalfOf: String): TokenSet
 
-    suspend fun grant(scope: String, onBehalfOf: String): TokenSet = grant {
-        grantType(GrantType.JWT_BEARER)
-        scope(scope)
-        assertion(onBehalfOf)
-        requestedTokenUse("on_behalf_of")
-    }
-
-    suspend fun grant(scope: String, onBehalfOf: DecodedJWT): TokenSet =
-        grant(scope = scope, onBehalfOf = onBehalfOf.token)
+    /**
+     * Utsted On-Behalf-Of-token (OBO-token) med [scope].
+     */
+    suspend fun grant(scope: String, onBehalfOf: DecodedJWT): TokenSet = grant(scope, onBehalfOf.token)
 
     fun withScope(scope: String): TokenSetProvider = TokenSetProvider { grant(scope) }
 

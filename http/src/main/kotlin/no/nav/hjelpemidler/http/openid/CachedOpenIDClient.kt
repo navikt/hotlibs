@@ -6,7 +6,6 @@ import io.github.oshai.kotlinlogging.withLoggingContext
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.cio.CIO
 import io.ktor.http.Parameters
-import io.ktor.http.ParametersBuilder
 import no.nav.hjelpemidler.cache.createCache
 import no.nav.hjelpemidler.cache.getAsync
 
@@ -15,11 +14,7 @@ private val log = KotlinLogging.logger {}
 internal class CachedOpenIDClient(
     configuration: OpenIDClientConfiguration,
     engine: HttpClientEngine = CIO.create(),
-) : OpenIDClient {
-    private val wrapped: OpenIDClient = DefaultOpenIDClient(
-        configuration = configuration,
-        engine = engine,
-    )
+) : DefaultOpenIDClient(configuration, engine) {
     private val cache: AsyncCache<Parameters, TokenSet> = createCache(configuration.cacheConfiguration)
         .expireAfter(configuration.expiry)
         .removalListener<Parameters, TokenSet> { parameters, tokenSet, cause ->
@@ -35,11 +30,9 @@ internal class CachedOpenIDClient(
         }
         .buildAsync()
 
-    override suspend fun grant(builder: ParametersBuilder.() -> Unit): TokenSet {
-        val formParameters = Parameters.build(builder)
-        return cache.getAsync(formParameters) { _ ->
+    override suspend fun execute(formParameters: Parameters): TokenSet =
+        cache.getAsync(formParameters) {
             log.debug { "Cache miss, henter nytt token, scope: '${formParameters.scope}'" }
-            wrapped.grant(builder)
+            super.execute(it)
         }
-    }
 }
