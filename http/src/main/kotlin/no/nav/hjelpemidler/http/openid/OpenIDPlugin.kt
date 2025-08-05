@@ -38,4 +38,4 @@ fun HttpClientConfig<*>.openID(identityProvider: IdentityProvider, scope: String
 }
 
 fun HttpClientConfig<*>.entraID(scope: String) = openID(IdentityProvider.ENTRA_ID, scope)
-fun HttpClientConfig<*>.maskinporten(scope: String) = openID(IdentityProvider.ENTRA_ID, scope)
+fun HttpClientConfig<*>.maskinporten(scope: String) = openID(IdentityProvider.MASKINPORTEN, scope)

@@ -5,7 +5,7 @@ import io.ktor.client.request.bearerAuth
 import io.ktor.http.HttpMessageBuilder
 import io.ktor.util.AttributeKey
 
-fun HttpMessageBuilder.bearerAuth(tokenSet: TokenSet): Unit =
+fun HttpMessageBuilder.bearerAuth(tokenSet: TokenSet) =
     bearerAuth(tokenSet.accessToken)
 
 internal data object TokenExchangePreventionToken
@@ -13,15 +13,15 @@ internal data object TokenExchangePreventionToken
 internal val UserTokenKey =
     AttributeKey<String>("UserToken")
 
-internal val TokenExchangePreventionTokenKey =
-    AttributeKey<TokenExchangePreventionToken>("TokenExchangePreventionToken")
-
 internal fun HttpRequestBuilder.userToken(): String? =
     attributes.getOrNull(UserTokenKey)
 
 fun HttpRequestBuilder.userToken(userToken: String) {
     attributes[UserTokenKey] = userToken
 }
+
+internal val TokenExchangePreventionTokenKey =
+    AttributeKey<TokenExchangePreventionToken>("TokenExchangePreventionToken")
 
 internal fun HttpRequestBuilder.tokenExchangePreventionToken(): TokenExchangePreventionToken? =
     attributes.getOrNull(TokenExchangePreventionTokenKey)

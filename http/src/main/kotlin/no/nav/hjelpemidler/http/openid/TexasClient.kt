@@ -1,5 +1,6 @@
 package no.nav.hjelpemidler.http.openid
 
+import com.auth0.jwt.interfaces.DecodedJWT
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -38,9 +39,9 @@ class TexasClient(
         log.debug { "token, url: '$tokenUrl', identityProvider: '$identityProvider', target: '$target', resource: '$resource', skipCache: $skipCache" }
         return execute(tokenUrl) {
             identityProvider(identityProvider)
+            target(target)
             if (resource != null) resource(resource)
             if (skipCache != null) skipCache(skipCache)
-            target(target)
         }
     }
 
@@ -56,11 +57,21 @@ class TexasClient(
         log.debug { "exchange, url: '$tokenExchangeUrl', identityProvider: '$identityProvider', target: '$target', skipCache: $skipCache" }
         return execute(tokenExchangeUrl) {
             identityProvider(identityProvider)
-            if (skipCache != null) skipCache(skipCache)
             target(target)
             userToken(userToken)
+            if (skipCache != null) skipCache(skipCache)
         }
     }
+
+    /**
+     * Hent On-Behalf-Of-token (OBO-token) for [target].
+     */
+    suspend fun exchange(
+        identityProvider: IdentityProvider,
+        target: String,
+        userToken: DecodedJWT,
+        skipCache: Boolean? = null,
+    ): TokenSet = exchange(identityProvider, target, userToken.toString(), skipCache)
 
     /**
      * Valider [token].
@@ -72,6 +83,12 @@ class TexasClient(
             token(token)
         }
     }
+
+    /**
+     * Valider [token].
+     */
+    suspend fun introspection(identityProvider: IdentityProvider, token: DecodedJWT): TokenIntrospection =
+        introspection(identityProvider, token.toString())
 
     private suspend inline fun <reified T : Any> execute(
         url: String,
