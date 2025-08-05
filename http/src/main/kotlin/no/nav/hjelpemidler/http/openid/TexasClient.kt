@@ -13,6 +13,9 @@ import no.nav.hjelpemidler.http.createHttpClient
 
 private val log = KotlinLogging.logger {}
 
+/**
+ * @see <a href="https://docs.nais.io/auth/explanations/#texas">Texas</a>
+ */
 class TexasClient(
     engine: HttpClientEngine = CIO.create(),
     private val tokenUrl: String = TexasEnvironmentVariable.NAIS_TOKEN_ENDPOINT,
@@ -26,11 +29,17 @@ class TexasClient(
     /**
      * Hent Machine-To-Machine-token (M2M-token) for [target].
      */
-    suspend fun token(identityProvider: IdentityProvider, target: String): TokenSet {
-        log.debug { "token, url: '$tokenUrl', identityProvider: '$identityProvider', target: '$target'" }
+    suspend fun token(
+        identityProvider: IdentityProvider,
+        target: String,
+        resource: String? = null,
+        skipCache: Boolean? = null,
+    ): TokenSet {
+        log.debug { "token, url: '$tokenUrl', identityProvider: '$identityProvider', target: '$target', resource: '$resource', skipCache: $skipCache" }
         return execute(tokenUrl) {
-            // resource("")
-            // skipCache(true)
+            identityProvider(identityProvider)
+            if (resource != null) resource(resource)
+            if (skipCache != null) skipCache(skipCache)
             target(target)
         }
     }
@@ -38,10 +47,16 @@ class TexasClient(
     /**
      * Hent On-Behalf-Of-token (OBO-token) for [target].
      */
-    suspend fun exchange(identityProvider: IdentityProvider, target: String, userToken: String): TokenSet {
-        log.debug { "exchange, url: '$tokenExchangeUrl', identityProvider: '$identityProvider', target: '$target'" }
+    suspend fun exchange(
+        identityProvider: IdentityProvider,
+        target: String,
+        userToken: String,
+        skipCache: Boolean? = null,
+    ): TokenSet {
+        log.debug { "exchange, url: '$tokenExchangeUrl', identityProvider: '$identityProvider', target: '$target', skipCache: $skipCache" }
         return execute(tokenExchangeUrl) {
-            // skipCache(true)
+            identityProvider(identityProvider)
+            if (skipCache != null) skipCache(skipCache)
             target(target)
             userToken(userToken)
         }
@@ -53,6 +68,7 @@ class TexasClient(
     suspend fun introspection(identityProvider: IdentityProvider, token: String): TokenIntrospection {
         log.debug { "introspection, url: '$tokenIntrospectionUrl', identityProvider: '$identityProvider'" }
         return execute(tokenIntrospectionUrl) {
+            identityProvider(identityProvider)
             token(token)
         }
     }
@@ -64,9 +80,6 @@ class TexasClient(
         .submitForm(url = url, formParameters = parameters(builder))
         .body<T>()
 
-    fun asOpenIDClient(identityProvider: IdentityProvider): OpenIDClient =
-        TexasOpenIDClient(this, identityProvider)
-
     fun asTokenSetProvider(identityProvider: IdentityProvider, target: String): TokenSetProvider =
         TokenSetProvider {
             val userToken = it.userToken()
@@ -76,6 +89,9 @@ class TexasClient(
                 token(identityProvider, target)
             }
         }
+
+    fun asOpenIDClient(identityProvider: IdentityProvider): OpenIDClient =
+        TexasOpenIDClientAdapter(this, identityProvider)
 }
 
 private fun ParametersBuilder.identityProvider(value: IdentityProvider) = append("identity_provider", value.toString())

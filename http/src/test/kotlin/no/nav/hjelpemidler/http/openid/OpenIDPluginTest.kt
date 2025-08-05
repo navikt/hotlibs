@@ -1,15 +1,11 @@
 package no.nav.hjelpemidler.http.openid
 
-import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respondError
 import io.ktor.client.engine.mock.respondOk
 import io.ktor.client.request.get
 import io.ktor.http.HttpStatusCode
-import io.mockk.coEvery
-import io.mockk.every
-import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import no.nav.hjelpemidler.http.createHttpClient
 import no.nav.hjelpemidler.http.test.respondJson
@@ -24,13 +20,13 @@ class OpenIDPluginTest {
                 it.url.toString().endsWith("/token") ->
                     respondJson(
                         TokenSet(
-                            accessToken = "token",
+                            accessToken = "accessToken",
                             expiresIn = 1.hours,
                         )
                     )
 
                 it.url.toString().endsWith("/test") -> {
-                    it.headers["Authorization"] shouldBe "Bearer token"
+                    it.headers["Authorization"] shouldBe "Bearer accessToken"
                     respondOk()
                 }
 
@@ -39,42 +35,11 @@ class OpenIDPluginTest {
             }
         }
         val client = createHttpClient(engine) {
-            openID(scope = "test") {
-                openIDClient {
-                    tokenEndpoint = "https://issuer/token"
-                    clientId = "clientId"
-                    clientSecret = "clientSecret"
-
-                    cache()
-                }
-            }
+            openID(IdentityProvider.ENTRA_ID, "test")
         }
 
         val response = client.get("/test")
 
         response.status shouldBe HttpStatusCode.OK
-    }
-
-    @Test
-    fun `Skal kaste feil hvis grant feiler`() = runTest {
-        val openIDClient = mockk<OpenIDClient> {
-            every { withScope(any()) } answers {
-                TokenSetProvider { grant(firstArg<String>()) }
-            }
-        }
-        val engine = MockEngine {
-            respondOk("")
-        }
-        val client = createHttpClient(engine) {
-            openID(scope = "test", openIDClient = openIDClient)
-        }
-
-        coEvery {
-            openIDClient.grant("test")
-        } throws OpenIDClientException("test")
-
-        shouldThrow<OpenIDClientException> {
-            client.get("/test")
-        }
     }
 }

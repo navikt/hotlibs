@@ -21,9 +21,7 @@ class TokenExpiryTest {
 
     @BeforeTest
     fun setUp() {
-        every {
-            loader(key)
-        } returns tokenSetThat(expiresIn = 0.seconds)
+        every { loader(key) } returns tokenSetThat(expiresIn = 0.seconds)
     }
 
     @Test

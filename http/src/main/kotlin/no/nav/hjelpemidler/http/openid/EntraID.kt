@@ -6,7 +6,4 @@ import io.ktor.client.engine.cio.CIO
 fun entraIDClient(
     engine: HttpClientEngine = CIO.create(),
     block: OpenIDClientConfiguration.() -> Unit = {},
-): OpenIDClient = createOpenIDClient(engine) {
-    entraIDEnvironmentConfiguration()
-    block()
-}
+): OpenIDClient = TexasClient(engine).asOpenIDClient(IdentityProvider.ENTRA_ID)

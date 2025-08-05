@@ -1,54 +1,41 @@
 package no.nav.hjelpemidler.http.openid
 
 import io.ktor.client.HttpClientConfig
-import io.ktor.client.engine.HttpClientEngine
-import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.api.createClientPlugin
 
-class OpenIDPluginConfiguration {
-    var scope: String = ""
+class OpenIDPluginConfiguration internal constructor() {
     var tokenSetProvider: TokenSetProvider? = null
 
-    internal val openIDClientConfiguration: OpenIDClientConfiguration = OpenIDClientConfiguration()
-    fun openIDClient(block: OpenIDClientConfiguration.() -> Unit) {
-        openIDClientConfiguration.apply(block)
-    }
+    var identityProvider: IdentityProvider? = null
+    var scope: String? = null
 }
 
-val OpenIDPlugin = createClientPlugin("OpenIDPlugin", ::OpenIDPluginConfiguration) {
-    val tokenSetProvider = pluginConfig.tokenSetProvider ?: createOpenIDClient(
-        configuration = pluginConfig.openIDClientConfiguration,
-        engine = client.engine,
-    ).withScope(pluginConfig.scope)
+internal val OpenIDPlugin = createClientPlugin("OpenIDPlugin", ::OpenIDPluginConfiguration) {
+    val tokenSetProvider = pluginConfig.tokenSetProvider ?: run {
+        val identityProvider = pluginConfig.identityProvider
+        val scope = pluginConfig.scope
+        require(identityProvider != null && scope != null) {
+            "Du må enten sette tokenSetProvider eller både identityProvider og scope"
+        }
+        TexasClient(client.engine).asTokenSetProvider(identityProvider, scope)
+    }
     onRequest { request, _ ->
         request.bearerAuth(tokenSetProvider(request))
     }
 }
 
-fun HttpClientConfig<*>.openID(
-    tokenSetProvider: TokenSetProvider? = null,
-    block: OpenIDPluginConfiguration.() -> Unit = {},
-) {
+fun HttpClientConfig<*>.openID(tokenSetProvider: TokenSetProvider) {
     install(OpenIDPlugin) {
         this.tokenSetProvider = tokenSetProvider
-        block()
     }
 }
 
-fun HttpClientConfig<*>.openID(
-    scope: String,
-    openIDClient: OpenIDClient? = null,
-    block: OpenIDPluginConfiguration.() -> Unit = {},
-) = openID(openIDClient?.withScope(scope), block)
+fun HttpClientConfig<*>.openID(identityProvider: IdentityProvider, scope: String) {
+    install(OpenIDPlugin) {
+        this.identityProvider = identityProvider
+        this.scope = scope
+    }
+}
 
-fun HttpClientConfig<*>.entraID(
-    scope: String,
-    engine: HttpClientEngine = CIO.create(),
-    block: OpenIDClientConfiguration.() -> Unit = {},
-) = openID(entraIDClient(engine, block).withScope(scope))
-
-fun HttpClientConfig<*>.maskinporten(
-    scope: String,
-    engine: HttpClientEngine = CIO.create(),
-    block: OpenIDClientConfiguration.() -> Unit = {},
-) = openID(maskinportenClient(engine, block).withMaskinportenAssertion(scope))
+fun HttpClientConfig<*>.entraID(scope: String) = openID(IdentityProvider.ENTRA_ID, scope)
+fun HttpClientConfig<*>.maskinporten(scope: String) = openID(IdentityProvider.ENTRA_ID, scope)

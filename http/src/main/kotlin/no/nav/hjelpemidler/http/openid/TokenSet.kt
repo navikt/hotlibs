@@ -12,6 +12,9 @@ import java.time.Instant
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
+/**
+ * @see <a href="https://docs.nais.io/auth/explanations/#texas">Texas</a>
+ */
 @JsonNaming(SnakeCaseStrategy::class)
 data class TokenSet(
     val accessToken: String,
