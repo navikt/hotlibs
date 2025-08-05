@@ -6,8 +6,8 @@ import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.request.forms.submitForm
+import io.ktor.http.ParametersBuilder
 import io.ktor.http.parameters
-import io.ktor.util.appendAll
 import no.nav.hjelpemidler.configuration.TexasEnvironmentVariable
 import no.nav.hjelpemidler.http.createHttpClient
 
@@ -24,86 +24,63 @@ class TexasClient(
     }
 
     /**
-     * Utsted Machine-To-Machine-token (M2M-token) for [target].
+     * Hent Machine-To-Machine-token (M2M-token) for [target].
      */
     suspend fun token(identityProvider: IdentityProvider, target: String): TokenSet {
-        val url = tokenUrl
-        log.debug { "token, url: '$url', identityProvider: '$identityProvider', target: '$target'" }
-        return execute(
-            url = url,
-            identityProvider = identityProvider,
-            parameters = mapOf(
-                // "resource" to "",
-                // "skip_cache" to "true",
-                "target" to target,
-            ),
-        )
+        log.debug { "token, url: '$tokenUrl', identityProvider: '$identityProvider', target: '$target'" }
+        return execute(tokenUrl) {
+            // resource("")
+            // skipCache(true)
+            target(target)
+        }
     }
 
     /**
-     * Utsted On-Behalf-Of-token (OBO-token) for [target].
+     * Hent On-Behalf-Of-token (OBO-token) for [target].
      */
     suspend fun exchange(identityProvider: IdentityProvider, target: String, userToken: String): TokenSet {
-        val url = tokenExchangeUrl
-        log.debug { "exchange, url: '$url', identityProvider: '$identityProvider', target: '$target'" }
-        return execute(
-            url = url,
-            identityProvider = identityProvider,
-            parameters = mapOf(
-                // "skip_cache" to "true",
-                "target" to target,
-                "user_token" to userToken,
-            ),
-        )
+        log.debug { "exchange, url: '$tokenExchangeUrl', identityProvider: '$identityProvider', target: '$target'" }
+        return execute(tokenExchangeUrl) {
+            // skipCache(true)
+            target(target)
+            userToken(userToken)
+        }
     }
 
     /**
      * Valider [token].
      */
     suspend fun introspection(identityProvider: IdentityProvider, token: String): TokenIntrospection {
-        val url = tokenIntrospectionUrl
-        log.debug { "introspection, url: '$url', identityProvider: '$identityProvider'" }
-        return execute(
-            url = url,
-            identityProvider = identityProvider,
-            parameters = mapOf(
-                "token" to token,
-            )
-        )
+        log.debug { "introspection, url: '$tokenIntrospectionUrl', identityProvider: '$identityProvider'" }
+        return execute(tokenIntrospectionUrl) {
+            token(token)
+        }
     }
+
+    private suspend inline fun <reified T : Any> execute(
+        url: String,
+        noinline builder: ParametersBuilder.() -> Unit,
+    ): T = client
+        .submitForm(url = url, formParameters = parameters(builder))
+        .body<T>()
 
     fun asOpenIDClient(identityProvider: IdentityProvider): OpenIDClient =
         TexasOpenIDClient(this, identityProvider)
 
     fun asTokenSetProvider(identityProvider: IdentityProvider, target: String): TokenSetProvider =
-        TokenSetProvider { token(identityProvider, target) }
-
-    private suspend inline fun <reified T : Any> execute(
-        url: String,
-        identityProvider: IdentityProvider,
-        parameters: Map<String, String>,
-    ): T = client
-        .submitForm(url = url, formParameters = parameters {
-            append("identity_provider", identityProvider.toString())
-            appendAll(parameters)
-        })
-        .body<T>()
+        TokenSetProvider {
+            val userToken = it.userToken()
+            if (userToken != null && it.tokenExchangePreventionToken() == null) {
+                exchange(identityProvider, target, userToken)
+            } else {
+                token(identityProvider, target)
+            }
+        }
 }
 
-/*
-@Suppress("PropertyName")
-class TexasRequest(
-    private val parameters: MutableMap<String, String> = mutableMapOf(),
-) : Map<String, String> by parameters {
-    var identity_provider by parameters
-    var resource by parameters
-    var skip_cache by parameters
-    var target by parameters
-    var token by parameters
-    var user_token by parameters
-}
-
-fun texasRequestOf(block: TexasRequest.() -> Unit): TexasRequest {
-    return TexasRequest().apply(block)
-}
-*/
+private fun ParametersBuilder.identityProvider(value: IdentityProvider) = append("identity_provider", value.toString())
+private fun ParametersBuilder.resource(value: String) = append("resource", value)
+private fun ParametersBuilder.skipCache(value: Boolean) = append("skip_cache", value.toString())
+private fun ParametersBuilder.target(value: String) = append("target", value)
+private fun ParametersBuilder.token(value: String) = append("token", value)
+private fun ParametersBuilder.userToken(value: String) = append("user_token", value)

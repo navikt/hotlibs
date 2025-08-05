@@ -13,21 +13,13 @@ internal fun createOpenIDClient(
     log.info {
         "Lager OpenID-klient, tokenEndpoint: '${configuration.tokenEndpoint}', clientId: '${configuration.clientId}'"
     }
-
-    return when {
-        configuration.expiry === ExpireImmediately -> DefaultOpenIDClient(
-            configuration = configuration,
-            engine = engine,
-        )
-
-        else -> CachedOpenIDClient(
-            configuration = configuration,
-            engine = engine,
-        )
-    }
+    return DefaultOpenIDClient(
+        configuration = configuration,
+        engine = engine,
+    )
 }
 
-fun createOpenIDClient(
+internal fun createOpenIDClient(
     engine: HttpClientEngine = CIO.create(),
     block: OpenIDClientConfiguration.() -> Unit = {},
 ): OpenIDClient = createOpenIDClient(
