@@ -31,10 +31,10 @@ internal class CaffeineCoroutinesCache<K : Any, V>(private val wrapped: AsyncCac
         wrapped.put(key, CompletableFuture.completedFuture(value))
     }
 
-    override suspend fun computeIfAbsent(key: K, loader: suspend CoroutineScope.(K) -> V): V? = coroutineScope {
+    override suspend fun computeIfAbsent(key: K, loader: suspend CoroutineScope.(K) -> V): V = coroutineScope {
         wrapped.asMap().computeIfAbsent(key) { key ->
             future { loader(key) }
-        }?.await()
+        }.await()
     }
 
     override suspend fun computeIfPresent(key: K, loader: suspend CoroutineScope.(K, V) -> V): V? = coroutineScope {

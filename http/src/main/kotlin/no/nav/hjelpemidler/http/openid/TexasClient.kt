@@ -96,27 +96,45 @@ class TexasClient(
     ): T = client.submitForm(url = url, formParameters = parameters(builder)).body<T>()
 
     /**
-     * Opprett [TokenSetProvider] for [identityProvider] som henter token eller gjør token exchange avhengig av
-     * attributtene [userToken] og [tokenExchangePreventionToken]. `userToken` kan også defineres med [UserContext].
+     * Opprett [TokenSetProvider] for [identityProvider] som henter token eller gjør token exchange avhengig
+     * av attributtene [io.ktor.client.request.HttpRequestBuilder.userToken] og
+     * [io.ktor.client.request.HttpRequestBuilder.tokenExchangePreventionToken].
+     * `userToken` kan også defineres med [UserContext].
      *
-     * @see [userToken]
-     * @see [tokenExchangePreventionToken]
+     * @see [io.ktor.client.request.HttpRequestBuilder.userToken]
+     * @see [io.ktor.client.request.HttpRequestBuilder.tokenExchangePreventionToken]
      * @see [TexasTokenSetProvider]
+     * @see [entraId]
+     * @see [idPorten]
+     * @see [maskinporten]
+     * @see [tokenX]
      */
     fun asTokenSetProvider(identityProvider: IdentityProvider, target: String): TokenSetProvider =
         TexasTokenSetProvider(this, identityProvider, target)
 
-    fun asEntraIDTokenSetProvider(target: String): TokenSetProvider =
-        TexasTokenSetProvider(this, IdentityProvider.ENTRA_ID, target)
+    /**
+     * [TokenSetProvider] for [IdentityProvider.ENTRA_ID].
+     */
+    fun entraId(target: String): TokenSetProvider =
+        asTokenSetProvider(IdentityProvider.ENTRA_ID, target)
 
-    fun asIDPortenTokenSetProvider(target: String): TokenSetProvider =
-        TexasTokenSetProvider(this, IdentityProvider.ID_PORTEN, target)
+    /**
+     * [TokenSetProvider] for [IdentityProvider.ID_PORTEN].
+     */
+    fun idPorten(target: String): TokenSetProvider =
+        asTokenSetProvider(IdentityProvider.ID_PORTEN, target)
 
-    fun asMaskinportenTokenSetProvider(target: String): TokenSetProvider =
-        TexasTokenSetProvider(this, IdentityProvider.MASKINPORTEN, target)
+    /**
+     * [TokenSetProvider] for [IdentityProvider.MASKINPORTEN].
+     */
+    fun maskinporten(target: String): TokenSetProvider =
+        asTokenSetProvider(IdentityProvider.MASKINPORTEN, target)
 
-    fun asTokenXTokenSetProvider(target: String): TokenSetProvider =
-        TexasTokenSetProvider(this, IdentityProvider.TOKEN_X, target)
+    /**
+     * [TokenSetProvider] for [IdentityProvider.TOKEN_X].
+     */
+    fun tokenX(target: String): TokenSetProvider =
+        asTokenSetProvider(IdentityProvider.TOKEN_X, target)
 
     /**
      * Opprett [OpenIDClient] for [identityProvider].

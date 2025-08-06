@@ -24,7 +24,7 @@ class NoOpCoroutinesCache<K : Any, V> : CoroutinesCache<K, V> {
     override suspend fun put(key: K, value: V) =
         Unit
 
-    override suspend fun computeIfAbsent(key: K, loader: suspend CoroutineScope.(K) -> V): V? = coroutineScope {
+    override suspend fun computeIfAbsent(key: K, loader: suspend CoroutineScope.(K) -> V): V = coroutineScope {
         loader(key)
     }
 

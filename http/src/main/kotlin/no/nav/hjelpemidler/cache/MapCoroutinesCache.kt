@@ -30,16 +30,22 @@ internal class MapCoroutinesCache<K : Any, V> private constructor(
         wrapped[key] = value
     }
 
-    override suspend fun computeIfAbsent(key: K, loader: suspend CoroutineScope.(K) -> V): V? = coroutineScope {
-        TODO("Not yet implemented")
+    override suspend fun computeIfAbsent(key: K, loader: suspend CoroutineScope.(K) -> V): V = coroutineScope {
+        wrapped.computeIfAbsent(key) { key ->
+            TODO("Not yet implemented")
+        }
     }
 
     override suspend fun computeIfPresent(key: K, loader: suspend CoroutineScope.(K, V) -> V): V? = coroutineScope {
-        TODO("Not yet implemented")
+        wrapped.computeIfPresent(key) { key, oldValue ->
+            TODO("Not yet implemented")
+        }
     }
 
     override suspend fun compute(key: K, loader: suspend CoroutineScope.(K, V?) -> V): V? = coroutineScope {
-        TODO("Not yet implemented")
+        wrapped.compute(key) { key, oldValue ->
+            TODO("Not yet implemented")
+        }
     }
 
     override suspend fun remove(key: K): V? =
