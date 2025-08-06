@@ -15,11 +15,9 @@ class MapCoroutinesCache<K : Any, V> private constructor(
 ) : CoroutinesCache<K, V> {
     constructor() : this(ConcurrentHashMap())
 
-    override suspend fun getIfPresent(key: K): V? =
-        wrapped[key]?.await()
+    override suspend fun getIfPresent(key: K): V? = wrapped[key]?.await()
 
-    override suspend fun get(key: K, loader: suspend CoroutineScope.(K) -> V): V =
-        computeIfAbsent(key, loader)
+    override suspend fun get(key: K, loader: suspend CoroutineScope.(K) -> V): V = computeIfAbsent(key, loader)
 
     override suspend fun getAll(
         keys: Iterable<K>,
@@ -29,8 +27,8 @@ class MapCoroutinesCache<K : Any, V> private constructor(
         val missingKeys = mutableSetOf<K>()
 
         keys.forEach { key ->
-            wrapped[key]?.await()?.let {
-                result[key] = it
+            getIfPresent(key)?.let { value ->
+                result[key] = value
             } ?: run {
                 missingKeys.add(key)
             }
@@ -39,8 +37,8 @@ class MapCoroutinesCache<K : Any, V> private constructor(
         if (missingKeys.isNotEmpty()) {
             val value = loader(missingKeys)
             value.forEach { (key, value) ->
-                wrapped[key] = CompletableDeferred(value)
                 result[key] = value
+                put(key, value)
             }
         }
 
@@ -69,9 +67,7 @@ class MapCoroutinesCache<K : Any, V> private constructor(
             ?.await()
     }
 
-    override suspend fun remove(key: K): V? =
-        wrapped.remove(key)?.await()
+    override suspend fun remove(key: K): V? = wrapped.remove(key)?.await()
 
-    override suspend fun asMap(): Map<K, Deferred<V>> =
-        wrapped.toMap()
+    override suspend fun asMap(): Map<K, Deferred<V>> = wrapped.toMap()
 }

@@ -15,45 +15,43 @@ internal class CaffeineCoroutinesCache<K : Any, V>(private val wrapped: AsyncCac
     }
 
     override suspend fun get(key: K, loader: suspend CoroutineScope.(K) -> V): V = coroutineScope {
-        wrapped.get(key) { key, _ ->
-            future { loader(key) }
-        }.await()
+        wrapped
+            .get(key) { key, _ -> future { loader(key) } }
+            .await()
     }
 
     override suspend fun getAll(
         keys: Iterable<K>,
         loader: suspend CoroutineScope.(Set<K>) -> Map<K, V & Any>,
     ): Map<K, V & Any> = coroutineScope {
-        wrapped.getAll(keys) { keys, _ ->
-            future { loader(keys) }
-        }.await()
+        wrapped
+            .getAll(keys) { keys, _ -> future { loader(keys) } }
+            .await()
     }
 
-    override suspend fun put(key: K, value: V) = coroutineScope {
+    override suspend fun put(key: K, value: V) =
         wrapped.put(key, CompletableFuture.completedFuture(value))
-    }
 
     override suspend fun computeIfAbsent(key: K, loader: suspend CoroutineScope.(K) -> V): V = coroutineScope {
-        wrapped.asMap().computeIfAbsent(key) { key ->
-            future { loader(key) }
-        }.await()
+        wrapped.asMap()
+            .computeIfAbsent(key) { key -> future { loader(key) } }
+            .await()
     }
 
     override suspend fun computeIfPresent(key: K, loader: suspend CoroutineScope.(K, V) -> V): V? = coroutineScope {
-        wrapped.asMap().computeIfPresent(key) { key, value ->
-            future { loader(key, value.await()) }
-        }?.await()
+        wrapped.asMap()
+            .computeIfPresent(key) { key, value -> future { loader(key, value.await()) } }
+            ?.await()
     }
 
     override suspend fun compute(key: K, loader: suspend CoroutineScope.(K, V?) -> V): V? = coroutineScope {
-        wrapped.asMap().compute(key) { key, value ->
-            future { loader(key, value?.await()) }
-        }?.await()
+        wrapped.asMap()
+            .compute(key) { key, value -> future { loader(key, value?.await()) } }
+            ?.await()
     }
 
-    override suspend fun remove(key: K): V? = coroutineScope {
+    override suspend fun remove(key: K): V? =
         wrapped.asMap().remove(key)?.await()
-    }
 
     override suspend fun asMap(): Map<K, Deferred<V>> =
         wrapped.asMap().mapValues { (_, value) -> value.asDeferred() }
