@@ -46,7 +46,7 @@ class TexasClient(
     }
 
     /**
-     * Hent On-Behalf-Of-token (OBO-token) for [target].
+     * Hent On-Behalf-Of-token (OBO-token) for [target] (token exchange).
      */
     suspend fun exchange(
         identityProvider: IdentityProvider,
@@ -64,14 +64,14 @@ class TexasClient(
     }
 
     /**
-     * Hent On-Behalf-Of-token (OBO-token) for [target].
+     * Hent On-Behalf-Of-token (OBO-token) for [target] (token exchange).
      */
     suspend fun exchange(
         identityProvider: IdentityProvider,
         target: String,
         userToken: DecodedJWT,
         skipCache: Boolean? = null,
-    ): TokenSet = exchange(identityProvider, target, userToken.toString(), skipCache)
+    ): TokenSet = exchange(identityProvider, target, userToken.token, skipCache)
 
     /**
      * Valider [token].
@@ -88,25 +88,27 @@ class TexasClient(
      * Valider [token].
      */
     suspend fun introspection(identityProvider: IdentityProvider, token: DecodedJWT): TokenIntrospection =
-        introspection(identityProvider, token.toString())
+        introspection(identityProvider, token.token)
 
     private suspend inline fun <reified T : Any> execute(
         url: String,
         noinline builder: ParametersBuilder.() -> Unit,
-    ): T = client
-        .submitForm(url = url, formParameters = parameters(builder))
-        .body<T>()
+    ): T = client.submitForm(url = url, formParameters = parameters(builder)).body<T>()
 
+    /**
+     * Opprett [TokenSetProvider] for [identityProvider] som henter token eller gjør token exchange avhengig av
+     * attributtene [userToken] og [tokenExchangePreventionToken]. `userToken` kan også defineres med [UserContext].
+     *
+     * @see [userToken]
+     * @see [tokenExchangePreventionToken]
+     * @see [TexasTokenSetProvider]
+     */
     fun asTokenSetProvider(identityProvider: IdentityProvider, target: String): TokenSetProvider =
-        TokenSetProvider {
-            val userToken = it.userToken()
-            if (userToken != null && it.tokenExchangePreventionToken() == null) {
-                exchange(identityProvider, target, userToken)
-            } else {
-                token(identityProvider, target)
-            }
-        }
+        TexasTokenSetProvider(this, identityProvider, target)
 
+    /**
+     * Opprett [OpenIDClient] for [identityProvider].
+     */
     fun asOpenIDClient(identityProvider: IdentityProvider): OpenIDClient =
         TexasOpenIDClientAdapter(this, identityProvider)
 }

@@ -25,7 +25,7 @@ class OpenIDPluginTest {
                         )
                     )
 
-                it.url.toString().endsWith("/test") -> {
+                it.url.toString().endsWith("/sak/1") -> {
                     it.headers["Authorization"] shouldBe "Bearer accessToken"
                     respondOk()
                 }
@@ -38,7 +38,7 @@ class OpenIDPluginTest {
             openID(IdentityProvider.ENTRA_ID, "test")
         }
 
-        val response = client.get("/test")
+        val response = client.get("/sak/1")
 
         response.status shouldBe HttpStatusCode.OK
     }
