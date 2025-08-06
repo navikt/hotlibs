@@ -106,6 +106,18 @@ class TexasClient(
     fun asTokenSetProvider(identityProvider: IdentityProvider, target: String): TokenSetProvider =
         TexasTokenSetProvider(this, identityProvider, target)
 
+    fun asEntraIDTokenSetProvider(target: String): TokenSetProvider =
+        TexasTokenSetProvider(this, IdentityProvider.ENTRA_ID, target)
+
+    fun asIDPortenTokenSetProvider(target: String): TokenSetProvider =
+        TexasTokenSetProvider(this, IdentityProvider.ID_PORTEN, target)
+
+    fun asMaskinportenTokenSetProvider(target: String): TokenSetProvider =
+        TexasTokenSetProvider(this, IdentityProvider.MASKINPORTEN, target)
+
+    fun asTokenXTokenSetProvider(target: String): TokenSetProvider =
+        TexasTokenSetProvider(this, IdentityProvider.TOKEN_X, target)
+
     /**
      * Opprett [OpenIDClient] for [identityProvider].
      */
