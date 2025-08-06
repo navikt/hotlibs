@@ -2,7 +2,9 @@ package no.nav.hjelpemidler.cache
 
 import com.github.benmanes.caffeine.cache.AsyncCache
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.future.asDeferred
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.future.future
 import java.util.concurrent.CompletableFuture
@@ -52,4 +54,7 @@ internal class CaffeineCoroutinesCache<K : Any, V>(private val wrapped: AsyncCac
     override suspend fun remove(key: K): V? = coroutineScope {
         wrapped.asMap().remove(key)?.await()
     }
+
+    override suspend fun asMap(): Map<K, Deferred<V>> =
+        wrapped.asMap().mapValues { (_, value) -> value.asDeferred() }
 }
