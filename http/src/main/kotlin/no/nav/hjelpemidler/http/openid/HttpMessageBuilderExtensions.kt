@@ -1,5 +1,6 @@
 package no.nav.hjelpemidler.http.openid
 
+import com.auth0.jwt.interfaces.DecodedJWT
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.bearerAuth
 import io.ktor.http.HttpMessageBuilder
@@ -23,6 +24,15 @@ internal fun HttpRequestBuilder.userToken(): String? =
 fun HttpRequestBuilder.userToken(userToken: String) {
     attributes[UserTokenKey] = userToken
 }
+
+/**
+ * Sett [userToken] for request. Gjør at [TokenSetProvider] forsøker token exchange (med mindre
+ * [TokenExchangePreventionToken] er satt).
+ *
+ * @see [TexasTokenSetProvider]
+ */
+fun HttpRequestBuilder.userToken(userToken: DecodedJWT) =
+    userToken(userToken.token)
 
 internal data object TokenExchangePreventionToken
 
