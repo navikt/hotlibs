@@ -11,7 +11,7 @@ import kotlin.time.Duration.Companion.hours
 class TexasTokenSetProviderTest {
     private val client = mockk<TexasClient>()
     private val identityProvider = IdentityProvider.ENTRA_ID
-    private val target = "test"
+    private val target = "target"
     private val provider = TexasTokenSetProvider(client, identityProvider, target)
 
     @Test
@@ -62,6 +62,24 @@ class TexasTokenSetProviderTest {
 
         withUserContext(userToken) {
             provider(HttpRequestBuilder().apply { preventTokenExchange() })
+        }
+
+        coVerify(exactly = 0) {
+            client.exchange(identityProvider, target, userToken)
+        }
+    }
+
+    @Test
+    fun `Overstyr target`() = runTest {
+        val otherTarget = "otherTarget"
+        val userToken = "userTokenFromContext"
+
+        coEvery {
+            client.exchange(identityProvider, otherTarget, userToken)
+        } returns TokenSet("accessToken", 1.hours)
+
+        withUserContext(userToken) {
+            provider(HttpRequestBuilder().apply { target(otherTarget) })
         }
 
         coVerify(exactly = 0) {

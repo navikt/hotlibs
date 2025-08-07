@@ -96,13 +96,13 @@ class TexasClient(
     ): T = client.submitForm(url = url, formParameters = parameters(builder)).body<T>()
 
     /**
-     * Opprett [TokenSetProvider] for [identityProvider] som henter token eller gjør token exchange avhengig
-     * av attributtene [io.ktor.client.request.HttpRequestBuilder.userToken] og
-     * [io.ktor.client.request.HttpRequestBuilder.tokenExchangePreventionToken].
-     * `userToken` kan også defineres med [UserContext].
+     * [TokenSetProvider] for [identityProvider] som henter token eller gjør token exchange avhengig av
+     * attributtene [UserTokenKey] og [TokenExchangePreventionTokenKey]. `userToken` kan også defineres med [UserContext].
+     * `target` kan overstyres med [io.ktor.client.request.HttpRequestBuilder.target].
      *
+     * @see [io.ktor.client.request.HttpRequestBuilder.target]
      * @see [io.ktor.client.request.HttpRequestBuilder.userToken]
-     * @see [io.ktor.client.request.HttpRequestBuilder.tokenExchangePreventionToken]
+     * @see [io.ktor.client.request.HttpRequestBuilder.preventTokenExchange]
      * @see [TexasTokenSetProvider]
      * @see [entraId]
      * @see [idPorten]

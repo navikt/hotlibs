@@ -6,17 +6,14 @@ import io.ktor.client.request.bearerAuth
 import io.ktor.http.HttpMessageBuilder
 import io.ktor.util.AttributeKey
 
-fun HttpMessageBuilder.bearerAuth(tokenSet: TokenSet) =
-    bearerAuth(tokenSet.accessToken)
+fun HttpMessageBuilder.bearerAuth(tokenSet: TokenSet) = bearerAuth(tokenSet.accessToken)
 
-internal val UserTokenKey =
-    AttributeKey<String>("UserToken")
+internal val UserTokenKey = AttributeKey<String>("UserToken")
 
-internal fun HttpRequestBuilder.userToken(): String? =
-    attributes.getOrNull(UserTokenKey)
+internal fun HttpRequestBuilder.userToken(): String? = attributes.getOrNull(UserTokenKey)
 
 /**
- * Sett [userToken] for request. Gjør at [TokenSetProvider] forsøker token exchange (med mindre
+ * Sett [UserTokenKey] for request. Gjør at [TexasTokenSetProvider] forsøker token exchange (med mindre
  * [TokenExchangePreventionToken] er satt).
  *
  * @see [TexasTokenSetProvider]
@@ -26,13 +23,25 @@ fun HttpRequestBuilder.userToken(userToken: String) {
 }
 
 /**
- * Sett [userToken] for request. Gjør at [TokenSetProvider] forsøker token exchange (med mindre
+ * Sett [UserTokenKey] for request. Gjør at [TexasTokenSetProvider] forsøker token exchange (med mindre
  * [TokenExchangePreventionToken] er satt).
  *
  * @see [TexasTokenSetProvider]
  */
-fun HttpRequestBuilder.userToken(userToken: DecodedJWT) =
-    userToken(userToken.token)
+fun HttpRequestBuilder.userToken(userToken: DecodedJWT) = userToken(userToken.token)
+
+internal val TargetKey = AttributeKey<String>("Target")
+
+internal fun HttpRequestBuilder.target(): String? = attributes.getOrNull(TargetKey)
+
+/**
+ * Overstyr `target` for request.
+ *
+ * @see [TexasTokenSetProvider]
+ */
+fun HttpRequestBuilder.target(target: String) {
+    attributes[TargetKey] = target
+}
 
 internal data object TokenExchangePreventionToken
 
@@ -45,7 +54,7 @@ internal fun HttpRequestBuilder.tokenExchangePreventionToken(): TokenExchangePre
 /**
  * Ikke gjør token exchange, selv om [UserTokenKey] eller [UserContext] er satt.
  *
- * Kan bla. brukes for tjenester vi stort sett kaller på vegne av bruker, men som har spesifikke endepunkter som
+ * Kan bla. brukes for tjenester hvor vi stort sett kaller på vegne av bruker, men som har spesifikke endepunkter som
  * ikke bruker har tilgang til, f.eks. PDLs bulkoppslag.
  *
  * @see [HttpRequestBuilder.userToken]
