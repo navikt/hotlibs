@@ -8,59 +8,61 @@ import io.ktor.util.AttributeKey
 
 fun HttpMessageBuilder.bearerAuth(tokenSet: TokenSet) = bearerAuth(tokenSet.accessToken)
 
-internal val UserTokenKey = AttributeKey<String>("UserToken")
-
-internal fun HttpRequestBuilder.userToken(): String? = attributes.getOrNull(UserTokenKey)
+internal val TargetKey = AttributeKey<Target>("Target")
+internal val UserTokenKey = AttributeKey<Token>("UserToken")
+internal val SystembrukerTokenKey = AttributeKey<SystembrukerToken>("SystembrukerToken")
 
 /**
- * Sett [UserTokenKey] for request. Gjør at [TexasTokenSetProvider] forsøker token exchange (med mindre
- * [TokenExchangePreventionToken] er satt).
+ * Sett `target` for request.
  *
  * @see [TexasTokenSetProvider]
  */
-fun HttpRequestBuilder.userToken(userToken: String) {
+fun HttpRequestBuilder.target(target: Target) {
+    attributes[TargetKey] = target
+}
+
+/**
+ * Sett `target` for request.
+ *
+ * @see [TexasTokenSetProvider]
+ */
+fun HttpRequestBuilder.target(target: String) = target(Target(target))
+
+/**
+ * Sett `userToken` for request.
+ *
+ * @see [HttpRequestBuilder.systembruker]
+ * @see [TexasTokenSetProvider]
+ */
+fun HttpRequestBuilder.påVegneAv(userToken: Token) {
     attributes[UserTokenKey] = userToken
 }
 
 /**
- * Sett [UserTokenKey] for request. Gjør at [TexasTokenSetProvider] forsøker token exchange (med mindre
- * [TokenExchangePreventionToken] er satt).
+ * Sett `userToken` for request.
  *
+ * @see [HttpRequestBuilder.systembruker]
  * @see [TexasTokenSetProvider]
  */
-fun HttpRequestBuilder.userToken(userToken: DecodedJWT) = userToken(userToken.token)
-
-internal val TargetKey = AttributeKey<String>("Target")
-
-internal fun HttpRequestBuilder.target(): String? = attributes.getOrNull(TargetKey)
+fun HttpRequestBuilder.påVegneAv(userToken: String) = påVegneAv(Token(userToken))
 
 /**
- * Overstyr `target` for request.
+ * Sett `userToken` for request.
  *
+ * @see [HttpRequestBuilder.systembruker]
  * @see [TexasTokenSetProvider]
  */
-fun HttpRequestBuilder.target(target: String) {
-    attributes[TargetKey] = target
-}
+fun HttpRequestBuilder.påVegneAv(userToken: DecodedJWT) = påVegneAv(Token(userToken))
 
-internal data object TokenExchangePreventionToken
-
-internal val TokenExchangePreventionTokenKey =
-    AttributeKey<TokenExchangePreventionToken>("TokenExchangePreventionToken")
-
-internal fun HttpRequestBuilder.tokenExchangePreventionToken(): TokenExchangePreventionToken? =
-    attributes.getOrNull(TokenExchangePreventionTokenKey)
+internal data object SystembrukerToken
 
 /**
- * Ikke gjør token exchange, selv om [UserTokenKey] eller [UserContext] er satt.
+ * Gjør request som systembruker, uansett brukerkontekst.
  *
- * Kan bla. brukes for tjenester hvor vi stort sett kaller på vegne av bruker, men som har spesifikke endepunkter som
- * ikke bruker har tilgang til, f.eks. PDLs bulkoppslag.
- *
- * @see [HttpRequestBuilder.userToken]
  * @see [UserContext]
+ * @see [HttpRequestBuilder.påVegneAv]
  * @see [TexasTokenSetProvider]
  */
-fun HttpRequestBuilder.preventTokenExchange() {
-    attributes[TokenExchangePreventionTokenKey] = TokenExchangePreventionToken
+fun HttpRequestBuilder.systembruker() {
+    attributes[SystembrukerTokenKey] = SystembrukerToken
 }

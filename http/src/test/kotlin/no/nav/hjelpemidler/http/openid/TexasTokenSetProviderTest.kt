@@ -11,8 +11,8 @@ import kotlin.time.Duration.Companion.hours
 class TexasTokenSetProviderTest {
     private val client = mockk<TexasClient>()
     private val identityProvider = IdentityProvider.ENTRA_ID
-    private val target = "target"
-    private val provider = TexasTokenSetProvider(client, identityProvider, target)
+    private val target = Target(application = "hotlibs").toString()
+    private val provider = TexasTokenSetProvider(client, identityProvider, Target(target))
 
     @Test
     fun `Gjør token exchange med userToken fra context`() = runTest {
@@ -41,7 +41,7 @@ class TexasTokenSetProviderTest {
         } returns TokenSet("accessToken", 1.hours)
 
         withUserContext(userTokenFromContext) {
-            provider(HttpRequestBuilder().apply { userToken(userTokenFromRequest) })
+            provider(HttpRequestBuilder().apply { påVegneAv(userTokenFromRequest) })
         }
 
         coVerify(exactly = 0) {
@@ -53,7 +53,7 @@ class TexasTokenSetProviderTest {
     }
 
     @Test
-    fun `Gjør ikke token exchange hvis TokenExchangePreventionToken er satt`() = runTest {
+    fun `Gjør ikke token exchange hvis Systembruker er satt`() = runTest {
         val userToken = "userTokenFromContext"
 
         coEvery {
@@ -61,7 +61,7 @@ class TexasTokenSetProviderTest {
         } returns TokenSet("accessToken", 1.hours)
 
         withUserContext(userToken) {
-            provider(HttpRequestBuilder().apply { preventTokenExchange() })
+            provider(HttpRequestBuilder().apply { systembruker() })
         }
 
         coVerify(exactly = 0) {
@@ -71,7 +71,7 @@ class TexasTokenSetProviderTest {
 
     @Test
     fun `Overstyr target`() = runTest {
-        val otherTarget = "otherTarget"
+        val otherTarget = Target(application = "hotsak").toString()
         val userToken = "userTokenFromContext"
 
         coEvery {

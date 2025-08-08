@@ -8,22 +8,21 @@ import kotlin.coroutines.AbstractCoroutineContextElement
 import kotlin.coroutines.CoroutineContext
 
 /**
- * Holder på [userToken] for gjeldende bruker.
+ * Holder på [Token] for gjeldende bruker.
+ *
+ * @see [TexasTokenSetProvider]
  */
-class UserContext(val userToken: String) : AbstractCoroutineContextElement(UserContext) {
-    constructor(userToken: DecodedJWT) : this(userToken.token)
+class UserContext(val userToken: Token) : AbstractCoroutineContextElement(UserContext) {
+    constructor(userToken: DecodedJWT) : this(Token(userToken))
 
     companion object Key : CoroutineContext.Key<UserContext>
 }
 
 /**
- * Set [userToken] som benyttes til å bestemme om det skal gjøres token exchange eller kun hentes token (med mindre
- * [TokenExchangePreventionToken] er satt).
- *
  * @see [TexasTokenSetProvider]
  */
 suspend fun <T> withUserContext(userToken: String, block: suspend CoroutineScope.() -> T): T =
-    withContext(UserContext(userToken), block)
+    withContext(UserContext(Token(userToken)), block)
 
 /**
  * Hent gjeldende [UserContext] hvis denne er satt.

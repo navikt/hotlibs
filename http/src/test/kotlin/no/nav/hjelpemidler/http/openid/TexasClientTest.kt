@@ -14,7 +14,7 @@ import kotlin.test.Test
 import kotlin.time.Duration.Companion.hours
 
 class TexasClientTest {
-    private val target = scopeOf("test")
+    private val target = Target(application = "hotlibs").toString()
     private val identityProvider = IdentityProvider.ENTRA_ID
 
     @Test
@@ -58,7 +58,7 @@ class TexasClientTest {
 
         val tokenSet = client.exchange(identityProvider, target, userToken)
 
-        val builder = HttpRequestBuilder().apply { userToken(userToken) }
+        val builder = HttpRequestBuilder().apply { påVegneAv(userToken) }
         client.asTokenSetProvider(identityProvider, target).invoke(builder) shouldBe tokenSet
         client.asOpenIDClient(identityProvider).grant(target, userToken) shouldBe tokenSet
     }
