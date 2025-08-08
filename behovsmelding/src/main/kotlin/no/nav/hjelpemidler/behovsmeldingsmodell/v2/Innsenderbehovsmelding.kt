@@ -123,6 +123,7 @@ data class Levering(
         val epost: String,
         val treffesEnklest: String,
         val kommunenavn: String?,
+        val kommunenummer: String? = null,
     ) : HarPersonnavn
 
     data class AnnenOppfølgingsansvarlig(
