@@ -15,10 +15,10 @@ internal class TexasTokenSetProvider(
     private val identityProvider: IdentityProvider,
     private val defaultTarget: Target,
 ) : TokenSetProvider {
-    override suspend fun invoke(builder: HttpRequestBuilder): TokenSet {
-        val target = builder.attributes.getOrNull(TargetKey) ?: defaultTarget
-        val userToken = builder.attributes.getOrNull(UserTokenKey) ?: currentUserContext()?.userToken
-        val systembrukerToken = builder.attributes.getOrNull(SystembrukerTokenKey)
+    override suspend fun invoke(request: HttpRequestBuilder): TokenSet {
+        val target = request.attributes.getOrNull(TargetKey) ?: defaultTarget
+        val userToken = request.attributes.getOrNull(UserTokenKey) ?: currentUserContext()?.userToken
+        val systembrukerToken = request.attributes.getOrNull(SystembrukerTokenKey)
         return if (userToken != null && systembrukerToken == null) {
             log.debug { "Brukerkontekst, gjør token exchange, identityProvider: '$identityProvider', target: '$target'" }
             client.exchange(identityProvider, target.toString(), userToken.toString())
