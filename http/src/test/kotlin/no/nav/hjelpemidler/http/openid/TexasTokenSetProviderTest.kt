@@ -53,7 +53,7 @@ class TexasTokenSetProviderTest {
     }
 
     @Test
-    fun `Gjør ikke token exchange hvis Systembruker er satt`() = runTest {
+    fun `Gjør ikke token exchange hvis SomSystembruker er satt`() = runTest {
         val userToken = "userTokenFromContext"
 
         coEvery {
@@ -61,7 +61,7 @@ class TexasTokenSetProviderTest {
         } returns TokenSet("accessToken", 1.hours)
 
         withUserContext(userToken) {
-            provider(HttpRequestBuilder().apply { systembruker() })
+            provider(HttpRequestBuilder().apply { somSystembruker() })
         }
 
         coVerify(exactly = 0) {

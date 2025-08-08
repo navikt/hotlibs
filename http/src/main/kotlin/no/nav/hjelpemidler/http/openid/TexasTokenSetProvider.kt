@@ -8,7 +8,7 @@ private val log = KotlinLogging.logger {}
 /**
  * @see [io.ktor.client.request.HttpRequestBuilder.target]
  * @see [io.ktor.client.request.HttpRequestBuilder.påVegneAv]
- * @see [io.ktor.client.request.HttpRequestBuilder.systembruker]
+ * @see [io.ktor.client.request.HttpRequestBuilder.somSystembruker]
  */
 internal class TexasTokenSetProvider(
     private val client: TexasClient,
@@ -18,8 +18,8 @@ internal class TexasTokenSetProvider(
     override suspend fun invoke(request: HttpRequestBuilder): TokenSet {
         val target = request.attributes.getOrNull(TargetKey) ?: defaultTarget
         val userToken = request.attributes.getOrNull(UserTokenKey) ?: currentUserContext()?.userToken
-        val systembrukerToken = request.attributes.getOrNull(SystembrukerTokenKey)
-        return if (userToken != null && systembrukerToken == null) {
+        val somSystembruker = request.attributes.getOrNull(SomSystembrukerKey)
+        return if (userToken != null && somSystembruker == null) {
             log.debug { "Brukerkontekst, gjør token exchange, identityProvider: '$identityProvider', target: '$target'" }
             client.exchange(identityProvider, target.toString(), userToken.toString())
         } else {

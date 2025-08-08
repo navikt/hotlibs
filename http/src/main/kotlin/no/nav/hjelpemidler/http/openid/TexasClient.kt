@@ -98,7 +98,7 @@ class TexasClient(
     /**
      * @see [io.ktor.client.request.HttpRequestBuilder.target]
      * @see [io.ktor.client.request.HttpRequestBuilder.påVegneAv]
-     * @see [io.ktor.client.request.HttpRequestBuilder.systembruker]
+     * @see [io.ktor.client.request.HttpRequestBuilder.somSystembruker]
      * @see [TexasClient.entraId]
      * @see [TexasClient.idPorten]
      * @see [TexasClient.maskinporten]

@@ -10,7 +10,7 @@ fun HttpMessageBuilder.bearerAuth(tokenSet: TokenSet) = bearerAuth(tokenSet.acce
 
 internal val TargetKey = AttributeKey<Target>("Target")
 internal val UserTokenKey = AttributeKey<Token>("UserToken")
-internal val SystembrukerTokenKey = AttributeKey<SystembrukerToken>("SystembrukerToken")
+internal val SomSystembrukerKey = AttributeKey<SomSystembruker>("SomSystembruker")
 
 /**
  * Sett `target` for request.
@@ -29,9 +29,9 @@ fun HttpRequestBuilder.target(target: Target) {
 fun HttpRequestBuilder.target(target: String) = target(Target(target))
 
 /**
- * Sett `userToken` for request.
+ * Gjør request på vegne av bruker.
  *
- * @see [HttpRequestBuilder.systembruker]
+ * @see [HttpRequestBuilder.somSystembruker]
  * @see [TexasTokenSetProvider]
  */
 fun HttpRequestBuilder.påVegneAv(userToken: Token) {
@@ -39,22 +39,22 @@ fun HttpRequestBuilder.påVegneAv(userToken: Token) {
 }
 
 /**
- * Sett `userToken` for request.
+ * Gjør request på vegne av bruker.
  *
- * @see [HttpRequestBuilder.systembruker]
+ * @see [HttpRequestBuilder.somSystembruker]
  * @see [TexasTokenSetProvider]
  */
 fun HttpRequestBuilder.påVegneAv(userToken: String) = påVegneAv(Token(userToken))
 
 /**
- * Sett `userToken` for request.
+ * Gjør request på vegne av bruker.
  *
- * @see [HttpRequestBuilder.systembruker]
+ * @see [HttpRequestBuilder.somSystembruker]
  * @see [TexasTokenSetProvider]
  */
 fun HttpRequestBuilder.påVegneAv(userToken: DecodedJWT) = påVegneAv(Token(userToken))
 
-internal data object SystembrukerToken
+internal data object SomSystembruker
 
 /**
  * Gjør request som systembruker, uansett brukerkontekst.
@@ -63,6 +63,6 @@ internal data object SystembrukerToken
  * @see [HttpRequestBuilder.påVegneAv]
  * @see [TexasTokenSetProvider]
  */
-fun HttpRequestBuilder.systembruker() {
-    attributes[SystembrukerTokenKey] = SystembrukerToken
+fun HttpRequestBuilder.somSystembruker() {
+    attributes[SomSystembrukerKey] = SomSystembruker
 }
