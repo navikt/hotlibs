@@ -1,9 +1,12 @@
 package no.nav.hjelpemidler.http.openid
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.request.HttpRequestBuilder
 import no.nav.hjelpemidler.http.context.currentRequestContext
 import no.nav.hjelpemidler.security.ApplicationPrincipal
 import no.nav.hjelpemidler.security.UserPrincipal
+
+private val log = KotlinLogging.logger {}
 
 /**
  * Hent [TokenSet] (evt. basert på request/context).
@@ -47,6 +50,8 @@ internal class ApplicationTokenSetProvider(
 
 /**
  * [TokenSetProvider] som alltid henter On-Behalf-Of-token (OBO-token) for [defaultTarget] (eller overstyrt target).
+ * `userToken` defineres med [io.ktor.client.request.HttpRequestBuilder.onBehalfOf] eller hentes fra
+ * [no.nav.hjelpemidler.http.context.RequestContext.principal].
  *
  * @see [io.ktor.client.request.HttpRequestBuilder.target]
  * @see [io.ktor.client.request.HttpRequestBuilder.onBehalfOf]
@@ -61,7 +66,7 @@ internal class UserTokenSetProvider(
         val userToken = request.attributes.getOrNull(UserTokenKey)?.toString()
             ?: (currentRequestContext()?.principal as? UserPrincipal)?.userToken
             ?: error("userToken mangler")
-        return client.exchange(identityProvider, target, userToken.toString())
+        return client.exchange(identityProvider, target, userToken)
     }
 }
 
@@ -83,8 +88,19 @@ internal class DelegatingTokenSetProvider(
     private val user: TokenSetProvider = UserTokenSetProvider(client, identityProvider, defaultTarget)
 
     override suspend fun invoke(request: HttpRequestBuilder): TokenSet = when {
-        request.attributes.getOrNull(AsApplicationKey) != null -> application(request)
-        currentRequestContext()?.principal is ApplicationPrincipal -> application(request)
-        else -> user(request)
+        request.attributes.getOrNull(AsApplicationKey) != null -> {
+            log.debug { "M2M-flyt, AsApplicationKey er satt" }
+            application(request)
+        }
+
+        currentRequestContext()?.principal is ApplicationPrincipal -> {
+            log.debug { "M2M-flyt, RequestContext.principal er ApplicationPrincipal" }
+            application(request)
+        }
+
+        else -> {
+            log.debug { "OBO-flyt, AsApplicationKey er ikke satt og RequestContext.principal er ikke ApplicationPrincipal" }
+            user(request)
+        }
     }
 }

@@ -8,6 +8,6 @@ data object TestApplicationPrincipal : ApplicationPrincipal {
 }
 
 data object TestUserPrincipal : UserPrincipal {
-    override val id: String get() = TestApplicationPrincipal.toString()
+    override val id: String get() = toString()
     override val userToken: String = "userTokenFromContext"
 }
