@@ -7,7 +7,7 @@ data object TestApplicationPrincipal : ApplicationPrincipal {
     override val id: String get() = toString()
 }
 
-data object TestUserPrincipal : UserPrincipal {
+data object TestUserPrincipal : UserPrincipal<String> {
     override val id: String get() = toString()
     override val userToken: String = "userTokenFromContext"
 }

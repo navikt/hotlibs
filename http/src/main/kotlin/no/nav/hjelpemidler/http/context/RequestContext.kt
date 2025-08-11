@@ -5,7 +5,7 @@ import no.nav.hjelpemidler.security.Principal
 import kotlin.coroutines.AbstractCoroutineContextElement
 import kotlin.coroutines.CoroutineContext
 
-class RequestContext(val principal: Principal) : AbstractCoroutineContextElement(RequestContext) {
+class RequestContext(val principal: Principal<*>) : AbstractCoroutineContextElement(RequestContext) {
     companion object Key : CoroutineContext.Key<RequestContext>
 }
 
