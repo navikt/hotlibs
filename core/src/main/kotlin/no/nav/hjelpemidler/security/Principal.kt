@@ -5,12 +5,12 @@ interface Principal<ID : Any> {
 }
 
 /**
- * [Principal] som er en applikasjon, også kalt "systembruker".
+ * [Principal] er applikasjon, også kalt "systembruker".
  */
 interface ApplicationPrincipal : Principal<String>
 
 /**
- * [Principal] som er en person.
+ * [Principal] er person.
  */
 interface UserPrincipal<ID : Any> : Principal<ID> {
     /**
