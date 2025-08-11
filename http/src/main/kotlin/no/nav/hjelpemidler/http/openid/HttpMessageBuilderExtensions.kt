@@ -8,29 +8,11 @@ import io.ktor.util.AttributeKey
 
 fun HttpMessageBuilder.bearerAuth(tokenSet: TokenSet) = bearerAuth(tokenSet.accessToken)
 
-internal val TargetKey = AttributeKey<Target>("Target")
-internal val UserTokenKey = AttributeKey<Token>("UserToken")
-internal val AsApplicationKey = AttributeKey<AsApplication>("AsApplication")
-
 /**
  * Sett `target` for request.
  */
-fun HttpRequestBuilder.target(target: Target) {
-    attributes[TargetKey] = target
-}
-
-/**
- * Sett `target` for request.
- */
-fun HttpRequestBuilder.target(target: String) = target(Target(target))
-
-/**
- * Gjør request på vegne av bruker.
- *
- * @see [HttpRequestBuilder.asApplication]
- */
-fun HttpRequestBuilder.onBehalfOf(userToken: Token) {
-    attributes[UserTokenKey] = userToken
+fun HttpRequestBuilder.target(target: String) {
+    attributes[TargetKey] = TargetValue(target)
 }
 
 /**
@@ -38,16 +20,18 @@ fun HttpRequestBuilder.onBehalfOf(userToken: Token) {
  *
  * @see [HttpRequestBuilder.asApplication]
  */
-fun HttpRequestBuilder.onBehalfOf(userToken: String) = onBehalfOf(Token(userToken))
+fun HttpRequestBuilder.onBehalfOf(userToken: String) {
+    attributes[UserTokenKey] = UserTokenValue(userToken)
+}
 
 /**
  * Gjør request på vegne av bruker.
  *
  * @see [HttpRequestBuilder.asApplication]
  */
-fun HttpRequestBuilder.onBehalfOf(userToken: DecodedJWT) = onBehalfOf(Token(userToken))
+fun HttpRequestBuilder.onBehalfOf(userToken: DecodedJWT) = onBehalfOf(userToken.token)
 
-internal data object AsApplication
+internal data object AsApplicationValue
 
 /**
  * Gjør request som applikasjon, uansett kontekst.
@@ -56,5 +40,19 @@ internal data object AsApplication
  * @see [no.nav.hjelpemidler.http.context.RequestContext.principal]
  */
 fun HttpRequestBuilder.asApplication() {
-    attributes[AsApplicationKey] = AsApplication
+    attributes[AsApplicationKey] = AsApplicationValue
 }
+
+@JvmInline
+internal value class TargetValue(private val value: String) {
+    override fun toString(): String = value
+}
+
+@JvmInline
+internal value class UserTokenValue(private val value: String) {
+    override fun toString(): String = value
+}
+
+internal val TargetKey = AttributeKey<TargetValue>("Target")
+internal val UserTokenKey = AttributeKey<UserTokenValue>("UserToken")
+internal val AsApplicationKey = AttributeKey<AsApplicationValue>("AsApplication")

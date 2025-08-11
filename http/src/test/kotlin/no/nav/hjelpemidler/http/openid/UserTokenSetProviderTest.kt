@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test
 class UserTokenSetProviderTest {
     private val client = mockk<TexasClient>(relaxed = true)
     private val identityProvider = IdentityProvider.ENTRA_ID
-    private val defaultTarget = Target(application = "test1")
+    private val defaultTarget = "test1"
     private val provider = UserTokenSetProvider(client, identityProvider, defaultTarget)
 
     @Test
@@ -23,7 +23,7 @@ class UserTokenSetProviderTest {
         provider(request { onBehalfOf(userTokenFromRequest) })
 
         coVerify(exactly = 1) {
-            client.exchange(identityProvider, defaultTarget.toString(), userTokenFromRequest)
+            client.exchange(identityProvider, defaultTarget, userTokenFromRequest)
         }
         coVerify(exactly = 0) {
             client.token(any(), any())
@@ -32,14 +32,14 @@ class UserTokenSetProviderTest {
 
     @Test
     fun `Gjør token exchange med userToken i context`() = runTest {
-        val userTokenFromContext = TestUserPrincipal.userToken.toString()
+        val userTokenFromContext = TestUserPrincipal.userToken
 
         withContext(RequestContext(TestUserPrincipal)) {
             provider(request())
         }
 
         coVerify(exactly = 1) {
-            client.exchange(identityProvider, defaultTarget.toString(), userTokenFromContext)
+            client.exchange(identityProvider, defaultTarget, userTokenFromContext)
         }
         coVerify(exactly = 0) {
             client.token(any(), any())
@@ -55,7 +55,7 @@ class UserTokenSetProviderTest {
 
     @Test
     fun `Overstyrer target`() = runTest {
-        val otherTarget = Target(application = "test2")
+        val otherTarget = "test2"
         val userTokenFromRequest = "userTokenFromRequest"
 
         provider(request {
@@ -64,7 +64,10 @@ class UserTokenSetProviderTest {
         })
 
         coVerify(exactly = 1) {
-            client.exchange(identityProvider, otherTarget.toString(), userTokenFromRequest)
+            client.exchange(identityProvider, otherTarget, userTokenFromRequest)
+        }
+        coVerify(exactly = 0) {
+            client.exchange(identityProvider, defaultTarget, userTokenFromRequest)
         }
     }
 }

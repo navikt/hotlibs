@@ -1,6 +1,7 @@
 package no.nav.hjelpemidler.http.context
 
 import kotlinx.coroutines.currentCoroutineContext
+import no.nav.hjelpemidler.security.Principal
 import kotlin.coroutines.AbstractCoroutineContextElement
 import kotlin.coroutines.CoroutineContext
 

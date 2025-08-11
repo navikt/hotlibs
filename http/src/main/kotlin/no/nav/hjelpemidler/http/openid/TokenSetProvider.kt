@@ -1,9 +1,9 @@
 package no.nav.hjelpemidler.http.openid
 
 import io.ktor.client.request.HttpRequestBuilder
-import no.nav.hjelpemidler.http.context.ApplicationPrincipal
-import no.nav.hjelpemidler.http.context.UserPrincipal
 import no.nav.hjelpemidler.http.context.currentRequestContext
+import no.nav.hjelpemidler.security.ApplicationPrincipal
+import no.nav.hjelpemidler.security.UserPrincipal
 
 /**
  * Hent [TokenSet] (evt. basert på request/context).
@@ -20,14 +20,14 @@ fun interface TokenSetProvider {
 internal abstract class AbstractTokenSetProvider(
     protected val client: TexasClient,
     protected val identityProvider: IdentityProvider,
-    protected val defaultTarget: Target,
+    protected val defaultTarget: String,
 ) : TokenSetProvider {
     override suspend fun invoke(request: HttpRequestBuilder): TokenSet {
-        val target = request.attributes.getOrNull(TargetKey) ?: defaultTarget
+        val target = request.attributes.getOrNull(TargetKey)?.toString() ?: defaultTarget
         return invoke(request, target)
     }
 
-    protected abstract suspend fun invoke(request: HttpRequestBuilder, target: Target): TokenSet
+    protected abstract suspend fun invoke(request: HttpRequestBuilder, target: String): TokenSet
 }
 
 /**
@@ -38,10 +38,10 @@ internal abstract class AbstractTokenSetProvider(
 internal class ApplicationTokenSetProvider(
     client: TexasClient,
     identityProvider: IdentityProvider,
-    defaultTarget: Target,
+    defaultTarget: String,
 ) : AbstractTokenSetProvider(client, identityProvider, defaultTarget) {
-    override suspend fun invoke(request: HttpRequestBuilder, target: Target): TokenSet {
-        return client.token(identityProvider, target.toString())
+    override suspend fun invoke(request: HttpRequestBuilder, target: String): TokenSet {
+        return client.token(identityProvider, target)
     }
 }
 
@@ -55,13 +55,13 @@ internal class ApplicationTokenSetProvider(
 internal class UserTokenSetProvider(
     client: TexasClient,
     identityProvider: IdentityProvider,
-    defaultTarget: Target,
+    defaultTarget: String,
 ) : AbstractTokenSetProvider(client, identityProvider, defaultTarget) {
-    override suspend fun invoke(request: HttpRequestBuilder, target: Target): TokenSet {
-        val userToken = request.attributes.getOrNull(UserTokenKey)
+    override suspend fun invoke(request: HttpRequestBuilder, target: String): TokenSet {
+        val userToken = request.attributes.getOrNull(UserTokenKey)?.toString()
             ?: (currentRequestContext()?.principal as? UserPrincipal)?.userToken
             ?: error("userToken mangler")
-        return client.exchange(identityProvider, target.toString(), userToken.toString())
+        return client.exchange(identityProvider, target, userToken.toString())
     }
 }
 
@@ -77,7 +77,7 @@ internal class UserTokenSetProvider(
 internal class DelegatingTokenSetProvider(
     client: TexasClient,
     identityProvider: IdentityProvider,
-    defaultTarget: Target,
+    defaultTarget: String,
 ) : TokenSetProvider {
     private val application: TokenSetProvider = ApplicationTokenSetProvider(client, identityProvider, defaultTarget)
     private val user: TokenSetProvider = UserTokenSetProvider(client, identityProvider, defaultTarget)

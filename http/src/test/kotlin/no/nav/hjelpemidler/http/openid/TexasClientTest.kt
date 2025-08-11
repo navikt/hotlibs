@@ -13,7 +13,7 @@ import kotlin.test.Test
 import kotlin.time.Duration.Companion.hours
 
 class TexasClientTest {
-    private val target = Target(application = "test1").toString()
+    private val target = "test1"
     private val identityProvider = IdentityProvider.ENTRA_ID
 
     @Test

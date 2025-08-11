@@ -12,12 +12,12 @@ import org.junit.jupiter.api.Test
 class DelegatingTokenSetProviderTest {
     private val client = mockk<TexasClient>(relaxed = true)
     private val identityProvider = IdentityProvider.ENTRA_ID
-    private val target = Target(application = "hotlibs").toString()
-    private val provider = DelegatingTokenSetProvider(client, identityProvider, Target(target))
+    private val defaultTarget = "test1"
+    private val provider = DelegatingTokenSetProvider(client, identityProvider, defaultTarget)
 
     @Test
     fun `Gjør token exchange med userToken fra request`() = runTest {
-        val userTokenFromContext = TestUserPrincipal.userToken.toString()
+        val userTokenFromContext = TestUserPrincipal.userToken
         val userTokenFromRequest = "userTokenFromRequest"
 
         withContext(RequestContext(TestUserPrincipal)) {
@@ -25,7 +25,7 @@ class DelegatingTokenSetProviderTest {
         }
 
         coVerify(exactly = 1) {
-            client.exchange(identityProvider, target, userTokenFromRequest)
+            client.exchange(identityProvider, defaultTarget, userTokenFromRequest)
         }
         coVerify(exactly = 0) {
             client.exchange(any(), any(), userTokenFromContext)
@@ -37,14 +37,14 @@ class DelegatingTokenSetProviderTest {
 
     @Test
     fun `Gjør token exchange med userToken fra context`() = runTest {
-        val userTokenFromContext = TestUserPrincipal.userToken.toString()
+        val userTokenFromContext = TestUserPrincipal.userToken
 
         withContext(RequestContext(TestUserPrincipal)) {
             provider(request())
         }
 
         coVerify(exactly = 1) {
-            client.exchange(identityProvider, target, userTokenFromContext)
+            client.exchange(identityProvider, defaultTarget, userTokenFromContext)
         }
         coVerify(exactly = 0) {
             client.token(any(), any())
@@ -58,10 +58,10 @@ class DelegatingTokenSetProviderTest {
         }
 
         coVerify(exactly = 1) {
-            client.token(identityProvider, target)
+            client.token(identityProvider, defaultTarget)
         }
         coVerify(exactly = 0) {
-            client.exchange(any(), any(), any<String>())
+            client.exchange(any(), any(), any())
         }
     }
 
@@ -72,24 +72,27 @@ class DelegatingTokenSetProviderTest {
         }
 
         coVerify(exactly = 1) {
-            client.token(identityProvider, target)
+            client.token(identityProvider, defaultTarget)
         }
         coVerify(exactly = 0) {
-            client.exchange(any(), any(), any<String>())
+            client.exchange(any(), any(), any())
         }
     }
 
     @Test
     fun `Overstyr target`() = runTest {
-        val otherTarget = Target(application = "test2")
-        val userTokenFromContext = TestUserPrincipal.userToken.toString()
+        val otherTarget = "test2"
+        val userTokenFromContext = TestUserPrincipal.userToken
 
         withContext(RequestContext(TestUserPrincipal)) {
             provider(request { target(otherTarget) })
         }
 
         coVerify(exactly = 1) {
-            client.exchange(identityProvider, otherTarget.toString(), userTokenFromContext)
+            client.exchange(identityProvider, otherTarget, userTokenFromContext)
+        }
+        coVerify(exactly = 0) {
+            client.exchange(identityProvider, defaultTarget, userTokenFromContext)
         }
     }
 }

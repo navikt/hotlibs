@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 class ApplicationTokenSetProviderTest {
     private val client = mockk<TexasClient>(relaxed = true)
     private val identityProvider = IdentityProvider.ENTRA_ID
-    private val defaultTarget = Target(application = "test1")
+    private val defaultTarget = "test1"
     private val provider = ApplicationTokenSetProvider(client, identityProvider, defaultTarget)
 
     @Test
@@ -16,21 +16,24 @@ class ApplicationTokenSetProviderTest {
         provider(request())
 
         coVerify(exactly = 1) {
-            client.token(identityProvider, defaultTarget.toString())
+            client.token(identityProvider, defaultTarget)
         }
         coVerify(exactly = 0) {
-            client.exchange(any(), any(), any<String>())
+            client.exchange(any(), any(), any())
         }
     }
 
     @Test
     fun `Overstyrer target`() = runTest {
-        val otherTarget = Target(application = "test2")
+        val otherTarget = "test2"
 
         provider(request { target(otherTarget) })
 
         coVerify(exactly = 1) {
-            client.token(identityProvider, otherTarget.toString())
+            client.token(identityProvider, otherTarget)
+        }
+        coVerify(exactly = 0) {
+            client.token(identityProvider, defaultTarget)
         }
     }
 }

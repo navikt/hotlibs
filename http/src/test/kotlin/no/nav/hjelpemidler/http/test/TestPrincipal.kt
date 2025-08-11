@@ -1,14 +1,13 @@
 package no.nav.hjelpemidler.http.test
 
-import no.nav.hjelpemidler.http.context.ApplicationPrincipal
-import no.nav.hjelpemidler.http.context.UserPrincipal
-import no.nav.hjelpemidler.http.openid.Token
+import no.nav.hjelpemidler.security.ApplicationPrincipal
+import no.nav.hjelpemidler.security.UserPrincipal
 
 data object TestApplicationPrincipal : ApplicationPrincipal {
-    override fun getName(): String = toString()
+    override val id: String get() = toString()
 }
 
 data object TestUserPrincipal : UserPrincipal {
-    override fun getName(): String = toString()
-    override val userToken: Token = Token("userTokenFromContext")
+    override val id: String get() = TestApplicationPrincipal.toString()
+    override val userToken: String = "userTokenFromContext"
 }
