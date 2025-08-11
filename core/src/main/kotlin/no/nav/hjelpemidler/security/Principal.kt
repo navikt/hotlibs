@@ -1,6 +1,6 @@
 package no.nav.hjelpemidler.security
 
-sealed interface Principal<ID : Any> {
+interface Principal<ID : Any> {
     val id: ID
 }
 
