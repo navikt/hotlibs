@@ -96,41 +96,44 @@ class TexasClient(
     ): T = client.submitForm(url = url, formParameters = parameters(builder)).body<T>()
 
     /**
-     * @see [io.ktor.client.request.HttpRequestBuilder.target]
-     * @see [io.ktor.client.request.HttpRequestBuilder.påVegneAv]
-     * @see [io.ktor.client.request.HttpRequestBuilder.somSystembruker]
-     * @see [TexasClient.entraId]
-     * @see [TexasClient.idPorten]
-     * @see [TexasClient.maskinporten]
-     * @see [TexasClient.tokenX]
-     * @see [TexasTokenSetProvider]
+     * [TokenSetProvider] for [IdentityProvider.ENTRA_ID].
+     *
+     * @see [DelegatingTokenSetProvider]
      */
-    fun asTokenSetProvider(identityProvider: IdentityProvider, target: String): TokenSetProvider =
-        TexasTokenSetProvider(this, identityProvider, Target(target))
+    fun entraId(target: String): TokenSetProvider =
+        DelegatingTokenSetProvider(this, IdentityProvider.ENTRA_ID, Target(target))
 
     /**
      * [TokenSetProvider] for [IdentityProvider.ENTRA_ID].
+     *
+     * @see [ApplicationTokenSetProvider]
      */
-    fun entraId(target: String): TokenSetProvider =
-        asTokenSetProvider(IdentityProvider.ENTRA_ID, target)
+    fun entraIdApplication(target: String): TokenSetProvider =
+        ApplicationTokenSetProvider(this, IdentityProvider.ENTRA_ID, Target(target))
 
     /**
-     * [TokenSetProvider] for [IdentityProvider.ID_PORTEN].
+     * [TokenSetProvider] for [IdentityProvider.ENTRA_ID].
+     *
+     * @see [UserTokenSetProvider]
      */
-    fun idPorten(target: String): TokenSetProvider =
-        asTokenSetProvider(IdentityProvider.ID_PORTEN, target)
+    fun entraIdUser(target: String): TokenSetProvider =
+        UserTokenSetProvider(this, IdentityProvider.ENTRA_ID, Target(target))
 
     /**
      * [TokenSetProvider] for [IdentityProvider.MASKINPORTEN].
+     *
+     * @see [ApplicationTokenSetProvider]
      */
     fun maskinporten(target: String): TokenSetProvider =
-        asTokenSetProvider(IdentityProvider.MASKINPORTEN, target)
+        ApplicationTokenSetProvider(this, IdentityProvider.MASKINPORTEN, Target(target))
 
     /**
      * [TokenSetProvider] for [IdentityProvider.TOKEN_X].
+     *
+     * @see [UserTokenSetProvider]
      */
     fun tokenX(target: String): TokenSetProvider =
-        asTokenSetProvider(IdentityProvider.TOKEN_X, target)
+        UserTokenSetProvider(this, IdentityProvider.TOKEN_X, Target(target))
 
     /**
      * Opprett [OpenIDClient] for [identityProvider].

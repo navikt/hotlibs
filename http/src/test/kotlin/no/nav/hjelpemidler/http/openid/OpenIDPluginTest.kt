@@ -7,7 +7,10 @@ import io.ktor.client.engine.mock.respondOk
 import io.ktor.client.request.get
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.withContext
+import no.nav.hjelpemidler.http.context.RequestContext
 import no.nav.hjelpemidler.http.createHttpClient
+import no.nav.hjelpemidler.http.test.TestUserPrincipal
 import no.nav.hjelpemidler.http.test.respondJson
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.hours
@@ -17,7 +20,7 @@ class OpenIDPluginTest {
     fun `Skal hente og bruke access token fra klient`() = runTest {
         val engine = MockEngine {
             when {
-                it.url.toString().endsWith("/token") ->
+                it.url.toString().endsWith("/token/exchange") ->
                     respondJson(
                         TokenSet(
                             accessToken = "accessToken",
@@ -38,7 +41,9 @@ class OpenIDPluginTest {
             openID(IdentityProvider.ENTRA_ID, "test")
         }
 
-        val response = client.get("/sak/1")
+        val response = withContext(RequestContext(TestUserPrincipal)) {
+            client.get("/sak/1")
+        }
 
         response.status shouldBe HttpStatusCode.OK
     }

@@ -4,7 +4,6 @@ import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.ktor.client.engine.mock.MockEngine
-import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.forms.FormDataContent
 import io.ktor.http.Parameters
 import io.ktor.http.content.OutgoingContent
@@ -14,7 +13,7 @@ import kotlin.test.Test
 import kotlin.time.Duration.Companion.hours
 
 class TexasClientTest {
-    private val target = Target(application = "hotlibs").toString()
+    private val target = Target(application = "test1").toString()
     private val identityProvider = IdentityProvider.ENTRA_ID
 
     @Test
@@ -32,9 +31,9 @@ class TexasClientTest {
                 )
             )
         })
+
         val tokenSet = client.token(identityProvider, target)
 
-        client.asTokenSetProvider(identityProvider, target).invoke(HttpRequestBuilder()) shouldBe tokenSet
         client.asOpenIDClient(identityProvider).grant(target) shouldBe tokenSet
     }
 
@@ -58,8 +57,6 @@ class TexasClientTest {
 
         val tokenSet = client.exchange(identityProvider, target, userToken)
 
-        val builder = HttpRequestBuilder().apply { påVegneAv(userToken) }
-        client.asTokenSetProvider(identityProvider, target).invoke(builder) shouldBe tokenSet
         client.asOpenIDClient(identityProvider).grant(target, userToken) shouldBe tokenSet
     }
 

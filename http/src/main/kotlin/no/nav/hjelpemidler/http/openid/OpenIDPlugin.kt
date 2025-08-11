@@ -17,7 +17,7 @@ internal val OpenIDPlugin = createClientPlugin("OpenIDPlugin", ::OpenIDPluginCon
         require(identityProvider != null && scope != null) {
             "Du må enten sette tokenSetProvider eller både identityProvider og scope"
         }
-        TexasClient(client.engine).asTokenSetProvider(identityProvider, scope)
+        DelegatingTokenSetProvider(TexasClient(client.engine), identityProvider, Target(scope))
     }
     onRequest { request, _ ->
         request.bearerAuth(tokenSetProvider(request))
