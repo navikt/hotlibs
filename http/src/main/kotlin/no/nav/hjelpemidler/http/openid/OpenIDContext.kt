@@ -17,5 +17,8 @@ class OpenIDContext(
 ) : AbstractCoroutineContextElement(OpenIDContext) {
     constructor(userIsApplication: Boolean, userToken: DecodedJWT) : this(userIsApplication, userToken.token)
 
+    override fun toString(): String =
+        "OpenIDContext(userIsApplication=$userIsApplication, userToken=${!userToken.isNullOrBlank()})"
+
     companion object Key : CoroutineContext.Key<OpenIDContext>
 }
