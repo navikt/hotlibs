@@ -15,10 +15,10 @@ class OpenIDContext(
      */
     val userToken: String?,
 ) : AbstractCoroutineContextElement(OpenIDContext) {
-    constructor(userIsApplication: Boolean, userToken: DecodedJWT) : this(userIsApplication, userToken.token)
+    constructor(asApplication: Boolean, userToken: DecodedJWT) : this(asApplication, userToken.token)
 
     override fun toString(): String =
-        "OpenIDContext(userIsApplication=$asApplication, userToken=${!userToken.isNullOrBlank()})"
+        "OpenIDContext(asApplication=$asApplication, userToken=${!userToken.isNullOrBlank()})"
 
     companion object Key : CoroutineContext.Key<OpenIDContext>
 }
