@@ -37,7 +37,7 @@ internal data object AsApplicationValue
  * Gjør request som applikasjon, uansett kontekst.
  *
  * @see [HttpRequestBuilder.onBehalfOf]
- * @see [no.nav.hjelpemidler.http.context.RequestContext.principal]
+ * @see [OpenIDContext]
  */
 fun HttpRequestBuilder.asApplication() {
     attributes[AsApplicationKey] = AsApplicationValue

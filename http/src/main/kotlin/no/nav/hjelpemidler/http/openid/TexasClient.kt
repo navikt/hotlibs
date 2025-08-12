@@ -26,6 +26,8 @@ class TexasClient(
         expectSuccess = true
     }
 
+    internal val factory = TokenSetProviderFactory(this)
+
     /**
      * Hent Machine-To-Machine-token (M2M-token) for [target].
      */
@@ -35,7 +37,7 @@ class TexasClient(
         resource: String? = null,
         skipCache: Boolean? = null,
     ): TokenSet {
-        log.debug { "token, url: '$tokenUrl', identityProvider: '$identityProvider', target: '$target', resource: '$resource', skipCache: $skipCache" }
+        log.debug { "Henter token, url: '$tokenUrl', identityProvider: '$identityProvider', target: '$target', resource: '$resource', skipCache: $skipCache" }
         return execute(tokenUrl) {
             identityProvider(identityProvider)
             target(target)
@@ -53,7 +55,7 @@ class TexasClient(
         userToken: String,
         skipCache: Boolean? = null,
     ): TokenSet {
-        log.debug { "exchange, url: '$tokenExchangeUrl', identityProvider: '$identityProvider', target: '$target', skipCache: $skipCache" }
+        log.debug { "Gjør token exchange, url: '$tokenExchangeUrl', identityProvider: '$identityProvider', target: '$target', skipCache: $skipCache" }
         return execute(tokenExchangeUrl) {
             identityProvider(identityProvider)
             target(target)
@@ -66,7 +68,7 @@ class TexasClient(
      * Valider [token].
      */
     suspend fun introspection(identityProvider: IdentityProvider, token: String): TokenIntrospection {
-        log.debug { "introspection, url: '$tokenIntrospectionUrl', identityProvider: '$identityProvider'" }
+        log.debug { "Gjør introspection, url: '$tokenIntrospectionUrl', identityProvider: '$identityProvider'" }
         return execute(tokenIntrospectionUrl) {
             identityProvider(identityProvider)
             token(token)
@@ -80,43 +82,33 @@ class TexasClient(
 
     /**
      * [TokenSetProvider] for [IdentityProvider.ENTRA_ID].
-     *
-     * @see [DelegatingTokenSetProvider]
      */
     fun entraId(defaultTarget: String): TokenSetProvider =
-        DelegatingTokenSetProvider(this, IdentityProvider.ENTRA_ID, defaultTarget)
+        factory.delegate(IdentityProvider.ENTRA_ID, defaultTarget)
 
     /**
      * [TokenSetProvider] for [IdentityProvider.ENTRA_ID].
-     *
-     * @see [ApplicationTokenSetProvider]
      */
     fun entraIdApplication(defaultTarget: String): TokenSetProvider =
-        ApplicationTokenSetProvider(this, IdentityProvider.ENTRA_ID, defaultTarget)
+        factory.application(IdentityProvider.ENTRA_ID, defaultTarget)
 
     /**
      * [TokenSetProvider] for [IdentityProvider.ENTRA_ID].
-     *
-     * @see [UserTokenSetProvider]
      */
     fun entraIdUser(defaultTarget: String): TokenSetProvider =
-        UserTokenSetProvider(this, IdentityProvider.ENTRA_ID, defaultTarget)
+        factory.user(IdentityProvider.ENTRA_ID, defaultTarget)
 
     /**
      * [TokenSetProvider] for [IdentityProvider.MASKINPORTEN].
-     *
-     * @see [ApplicationTokenSetProvider]
      */
     fun maskinporten(defaultTarget: String): TokenSetProvider =
-        ApplicationTokenSetProvider(this, IdentityProvider.MASKINPORTEN, defaultTarget)
+        factory.application(IdentityProvider.MASKINPORTEN, defaultTarget)
 
     /**
      * [TokenSetProvider] for [IdentityProvider.TOKEN_X].
-     *
-     * @see [UserTokenSetProvider]
      */
     fun tokenX(defaultTarget: String): TokenSetProvider =
-        UserTokenSetProvider(this, IdentityProvider.TOKEN_X, defaultTarget)
+        factory.user(IdentityProvider.TOKEN_X, defaultTarget)
 
     /**
      * Opprett [OpenIDClient] for [identityProvider].

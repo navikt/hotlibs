@@ -8,14 +8,14 @@ import io.ktor.client.request.get
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
-import no.nav.hjelpemidler.http.context.RequestContext
 import no.nav.hjelpemidler.http.createHttpClient
-import no.nav.hjelpemidler.http.test.TestUserPrincipal
 import no.nav.hjelpemidler.http.test.respondJson
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.hours
 
 class OpenIDPluginTest {
+    private val userOpenIDContext = OpenIDContext(false, "userTokenFromContext")
+
     @Test
     fun `Skal hente og bruke access token fra klient`() = runTest {
         val engine = MockEngine {
@@ -41,7 +41,7 @@ class OpenIDPluginTest {
             openID(IdentityProvider.ENTRA_ID, "test")
         }
 
-        val response = withContext(RequestContext(TestUserPrincipal)) {
+        val response = withContext(userOpenIDContext) {
             client.get("/sak/1")
         }
 
