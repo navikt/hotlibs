@@ -21,7 +21,7 @@ class TokenSetProviderFactoryTest {
 
     @Nested
     inner class Application {
-        private val provider = factory.application(identityProvider, defaultTarget)
+        private val provider = factory.applicationProvider(identityProvider, defaultTarget)
 
         @Test
         fun `Henter token`() = runTest {
@@ -52,7 +52,7 @@ class TokenSetProviderFactoryTest {
 
     @Nested
     inner class User {
-        private val provider = factory.user(identityProvider, defaultTarget)
+        private val provider = factory.userProvider(identityProvider, defaultTarget)
 
         @Test
         fun `Gjør token exchange med userToken i request`() = runTest {
@@ -114,7 +114,7 @@ class TokenSetProviderFactoryTest {
 
     @Nested
     inner class Delegate {
-        private val provider = factory.delegate(identityProvider, defaultTarget)
+        private val provider = factory.delegateProvider(identityProvider, defaultTarget)
 
         @Test
         fun `Gjør token exchange med userToken fra request`() = runTest {

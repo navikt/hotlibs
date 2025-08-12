@@ -15,6 +15,18 @@ fun HttpRequestBuilder.target(target: String) {
     attributes[TargetKey] = TargetValue(target)
 }
 
+internal data object AsApplicationValue
+
+/**
+ * Gjør request som applikasjon, uansett kontekst.
+ *
+ * @see [HttpRequestBuilder.onBehalfOf]
+ * @see [OpenIDContext]
+ */
+fun HttpRequestBuilder.asApplication() {
+    attributes[AsApplicationKey] = AsApplicationValue
+}
+
 /**
  * Gjør request på vegne av bruker.
  *
@@ -31,18 +43,6 @@ fun HttpRequestBuilder.onBehalfOf(userToken: String) {
  */
 fun HttpRequestBuilder.onBehalfOf(userToken: DecodedJWT) = onBehalfOf(userToken.token)
 
-internal data object AsApplicationValue
-
-/**
- * Gjør request som applikasjon, uansett kontekst.
- *
- * @see [HttpRequestBuilder.onBehalfOf]
- * @see [OpenIDContext]
- */
-fun HttpRequestBuilder.asApplication() {
-    attributes[AsApplicationKey] = AsApplicationValue
-}
-
 @JvmInline
 internal value class TargetValue(private val value: String) {
     override fun toString(): String = value
@@ -54,5 +54,5 @@ internal value class UserTokenValue(private val value: String) {
 }
 
 internal val TargetKey = AttributeKey<TargetValue>("Target")
-internal val UserTokenKey = AttributeKey<UserTokenValue>("UserToken")
 internal val AsApplicationKey = AttributeKey<AsApplicationValue>("AsApplication")
+internal val UserTokenKey = AttributeKey<UserTokenValue>("UserToken")

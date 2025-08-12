@@ -8,14 +8,14 @@ private val log = KotlinLogging.logger {}
 
 class TokenSetProviderFactory internal constructor(private val client: TexasClient) {
     private suspend fun openIDContext() =
-        currentCoroutineContext()[OpenIDContext] ?: OpenIDContext(userIsApplication = false, userToken = null)
+        currentCoroutineContext()[OpenIDContext] ?: OpenIDContext(asApplication = false, userToken = null)
 
     /**
      * [TokenSetProvider] som alltid henter Machine-To-Machine-token (M2M-token) for [defaultTarget] (eller overstyrt target).
      *
      * @see [HttpRequestBuilder.target]
      */
-    fun application(identityProvider: IdentityProvider, defaultTarget: String): TokenSetProvider =
+    fun applicationProvider(identityProvider: IdentityProvider, defaultTarget: String): TokenSetProvider =
         TokenSetProvider { request ->
             client.token(identityProvider, request.target ?: defaultTarget)
         }
@@ -28,7 +28,7 @@ class TokenSetProviderFactory internal constructor(private val client: TexasClie
      * @see [HttpRequestBuilder.onBehalfOf]
      * @see [OpenIDContext]
      */
-    fun user(identityProvider: IdentityProvider, defaultTarget: String): TokenSetProvider =
+    fun userProvider(identityProvider: IdentityProvider, defaultTarget: String): TokenSetProvider =
         TokenSetProvider { request ->
             val userToken = request.userToken ?: openIDContext().userToken ?: error("userToken mangler")
             client.exchange(identityProvider, request.target ?: defaultTarget, userToken)
@@ -43,41 +43,24 @@ class TokenSetProviderFactory internal constructor(private val client: TexasClie
      * @see [HttpRequestBuilder.asApplication]
      * @see [OpenIDContext]
      */
-    fun delegate(identityProvider: IdentityProvider, defaultTarget: String): TokenSetProvider {
-        val application = application(identityProvider, defaultTarget)
-        val user = user(identityProvider, defaultTarget)
+    fun delegateProvider(identityProvider: IdentityProvider, defaultTarget: String): TokenSetProvider {
+        val applicationProvider = applicationProvider(identityProvider, defaultTarget)
+        val userProvider = userProvider(identityProvider, defaultTarget)
         return TokenSetProvider { request ->
             val openIDContext = openIDContext()
-            when {
-                request.asApplication -> {
-                    log.debug { "request.asApplication er sann, identityProvider: '$identityProvider', defaultTarget: '$defaultTarget'" }
-                    application(request)
-                }
-
-                !request.userToken.isNullOrBlank() -> {
-                    log.debug { "request.userToken er satt, identityProvider: '$identityProvider', defaultTarget: '$defaultTarget'" }
-                    user(request)
-                }
-
-                !openIDContext.userToken.isNullOrBlank() -> {
-                    log.debug { "openIDContext.userToken er satt, identityProvider: '$identityProvider', defaultTarget: '$defaultTarget'" }
-                    user(request)
-                }
-
-                openIDContext.userIsApplication -> {
-                    log.debug { "openIDContext.userIsApplication er sann, identityProvider: '$identityProvider', defaultTarget: '$defaultTarget'" }
-                    application(request)
-                }
-
-                else -> {
-                    log.debug { "Fallback, identityProvider: '$identityProvider', defaultTarget: '$defaultTarget'" }
-                    application(request)
-                }
+            val (provider, reason) = when {
+                request.asApplication -> applicationProvider to "request.asApplication er sann"
+                !request.userToken.isNullOrBlank() -> userProvider to "request.userToken er satt"
+                openIDContext.asApplication -> applicationProvider to "openIDContext.asApplication er sann"
+                !openIDContext.userToken.isNullOrBlank() -> userProvider to "openIDContext.userToken er satt"
+                else -> applicationProvider to "fallback til applicationProvider"
             }
+            log.debug { "$reason, identityProvider: '$identityProvider', defaultTarget: '$defaultTarget'" }
+            provider(request)
         }
     }
 }
 
 private val HttpRequestBuilder.target: String? get() = attributes.getOrNull(TargetKey)?.toString()
-private val HttpRequestBuilder.userToken: String? get() = attributes.getOrNull(UserTokenKey)?.toString()
 private val HttpRequestBuilder.asApplication: Boolean get() = attributes.getOrNull(AsApplicationKey) != null
+private val HttpRequestBuilder.userToken: String? get() = attributes.getOrNull(UserTokenKey)?.toString()

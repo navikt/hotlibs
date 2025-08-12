@@ -84,31 +84,31 @@ class TexasClient(
      * [TokenSetProvider] for [IdentityProvider.ENTRA_ID].
      */
     fun entraId(defaultTarget: String): TokenSetProvider =
-        factory.delegate(IdentityProvider.ENTRA_ID, defaultTarget)
+        factory.delegateProvider(IdentityProvider.ENTRA_ID, defaultTarget)
 
     /**
      * [TokenSetProvider] for [IdentityProvider.ENTRA_ID].
      */
     fun entraIdApplication(defaultTarget: String): TokenSetProvider =
-        factory.application(IdentityProvider.ENTRA_ID, defaultTarget)
+        factory.applicationProvider(IdentityProvider.ENTRA_ID, defaultTarget)
 
     /**
      * [TokenSetProvider] for [IdentityProvider.ENTRA_ID].
      */
     fun entraIdUser(defaultTarget: String): TokenSetProvider =
-        factory.user(IdentityProvider.ENTRA_ID, defaultTarget)
+        factory.userProvider(IdentityProvider.ENTRA_ID, defaultTarget)
 
     /**
      * [TokenSetProvider] for [IdentityProvider.MASKINPORTEN].
      */
     fun maskinporten(defaultTarget: String): TokenSetProvider =
-        factory.application(IdentityProvider.MASKINPORTEN, defaultTarget)
+        factory.applicationProvider(IdentityProvider.MASKINPORTEN, defaultTarget)
 
     /**
      * [TokenSetProvider] for [IdentityProvider.TOKEN_X].
      */
     fun tokenX(defaultTarget: String): TokenSetProvider =
-        factory.user(IdentityProvider.TOKEN_X, defaultTarget)
+        factory.userProvider(IdentityProvider.TOKEN_X, defaultTarget)
 
     /**
      * Opprett [OpenIDClient] for [identityProvider].
