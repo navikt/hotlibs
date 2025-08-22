@@ -35,7 +35,7 @@ interface RepositoryOperations : DatabaseOperations, WriteOperations<Any, Any>, 
         entityClass: KClass<T>,
         id: Any,
         lockMode: LockMode = LockMode.NONE,
-    ): T
+    ): T?
 
     /**
      * @see [org.hibernate.StatelessSession.get]
@@ -45,7 +45,7 @@ interface RepositoryOperations : DatabaseOperations, WriteOperations<Any, Any>, 
         id: Any,
         lockMode: LockMode = LockMode.NONE,
         graphSemantic: GraphSemantic = GraphSemantic.LOAD,
-    ): T
+    ): T?
 
     /**
      * @see [org.hibernate.StatelessSession.getMultiple]
@@ -54,7 +54,7 @@ interface RepositoryOperations : DatabaseOperations, WriteOperations<Any, Any>, 
         entityClass: KClass<T>,
         ids: Iterable<*>,
         lockMode: LockMode = LockMode.NONE,
-    ): List<T>
+    ): List<T?>
 
     /**
      * @see [org.hibernate.StatelessSession.getMultiple]
@@ -63,7 +63,7 @@ interface RepositoryOperations : DatabaseOperations, WriteOperations<Any, Any>, 
         entityGraph: EntityGraph<T>,
         ids: Iterable<*>,
         graphSemantic: GraphSemantic = GraphSemantic.LOAD,
-    ): List<T>
+    ): List<T?>
 
     /**
      * @see [org.hibernate.StatelessSession.createEntityGraph]

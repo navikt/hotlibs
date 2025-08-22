@@ -12,15 +12,13 @@ internal class StatelessSessionReadOperations<T : Any, ID : Any>(
     private val session: StatelessSession,
     private val entityClass: KClass<T>,
 ) : ReadOperations<T, ID>, AutoCloseable by session {
-    override fun findById(id: ID, lockMode: LockMode): T =
+    override fun findById(id: ID, lockMode: LockMode): T? =
         session.get<T>(entityClass.java, id, lockMode)
 
-    override fun findAllById(ids: Iterable<ID>, lockMode: LockMode): List<T> =
+    override fun findAllById(ids: Iterable<ID>, lockMode: LockMode): List<T?> =
         session.getMultiple<T>(entityClass.java, ids.toList(), lockMode)
 
-    override fun fetch(association: Any) =
-        session.fetch(association)
+    override fun fetch(association: Any) = session.fetch(association)
 
-    override fun refresh(entity: T, lockMode: LockMode) =
-        session.refresh(entity, lockMode)
+    override fun refresh(entity: T, lockMode: LockMode) = session.refresh(entity, lockMode)
 }

@@ -13,7 +13,7 @@ import org.intellij.lang.annotations.Language
 inline fun <reified T : Any> RepositoryOperations.findById(
     id: Any,
     lockMode: LockMode = LockMode.NONE,
-): T = findById(T::class, id, lockMode)
+): T? = findById(T::class, id, lockMode)
 
 /**
  * @see [RepositoryOperations.findAllById]
@@ -21,7 +21,7 @@ inline fun <reified T : Any> RepositoryOperations.findById(
 inline fun <reified T : Any> RepositoryOperations.findAllById(
     ids: List<*>,
     lockMode: LockMode = LockMode.NONE,
-): List<T> = findAllById(T::class, ids, lockMode)
+): List<T?> = findAllById(T::class, ids, lockMode)
 
 /**
  * @see [RepositoryOperations.createEntityGraph]

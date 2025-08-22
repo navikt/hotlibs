@@ -53,7 +53,7 @@ class StatelessSessionRepositoryOperationsTest {
             ) as Long
             tx.insert(TestSaksstatus(sakId1, "OPPRETTET"))
 
-            val sak1 = tx.findById<TestSakEntity>(sakId1)
+            val sak1 = tx.findById<TestSakEntity>(sakId1).shouldNotBeNull()
             sak1.id shouldBe sakId1
 
             tx.fetch(sak1.saksstatuser)

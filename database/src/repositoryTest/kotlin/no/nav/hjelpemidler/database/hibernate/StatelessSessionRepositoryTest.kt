@@ -2,6 +2,7 @@ package no.nav.hjelpemidler.database.hibernate
 
 import io.kotest.inspectors.forOne
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.test.runTest
 import no.nav.hjelpemidler.database.hibernate.test.Sakstype
@@ -35,7 +36,7 @@ class StatelessSessionRepositoryTest {
                 )
             )
 
-            val saker = repository.findAllById(setOf(sakId1, sakId2))
+            val saker = repository.findAllById(setOf(sakId1, sakId2)).filterNotNull()
             saker shouldHaveSize 2
             saker.forOne { it.id shouldBe sakId1 }
             saker.forOne { it.id shouldBe sakId2 }
@@ -55,7 +56,7 @@ class StatelessSessionRepositoryTest {
                 )
             )
 
-            val sak1 = repository.findById(sakId1)
+            val sak1 = repository.findById(sakId1).shouldNotBeNull()
             sak1.sakstype shouldBe Sakstype.BESTILLING
         }
     }

@@ -6,12 +6,12 @@ interface ReadOperations<T : Any, ID : Any> {
     /**
      * @see [org.hibernate.StatelessSession.get]
      */
-    fun findById(id: ID, lockMode: LockMode = LockMode.NONE): T
+    fun findById(id: ID, lockMode: LockMode = LockMode.NONE): T?
 
     /**
      * @see [org.hibernate.StatelessSession.getMultiple]
      */
-    fun findAllById(ids: Iterable<ID>, lockMode: LockMode = LockMode.NONE): List<T>
+    fun findAllById(ids: Iterable<ID>, lockMode: LockMode = LockMode.NONE): List<T?>
 
     /**
      * @see [org.hibernate.StatelessSession.fetch]
