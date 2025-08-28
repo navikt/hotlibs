@@ -88,7 +88,7 @@ interface RepositoryOperations : DatabaseOperations, WriteOperations<Any, Any>, 
     /**
      * @see [org.hibernate.StatelessSession.createNativeMutationQuery]
      */
-    fun createNativeMutationQuery(@Language("HQL") sql: CharSequence): MutationQuery
+    fun createNativeMutationQuery(@Language("SQL") sql: CharSequence): MutationQuery
 
     fun <T : Any, ID : Any> createRepository(entityClass: KClass<T>): Repository<T, ID>
 
