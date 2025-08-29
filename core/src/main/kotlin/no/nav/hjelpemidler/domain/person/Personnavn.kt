@@ -1,5 +1,8 @@
 package no.nav.hjelpemidler.domain.person
 
+import jakarta.persistence.Embeddable
+
+@Embeddable
 data class Personnavn(
     val fornavn: String,
     val mellomnavn: String? = null,
