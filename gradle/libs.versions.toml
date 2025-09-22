@@ -66,6 +66,7 @@ shadow = "8.1.1"
 slf4j = "2.0.17"
 spotless = "7.2.1"
 swagger = "2.2.37"
+swaggerParser = "2.1.34"
 tbdLibs = "2025.09.15-14.41-2bf93bde"
 testcontainers = "1.21.3"
 tmsKtorTokenSupport = "5.0.4"
@@ -247,6 +248,7 @@ slf4j-jdk-platform-logging = { module = "org.slf4j:slf4j-jdk-platform-logging", 
 slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
 spotless-gradle-plugin = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
 swagger-annotations = { module = "io.swagger.core.v3:swagger-annotations", version.ref = "swagger" }
+swagger-parser = { module = "io.swagger.parser.v3:swagger-parser", version.ref = "swaggerParser" }
 tbdLibs-kafka = { module = "com.github.navikt.tbd-libs:kafka", version.ref = "tbdLibs" }
 tbdLibs-rapidsAndRivers = { module = "com.github.navikt.tbd-libs:rapids-and-rivers", version.ref = "tbdLibs" }
 tbdLibs-rapidsAndRivers-api = { module = "com.github.navikt.tbd-libs:rapids-and-rivers-api", version.ref = "tbdLibs" }
