@@ -9,7 +9,7 @@ dependencies {
     api(libs.kotest.assertions.json)
     constraints {
         // CVE-2024-57699
-        implementation("net.minidev:json-smart:2.5.2")
+        implementation("net.minidev:json-smart:2.6.0")
     }
     api(libs.mockk) {
         exclude("junit", "junit")
