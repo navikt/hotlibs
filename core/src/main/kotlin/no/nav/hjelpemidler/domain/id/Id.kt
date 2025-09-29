@@ -1,12 +1,13 @@
 package no.nav.hjelpemidler.domain.id
 
 import com.fasterxml.jackson.annotation.JsonValue
+import no.nav.hjelpemidler.domain.ValueType
 import java.nio.charset.Charset
 
 /**
  * Abstrakt klasse for implementasjon av sterke typer for ulike identifikatorer.
  */
-abstract class Id<T : Comparable<T>>(val value: T) : Comparable<Id<T>> {
+abstract class Id<T : Comparable<T>>(override val value: T) : Comparable<Id<T>>, ValueType<T> {
     fun toByteArray(charset: Charset = Charsets.UTF_8): ByteArray = toString().toByteArray(charset)
 
     override fun compareTo(other: Id<T>): Int {
