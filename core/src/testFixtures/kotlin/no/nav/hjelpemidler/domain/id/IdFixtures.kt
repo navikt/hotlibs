@@ -2,7 +2,7 @@ package no.nav.hjelpemidler.domain.id
 
 import java.util.UUID
 
-class TestNumberId(value: Long) : NumberId(value) {
+class TestLongId(value: Long) : LongId(value) {
     constructor(value: String) : this(value.toLong())
 }
 
@@ -14,7 +14,7 @@ class TestUuidId(value: UUID) : Id<UUID>(value) {
     constructor(value: String) : this(UUID.fromString(value))
 }
 
-val numberId = TestNumberId(12345)
+val numberId = TestLongId(12345)
 val stringId = TestStringId("54321")
 val uuidId = TestUuidId(UUID.randomUUID())
 

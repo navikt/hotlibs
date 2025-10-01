@@ -8,6 +8,6 @@ abstract class StringId(value: String) : Id<String>(value), CharSequence {
     override fun subSequence(startIndex: Int, endIndex: Int): CharSequence = value.subSequence(startIndex, endIndex)
 
     companion object {
-        val SQL_TYPE: Int = Types.VARCHAR
+        const val SQL_TYPE: Int = Types.VARCHAR
     }
 }

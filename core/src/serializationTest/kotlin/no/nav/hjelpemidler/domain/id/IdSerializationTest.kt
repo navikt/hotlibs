@@ -32,7 +32,7 @@ class IdSerializationTest {
 }
 
 private object TestNumberIdSerializer :
-    IdSerializer<TestNumberId>("no.nav.hjelpemidler.domain.id.TestNumberIdSerializer", ::TestNumberId)
+    IdSerializer<TestLongId>("no.nav.hjelpemidler.domain.id.TestNumberIdSerializer", ::TestLongId)
 
 private object TestStringIdSerializer :
     IdSerializer<TestStringId>("no.nav.hjelpemidler.domain.id.TestStringIdSerializer", ::TestStringId)

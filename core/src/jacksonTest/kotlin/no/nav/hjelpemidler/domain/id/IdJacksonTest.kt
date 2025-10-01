@@ -15,8 +15,8 @@ class IdJacksonTest {
 
     @Test
     fun `Deserialiser til Kotlin med Jackson`() {
-        jsonToValue<TestNumberId>(numberIdJsonNumber) shouldBe numberId
-        jsonToValue<TestNumberId>(numberIdJsonString) shouldBe numberId
+        jsonToValue<TestLongId>(numberIdJsonNumber) shouldBe numberId
+        jsonToValue<TestLongId>(numberIdJsonString) shouldBe numberId
         jsonToValue<TestStringId>(stringIdJsonString) shouldBe stringId
         jsonToValue<TestUuidId>(uuidIdJsonString) shouldBe uuidId
     }

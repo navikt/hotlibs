@@ -3,9 +3,9 @@ package no.nav.hjelpemidler.database.test
 import io.kotest.matchers.longs.shouldBePositive
 import io.kotest.matchers.nulls.shouldNotBeNull
 import no.nav.hjelpemidler.database.Row
-import no.nav.hjelpemidler.domain.id.NumberId
+import no.nav.hjelpemidler.domain.id.LongId
 
-class TestId(value: Long = 0) : NumberId(value)
+class TestId(value: Long = 0) : LongId(value)
 
 fun TestId?.shouldBeValid() {
     this.shouldNotBeNull()
