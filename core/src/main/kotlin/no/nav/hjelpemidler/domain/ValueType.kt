@@ -5,6 +5,6 @@ import java.io.Serializable
 /**
  * Wrapper for en enkelt verdi.
  */
-interface ValueType<T : Comparable<T>> : Serializable {
+interface ValueType<T : Any> : Serializable {
     val value: T
 }
