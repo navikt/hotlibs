@@ -47,6 +47,10 @@ abstract class ValueJavaType<T : ValueType<R>, R : Any>(
         else -> factory(delegate.wrap(value, options))
     }
 
-    override fun <X : Any> coerce(value: X?, coercionContext: CoercionContext): T? =
-        delegate.coerce(value, coercionContext)?.let { factory(it) }
+    @Suppress("UNCHECKED_CAST")
+    override fun <X : Any> coerce(value: X?, coercionContext: CoercionContext): T? = when {
+        value == null -> null
+        javaType.isInstance(value) -> value as T
+        else -> factory(delegate.coerce(value, coercionContext))
+    }
 }
