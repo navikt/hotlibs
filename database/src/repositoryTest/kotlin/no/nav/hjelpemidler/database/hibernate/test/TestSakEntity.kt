@@ -1,5 +1,6 @@
 package no.nav.hjelpemidler.database.hibernate.test
 
+import jakarta.persistence.Convert
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
@@ -9,9 +10,9 @@ import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.SequenceGenerator
 import jakarta.persistence.Table
+import no.nav.hjelpemidler.database.jpa.FødselsnummerConverter
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import org.hibernate.annotations.CreationTimestamp
-import org.hibernate.annotations.JdbcTypeCode
 import java.time.Instant
 
 @Entity
@@ -19,7 +20,7 @@ import java.time.Instant
 class TestSakEntity(
     @Enumerated(EnumType.STRING)
     val sakstype: Sakstype,
-    @JdbcTypeCode(Fødselsnummer.SQL_TYPE)
+    @Convert(FødselsnummerConverter::class)
     val fnr: Fødselsnummer,
     @CreationTimestamp
     val opprettet: Instant = Instant.now(),

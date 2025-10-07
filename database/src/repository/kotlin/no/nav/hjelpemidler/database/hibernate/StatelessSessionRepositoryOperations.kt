@@ -6,6 +6,7 @@ import no.nav.hjelpemidler.database.QueryParameters
 import no.nav.hjelpemidler.database.repository.Repository
 import no.nav.hjelpemidler.database.repository.RepositoryOperations
 import no.nav.hjelpemidler.database.repository.WriteOperations
+import no.nav.hjelpemidler.database.repository.unwrap
 import org.hibernate.LockMode
 import org.hibernate.StatelessSession
 import org.hibernate.graph.GraphSemantic
@@ -40,26 +41,26 @@ internal class StatelessSessionRepositoryOperations private constructor(
         entityClass: KClass<T>,
         id: Any,
         lockMode: LockMode,
-    ): T? = session.get(entityClass.java, id, lockMode)
+    ): T? = session.get(entityClass.java, id.unwrap(), lockMode)
 
     override fun <T : Any> findById(
         entityGraph: EntityGraph<T>,
         id: Any,
         lockMode: LockMode,
         graphSemantic: GraphSemantic,
-    ): T? = session.get(entityGraph, graphSemantic, id, lockMode)
+    ): T? = session.get(entityGraph, graphSemantic, id.unwrap(), lockMode)
 
     override fun <T : Any> findAllById(
         entityClass: KClass<T>,
         ids: Iterable<*>,
         lockMode: LockMode,
-    ): List<T?> = session.getMultiple(entityClass.java, ids.toList(), lockMode)
+    ): List<T?> = session.getMultiple(entityClass.java, ids.map { it?.unwrap() }, lockMode)
 
     override fun <T : Any> findAllById(
         entityGraph: EntityGraph<T>,
         ids: Iterable<*>,
         graphSemantic: GraphSemantic,
-    ): List<T?> = session.getMultiple(entityGraph, graphSemantic, ids.toList())
+    ): List<T?> = session.getMultiple(entityGraph, graphSemantic, ids.map { it?.unwrap() })
 
     override fun <T : Any> createEntityGraph(rootType: KClass<T>): RootGraph<T> =
         session.createEntityGraph(rootType.java)

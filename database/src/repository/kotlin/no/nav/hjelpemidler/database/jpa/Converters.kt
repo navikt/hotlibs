@@ -1,22 +1,22 @@
 package no.nav.hjelpemidler.database.jpa
 
 import jakarta.persistence.Converter
-import no.nav.hjelpemidler.database.hibernate.SessionFactoryConfiguration
+import no.nav.hjelpemidler.database.repository.RepositoryConfiguration
 import no.nav.hjelpemidler.domain.enhet.Enhetsnummer
 import no.nav.hjelpemidler.domain.person.AktørId
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 
 @Converter
-class AktørIdConverter internal constructor() : StringIdConverter<AktørId>(::AktørId)
+class AktørIdConverter internal constructor() : ValueTypeConverter<AktørId, String>(::AktørId)
 
 @Converter
-class FødselsnummerConverter internal constructor() : StringIdConverter<Fødselsnummer>(::Fødselsnummer)
+class FødselsnummerConverter internal constructor() : ValueTypeConverter<Fødselsnummer, String>(::Fødselsnummer)
 
 @Converter
-class EnhetsnummerConverter internal constructor() : StringIdConverter<Enhetsnummer>(::Enhetsnummer)
+class EnhetsnummerConverter internal constructor() : ValueTypeConverter<Enhetsnummer, String>(::Enhetsnummer)
 
-fun SessionFactoryConfiguration.defaultAttributeConverters(autoApply: Boolean = true) {
-    attributeConverter<AktørIdConverter>(autoApply)
-    attributeConverter<EnhetsnummerConverter>(autoApply)
-    attributeConverter<FødselsnummerConverter>(autoApply)
+fun RepositoryConfiguration.defaultAttributeConverters() {
+    managedClass<AktørIdConverter>()
+    managedClass<FødselsnummerConverter>()
+    managedClass<EnhetsnummerConverter>()
 }

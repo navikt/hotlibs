@@ -4,8 +4,8 @@ import no.nav.hjelpemidler.database.hibernate.createSessionFactory
 
 val testSessionFactory by lazy {
     createSessionFactory {
-        annotatedClass<TestSakEntity>()
-        annotatedClass<TestSaksstatusEntity>()
+        managedClass<TestSakEntity>()
+        managedClass<TestSaksstatusEntity>()
         dataSource(testDataSource)
         showSql(showSql = false, formatSql = false, highlightSql = false)
     }
