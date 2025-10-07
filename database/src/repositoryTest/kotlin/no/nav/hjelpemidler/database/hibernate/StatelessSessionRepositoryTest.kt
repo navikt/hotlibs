@@ -25,14 +25,12 @@ class StatelessSessionRepositoryTest {
                 TestSakEntity(
                     sakstype = Sakstype.SØKNAD,
                     fnr = Fødselsnummer(50.år),
-                    saksstatuser = emptyList()
                 )
             )
             val sakId2 = repository.insert(
                 TestSakEntity(
                     sakstype = Sakstype.BESTILLING,
                     fnr = Fødselsnummer(60.år),
-                    saksstatuser = emptyList()
                 )
             )
 
@@ -51,7 +49,6 @@ class StatelessSessionRepositoryTest {
                 TestSakEntity(
                     sakstype = Sakstype.BESTILLING,
                     fnr = Fødselsnummer(55.år),
-                    saksstatuser = emptyList(),
                     id = sakId1
                 )
             )

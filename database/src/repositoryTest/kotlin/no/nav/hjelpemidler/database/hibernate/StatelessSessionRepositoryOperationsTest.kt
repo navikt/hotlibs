@@ -7,7 +7,7 @@ import jakarta.persistence.Tuple
 import kotlinx.coroutines.test.runTest
 import no.nav.hjelpemidler.database.hibernate.test.Sakstype
 import no.nav.hjelpemidler.database.hibernate.test.TestSakEntity
-import no.nav.hjelpemidler.database.hibernate.test.TestSaksstatus
+import no.nav.hjelpemidler.database.hibernate.test.TestSaksstatusEntity
 import no.nav.hjelpemidler.database.hibernate.test.testSessionFactory
 import no.nav.hjelpemidler.database.repository.createNativeQuery
 import no.nav.hjelpemidler.database.repository.findById
@@ -29,17 +29,14 @@ class StatelessSessionRepositoryOperationsTest {
                     TestSakEntity(
                         sakstype = Sakstype.SØKNAD,
                         fnr = fnr,
-                        saksstatuser = emptyList()
                     ),
                     TestSakEntity(
                         sakstype = Sakstype.BESTILLING,
                         fnr = fnr,
-                        saksstatuser = emptyList()
                     ),
                     TestSakEntity(
                         sakstype = Sakstype.BYTTE,
                         fnr = fnr,
-                        saksstatuser = emptyList()
                     ),
                 )
             )
@@ -48,10 +45,9 @@ class StatelessSessionRepositoryOperationsTest {
                 TestSakEntity(
                     sakstype = Sakstype.SØKNAD,
                     fnr = fnr,
-                    saksstatuser = emptyList()
                 )
             ) as Long
-            tx.insert(TestSaksstatus(sakId1, "OPPRETTET"))
+            tx.insert(TestSaksstatusEntity(sakId1, "OPPRETTET"))
 
             val sak1 = tx.findById<TestSakEntity>(sakId1).shouldNotBeNull()
             sak1.id shouldBe sakId1
@@ -83,10 +79,9 @@ class StatelessSessionRepositoryOperationsTest {
                 TestSakEntity(
                     sakstype = Sakstype.SØKNAD,
                     fnr = Fødselsnummer(50.år),
-                    saksstatuser = emptyList()
                 )
             ) as Long
-            tx.insert(TestSaksstatus(sakId, "OPPRETTET"))
+            tx.insert(TestSaksstatusEntity(sakId, "OPPRETTET"))
 
             data class Sak(
                 val id: Long,
