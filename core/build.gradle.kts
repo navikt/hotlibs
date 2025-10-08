@@ -16,9 +16,6 @@ dependencies {
     compileOnly(libs.kotlinx.serialization.core)
     compileOnly(libs.kotlinx.serialization.json)
 
-    // JPA
-    compileOnly(libs.persistence.api)
-
     // Fixtures
     testFixturesCompileOnly(libs.jackson.annotations)
     testFixturesCompileOnly(libs.kotlinx.serialization.core)

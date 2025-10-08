@@ -36,12 +36,6 @@ dependencies {
     postgresqlApi(libs.flyway.core)
     postgresqlRuntimeOnly(libs.flyway.database.postgresql)
 
-    // Repository
-    repositoryApi(project(path))
-    repositoryApi(libs.hibernate.core)
-    repositoryImplementation(libs.kotlinx.coroutines.core)
-    repositoryRuntimeOnly(libs.slf4j.jdk.platform.logging)
-
     // Testcontainers
     testcontainersApi(project(path))
     testcontainersRuntimeOnly(libs.testcontainers.postgresql) { // fixme -> kunne vi valgt oracle hvis oracle-capability?
@@ -54,6 +48,5 @@ dependencies {
 tasks.named("check") {
     dependsOn(
         testing.suites.named("postgresqlTest"),
-        testing.suites.named("repositoryTest"),
     )
 }

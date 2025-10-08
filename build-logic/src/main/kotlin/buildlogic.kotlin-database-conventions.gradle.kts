@@ -42,11 +42,6 @@ java {
         withSourcesJar()
     }
 
-    registerFeature(repository.name) {
-        usingSourceSet(repository)
-        withSourcesJar()
-    }
-
     registerFeature(testcontainers.name) {
         usingSourceSet(testcontainers)
         withSourcesJar()

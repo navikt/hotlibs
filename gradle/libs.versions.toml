@@ -18,7 +18,6 @@ graphql = "8.8.1"
 graphql-java = "24.3"
 h2 = "2.4.240"
 handlebars = "4.5.0"
-hibernate = "7.1.3.Final"
 hikaricp = "7.0.2"
 htmlSanitizer = "20240325.1"
 jackson = "2.20.0"
@@ -54,7 +53,6 @@ nocommons = "0.16.0"
 openapi = "7.14.0"
 openhtmltopdf = "1.1.31"
 oracle = "23.9.0.25.07"
-persistence-api = "3.2.0"
 postgresql = "42.7.8"
 prometheus = "1.4.1"
 prometheus-deprecated = "0.16.0"
@@ -117,7 +115,6 @@ graphql-ktor-client = { module = "com.expediagroup:graphql-kotlin-ktor-client", 
 graphql-ktor-server = { module = "com.expediagroup:graphql-kotlin-ktor-server", version.ref = "graphql" }
 h2 = { module = "com.h2database:h2", version.ref = "h2" }
 handlebars = { module = "com.github.jknack:handlebars", version.ref = "handlebars" }
-hibernate-core = { module = "org.hibernate.orm:hibernate-core", version.ref = "hibernate" }
 hikaricp = { module = "com.zaxxer:HikariCP", version.ref = "hikaricp" }
 hm-contract-pdl-avro = { module = "no.nav.hjelpemidler:hm-contract-pdl-avro", version.ref = "contractPdlAvro" }
 idporten-sidecar = { module = "no.nav.tms.token.support:idporten-sidecar", version.ref = "tmsKtorTokenSupport" }
@@ -129,7 +126,6 @@ jackson-dataformat-cbor = { module = "com.fasterxml.jackson.dataformat:jackson-d
 jackson-dataformat-csv = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-csv", version.ref = "jackson" }
 jackson-dataformat-xml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-xml", version.ref = "jackson" }
 jackson-dataformat-yaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jackson" }
-jackson-datatype-hibernate7 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-hibernate7", version.ref = "jackson" }
 jackson-datatype-jsr310 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version.ref = "jackson" }
 jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
 java-jwt = { module = "com.auth0:java-jwt", version.ref = "javaJwt" }
@@ -232,7 +228,6 @@ openhtmltopdf-pdfbox = { module = "io.github.openhtmltopdf:openhtmltopdf-pdfbox"
 openhtmltopdf-slf4j = { module = "io.github.openhtmltopdf:openhtmltopdf-slf4j", version.ref = "openhtmltopdf" }
 openhtmltopdf-svg-support = { module = "io.github.openhtmltopdf:openhtmltopdf-svg-support", version.ref = "openhtmltopdf" }
 owasp-java-html-sanitizer = { module = "com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer", version.ref = "htmlSanitizer" }
-persistence-api = { module = "jakarta.persistence:jakarta.persistence-api", version.ref = "persistence-api" }
 postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
 prometheus-client-deprecated = { module = "io.prometheus:simpleclient_common", version.ref = "prometheus-deprecated" }
 prometheus-metrics-bom = { module = "io.prometheus:prometheus-metrics-bom", version.ref = "prometheus" }
