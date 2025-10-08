@@ -18,7 +18,6 @@ val h2: SourceSet = sourceSets.create("h2")
 val ktor: SourceSet = sourceSets.create("ktor")
 val oracle: SourceSet = sourceSets.create("oracle")
 val postgresql: SourceSet = sourceSets.create("postgresql") // inkluderer flyway
-val repository: SourceSet = sourceSets.create("repository")
 val testcontainers: SourceSet = sourceSets.create("testcontainers")
 
 java {
@@ -52,33 +51,6 @@ java {
 testing {
     suites {
         val test by getting(JvmTestSuite::class)
-        val repositoryTest by registering(JvmTestSuite::class) {
-            dependencies {
-                implementation(project(path)) {
-                    capabilities {
-                        requireCapability("${project.group}:${project.name}-${repository.name}")
-                    }
-                }
-                implementation(project(path)) {
-                    capabilities {
-                        requireCapability("${project.group}:${project.name}-${postgresql.name}")
-                    }
-                }
-                implementation(project(path)) {
-                    capabilities {
-                        requireCapability("${project.group}:${project.name}-${testcontainers.name}")
-                    }
-                }
-            }
-
-            targets {
-                all {
-                    testTask.configure {
-                        shouldRunAfter(test)
-                    }
-                }
-            }
-        }
         val postgresqlTest by registering(JvmTestSuite::class) {
             dependencies {
                 implementation(project(path)) {
