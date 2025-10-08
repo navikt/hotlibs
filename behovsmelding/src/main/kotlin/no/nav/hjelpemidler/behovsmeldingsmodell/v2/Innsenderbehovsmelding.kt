@@ -34,6 +34,7 @@ data class Innsenderbehovsmelding(
     val hjelpemidler: Hjelpemidler,
     val levering: Levering,
     val innsender: Innsender,
+    val vedlegg: List<Vedlegg> = emptyList(),
 
     val metadata: InnsenderbehovsmeldingMetadata,
 
@@ -45,6 +46,15 @@ data class Innsenderbehovsmelding(
     override val hjmBrukersFnr: Fødselsnummer = bruker.fnr,
     override val prioritet: Prioritet = tilPrioritet(levering.hast),
 ) : BehovsmeldingBase
+
+data class Vedlegg (
+    val id: UUID,
+    val type: VedleggType,
+)
+
+enum class VedleggType {
+    LEGEERKLÆRING
+}
 
 data class InnsenderbehovsmeldingMetadata(
     val bestillingsordningsjekk: Bestillingsordningsjekk?,
