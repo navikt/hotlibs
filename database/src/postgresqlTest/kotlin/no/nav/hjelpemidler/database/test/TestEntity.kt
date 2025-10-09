@@ -1,11 +1,14 @@
 package no.nav.hjelpemidler.database.test
 
+import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.databind.JsonNode
 import no.nav.hjelpemidler.database.QueryParameters
 import no.nav.hjelpemidler.database.Row
 import no.nav.hjelpemidler.database.pgJsonbOf
+import no.nav.hjelpemidler.database.toQueryParameters
 import no.nav.hjelpemidler.domain.person.AktørId
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
+import no.nav.hjelpemidler.domain.person.Personnavn
 import no.nav.hjelpemidler.domain.person.år
 
 data class TestEntity(
@@ -13,10 +16,14 @@ data class TestEntity(
     val string: String = "",
     val integer: Int = 0,
     val enum: TestEnum = TestEnum.A,
+    @param:JsonAlias("data_1")
     val data1: Map<String, Any?> = emptyMap(),
+    @param:JsonAlias("data_2")
     val data2: JsonNode? = null,
     val fnr: Fødselsnummer? = Fødselsnummer(50.år),
+    @param:JsonAlias("aktor_id")
     val aktørId: AktørId? = AktørId("1234567891011"),
+    val navn: Personnavn? = null,
 ) {
     fun toQueryParameters(): QueryParameters =
         mapOf(
@@ -27,7 +34,7 @@ data class TestEntity(
             "data_2" to pgJsonbOf(data2),
             "fnr" to fnr,
             "aktor_id" to aktørId,
-        )
+        ) + (navn?.toQueryParameters() ?: emptyMap())
 }
 
 fun Row.toTestEntity(): TestEntity = TestEntity(

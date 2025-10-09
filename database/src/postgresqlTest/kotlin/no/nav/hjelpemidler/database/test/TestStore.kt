@@ -1,5 +1,6 @@
 package no.nav.hjelpemidler.database.test
 
+import com.fasterxml.jackson.databind.JsonNode
 import no.nav.hjelpemidler.database.JdbcOperations
 import no.nav.hjelpemidler.database.Row
 import no.nav.hjelpemidler.database.Store
@@ -36,11 +37,17 @@ class TestStore(private val tx: JdbcOperations) : Store {
             mapper = Row::toTestEntity,
         )
 
-    fun hent(id: TestId, vararg columnLabels: String): Map<String, Any?> =
+    fun hentMap(id: TestId, vararg columnLabels: String): Map<String, Any?> =
         tx.single(
             sql = "SELECT ${columnLabels.joinToString()} FROM test WHERE id = :id",
             queryParameters = id.toQueryParameters(),
         ) { it.toMap() }
+
+    fun hentTree(id: TestId): JsonNode =
+        tx.single(
+            sql = "SELECT * FROM test WHERE id = :id",
+            queryParameters = id.toQueryParameters(),
+        ) { it.toTree() }
 
     fun oppdater(id: TestId, integer: Int): UpdateResult {
         return tx.update(
@@ -58,8 +65,8 @@ class TestStore(private val tx: JdbcOperations) : Store {
     companion object {
         val SQL_INSERT = Sql(
             """
-                INSERT INTO test (string, integer, enum, data_1, data_2, fnr, aktor_id)
-                VALUES (:string, :integer, :enum, :data_1, :data_2, :fnr, :aktor_id)
+                INSERT INTO test (string, integer, enum, data_1, data_2, fnr, aktor_id, navn)
+                VALUES (:string, :integer, :enum, :data_1, :data_2, :fnr, :aktor_id, (:fornavn, :mellomnavn, :etternavn)::gyldig_personnavn)
                 RETURNING id
             """.trimIndent()
         )

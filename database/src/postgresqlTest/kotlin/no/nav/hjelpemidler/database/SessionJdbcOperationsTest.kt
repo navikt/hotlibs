@@ -2,10 +2,12 @@ package no.nav.hjelpemidler.database
 
 import com.fasterxml.jackson.databind.node.MissingNode
 import com.fasterxml.jackson.databind.node.NullNode
+import com.fasterxml.jackson.databind.node.ObjectNode
 import io.kotest.assertions.throwables.shouldNotThrow
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.maps.shouldContain
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.coroutines.test.runTest
 import no.nav.hjelpemidler.database.test.TestEntity
 import no.nav.hjelpemidler.database.test.TestEnum
@@ -13,6 +15,7 @@ import no.nav.hjelpemidler.database.test.TestStore
 import no.nav.hjelpemidler.database.test.testDataSource
 import no.nav.hjelpemidler.database.test.testDatabase
 import no.nav.hjelpemidler.database.test.toTestEntity
+import no.nav.hjelpemidler.domain.person.Personnavn
 import kotlin.test.Test
 
 class SessionJdbcOperationsTest {
@@ -53,7 +56,7 @@ class SessionJdbcOperationsTest {
     fun `Henter JSON`() = runTest {
         val data1 = mapOf("key" to "value")
         val id = testDatabase { lagre(TestEntity(data1 = data1)) }
-        val result = testDatabase { hent(id, "id", "data_1") }
+        val result = testDatabase { hentMap(id, "id", "data_1") }
 
         result.shouldContain("id", id.value)
         result.shouldContain("data_1", pgObjectOf("jsonb", """{"key": "value"}"""))
@@ -99,7 +102,7 @@ class SessionJdbcOperationsTest {
     @Test
     fun `Skal sette inn og hente null som null`() = runTest {
         val id = testDatabase { lagre(TestEntity(data2 = null)) }
-        val result = testDatabase { hent(id, "id", "data_2") }
+        val result = testDatabase { hentMap(id, "id", "data_2") }
 
         result.shouldContain("id", id.value)
         result.shouldContain("data_2", null)
@@ -108,7 +111,7 @@ class SessionJdbcOperationsTest {
     @Test
     fun `Skal sette inn og hente NullNode som null`() = runTest {
         val id = testDatabase { lagre(TestEntity(data2 = NullNode.getInstance())) }
-        val result = testDatabase { hent(id, "id", "data_2") }
+        val result = testDatabase { hentMap(id, "id", "data_2") }
 
         result.shouldContain("id", id.value)
         result.shouldContain("data_2", null)
@@ -117,10 +120,26 @@ class SessionJdbcOperationsTest {
     @Test
     fun `Skal sette inn og hente MissingNode som null`() = runTest {
         val id = testDatabase { lagre(TestEntity(data2 = MissingNode.getInstance())) }
-        val result = testDatabase { hent(id, "id", "data_2") }
+        val result = testDatabase { hentMap(id, "id", "data_2") }
 
         result.shouldContain("id", id.value)
         result.shouldContain("data_2", null)
+    }
+
+    @Test
+    fun `Skal hente som JsonNode`() = runTest {
+        val id = testDatabase {
+            lagre(
+                TestEntity(
+                    string = "string",
+                    integer = 1000,
+                    data1 = mapOf("k1" to 1, "k2" to "2"),
+                    navn = Personnavn("Fornavn", null, "Etternavn")
+                )
+            )
+        }
+        val result = testDatabase { hentTree(id) }.shouldBeInstanceOf<ObjectNode>()
+        result["id"]?.longValue() shouldBe id.value
     }
 
     private suspend fun lagreEntities(antall: Int): List<Long> = testDatabase {
