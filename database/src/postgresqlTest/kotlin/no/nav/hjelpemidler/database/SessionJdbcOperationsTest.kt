@@ -93,7 +93,7 @@ class SessionJdbcOperationsTest {
         rows1 shouldHaveSize 3
 
         val rows2 = transactionAsync(testDataSource) { tx ->
-            tx.list("SELECT * FROM test WHERE string LIKE 'x%'", mapper = Row::toTestEntity)
+            tx.list("SELECT * FROM test WHERE string_1 LIKE 'x%'", mapper = Row::toTestEntity)
         }
 
         rows2 shouldHaveSize 3

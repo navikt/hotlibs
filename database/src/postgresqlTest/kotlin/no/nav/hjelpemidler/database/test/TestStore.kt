@@ -51,7 +51,7 @@ class TestStore(private val tx: JdbcOperations) : Store {
 
     fun oppdater(id: TestId, integer: Int): UpdateResult {
         return tx.update(
-            sql = "UPDATE test SET integer = :integer WHERE id = :id",
+            sql = "UPDATE test SET integer_1 = :integer WHERE id = :id",
             queryParameters = mapOf("id" to id, "integer" to integer),
         )
     }
@@ -65,8 +65,8 @@ class TestStore(private val tx: JdbcOperations) : Store {
     companion object {
         val SQL_INSERT = Sql(
             """
-                INSERT INTO test (string, integer, enum, data_1, data_2, fnr, aktor_id, navn)
-                VALUES (:string, :integer, :enum, :data_1, :data_2, :fnr, :aktor_id, (:fornavn, :mellomnavn, :etternavn)::gyldig_personnavn)
+                INSERT INTO test (string_1, integer_1, enum_1, data_1, data_2, fnr_1, aktor_id_1, navn_1)
+                VALUES (:string_1, :integer_1, :enum_1, :data_1, :data_2, :fnr_1, :aktor_id_1, (:fornavn, :mellomnavn, :etternavn)::gyldig_personnavn)
                 RETURNING id
             """.trimIndent()
         )

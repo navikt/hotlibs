@@ -15,6 +15,7 @@ import no.nav.hjelpemidler.domain.person.Personnavn
 import no.nav.hjelpemidler.serialization.jackson.add
 import no.nav.hjelpemidler.serialization.jackson.jsonMapper
 import no.nav.hjelpemidler.serialization.jackson.put
+import no.nav.hjelpemidler.serialization.jackson.value
 import java.io.InputStream
 import java.io.Reader
 import java.math.BigDecimal
@@ -37,6 +38,7 @@ import java.time.OffsetTime
 import java.time.ZonedDateTime
 import java.util.Calendar
 import java.util.UUID
+import kotlin.reflect.KClass
 
 /**
  * Manuell delegering til [kotliquery.Row] siden [kotliquery.Row] ikke er et interface.
@@ -48,6 +50,12 @@ class Row(private val wrapped: kotliquery.Row) : DatabaseRecord {
     fun any(columnLabel: String): Any = wrapped.any(columnLabel)
     fun anyOrNull(columnIndex: Int): Any? = wrapped.anyOrNull(columnIndex)
     fun anyOrNull(columnLabel: String): Any? = wrapped.anyOrNull(columnLabel)
+
+    fun <T : Any> anyOrNull(columnIndex: Int, type: KClass<T>): T? =
+        wrapped.underlying.getObject<T>(columnIndex, type.java)
+
+    fun <T : Any> anyOrNull(columnLabel: String, type: KClass<T>): T? =
+        wrapped.underlying.getObject<T>(columnLabel, type.java)
 
     inline fun <reified T> array(columnIndex: Int): Array<T> = arrayOrNull<T>(columnIndex)!!
     inline fun <reified T> array(columnLabel: String): Array<T> = arrayOrNull<T>(columnLabel)!!
@@ -292,81 +300,43 @@ class Row(private val wrapped: kotliquery.Row) : DatabaseRecord {
         val rootNode = jsonMapper.createObjectNode()
         (1..metaData.columnCount).forEach { columnIndex ->
             val propertyName = metaData.getColumnLabel(columnIndex)
-            val value: Any? = when (val type = metaData.getColumnType(columnIndex)) {
-                // Boolean
-                Types.BIT, Types.BOOLEAN -> booleanOrNull(columnIndex)
-
-                // Number
-                Types.TINYINT, Types.SMALLINT -> shortOrNull(columnIndex)
-                Types.INTEGER -> intOrNull(columnIndex)
-                Types.BIGINT -> longOrNull(columnIndex)
-                Types.REAL -> floatOrNull(columnIndex)
-                Types.FLOAT, Types.DOUBLE -> doubleOrNull(columnIndex)
-                Types.NUMERIC, Types.DECIMAL -> bigDecimalOrNull(columnIndex)
-
-                // String
-                Types.CHAR, Types.VARCHAR, Types.LONGVARCHAR -> stringOrNull(columnIndex)
-
+            val value = when (metaData.getColumnType(columnIndex)) {
                 // Datetime
-                Types.DATE -> localDateOrNull(columnIndex)
+                Types.DATE -> anyOrNull(columnIndex, LocalDate::class)
 
-                Types.TIME -> when (val typeName = metaData.getColumnTypeName(columnIndex)) {
-                    "time" -> localTimeOrNull(columnIndex)
-                    "timetz" -> offsetTimeOrNull(columnIndex)
-                    else -> error("propertyName: $propertyName, type: $type/$typeName")
+                Types.TIME -> when (metaData.getColumnTypeName(columnIndex)) {
+                    "timetz" -> anyOrNull(columnIndex, OffsetTime::class)
+                    else -> anyOrNull(columnIndex, LocalTime::class)
                 }
 
-                Types.TIME_WITH_TIMEZONE -> offsetTimeOrNull(columnIndex)
-
-                Types.TIMESTAMP -> when (val typeName = metaData.getColumnTypeName(columnIndex)) {
-                    "timestamp" -> localTimeOrNull(columnIndex)
-                    "timestamptz" -> offsetDateTimeOrNull(columnIndex)
-                    else -> error("propertyName: $propertyName, type: $type/$typeName")
+                Types.TIMESTAMP -> when (metaData.getColumnTypeName(columnIndex)) {
+                    "timestamptz" -> anyOrNull(columnIndex, OffsetDateTime::class)
+                    else -> anyOrNull(columnIndex, LocalDateTime::class)
                 }
 
-                Types.TIMESTAMP_WITH_TIMEZONE -> offsetDateTimeOrNull(columnIndex)
-
-                // Binary
-                Types.BINARY, Types.VARBINARY, Types.LONGVARBINARY -> bytesOrNull(columnIndex)
-
-                // JSON etc.
-                Types.OTHER -> when (val typeName = metaData.getColumnTypeName(columnIndex)) {
-                    "json", "jsonb" -> treeOrNull(columnIndex)
-                    else -> error("propertyName: $propertyName, type: $type/$typeName")
-                }
+                // Custom domains/types
+                Types.STRUCT -> null
 
                 // Array
                 Types.ARRAY -> {
-                    val sqlArray = sqlArrayOrNull(columnIndex)
-                    if (sqlArray == null) {
+                    val array = sqlArrayOrNull(columnIndex)?.array as? Array<*>?
+                    if (array == null) {
                         null
                     } else {
-                        val array = sqlArray.array as Array<*>
-                        val arrayNode = rootNode.arrayNode()
-                        array.forEach { arrayNode.add(it) }
+                        val arrayNode = rootNode.arrayNode(array.size)
+                        array.forEach(arrayNode::add)
                         arrayNode
                     }
                 }
 
-                // Custom types
-                Types.STRUCT -> {
-                    /*
-                    val value = anyOrNull(columnIndex)
-                    if (value == null || value::class.simpleName != "PGobject") {
-                        null
-                    } else {
-                        val array = value.toString()
-                            .removeSurrounding("(", ")")
-                            .split(",")
-                        val arrayNode = rootNode.arrayNode()
-                        array.forEach { arrayNode.add(it) }
-                        arrayNode
-                    }
-                    */
-                    null
+                // JSON
+                Types.OTHER -> when (metaData.getColumnTypeName(columnIndex)) {
+                    "json", "jsonb" -> treeOrNull(columnIndex)
+                    else -> anyOrNull(columnIndex)
                 }
 
-                else -> error("$type/${metaData.getColumnTypeName(columnIndex)}")
+                // Fallback til JDBC-drivers JDBC til Java-mapping
+                else -> anyOrNull(columnIndex)
             }
             if (value is JsonNode) {
                 rootNode.set(propertyName, value)
@@ -374,8 +344,14 @@ class Row(private val wrapped: kotliquery.Row) : DatabaseRecord {
                 rootNode.put(propertyName, value)
             }
         }
-        return rootNode
+        return if (metaData.columnCount == 1) {
+            rootNode.values().next()
+        } else {
+            rootNode
+        }
     }
+
+    inline fun <reified T : Any> toValue(): T = toTree().value<T>()
 
     // END JSON
 
@@ -415,7 +391,5 @@ class Row(private val wrapped: kotliquery.Row) : DatabaseRecord {
 
     // END DOMAIN
 
-    private fun <T> nullable(v: T): T? {
-        return if (wrapped.underlying.wasNull()) null else v
-    }
+    private fun <T> nullable(value: T): T? = if (wrapped.underlying.wasNull()) null else value
 }

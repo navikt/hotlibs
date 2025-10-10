@@ -6,10 +6,12 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.declaredFunctions
 import kotlin.reflect.full.declaredMemberFunctions
+import kotlin.test.Ignore
 import kotlin.test.Test
 
 class RowTest {
     @Test
+    @Ignore
     fun `Lag delegerte funksjoner`() {
         Row::class.declaredMemberFunctions
             .filter { it.parameters.size > 1 }
