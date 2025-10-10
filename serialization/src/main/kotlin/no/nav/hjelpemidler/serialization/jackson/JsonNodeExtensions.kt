@@ -34,4 +34,4 @@ fun JsonNode.fødselsnummerValue(): Fødselsnummer = Fødselsnummer(textValue())
 fun JsonNode?.fødselsnummerValueOrNull(): Fødselsnummer? = ifText(::Fødselsnummer)
 
 inline fun <reified T : Any> JsonNode.value(): T = treeToValue<T>(this)
-inline fun <reified T> JsonNode?.valueOrNull(): T? = treeToValueOrNull<T>(this)
+inline fun <reified T : Any> JsonNode?.valueOrNull(): T? = treeToValueOrNull<T>(this)

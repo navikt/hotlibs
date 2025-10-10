@@ -24,7 +24,7 @@ internal class SessionJdbcOperations(private val session: Session) : JdbcOperati
     ): T = singleOrNull(sql, queryParameters, mapper)
         ?: throw NoSuchElementException("Spørringen ga ingen treff i databasen")
 
-    override fun <T> singleOrNull(
+    override fun <T : Any> singleOrNull(
         sql: CharSequence,
         queryParameters: QueryParameters,
         mapper: ResultMapper<T>,

@@ -15,10 +15,11 @@ import no.nav.hjelpemidler.domain.person.Personnavn
 import no.nav.hjelpemidler.serialization.jackson.add
 import no.nav.hjelpemidler.serialization.jackson.jsonMapper
 import no.nav.hjelpemidler.serialization.jackson.put
-import no.nav.hjelpemidler.serialization.jackson.value
+import no.nav.hjelpemidler.serialization.jackson.treeToValueOrNull
 import java.io.InputStream
 import java.io.Reader
 import java.math.BigDecimal
+import java.math.BigInteger
 import java.net.URL
 import java.sql.Blob
 import java.sql.Clob
@@ -51,11 +52,14 @@ class Row(private val wrapped: kotliquery.Row) : DatabaseRecord {
     fun anyOrNull(columnIndex: Int): Any? = wrapped.anyOrNull(columnIndex)
     fun anyOrNull(columnLabel: String): Any? = wrapped.anyOrNull(columnLabel)
 
+    fun <T : Any> any(columnIndex: Int, type: KClass<T>): T = anyOrNull(columnIndex, type)!!
+    fun <T : Any> any(columnLabel: String, type: KClass<T>): T = anyOrNull(columnLabel, type)!!
+
     fun <T : Any> anyOrNull(columnIndex: Int, type: KClass<T>): T? =
-        wrapped.underlying.getObject<T>(columnIndex, type.java)
+        nullable(wrapped.underlying.getObject<T>(columnIndex, type.java))
 
     fun <T : Any> anyOrNull(columnLabel: String, type: KClass<T>): T? =
-        wrapped.underlying.getObject<T>(columnLabel, type.java)
+        nullable(wrapped.underlying.getObject<T>(columnLabel, type.java))
 
     inline fun <reified T> array(columnIndex: Int): Array<T> = arrayOrNull<T>(columnIndex)!!
     inline fun <reified T> array(columnLabel: String): Array<T> = arrayOrNull<T>(columnLabel)!!
@@ -344,6 +348,7 @@ class Row(private val wrapped: kotliquery.Row) : DatabaseRecord {
                 rootNode.put(propertyName, value)
             }
         }
+        // Hvis kun én kolonne returnerer vi kun denne verdien (JsonNode)
         return if (metaData.columnCount == 1) {
             rootNode.values().next()
         } else {
@@ -351,7 +356,21 @@ class Row(private val wrapped: kotliquery.Row) : DatabaseRecord {
         }
     }
 
-    inline fun <reified T : Any> toValue(): T = toTree().value<T>()
+    fun <T : Any> toValue(type: KClass<T>): T = toValueOrNull<T>(type)!!
+    inline fun <reified T : Any> toValue(): T = toValueOrNull<T>()!!
+
+    fun <T : Any> toValueOrNull(type: KClass<T>): T? {
+        return if (type.isValueType) {
+            anyOrNull(1, type)
+        } else {
+            treeToValueOrNull<T>(toTree(), type)
+        }
+    }
+
+    inline fun <reified T : Any> toValueOrNull(): T? {
+        val type = T::class
+        return toValueOrNull<T>(type)
+    }
 
     // END JSON
 
@@ -393,3 +412,28 @@ class Row(private val wrapped: kotliquery.Row) : DatabaseRecord {
 
     private fun <T> nullable(value: T): T? = if (wrapped.underlying.wasNull()) null else value
 }
+
+val KClass<*>.isValueType: Boolean
+    get() = when (this) {
+        BigDecimal::class,
+        BigInteger::class,
+        Boolean::class,
+        ByteArray::class,
+        Double::class,
+        Float::class,
+        Int::class,
+        Long::class,
+        Short::class,
+        String::class,
+        UUID::class,
+
+        Instant::class,
+        LocalDate::class,
+        LocalDateTime::class,
+        LocalTime::class,
+        OffsetDateTime::class,
+        OffsetTime::class,
+            -> true
+
+        else -> false
+    }

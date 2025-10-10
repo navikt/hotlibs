@@ -10,7 +10,3 @@ fun valueToJson(value: Any?, pretty: Boolean = false): String =
     } else {
         jsonMapper.writeValueAsString(value)
     }
-
-fun Any?.toTree(): JsonNode = valueToTree(this)
-
-fun Any?.toJson(pretty: Boolean = false): String = valueToJson(this, pretty)

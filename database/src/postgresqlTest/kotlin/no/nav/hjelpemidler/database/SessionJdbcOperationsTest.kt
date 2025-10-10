@@ -11,6 +11,7 @@ import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.coroutines.test.runTest
 import no.nav.hjelpemidler.database.test.TestEntity
 import no.nav.hjelpemidler.database.test.TestEnum
+import no.nav.hjelpemidler.database.test.TestId
 import no.nav.hjelpemidler.database.test.TestStore
 import no.nav.hjelpemidler.database.test.testDataSource
 import no.nav.hjelpemidler.database.test.testDatabase
@@ -140,6 +141,15 @@ class SessionJdbcOperationsTest {
         }
         val result = testDatabase { hentTree(id) }.shouldBeInstanceOf<ObjectNode>()
         result["id"]?.longValue() shouldBe id.value
+    }
+
+    @Test
+    fun `Skal hente som TestId`() = runTest {
+        val id = testDatabase {
+            val id = lagre(TestEntity())
+            tx.single<TestId>("select id from test where id = $id")
+        }
+        id.shouldBeInstanceOf<TestId>()
     }
 
     private suspend fun lagreEntities(antall: Int): List<Long> = testDatabase {

@@ -10,7 +10,7 @@ inline fun <reified T : Any> JdbcOperations.single(
 inline fun <reified T : Any> JdbcOperations.singleOrNull(
     @Language("SQL") sql: CharSequence,
     queryParameters: QueryParameters = emptyMap(),
-): T? = singleOrNull(sql, queryParameters) { it.toValue<T>() }
+): T? = singleOrNull(sql, queryParameters) { it.toValueOrNull<T>() }
 
 inline fun <reified T : Any> JdbcOperations.list(
     @Language("SQL") sql: CharSequence,

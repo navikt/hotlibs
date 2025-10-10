@@ -8,7 +8,7 @@ import no.nav.hjelpemidler.database.UpdateResult
 import no.nav.hjelpemidler.database.sql.Sql
 import no.nav.hjelpemidler.database.toQueryParameters
 
-class TestStore(private val tx: JdbcOperations) : Store {
+class TestStore(val tx: JdbcOperations) : Store {
     fun lagre(entity: TestEntity): TestId =
         tx.single(
             sql = SQL_INSERT,

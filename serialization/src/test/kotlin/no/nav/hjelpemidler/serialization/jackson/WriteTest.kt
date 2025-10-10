@@ -8,11 +8,11 @@ import kotlin.test.Test
 class WriteTest {
     @Test
     fun `null til JsonNode`() {
-        (null as Any?).toTree().shouldBeInstanceOf<NullNode>()
+        valueToTree(null).shouldBeInstanceOf<NullNode>()
     }
 
     @Test
     fun `String til JsonNode`() {
-        "test".toTree().shouldBeInstanceOf<TextNode>()
+        valueToTree("test").shouldBeInstanceOf<TextNode>()
     }
 }

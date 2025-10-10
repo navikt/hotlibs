@@ -5,7 +5,6 @@ import no.bekk.bekkopen.person.Fodselsnummer
 import no.bekk.bekkopen.person.FodselsnummerCalculator
 import no.bekk.bekkopen.person.FodselsnummerValidator
 import no.nav.hjelpemidler.time.toDate
-import java.sql.Types
 
 /**
  * F-nummer/D-nummer med 11 siffer.
@@ -46,8 +45,6 @@ class Fødselsnummer(value: String) : PersonIdent(value) {
     )
 
     companion object {
-        const val SQL_TYPE: Int = Types.CHAR
-
         fun erGyldig(value: String): Boolean = FodselsnummerValidator.isValid(value)
     }
 }
