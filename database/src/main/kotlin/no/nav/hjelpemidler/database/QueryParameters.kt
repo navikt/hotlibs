@@ -55,3 +55,5 @@ fun columnLabelOf(columnLabel: String, prefix: String? = null, postfix: String? 
  */
 fun QueryParameters.transform(prefix: String? = null, postfix: String? = null): QueryParameters =
     mapKeys { columnLabelOf(it.key, prefix, postfix) }
+
+inline fun <reified T : Any> parameterOf(value: T?): Any = kotliquery.Parameter(value, T::class.java)
