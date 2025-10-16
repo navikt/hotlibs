@@ -16,10 +16,12 @@ internal data class DefaultPage<out T>(
     override val totalElements: Long,
     @JsonIgnore
     val pageRequest: PageRequest,
-) : Page<T>, Iterable<T> by content {
+) : Page<T> {
     override val pageNumber: Int get() = pageRequest.pageNumber
     override val pageSize: Int get() = pageRequest.pageSize
     override val totalPages: Int get() = ceil(totalElements.toDouble() / pageSize).toInt()
+
+    override fun iterator(): Iterator<T> = content.iterator()
 }
 
 fun <T> pageOf(

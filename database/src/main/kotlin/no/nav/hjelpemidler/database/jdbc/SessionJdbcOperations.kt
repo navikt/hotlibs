@@ -28,13 +28,13 @@ internal class SessionJdbcOperations(private val session: Session) : JdbcOperati
         sql: CharSequence,
         queryParameters: QueryParameters,
         mapper: ResultMapper<T>,
-    ): T? = session.single(queryOf(sql, queryParameters)) { mapper(Row(it)) }
+    ): T? = session.single(queryOf(sql, queryParameters)) { mapper(Row(it.underlying)) }
 
     override fun <T : Any> list(
         sql: CharSequence,
         queryParameters: QueryParameters,
         mapper: ResultMapper<T>,
-    ): List<T> = session.list(queryOf(sql, queryParameters)) { mapper(Row(it)) }
+    ): List<T> = session.list(queryOf(sql, queryParameters)) { mapper(Row(it.underlying)) }
 
     /**
      * NB! Implementasjonen fungerer ikke med Oracle pt.
@@ -71,7 +71,7 @@ internal class SessionJdbcOperations(private val session: Session) : JdbcOperati
 
         val content = session.list(query) {
             totalElements = it.longOrNull(totalElementsLabel) ?: -1
-            mapper(Row(it))
+            mapper(Row(it.underlying))
         }
 
         return pageOf(

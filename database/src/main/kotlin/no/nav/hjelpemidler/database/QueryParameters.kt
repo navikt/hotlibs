@@ -16,6 +16,7 @@ fun Boolean?.toQueryParameters(key: String): QueryParameters = mapOf(key to this
 fun Int?.toQueryParameters(key: String = "id"): QueryParameters = mapOf(key to this)
 fun Long?.toQueryParameters(key: String = "id"): QueryParameters = mapOf(key to this)
 fun String?.toQueryParameters(key: String): QueryParameters = mapOf(key to this)
+
 fun ValueType<*>?.toQueryParameters(key: String = "id"): QueryParameters = mapOf(key to this?.value)
 
 fun <E : Enum<E>> Enum<E>?.toQueryParameters(key: String): QueryParameters = mapOf(key to this?.name)
@@ -27,8 +28,9 @@ inline fun <reified T : Comparable<T>> Collection<ValueType<T>>?.toQueryParamete
 /**
  * Transformer til verdier som støttes av JDBC direkte.
  */
-internal fun QueryParameters.prepare(): Map<String, Any?> = mapValues { (_, value) ->
+internal fun QueryParameters.prepare(): QueryParameters = mapValues { (_, value) ->
     when (value) {
+        is String -> value // String er også CharSequence
         is CharSequence -> value.toString()
         is Enum<*> -> value.name
         is QueryParameter<*> -> value.queryParameter

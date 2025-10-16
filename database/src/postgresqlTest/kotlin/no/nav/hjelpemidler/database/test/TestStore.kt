@@ -39,22 +39,23 @@ class TestStore(val tx: JdbcOperations) : Store {
 
     fun hentMap(id: TestId, vararg columnLabels: String): Map<String, Any?> =
         tx.single(
-            sql = "SELECT ${columnLabels.joinToString()} FROM test WHERE id = :id",
+            sql = "SELECT ${if (columnLabels.isEmpty()) '*' else columnLabels.joinToString()} FROM test WHERE id = :id",
             queryParameters = id.toQueryParameters(),
-        ) { it.toMap() }
+            mapper = Row::toMap,
+        )
 
-    fun hentTree(id: TestId): JsonNode =
+    fun hentTree(id: TestId, vararg columnLabels: String): JsonNode =
         tx.single(
-            sql = "SELECT * FROM test WHERE id = :id",
+            sql = "SELECT ${if (columnLabels.isEmpty()) '*' else columnLabels.joinToString()} FROM test WHERE id = :id",
             queryParameters = id.toQueryParameters(),
-        ) { it.toTree() }
+            mapper = Row::toTree,
+        )
 
-    fun oppdater(id: TestId, integer: Int): UpdateResult {
-        return tx.update(
+    fun oppdater(id: TestId, integer: Int): UpdateResult =
+        tx.update(
             sql = "UPDATE test SET integer_1 = :integer WHERE id = :id",
             queryParameters = mapOf("id" to id, "integer" to integer),
         )
-    }
 
     fun slett(id: TestId): Boolean =
         tx.execute(

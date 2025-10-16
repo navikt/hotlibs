@@ -13,3 +13,9 @@ Samling av fellesbiblioteker for DigiHoT.
 ## Publisering
 
 Nye versjoner av alle biblioteker publiseres ved push til main.
+
+## Oracle
+
+```bash
+docker run --name oracle-free -p 1521:1521 -e ORACLE_PWD=system -d container-registry.oracle.com/database/free:latest-lite
+```

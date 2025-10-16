@@ -3,6 +3,7 @@ package no.nav.hjelpemidler.database.test
 import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.databind.JsonNode
 import no.nav.hjelpemidler.database.QueryParameters
+import no.nav.hjelpemidler.database.QueryParametersProvider
 import no.nav.hjelpemidler.database.Row
 import no.nav.hjelpemidler.database.pgJsonbOf
 import no.nav.hjelpemidler.database.toQueryParameters
@@ -29,9 +30,9 @@ data class TestEntity(
     val fnr: Fødselsnummer? = Fødselsnummer(50.år),
     @param:JsonAlias("aktor_id_1")
     val aktørId: AktørId? = AktørId("1234567891011"),
-    val navn: Personnavn? = null,
-) {
-    fun toQueryParameters(): QueryParameters =
+    val navn: Personnavn? = Personnavn("Fornavn", null, "Etternavn"),
+) : QueryParametersProvider {
+    override fun toQueryParameters(): QueryParameters =
         mapOf(
             "string_1" to string,
             "integer_1" to integer,

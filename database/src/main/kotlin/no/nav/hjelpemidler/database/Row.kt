@@ -1,9 +1,6 @@
 package no.nav.hjelpemidler.database
 
-import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import no.nav.hjelpemidler.collections.emptyEnumSet
 import no.nav.hjelpemidler.collections.toEnumSet
 import no.nav.hjelpemidler.domain.enhet.Enhet
 import no.nav.hjelpemidler.domain.enhet.Enhetsnummer
@@ -14,21 +11,17 @@ import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.Personnavn
 import no.nav.hjelpemidler.serialization.jackson.add
 import no.nav.hjelpemidler.serialization.jackson.jsonMapper
+import no.nav.hjelpemidler.serialization.jackson.jsonToTree
+import no.nav.hjelpemidler.serialization.jackson.jsonToValue
 import no.nav.hjelpemidler.serialization.jackson.put
 import no.nav.hjelpemidler.serialization.jackson.treeToValueOrNull
 import java.io.InputStream
-import java.io.Reader
 import java.math.BigDecimal
 import java.math.BigInteger
-import java.net.URL
 import java.sql.Blob
 import java.sql.Clob
-import java.sql.Date
-import java.sql.NClob
-import java.sql.Ref
+import java.sql.ResultSet
 import java.sql.ResultSetMetaData
-import java.sql.Time
-import java.sql.Timestamp
 import java.sql.Types
 import java.time.Instant
 import java.time.LocalDate
@@ -37,220 +30,181 @@ import java.time.LocalTime
 import java.time.OffsetDateTime
 import java.time.OffsetTime
 import java.time.ZonedDateTime
-import java.util.Calendar
 import java.util.UUID
 import kotlin.reflect.KClass
 
 /**
- * Manuell delegering til [kotliquery.Row] siden [kotliquery.Row] ikke er et interface.
+ * Erstatning av [kotliquery.Row] for å legge til flere funksjoner og for å ikke eksponere kotliquery ut av
+ * hotlibs/database.
+ * Noen funksjoner fra [kotliquery.Row] er med vilje utelatt her, bla. funksjoner for Joda-Time
+ * og java.sql.Date / java.sql.Time / java.sql.Timestamp. Vi benytter kun java.time.* (Java Time / JSR 310).
  */
-class Row(private val wrapped: kotliquery.Row) : DatabaseRecord {
-    val metaData: ResultSetMetaData get() = wrapped.underlying.metaData
+class Row(private val resultSet: ResultSet) : DatabaseRecord, AutoCloseable by resultSet {
+    val metaData: ResultSetMetaData get() = resultSet.metaData
 
-    fun any(columnIndex: Int): Any = wrapped.any(columnIndex)
-    fun any(columnLabel: String): Any = wrapped.any(columnLabel)
-    fun anyOrNull(columnIndex: Int): Any? = wrapped.anyOrNull(columnIndex)
-    fun anyOrNull(columnLabel: String): Any? = wrapped.anyOrNull(columnLabel)
+    fun any(columnIndex: Int): Any = anyOrNull(columnIndex)!!
+    fun any(columnLabel: String): Any = anyOrNull(columnLabel)!!
+    fun anyOrNull(columnIndex: Int): Any? = nullable(resultSet.getObject(columnIndex))
+    fun anyOrNull(columnLabel: String): Any? = nullable(resultSet.getObject(columnLabel))
 
     fun <T : Any> any(columnIndex: Int, type: KClass<T>): T = anyOrNull(columnIndex, type)!!
     fun <T : Any> any(columnLabel: String, type: KClass<T>): T = anyOrNull(columnLabel, type)!!
 
     fun <T : Any> anyOrNull(columnIndex: Int, type: KClass<T>): T? =
-        nullable(wrapped.underlying.getObject<T>(columnIndex, type.java))
+        nullable(resultSet.getObject<T>(columnIndex, type.java))
 
     fun <T : Any> anyOrNull(columnLabel: String, type: KClass<T>): T? =
-        nullable(wrapped.underlying.getObject<T>(columnLabel, type.java))
+        nullable(resultSet.getObject<T>(columnLabel, type.java))
 
     inline fun <reified T> array(columnIndex: Int): Array<T> = arrayOrNull<T>(columnIndex)!!
     inline fun <reified T> array(columnLabel: String): Array<T> = arrayOrNull<T>(columnLabel)!!
 
     inline fun <reified T> arrayOrNull(columnIndex: Int): Array<T>? {
-        val result = sqlArrayOrNull(columnIndex)?.array as Array<*>?
-        return result?.map { it as T }?.toTypedArray<T>()
+        val result = sqlArrayOrNull(columnIndex)?.array as Array<*>? ?: return null
+        return result.map { it as T }.toTypedArray<T>()
     }
 
     inline fun <reified T> arrayOrNull(columnLabel: String): Array<T>? {
-        val result = sqlArrayOrNull(columnLabel)?.array as Array<*>?
-        return result?.map { it as T }?.toTypedArray<T>()
+        val result = sqlArrayOrNull(columnLabel)?.array as Array<*>? ?: return null
+        return result.map { it as T }.toTypedArray<T>()
     }
 
-    fun asciiStream(columnIndex: Int): InputStream = wrapped.asciiStream(columnIndex)
-    fun asciiStream(columnLabel: String): InputStream = wrapped.asciiStream(columnLabel)
-    fun asciiStreamOrNull(columnIndex: Int): InputStream? = wrapped.asciiStreamOrNull(columnIndex)
-    fun asciiStreamOrNull(columnLabel: String): InputStream? = wrapped.asciiStreamOrNull(columnLabel)
+    fun asciiStream(columnIndex: Int): InputStream = asciiStreamOrNull(columnIndex)!!
+    fun asciiStream(columnLabel: String): InputStream = asciiStreamOrNull(columnLabel)!!
+    fun asciiStreamOrNull(columnIndex: Int): InputStream? = nullable(resultSet.getAsciiStream(columnIndex))
+    fun asciiStreamOrNull(columnLabel: String): InputStream? = nullable(resultSet.getAsciiStream(columnLabel))
 
-    fun bigDecimal(columnIndex: Int): BigDecimal = wrapped.bigDecimal(columnIndex)
-    fun bigDecimal(columnLabel: String): BigDecimal = wrapped.bigDecimal(columnLabel)
-    fun bigDecimalOrNull(columnIndex: Int): BigDecimal? = wrapped.bigDecimalOrNull(columnIndex)
-    fun bigDecimalOrNull(columnLabel: String): BigDecimal? = wrapped.bigDecimalOrNull(columnLabel)
+    fun bigDecimal(columnIndex: Int): BigDecimal = bigDecimalOrNull(columnIndex)!!
+    fun bigDecimal(columnLabel: String): BigDecimal = bigDecimalOrNull(columnLabel)!!
+    fun bigDecimalOrNull(columnIndex: Int): BigDecimal? = nullable(resultSet.getBigDecimal(columnIndex))
+    fun bigDecimalOrNull(columnLabel: String): BigDecimal? = nullable(resultSet.getBigDecimal(columnLabel))
 
-    fun binaryStream(columnIndex: Int): InputStream = wrapped.binaryStream(columnIndex)
-    fun binaryStream(columnLabel: String): InputStream = wrapped.binaryStream(columnLabel)
-    fun binaryStreamOrNull(columnIndex: Int): InputStream? = wrapped.binaryStreamOrNull(columnIndex)
-    fun binaryStreamOrNull(columnLabel: String): InputStream? = wrapped.binaryStreamOrNull(columnLabel)
+    fun binaryStream(columnIndex: Int): InputStream = binaryStreamOrNull(columnIndex)!!
+    fun binaryStream(columnLabel: String): InputStream = binaryStreamOrNull(columnLabel)!!
+    fun binaryStreamOrNull(columnIndex: Int): InputStream? = nullable(resultSet.getBinaryStream(columnIndex))
+    fun binaryStreamOrNull(columnLabel: String): InputStream? = nullable(resultSet.getBinaryStream(columnLabel))
 
-    fun blob(columnIndex: Int): Blob = wrapped.blob(columnIndex)
-    fun blob(columnLabel: String): Blob = wrapped.blob(columnLabel)
-    fun blobOrNull(columnIndex: Int): Blob? = wrapped.blobOrNull(columnIndex)
-    fun blobOrNull(columnLabel: String): Blob? = wrapped.blobOrNull(columnLabel)
+    fun blob(columnIndex: Int): Blob = blobOrNull(columnIndex)!!
+    fun blob(columnLabel: String): Blob = blobOrNull(columnLabel)!!
+    fun blobOrNull(columnIndex: Int): Blob? = nullable(resultSet.getBlob(columnIndex))
+    fun blobOrNull(columnLabel: String): Blob? = nullable(resultSet.getBlob(columnLabel))
 
-    fun boolean(columnIndex: Int): Boolean = wrapped.boolean(columnIndex)
-    fun boolean(columnLabel: String): Boolean = wrapped.boolean(columnLabel)
-    fun booleanOrNull(columnIndex: Int): Boolean? = nullable(wrapped.boolean(columnIndex))
-    fun booleanOrNull(columnLabel: String): Boolean? = nullable(wrapped.boolean(columnLabel))
+    fun boolean(columnIndex: Int): Boolean = booleanOrNull(columnIndex)!!
+    fun boolean(columnLabel: String): Boolean = booleanOrNull(columnLabel)!!
+    fun booleanOrNull(columnIndex: Int): Boolean? = nullable(resultSet.getBoolean(columnIndex))
+    fun booleanOrNull(columnLabel: String): Boolean? = nullable(resultSet.getBoolean(columnLabel))
 
-    fun byte(columnIndex: Int): Byte = wrapped.byte(columnIndex)
-    fun byte(columnLabel: String): Byte = wrapped.byte(columnLabel)
-    fun byteOrNull(columnIndex: Int): Byte? = wrapped.byteOrNull(columnIndex)
-    fun byteOrNull(columnLabel: String): Byte? = wrapped.byteOrNull(columnLabel)
+    fun byte(columnIndex: Int): Byte = byteOrNull(columnIndex)!!
+    fun byte(columnLabel: String): Byte = byteOrNull(columnLabel)!!
+    fun byteOrNull(columnIndex: Int): Byte? = nullable(resultSet.getByte(columnIndex))
+    fun byteOrNull(columnLabel: String): Byte? = nullable(resultSet.getByte(columnLabel))
 
-    fun bytes(columnIndex: Int): ByteArray = wrapped.bytes(columnIndex)
-    fun bytes(columnLabel: String): ByteArray = wrapped.bytes(columnLabel)
-    fun bytesOrNull(columnIndex: Int): ByteArray? = wrapped.bytesOrNull(columnIndex)
-    fun bytesOrNull(columnLabel: String): ByteArray? = wrapped.bytesOrNull(columnLabel)
+    fun bytes(columnIndex: Int): ByteArray = bytesOrNull(columnIndex)!!
+    fun bytes(columnLabel: String): ByteArray = bytesOrNull(columnLabel)!!
+    fun bytesOrNull(columnIndex: Int): ByteArray? = nullable(resultSet.getBytes(columnIndex))
+    fun bytesOrNull(columnLabel: String): ByteArray? = nullable(resultSet.getBytes(columnLabel))
 
-    fun clob(columnIndex: Int): Clob = wrapped.clob(columnIndex)
-    fun clob(columnLabel: String): Clob = wrapped.clob(columnLabel)
-    fun clobOrNull(columnIndex: Int): Clob? = wrapped.clobOrNull(columnIndex)
-    fun clobOrNull(columnLabel: String): Clob? = wrapped.clobOrNull(columnLabel)
+    fun clob(columnIndex: Int): Clob = clobOrNull(columnIndex)!!
+    fun clob(columnLabel: String): Clob = clobOrNull(columnLabel)!!
+    fun clobOrNull(columnIndex: Int): Clob? = nullable(resultSet.getClob(columnIndex))
+    fun clobOrNull(columnLabel: String): Clob? = nullable(resultSet.getClob(columnLabel))
 
-    fun double(columnIndex: Int): Double = wrapped.double(columnIndex)
-    fun double(columnLabel: String): Double = wrapped.double(columnLabel)
-    fun doubleOrNull(columnIndex: Int): Double? = wrapped.doubleOrNull(columnIndex)
-    fun doubleOrNull(columnLabel: String): Double? = wrapped.doubleOrNull(columnLabel)
+    fun double(columnIndex: Int): Double = doubleOrNull(columnIndex)!!
+    fun double(columnLabel: String): Double = doubleOrNull(columnLabel)!!
+    fun doubleOrNull(columnIndex: Int): Double? = nullable(resultSet.getDouble(columnIndex))
+    fun doubleOrNull(columnLabel: String): Double? = nullable(resultSet.getDouble(columnLabel))
 
-    inline fun <reified E : Enum<E>> enum(columnLabel: String): E =
-        enumValueOf<E>(string((columnLabel)))
+    inline fun <reified E : Enum<E>> enum(columnIndex: Int): E = enumOrNull<E>(columnIndex)!!
+    inline fun <reified E : Enum<E>> enum(columnLabel: String): E = enumOrNull<E>(columnLabel)!!
+
+    inline fun <reified E : Enum<E>> enumOrNull(columnIndex: Int): E? =
+        stringOrNull(columnIndex)?.let { enumValueOf<E>(it) }
 
     inline fun <reified E : Enum<E>> enumOrNull(columnLabel: String): E? =
         stringOrNull(columnLabel)?.let { enumValueOf<E>(it) }
 
-    inline fun <reified E : Enum<E>> enums(columnLabel: String): Set<E> =
-        array<String>(columnLabel).toEnumSet()
+    inline fun <reified E : Enum<E>> enums(columnIndex: Int): Set<E> = enumsOrNull<E>(columnIndex)!!
+    inline fun <reified E : Enum<E>> enums(columnLabel: String): Set<E> = enumsOrNull<E>(columnLabel)!!
 
-    inline fun <reified E : Enum<E>> enumsOrNull(columnLabel: String): Set<E> {
-        val strings = arrayOrNull<String>(columnLabel) ?: return emptyEnumSet()
-        return strings.toEnumSet()
-    }
+    inline fun <reified E : Enum<E>> enumsOrNull(columnIndex: Int): Set<E>? =
+        arrayOrNull<String>(columnIndex)?.toEnumSet()
 
-    fun float(columnIndex: Int): Float = wrapped.float(columnIndex)
-    fun float(columnLabel: String): Float = wrapped.float(columnLabel)
-    fun floatOrNull(columnIndex: Int): Float? = wrapped.floatOrNull(columnIndex)
-    fun floatOrNull(columnLabel: String): Float? = wrapped.floatOrNull(columnLabel)
+    inline fun <reified E : Enum<E>> enumsOrNull(columnLabel: String): Set<E>? =
+        arrayOrNull<String>(columnLabel)?.toEnumSet()
 
-    fun instant(columnIndex: Int): Instant = wrapped.instant(columnIndex)
-    fun instant(columnLabel: String): Instant = wrapped.instant(columnLabel)
-    fun instantOrNull(columnIndex: Int): Instant? = wrapped.instantOrNull(columnIndex)
-    fun instantOrNull(columnLabel: String): Instant? = wrapped.instantOrNull(columnLabel)
+    fun float(columnIndex: Int): Float = floatOrNull(columnIndex)!!
+    fun float(columnLabel: String): Float = floatOrNull(columnLabel)!!
+    fun floatOrNull(columnIndex: Int): Float? = nullable(resultSet.getFloat(columnIndex))
+    fun floatOrNull(columnLabel: String): Float? = nullable(resultSet.getFloat(columnLabel))
 
-    fun int(columnIndex: Int): Int = wrapped.int(columnIndex)
-    fun int(columnLabel: String): Int = wrapped.int(columnLabel)
-    fun intOrNull(columnIndex: Int): Int? = wrapped.intOrNull(columnIndex)
-    fun intOrNull(columnLabel: String): Int? = wrapped.intOrNull(columnLabel)
+    fun int(columnIndex: Int): Int = intOrNull(columnIndex)!!
+    fun int(columnLabel: String): Int = intOrNull(columnLabel)!!
+    fun intOrNull(columnIndex: Int): Int? = nullable(resultSet.getInt(columnIndex))
+    fun intOrNull(columnLabel: String): Int? = nullable(resultSet.getInt(columnLabel))
 
-    fun localDate(columnIndex: Int): LocalDate = wrapped.localDate(columnIndex)
-    fun localDate(columnLabel: String): LocalDate = wrapped.localDate(columnLabel)
-    fun localDateOrNull(columnIndex: Int): LocalDate? = wrapped.localDateOrNull(columnIndex)
-    fun localDateOrNull(columnLabel: String): LocalDate? = wrapped.localDateOrNull(columnLabel)
+    fun long(columnIndex: Int): Long = longOrNull(columnIndex)!!
+    fun long(columnLabel: String): Long = longOrNull(columnLabel)!!
+    fun longOrNull(columnIndex: Int): Long? = nullable(resultSet.getLong(columnIndex))
+    fun longOrNull(columnLabel: String): Long? = nullable(resultSet.getLong(columnLabel))
 
-    fun localDateTime(columnIndex: Int): LocalDateTime = wrapped.localDateTime(columnIndex)
-    fun localDateTime(columnLabel: String): LocalDateTime = wrapped.localDateTime(columnLabel)
-    fun localDateTimeOrNull(columnIndex: Int): LocalDateTime? = wrapped.localDateTimeOrNull(columnIndex)
-    fun localDateTimeOrNull(columnLabel: String): LocalDateTime? = wrapped.localDateTimeOrNull(columnLabel)
+    fun short(columnIndex: Int): Short = shortOrNull(columnIndex)!!
+    fun short(columnLabel: String): Short = shortOrNull(columnLabel)!!
+    fun shortOrNull(columnIndex: Int): Short? = nullable(resultSet.getShort(columnIndex))
+    fun shortOrNull(columnLabel: String): Short? = nullable(resultSet.getShort(columnLabel))
 
-    fun localTime(columnIndex: Int): LocalTime = wrapped.localTime(columnIndex)
-    fun localTime(columnLabel: String): LocalTime = wrapped.localTime(columnLabel)
-    fun localTimeOrNull(columnIndex: Int): LocalTime? = wrapped.localTimeOrNull(columnIndex)
-    fun localTimeOrNull(columnLabel: String): LocalTime? = wrapped.localTimeOrNull(columnLabel)
+    fun sqlArray(columnIndex: Int): java.sql.Array = sqlArrayOrNull(columnIndex)!!
+    fun sqlArray(columnLabel: String): java.sql.Array = sqlArrayOrNull(columnLabel)!!
+    fun sqlArrayOrNull(columnIndex: Int): java.sql.Array? = nullable(resultSet.getArray(columnIndex))
+    fun sqlArrayOrNull(columnLabel: String): java.sql.Array? = nullable(resultSet.getArray(columnLabel))
 
-    fun long(columnIndex: Int): Long = wrapped.long(columnIndex)
-    fun long(columnLabel: String): Long = wrapped.long(columnLabel)
-    fun longOrNull(columnIndex: Int): Long? = wrapped.longOrNull(columnIndex)
-    fun longOrNull(columnLabel: String): Long? = wrapped.longOrNull(columnLabel)
+    fun string(columnIndex: Int): String = stringOrNull(columnIndex)!!
+    fun string(columnLabel: String): String = stringOrNull(columnLabel)!!
+    fun stringOrNull(columnIndex: Int): String? = nullable(resultSet.getString(columnIndex))
+    fun stringOrNull(columnLabel: String): String? = nullable(resultSet.getString(columnLabel))
 
-    fun nCharacterStream(columnIndex: Int): Reader = wrapped.nCharacterStream(columnIndex)
-    fun nCharacterStream(columnLabel: String): Reader = wrapped.nCharacterStream(columnLabel)
-    fun nCharacterStreamOrNull(columnIndex: Int): Reader? = wrapped.nCharacterStreamOrNull(columnIndex)
-    fun nCharacterStreamOrNull(columnLabel: String): Reader? = wrapped.nCharacterStreamOrNull(columnLabel)
+    fun uuid(columnLabel: String): UUID = uuidOrNull(columnLabel)!!
+    fun uuid(columnIndex: Int): UUID = uuidOrNull(columnIndex)!!
+    fun uuidOrNull(columnIndex: Int): UUID? = anyOrNull(columnIndex, UUID::class)
+    fun uuidOrNull(columnLabel: String): UUID? = anyOrNull(columnLabel, UUID::class)
 
-    fun nClob(columnIndex: Int): NClob = wrapped.nClob(columnIndex)
-    fun nClob(columnLabel: String): NClob = wrapped.nClob(columnLabel)
-    fun nClobOrNull(columnIndex: Int): NClob? = wrapped.nClobOrNull(columnIndex)
-    fun nClobOrNull(columnLabel: String): NClob? = wrapped.nClobOrNull(columnLabel)
+    // START Java Time / JSR 310
 
-    fun offsetTime(columnIndex: Int): OffsetTime = wrapped.offsetDateTime(columnIndex).toOffsetTime()
-    fun offsetTime(columnLabel: String): OffsetTime = wrapped.offsetDateTime(columnLabel).toOffsetTime()
-    fun offsetTimeOrNull(columnIndex: Int): OffsetTime? = wrapped.offsetDateTimeOrNull(columnIndex)?.toOffsetTime()
-    fun offsetTimeOrNull(columnLabel: String): OffsetTime? = wrapped.offsetDateTimeOrNull(columnLabel)?.toOffsetTime()
+    fun instant(columnIndex: Int): Instant = instantOrNull(columnIndex)!!
+    fun instant(columnLabel: String): Instant = instantOrNull(columnLabel)!!
+    fun instantOrNull(columnIndex: Int): Instant? = offsetDateTimeOrNull(columnIndex)?.toInstant()
+    fun instantOrNull(columnLabel: String): Instant? = offsetDateTimeOrNull(columnLabel)?.toInstant()
 
-    fun offsetDateTime(columnIndex: Int): OffsetDateTime = wrapped.offsetDateTime(columnIndex)
-    fun offsetDateTime(columnLabel: String): OffsetDateTime = wrapped.offsetDateTime(columnLabel)
-    fun offsetDateTimeOrNull(columnIndex: Int): OffsetDateTime? = wrapped.offsetDateTimeOrNull(columnIndex)
-    fun offsetDateTimeOrNull(columnLabel: String): OffsetDateTime? = wrapped.offsetDateTimeOrNull(columnLabel)
+    fun localDate(columnIndex: Int): LocalDate = localDateOrNull(columnIndex)!!
+    fun localDate(columnLabel: String): LocalDate = localDateOrNull(columnLabel)!!
+    fun localDateOrNull(columnIndex: Int): LocalDate? = anyOrNull(columnIndex, LocalDate::class)
+    fun localDateOrNull(columnLabel: String): LocalDate? = anyOrNull(columnLabel, LocalDate::class)
 
-    fun ref(columnIndex: Int): Ref = wrapped.ref(columnIndex)
-    fun ref(columnLabel: String): Ref = wrapped.ref(columnLabel)
-    fun refOrNull(columnIndex: Int): Ref? = wrapped.refOrNull(columnIndex)
-    fun refOrNull(columnLabel: String): Ref? = wrapped.refOrNull(columnLabel)
+    fun localTime(columnIndex: Int): LocalTime = localTimeOrNull(columnIndex)!!
+    fun localTime(columnLabel: String): LocalTime = localTimeOrNull(columnLabel)!!
+    fun localTimeOrNull(columnIndex: Int): LocalTime? = anyOrNull(columnIndex, LocalTime::class)
+    fun localTimeOrNull(columnLabel: String): LocalTime? = anyOrNull(columnLabel, LocalTime::class)
 
-    fun short(columnIndex: Int): Short = wrapped.short(columnIndex)
-    fun short(columnLabel: String): Short = wrapped.short(columnLabel)
-    fun shortOrNull(columnIndex: Int): Short? = wrapped.shortOrNull(columnIndex)
-    fun shortOrNull(columnLabel: String): Short? = wrapped.shortOrNull(columnLabel)
+    fun localDateTime(columnIndex: Int): LocalDateTime = localDateTimeOrNull(columnIndex)!!
+    fun localDateTime(columnLabel: String): LocalDateTime = localDateTimeOrNull(columnLabel)!!
+    fun localDateTimeOrNull(columnIndex: Int): LocalDateTime? = anyOrNull(columnIndex, LocalDateTime::class)
+    fun localDateTimeOrNull(columnLabel: String): LocalDateTime? = anyOrNull(columnLabel, LocalDateTime::class)
 
-    fun sqlArray(columnIndex: Int): java.sql.Array = wrapped.sqlArray(columnIndex)
-    fun sqlArray(columnLabel: String): java.sql.Array = wrapped.sqlArray(columnLabel)
-    fun sqlArrayOrNull(columnIndex: Int): java.sql.Array? = wrapped.sqlArrayOrNull(columnIndex)
-    fun sqlArrayOrNull(columnLabel: String): java.sql.Array? = wrapped.sqlArrayOrNull(columnLabel)
+    fun offsetTime(columnIndex: Int): OffsetTime = offsetTimeOrNull(columnIndex)!!
+    fun offsetTime(columnLabel: String): OffsetTime = offsetTimeOrNull(columnLabel)!!
+    fun offsetTimeOrNull(columnIndex: Int): OffsetTime? = anyOrNull(columnIndex, OffsetTime::class)
+    fun offsetTimeOrNull(columnLabel: String): OffsetTime? = anyOrNull(columnLabel, OffsetTime::class)
 
-    fun sqlDate(columnIndex: Int): Date = wrapped.sqlDate(columnIndex)
-    fun sqlDate(columnIndex: Int, calendar: Calendar): Date = wrapped.sqlDate(columnIndex, calendar)
-    fun sqlDate(columnLabel: String): Date = wrapped.sqlDate(columnLabel)
-    fun sqlDate(columnLabel: String, calendar: Calendar): Date = wrapped.sqlDate(columnLabel, calendar)
-    fun sqlDateOrNull(columnIndex: Int): Date? = wrapped.sqlDateOrNull(columnIndex)
-    fun sqlDateOrNull(columnIndex: Int, calendar: Calendar): Date? = wrapped.sqlDateOrNull(columnIndex, calendar)
-    fun sqlDateOrNull(columnLabel: String): Date? = wrapped.sqlDateOrNull(columnLabel)
-    fun sqlDateOrNull(columnLabel: String, calendar: Calendar): Date? = wrapped.sqlDateOrNull(columnLabel, calendar)
+    fun offsetDateTime(columnIndex: Int): OffsetDateTime = offsetDateTimeOrNull(columnIndex)!!
+    fun offsetDateTime(columnLabel: String): OffsetDateTime = offsetDateTimeOrNull(columnLabel)!!
+    fun offsetDateTimeOrNull(columnIndex: Int): OffsetDateTime? = anyOrNull(columnIndex, OffsetDateTime::class)
+    fun offsetDateTimeOrNull(columnLabel: String): OffsetDateTime? = anyOrNull(columnLabel, OffsetDateTime::class)
 
-    fun sqlTime(columnIndex: Int): Time = wrapped.sqlTime(columnIndex)
-    fun sqlTime(columnIndex: Int, calendar: Calendar): Time = wrapped.sqlTime(columnIndex, calendar)
-    fun sqlTime(columnLabel: String): Time = wrapped.sqlTime(columnLabel)
-    fun sqlTime(columnLabel: String, calendar: Calendar): Time = wrapped.sqlTime(columnLabel, calendar)
-    fun sqlTimeOrNull(columnIndex: Int): Time? = wrapped.sqlTimeOrNull(columnIndex)
-    fun sqlTimeOrNull(columnIndex: Int, calendar: Calendar): Time? = wrapped.sqlTimeOrNull(columnIndex, calendar)
-    fun sqlTimeOrNull(columnLabel: String): Time? = wrapped.sqlTimeOrNull(columnLabel)
-    fun sqlTimeOrNull(columnLabel: String, calendar: Calendar): Time? = wrapped.sqlTimeOrNull(columnLabel, calendar)
+    fun zonedDateTime(columnIndex: Int): ZonedDateTime = zonedDateTimeOrNull(columnIndex)!!
+    fun zonedDateTime(columnLabel: String): ZonedDateTime = zonedDateTimeOrNull(columnLabel)!!
+    fun zonedDateTimeOrNull(columnIndex: Int): ZonedDateTime? = offsetDateTimeOrNull(columnIndex)?.toZonedDateTime()
+    fun zonedDateTimeOrNull(columnLabel: String): ZonedDateTime? = offsetDateTimeOrNull(columnLabel)?.toZonedDateTime()
 
-    fun sqlTimestamp(columnIndex: Int): Timestamp = wrapped.sqlTimestamp(columnIndex)
-    fun sqlTimestamp(columnIndex: Int, calendar: Calendar): Timestamp = wrapped.sqlTimestamp(columnIndex, calendar)
-    fun sqlTimestamp(columnLabel: String): Timestamp = wrapped.sqlTimestamp(columnLabel)
-    fun sqlTimestamp(columnLabel: String, calendar: Calendar): Timestamp = wrapped.sqlTimestamp(columnLabel, calendar)
-
-    fun sqlTimestampOrNull(columnIndex: Int): Timestamp? = wrapped.sqlTimestampOrNull(columnIndex)
-    fun sqlTimestampOrNull(columnIndex: Int, calendar: Calendar): Timestamp? =
-        wrapped.sqlTimestampOrNull(columnIndex, calendar)
-
-    fun sqlTimestampOrNull(columnLabel: String): Timestamp? = wrapped.sqlTimestampOrNull(columnLabel)
-    fun sqlTimestampOrNull(columnLabel: String, calendar: Calendar): Timestamp? =
-        wrapped.sqlTimestampOrNull(columnLabel, calendar)
-
-    fun string(columnIndex: Int): String = wrapped.string(columnIndex)
-    fun string(columnLabel: String): String = wrapped.string(columnLabel)
-    fun stringOrNull(columnIndex: Int): String? = wrapped.stringOrNull(columnIndex)
-    fun stringOrNull(columnLabel: String): String? = wrapped.stringOrNull(columnLabel)
-
-    fun url(columnIndex: Int): URL = wrapped.url(columnIndex)
-    fun url(columnLabel: String): URL = wrapped.url(columnLabel)
-    fun urlOrNull(columnIndex: Int): URL? = wrapped.urlOrNull(columnIndex)
-    fun urlOrNull(columnLabel: String): URL? = wrapped.urlOrNull(columnLabel)
-
-    fun uuid(columnLabel: String): UUID = wrapped.uuid(columnLabel)
-    fun uuidOrNull(columnLabel: String): UUID? = wrapped.uuidOrNull(columnLabel)
-
-    fun zonedDateTime(columnIndex: Int): ZonedDateTime = wrapped.zonedDateTime(columnIndex)
-    fun zonedDateTime(columnLabel: String): ZonedDateTime = wrapped.zonedDateTime(columnLabel)
-    fun zonedDateTimeOrNull(columnIndex: Int): ZonedDateTime? = wrapped.zonedDateTimeOrNull(columnIndex)
-    fun zonedDateTimeOrNull(columnLabel: String): ZonedDateTime? = wrapped.zonedDateTimeOrNull(columnLabel)
+    // END Java Time / JSR 310
 
     fun <K, V> ifPresent(columnLabel: String, valueOrNull: Row.(String) -> K?, transform: Row.(K) -> V): V? {
         val value = valueOrNull(columnLabel) ?: return null
@@ -275,29 +229,15 @@ class Row(private val wrapped: kotliquery.Row) : DatabaseRecord {
 
     // START JSON
 
-    fun <T : Any> json(columnLabel: String, typeReference: TypeReference<T>): T =
-        jsonMapper.readValue<T>(string(columnLabel), typeReference)
+    inline fun <reified T> json(columnIndex: Int): T = jsonOrNull<T>(columnIndex)!!
+    inline fun <reified T> json(columnLabel: String): T = jsonOrNull<T>(columnLabel)!!
+    inline fun <reified T> jsonOrNull(columnIndex: Int): T? = stringOrNull(columnIndex)?.let { jsonToValue<T>(it) }
+    inline fun <reified T> jsonOrNull(columnLabel: String): T? = stringOrNull(columnLabel)?.let { jsonToValue<T>(it) }
 
-    inline fun <reified T : Any> json(columnLabel: String): T =
-        json<T>(columnLabel, jacksonTypeRef<T>())
-
-    fun <T> jsonOrNull(columnLabel: String, typeReference: TypeReference<T>): T? =
-        stringOrNull(columnLabel)?.let { jsonMapper.readValue<T>(it, typeReference) }
-
-    inline fun <reified T> jsonOrNull(columnLabel: String): T? =
-        jsonOrNull<T>(columnLabel, jacksonTypeRef<T>())
-
-    fun tree(columnIndex: Int): JsonNode =
-        jsonMapper.readTree(string(columnIndex))
-
-    fun tree(columnLabel: String): JsonNode =
-        jsonMapper.readTree(string(columnLabel))
-
-    fun treeOrNull(columnIndex: Int): JsonNode? =
-        stringOrNull(columnIndex)?.let<String, JsonNode?>(jsonMapper::readTree)
-
-    fun treeOrNull(columnLabel: String): JsonNode? =
-        stringOrNull(columnLabel)?.let<String, JsonNode?>(jsonMapper::readTree)
+    fun tree(columnIndex: Int): JsonNode = treeOrNull(columnIndex)!!
+    fun tree(columnLabel: String): JsonNode = treeOrNull(columnLabel)!!
+    fun treeOrNull(columnIndex: Int): JsonNode? = stringOrNull(columnIndex)?.let { jsonToTree(it) }
+    fun treeOrNull(columnLabel: String): JsonNode? = stringOrNull(columnLabel)?.let { jsonToTree(it) }
 
     fun toTree(): JsonNode {
         val metaData = this.metaData
@@ -306,24 +246,24 @@ class Row(private val wrapped: kotliquery.Row) : DatabaseRecord {
             val propertyName = metaData.getColumnLabel(columnIndex)
             val value = when (metaData.getColumnType(columnIndex)) {
                 // Datetime
-                Types.DATE -> anyOrNull(columnIndex, LocalDate::class)
+                Types.DATE -> localDateOrNull(columnIndex)
 
                 Types.TIME -> when (metaData.getColumnTypeName(columnIndex)) {
-                    "timetz" -> anyOrNull(columnIndex, OffsetTime::class)
-                    else -> anyOrNull(columnIndex, LocalTime::class)
+                    "timetz" -> offsetTimeOrNull(columnIndex)
+                    else -> localTimeOrNull(columnIndex)
                 }
 
                 Types.TIMESTAMP -> when (metaData.getColumnTypeName(columnIndex)) {
-                    "timestamptz" -> anyOrNull(columnIndex, OffsetDateTime::class)
-                    else -> anyOrNull(columnIndex, LocalDateTime::class)
+                    "timestamptz" -> offsetDateTimeOrNull(columnIndex)
+                    else -> localDateTimeOrNull(columnIndex)
                 }
 
-                // Custom domains/types
+                // Egendefinerte typer (e.g. CREATE TYPE / DOMAIN i PostgreSQL)
                 Types.STRUCT -> null
 
                 // Array
                 Types.ARRAY -> {
-                    val array = sqlArrayOrNull(columnIndex)?.array as? Array<*>?
+                    val array = arrayOrNull<Any?>(columnIndex)
                     if (array == null) {
                         null
                     } else {
@@ -339,7 +279,7 @@ class Row(private val wrapped: kotliquery.Row) : DatabaseRecord {
                     else -> anyOrNull(columnIndex)
                 }
 
-                // Fallback til JDBC-drivers JDBC til Java-mapping
+                // Fallback til JDBC-definert mapping til Java
                 else -> anyOrNull(columnIndex)
             }
             if (value is JsonNode) {
@@ -348,7 +288,7 @@ class Row(private val wrapped: kotliquery.Row) : DatabaseRecord {
                 rootNode.put(propertyName, value)
             }
         }
-        // Hvis kun én kolonne returnerer vi kun denne verdien (JsonNode)
+        // Hvis kun én kolonne returnerer vi kun denne ene verdien
         return if (metaData.columnCount == 1) {
             rootNode.values().next()
         } else {
@@ -356,33 +296,43 @@ class Row(private val wrapped: kotliquery.Row) : DatabaseRecord {
         }
     }
 
-    fun <T : Any> toValue(type: KClass<T>): T = toValueOrNull<T>(type)!!
+    fun <T : Any> toValue(type: KClass<T>): T = toValueOrNull(type)!!
     inline fun <reified T : Any> toValue(): T = toValueOrNull<T>()!!
 
+    /**
+     * @see [isValueType]
+     */
     fun <T : Any> toValueOrNull(type: KClass<T>): T? {
         return if (type.isValueType) {
             anyOrNull(1, type)
         } else {
-            treeToValueOrNull<T>(toTree(), type)
+            treeToValueOrNull(toTree(), type)
         }
     }
 
+    /**
+     * @see [isValueType]
+     */
     inline fun <reified T : Any> toValueOrNull(): T? {
         val type = T::class
-        return toValueOrNull<T>(type)
+        return if (type.isValueType) {
+            anyOrNull(1, type)
+        } else {
+            treeToValueOrNull<T>(toTree(), type) // fixme
+        }
     }
 
     // END JSON
 
     // START DOMAIN
 
-    fun aktørId(columnLabel: String): AktørId = AktørId(string(columnLabel))
+    fun aktørId(columnLabel: String): AktørId = aktørIdOrNull(columnLabel)!!
     fun aktørIdOrNull(columnLabel: String): AktørId? = stringOrNull(columnLabel)?.let(::AktørId)
 
-    fun fødselsnummer(columnLabel: String): Fødselsnummer = Fødselsnummer(string(columnLabel))
+    fun fødselsnummer(columnLabel: String): Fødselsnummer = fødselsnummerOrNull(columnLabel)!!
     fun fødselsnummerOrNull(columnLabel: String): Fødselsnummer? = stringOrNull(columnLabel)?.let(::Fødselsnummer)
 
-    fun enhetsnummer(columnLabel: String): Enhetsnummer = Enhetsnummer(string(columnLabel))
+    fun enhetsnummer(columnLabel: String): Enhetsnummer = enhetsnummerOrNull(columnLabel)!!
     fun enhetsnummerOrNull(columnLabel: String): Enhetsnummer? = stringOrNull(columnLabel)?.let(::Enhetsnummer)
 
     fun toPersonnavn(prefix: String? = null): Personnavn =
@@ -410,7 +360,7 @@ class Row(private val wrapped: kotliquery.Row) : DatabaseRecord {
 
     // END DOMAIN
 
-    private fun <T> nullable(value: T): T? = if (wrapped.underlying.wasNull()) null else value
+    private fun <T> nullable(value: T): T? = if (resultSet.wasNull()) null else value
 }
 
 val KClass<*>.isValueType: Boolean
@@ -418,6 +368,7 @@ val KClass<*>.isValueType: Boolean
         BigDecimal::class,
         BigInteger::class,
         Boolean::class,
+        Byte::class,
         ByteArray::class,
         Double::class,
         Float::class,

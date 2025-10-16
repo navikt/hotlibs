@@ -1,15 +1,12 @@
 package no.nav.hjelpemidler.database.test
 
-import io.kotest.matchers.longs.shouldBePositive
-import io.kotest.matchers.nulls.shouldNotBeNull
+import com.fasterxml.jackson.annotation.JsonCreator
 import no.nav.hjelpemidler.database.Row
 import no.nav.hjelpemidler.domain.id.LongId
 
-class TestId(value: Long = 0) : LongId(value)
-
-fun TestId?.shouldBeValid() {
-    this.shouldNotBeNull()
-    this.value.shouldBePositive()
+class TestId @JsonCreator constructor(value: Long = 0) : LongId(value) {
+    @JsonCreator
+    constructor(value: String) : this(value.toLong())
 }
 
 fun Row.testId(): TestId = TestId(long("id"))

@@ -13,12 +13,12 @@ CREATE TABLE test
 (
     id          BIGSERIAL         NOT NULL,
 
-    string_1    TEXT              NOT NULL DEFAULT '',
+    string_1    TEXT              NOT NULL DEFAULT 'test',
     integer_1   INTEGER           NOT NULL DEFAULT 10,
     long_1      BIGINT            NOT NULL DEFAULT 20,
     enum_1      TEXT              NOT NULL DEFAULT 'A',
 
-    data_1      jsonb             NOT NULL,
+    data_1      jsonb             NOT NULL DEFAULT '{}',
     data_2      jsonb             NULL,
 
     fnr_1       CHAR(11)          NULL,
