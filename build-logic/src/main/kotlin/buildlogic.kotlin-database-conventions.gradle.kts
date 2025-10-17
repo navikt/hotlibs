@@ -51,8 +51,27 @@ java {
 testing {
     suites {
         val test by getting(JvmTestSuite::class)
+        val oracleTest by registering(JvmTestSuite::class) {
+            dependencies {
+                implementation(testFixtures(project(path)))
+                implementation(project(path)) {
+                    capabilities {
+                        requireCapability("${project.group}:${project.name}-${oracle.name}")
+                    }
+                }
+            }
+
+            targets {
+                all {
+                    testTask.configure {
+                        shouldRunAfter(test)
+                    }
+                }
+            }
+        }
         val postgresqlTest by registering(JvmTestSuite::class) {
             dependencies {
+                implementation(testFixtures(project(path)))
                 implementation(project(path)) {
                     capabilities {
                         requireCapability("${project.group}:${project.name}-${postgresql.name}")

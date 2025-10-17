@@ -2,6 +2,8 @@ plugins {
     id("buildlogic.kotlin-database-conventions")
 
     alias(libs.plugins.kotlin.jpa)
+
+    `java-test-fixtures`
 }
 
 dependencies {
@@ -14,6 +16,7 @@ dependencies {
 
     // JDBC
     api(libs.hikaricp)
+    // Ikke api() siden vi ikke eksponerer kotliquery ut
     implementation(libs.kotliquery)
 
     // H2
@@ -47,6 +50,7 @@ dependencies {
 @Suppress("UnstableApiUsage")
 tasks.named("check") {
     dependsOn(
+        testing.suites.named("oracleTest"),
         testing.suites.named("postgresqlTest"),
     )
 }

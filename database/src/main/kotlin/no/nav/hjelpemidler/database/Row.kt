@@ -11,7 +11,7 @@ import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.Personnavn
 import no.nav.hjelpemidler.serialization.jackson.add
 import no.nav.hjelpemidler.serialization.jackson.jsonMapper
-import no.nav.hjelpemidler.serialization.jackson.jsonToTree
+import no.nav.hjelpemidler.serialization.jackson.jsonToTreeOrNull
 import no.nav.hjelpemidler.serialization.jackson.jsonToValue
 import no.nav.hjelpemidler.serialization.jackson.put
 import no.nav.hjelpemidler.serialization.jackson.treeToValueOrNull
@@ -236,8 +236,8 @@ class Row(private val resultSet: ResultSet) : DatabaseRecord, AutoCloseable by r
 
     fun tree(columnIndex: Int): JsonNode = treeOrNull(columnIndex)!!
     fun tree(columnLabel: String): JsonNode = treeOrNull(columnLabel)!!
-    fun treeOrNull(columnIndex: Int): JsonNode? = stringOrNull(columnIndex)?.let { jsonToTree(it) }
-    fun treeOrNull(columnLabel: String): JsonNode? = stringOrNull(columnLabel)?.let { jsonToTree(it) }
+    fun treeOrNull(columnIndex: Int): JsonNode? = stringOrNull(columnIndex)?.let { jsonToTreeOrNull(it) }
+    fun treeOrNull(columnLabel: String): JsonNode? = stringOrNull(columnLabel)?.let { jsonToTreeOrNull(it) }
 
     fun toTree(): JsonNode {
         val metaData = this.metaData

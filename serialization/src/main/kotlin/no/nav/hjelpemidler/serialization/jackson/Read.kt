@@ -26,3 +26,5 @@ fun jsonResourceToTree(name: String): JsonNode = jsonMapper.readResourceAsTree(n
 inline fun <reified T> jsonResourceToValue(name: String): T = jsonMapper.readResourceAsValue<T>(name)
 
 fun jsonToTree(@Language("JSON") value: String): JsonNode = jsonMapper.readTree(value)
+fun jsonToTreeOrNull(@Language("JSON") value: String): JsonNode? =
+    jsonMapper.readTree(value).takeUnless { it.isMissingOrNull }
