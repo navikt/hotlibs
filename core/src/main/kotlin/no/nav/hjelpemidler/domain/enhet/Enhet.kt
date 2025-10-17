@@ -37,6 +37,18 @@ open class Enhet(
             Enhet(nummer = "2970", navn = "IT-avdelingen")
 
         /**
+         * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/2990">NORG2</a>
+         */
+        val TEKNOLOGIAVDELINGEN =
+            Enhet(nummer = "2990", navn = "Teknologiavdelingen")
+
+        /**
+         * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/4700">NORG2</a>
+         */
+        val STYRINGSENHETEN_FOR_NAV_HJELPEMIDLER_OG_TILRETTELEGGING =
+            Enhet(nummer = "4700", navn = "Styringsenheten for Nav hjelpemidler og tilrettelegging")
+
+        /**
          * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/4303">NORG2</a>
          */
         val NAV_ID_OG_FORDELING =
@@ -47,12 +59,6 @@ open class Enhet(
          */
         val AY_HJELPEMIDLER =
             Enhet(nummer = "4485", navn = "Nav arbeid og ytelser - hjelpemidler")
-
-        /**
-         * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/4700">NORG2</a>
-         */
-        val STYRINGSENHETEN_FOR_NAV_HJELPEMIDLER_OG_TILRETTELEGGING =
-            Enhet(nummer = "4700", navn = "Styringsenheten for Nav hjelpemidler og tilrettelegging")
 
         /**
          * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/4701">NORG2</a>
