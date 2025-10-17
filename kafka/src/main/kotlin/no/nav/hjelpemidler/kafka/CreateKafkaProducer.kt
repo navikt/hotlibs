@@ -23,5 +23,5 @@ fun createKafkaProducer(configure: Properties.() -> Unit = {}): Producer<String,
 
 fun createMockProducer(autoComplete: Boolean = true): MockProducer<String, String> {
     val serializer = StringSerializer()
-    return MockProducer(autoComplete, serializer, serializer)
+    return MockProducer(autoComplete, null, serializer, serializer)
 }
