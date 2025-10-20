@@ -242,7 +242,7 @@ data class HjelpemiddelProdukt(
 )
 
 data class Tilbehør(
-    val tilbehørId: UUID?,
+    val tilbehørId: UUID? = null,
     override val hmsArtNr: String,
     val navn: String,
     override val antall: Int,
