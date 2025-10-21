@@ -53,7 +53,7 @@ data class Vedlegg (
 )
 
 enum class VedleggType {
-    LEGEERKLÆRING
+    LEGEERKLÆRING_FOR_VARMEHJELPEMIDDEL,
 }
 
 data class InnsenderbehovsmeldingMetadata(
