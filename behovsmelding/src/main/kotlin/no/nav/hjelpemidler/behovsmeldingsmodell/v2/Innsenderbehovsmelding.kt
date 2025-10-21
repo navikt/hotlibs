@@ -49,6 +49,7 @@ data class Innsenderbehovsmelding(
 
 data class Vedlegg (
     val id: UUID,
+    val navn: String,
     val type: VedleggType,
 )
 
