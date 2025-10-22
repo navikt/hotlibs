@@ -244,8 +244,8 @@ class Row(private val resultSet: ResultSet) : DatabaseRecord, AutoCloseable by r
         val rootNode = jsonMapper.createObjectNode()
         (1..metaData.columnCount).forEach { columnIndex ->
             val propertyName = metaData.getColumnLabel(columnIndex)
-            val value = when (metaData.getColumnType(columnIndex)) {
-                // Datetime
+            val value = when (val columnType = metaData.getColumnType(columnIndex)) {
+                // Date / Time / Timestamp
                 Types.DATE -> localDateOrNull(columnIndex)
 
                 Types.TIME -> when (metaData.getColumnTypeName(columnIndex)) {
@@ -257,9 +257,6 @@ class Row(private val resultSet: ResultSet) : DatabaseRecord, AutoCloseable by r
                     "timestamptz" -> offsetDateTimeOrNull(columnIndex)
                     else -> localDateTimeOrNull(columnIndex)
                 }
-
-                // Egendefinerte typer (e.g. CREATE TYPE / DOMAIN i PostgreSQL)
-                Types.STRUCT -> null
 
                 // Array
                 Types.ARRAY -> {
@@ -273,14 +270,8 @@ class Row(private val resultSet: ResultSet) : DatabaseRecord, AutoCloseable by r
                     }
                 }
 
-                // JSON
-                Types.OTHER -> when (metaData.getColumnTypeName(columnIndex)) {
-                    "json", "jsonb" -> treeOrNull(columnIndex)
-                    else -> anyOrNull(columnIndex)
-                }
-
-                // Fallback til JDBC-definert mapping til Java
-                else -> anyOrNull(columnIndex)
+                // Fallback til databasespesifikk håndtering av kolonne
+                else -> databaseAdapter.handle(this, columnIndex, columnType, metaData)
             }
             if (value is JsonNode) {
                 rootNode.set(propertyName, value)

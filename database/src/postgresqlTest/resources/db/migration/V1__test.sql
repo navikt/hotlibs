@@ -6,38 +6,34 @@ CREATE TYPE personnavn AS
 );
 
 CREATE DOMAIN gyldig_personnavn AS personnavn
-    CONSTRAINT navn_domain_check CHECK ((value IS NULL) OR
-                                        (((value).fornavn IS NOT NULL) AND ((value).etternavn IS NOT NULL)));
+    CHECK (value IS NULL OR ((value).fornavn IS NOT NULL AND (value).etternavn IS NOT NULL));
+
+CREATE DOMAIN fodselsnummer AS CHAR(11);
+CREATE DOMAIN aktor_id AS CHAR(13);
 
 CREATE TABLE test
 (
-    id                      BIGSERIAL         NOT NULL,
+    id                      BIGSERIAL PRIMARY KEY,
 
-    integer                 INTEGER           NOT NULL DEFAULT 10,
-    long                    BIGINT            NOT NULL DEFAULT 20,
-    string                  TEXT              NOT NULL DEFAULT 'test',
-    enum                    TEXT              NOT NULL DEFAULT 'A',
+    boolean                 BOOLEAN,
+    enum                    TEXT              DEFAULT 'A',
+    integer                 INTEGER           DEFAULT 10,
+    long                    BIGINT            DEFAULT 20,
+    string                  TEXT              DEFAULT 'test',
+    uuid                    uuid              DEFAULT gen_random_uuid(),
 
-    data_required           jsonb             NOT NULL DEFAULT '{}',
-    data_optional           jsonb             NULL,
+    date                    DATE              DEFAULT NOW(),
+    time                    TIME              DEFAULT NOW(),
+    time_with_timezone      timetz            DEFAULT NOW(),
+    timestamp               TIMESTAMP         DEFAULT NOW(),
+    timestamp_with_timezone timestamptz       DEFAULT NOW(),
 
-    fnr                     CHAR(11)          NULL,
-    aktor_id                CHAR(13)          NULL,
-    navn                    gyldig_personnavn NULL     DEFAULT ('Fornavn', NULL, 'Etternavn'),
+    fnr                     fodselsnummer,
+    aktor_id                aktor_id,
+    navn                    gyldig_personnavn DEFAULT ('Grønn Rolig', NULL, 'Bolle'),
 
-    boolean_required        BOOLEAN           NOT NULL DEFAULT FALSE,
-    boolean_optional        BOOLEAN           NULL,
+    strings                 TEXT[]            DEFAULT ARRAY ['a', 'b', 'c']::TEXT[],
+    integers                INTEGER[]         DEFAULT ARRAY [1, 2, 3]::INTEGER[],
 
-    date                    DATE              NULL     DEFAULT NOW(),
-    time                    TIME              NULL     DEFAULT NOW(),
-    time_with_timezone      timetz            NULL     DEFAULT NOW(),
-    timestamp               TIMESTAMP         NULL     DEFAULT NOW(),
-    timestamp_with_timezone timestamptz       NULL     DEFAULT NOW(),
-
-    array_string            TEXT[]            NULL     DEFAULT ARRAY ['a', 'b', 'c']::TEXT[],
-    array_integer           INTEGER[]         NULL     DEFAULT ARRAY [1, 2, 3]::INTEGER[],
-
-    uuid                    uuid              NULL     DEFAULT gen_random_uuid(),
-
-    PRIMARY KEY ("id")
+    data                    jsonb             DEFAULT '{}'
 );

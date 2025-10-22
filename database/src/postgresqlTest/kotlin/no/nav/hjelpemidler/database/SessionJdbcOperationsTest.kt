@@ -2,6 +2,7 @@ package no.nav.hjelpemidler.database
 
 import com.fasterxml.jackson.databind.node.MissingNode
 import com.fasterxml.jackson.databind.node.NullNode
+import com.fasterxml.jackson.databind.node.ObjectNode
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
@@ -13,7 +14,7 @@ import no.nav.hjelpemidler.database.test.TestEnum
 import no.nav.hjelpemidler.database.test.TestId
 import no.nav.hjelpemidler.database.test.testDataSource
 import no.nav.hjelpemidler.database.test.toTestEntity
-import no.nav.hjelpemidler.serialization.jackson.jsonMapper
+import no.nav.hjelpemidler.serialization.jackson.valueToTree
 import kotlin.test.Test
 
 class SessionJdbcOperationsTest {
@@ -43,7 +44,7 @@ class SessionJdbcOperationsTest {
         val ids = lagreEntities(20)
         val result = transactionAsync(testDataSource) { tx ->
             tx.page(
-                sql = "SELECT *, COUNT(1) OVER() AS total_elements FROM test WHERE id = ANY (:ids) ORDER BY id",
+                sql = "SELECT $columns, COUNT(1) OVER() AS total_elements FROM test WHERE id = ANY (:ids) ORDER BY id",
                 queryParameters = mapOf("ids" to ids.toTypedArray()),
                 pageRequest = PageRequest(1, 5),
                 mapper = Row::toTestEntity,
@@ -57,11 +58,11 @@ class SessionJdbcOperationsTest {
 
     @Test
     fun `Henter JSON`() = runTest {
-        val nyEntity = TestEntity(dataRequired = mapOf("k1" to "v1"))
+        val nyEntity = TestEntity(data = null)
         val id = transactionAsync(testDataSource) { it.lagre(nyEntity) }
         val result = transactionAsync(testDataSource) { it.hent(id) }
 
-        result.dataRequired shouldBe nyEntity.dataRequired
+        result.data shouldBe nyEntity.data
     }
 
     @Test
@@ -93,24 +94,23 @@ class SessionJdbcOperationsTest {
     @Test
     fun `Setter inn flere innslag`() = runTest {
         val items = listOf(
-            TestEntity(string = "x1", integer = 1, enum = TestEnum.A, dataRequired = mapOf("key" to "t1")),
-            TestEntity(string = "x2", integer = 2, enum = TestEnum.B, dataRequired = mapOf("key" to "t2")),
-            TestEntity(string = "x3", integer = 3, enum = TestEnum.C, dataRequired = mapOf("key" to "t3")),
+            TestEntity(string = "x1", integer = 1, enum = TestEnum.A, data = valueToTree(mapOf("key" to "t1"))),
+            TestEntity(string = "x2", integer = 2, enum = TestEnum.B, data = valueToTree(mapOf("key" to "t2"))),
+            TestEntity(string = "x3", integer = 3, enum = TestEnum.C, data = valueToTree(mapOf("key" to "t3"))),
         )
 
         val rows1 = transactionAsync(testDataSource) { tx ->
             tx.batch(insertSql, items) {
                 it.toQueryParameters() + mapOf(
-                    "data_required" to pgJsonbOf(it.dataRequired),
-                    "data_optional" to pgJsonbOf(it.dataOptional),
-                )
+                    "data" to pgJsonbOf(it.data),
+                ) + it.navn.toQueryParameters()
             }
         }
 
         rows1 shouldHaveSize 3
 
         val rows2 = transactionAsync(testDataSource) { tx ->
-            tx.list("SELECT * FROM test WHERE string LIKE 'x%'", mapper = Row::toTestEntity)
+            tx.list("SELECT $columns FROM test WHERE string LIKE 'x%'", mapper = Row::toTestEntity)
         }
 
         rows2 shouldHaveSize 3
@@ -120,39 +120,39 @@ class SessionJdbcOperationsTest {
     fun `Skal sette inn og hente null som null`() = runTest {
         val id = transactionAsync(testDataSource) {
             it.single<TestId>(
-                sql = """INSERT INTO test (data_optional) VALUES (:dataOptional) RETURNING id""",
-                queryParameters = mapOf("dataOptional" to pgJsonbOf(null)),
+                sql = """INSERT INTO test (data) VALUES (:data) RETURNING id""",
+                queryParameters = mapOf("data" to pgJsonbOf(null)),
             )
         }
         val result = transactionAsync(testDataSource) { it.hent(id) }
 
-        result.dataOptional.shouldBeNull()
+        result.data.shouldBeNull()
     }
 
     @Test
     fun `Skal sette inn og hente MissingNode som null`() = runTest {
         val id = transactionAsync(testDataSource) {
             it.single<TestId>(
-                sql = """INSERT INTO test (data_optional) VALUES (:dataOptional) RETURNING id""",
-                queryParameters = mapOf("dataOptional" to pgJsonbOf(MissingNode.getInstance())),
+                sql = """INSERT INTO test (data) VALUES (:data) RETURNING id""",
+                queryParameters = mapOf("data" to pgJsonbOf(MissingNode.getInstance())),
             )
         }
         val result = transactionAsync(testDataSource) { it.hent(id) }
 
-        result.dataOptional.shouldBeNull()
+        result.data.shouldBeNull()
     }
 
     @Test
     fun `Skal sette inn og hente NullNode som null`() = runTest {
         val id = transactionAsync(testDataSource) {
             it.single<TestId>(
-                sql = """INSERT INTO test (data_optional) VALUES (:dataOptional) RETURNING id""",
-                queryParameters = mapOf("dataOptional" to pgJsonbOf(NullNode.getInstance())),
+                sql = """INSERT INTO test (data) VALUES (:data) RETURNING id""",
+                queryParameters = mapOf("data" to pgJsonbOf(NullNode.getInstance())),
             )
         }
         val result = transactionAsync(testDataSource) { it.hent(id) }
 
-        result.dataOptional.shouldBeNull()
+        result.data.shouldBeNull()
     }
 
     @Test
@@ -160,7 +160,7 @@ class SessionJdbcOperationsTest {
         val id = transactionAsync(testDataSource) { it.lagre() }
         val result = transactionAsync(dataSource = testDataSource) {
             it.single(
-                sql = "SELECT * FROM test WHERE id = :id",
+                sql = "SELECT $columns FROM test WHERE id = :id",
                 queryParameters = id.toQueryParameters("id"),
                 mapper = Row::toTree,
             )
@@ -198,18 +198,28 @@ class SessionJdbcOperationsTest {
     @Test
     fun `Skal hente som TestEntity`() = runTest {
         val nyEntity = TestEntity(
-            dataRequired = mapOf("k1" to 1, "k2" to "2"),
-            dataOptional = jsonMapper.createObjectNode(),
-            navn = null,
+            data = valueToTree(mapOf("k1" to 1, "k2" to "2")),
+            // navn = null,
         )
         val id = transactionAsync(testDataSource) { it.lagre(nyEntity) }
         val lagretEntity = transactionAsync(testDataSource) {
             it.single<TestEntity>(
-                sql = "SELECT * FROM test WHERE id = :id",
+                sql = "SELECT $columns FROM test WHERE id = :id",
                 queryParameters = id.toQueryParameters("id"),
             )
         }
         lagretEntity shouldBe nyEntity.copy(id = id)
+    }
+
+    @Test
+    fun `Skal hente personnavn som JsonNode`() = runTest {
+        val id = transactionAsync(testDataSource) { it.lagre() }
+        val result = transactionAsync(testDataSource) {
+            it.single("SELECT (navn).* FROM test WHERE id = :id", id.toQueryParameters("id")) { row ->
+                row.toTree()
+            }
+        }
+        result.shouldBeInstanceOf<ObjectNode>()
     }
 
     private suspend fun lagreEntities(antall: Int): List<Long> = transactionAsync(testDataSource) { tx ->
@@ -220,30 +230,32 @@ class SessionJdbcOperationsTest {
     }
 }
 
+private const val columns =
+    "id, boolean, enum, integer, long, string, uuid, date, time, time_with_timezone, timestamp, timestamp_with_timezone, fnr, aktor_id, (navn).*, strings, integers, data"
+
 private val insertSql = Sql(
     """
-        INSERT INTO test (integer, long, string, enum, data_required, data_optional, fnr, aktor_id, navn, boolean_required,
-                          boolean_optional, date, time, time_with_timezone, timestamp, timestamp_with_timezone, array_string,
-                          array_integer, uuid)
-        VALUES (:integer, :long, :string, :enum, :data_required, :data_optional, :fnr, :aktor_id,
-                (:fornavn, :mellomnavn, :etternavn)::gyldig_personnavn,
-                :boolean_required, :boolean_optional, :date, :time, :time_with_timezone, :timestamp,
-                :timestamp_with_timezone, :array_string, :array_integer, :uuid)
+        INSERT INTO test (boolean, enum, integer, long, string, uuid, date, time, time_with_timezone, timestamp,
+                          timestamp_with_timezone, fnr, aktor_id, navn, strings, integers, data)
+        VALUES (:boolean, :enum, :integer, :long, :string, :uuid, :date, :time, :time_with_timezone, :timestamp,
+                :timestamp_with_timezone, :fnr, :aktor_id, (:fornavn,:mellomnavn,:etternavn), :strings, :integers, :data)
         RETURNING id
     """.trimIndent(),
 )
 
 private fun JdbcOperations.lagre(): TestId = single<TestId>("INSERT INTO test DEFAULT VALUES RETURNING id")
-private fun JdbcOperations.lagre(entity: TestEntity): TestId = single<TestId>(
-    sql = insertSql,
-    queryParameters = entity.toQueryParameters() + mapOf(
-        "data_required" to pgJsonbOf(entity.dataRequired),
-        "data_optional" to pgJsonbOf(entity.dataOptional),
-    ),
-)
+private fun JdbcOperations.lagre(entity: TestEntity): TestId {
+    val navn = entity.navn
+    return single<TestId>(
+        sql = insertSql,
+        queryParameters = entity.toQueryParameters() + mapOf(
+            "data" to pgJsonbOf(entity.data),
+        ) + navn.toQueryParameters(),
+    )
+}
 
 private fun JdbcOperations.hent(id: TestId) = single(
-    sql = "SELECT * FROM test WHERE id = :id",
+    sql = "SELECT $columns FROM test WHERE id = :id",
     queryParameters = id.toQueryParameters("id"),
     mapper = Row::toTestEntity,
 )

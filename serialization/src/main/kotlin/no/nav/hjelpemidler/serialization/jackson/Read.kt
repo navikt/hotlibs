@@ -6,8 +6,11 @@ import com.fasterxml.jackson.module.kotlin.treeToValue
 import org.intellij.lang.annotations.Language
 import kotlin.reflect.KClass
 
-fun <T : Any> treeToValue(node: JsonNode, type: KClass<T>): T = jsonMapper.treeToValue<T>(node, type.java)
-inline fun <reified T> treeToValue(node: JsonNode): T = jsonMapper.treeToValue<T>(node)
+fun <T : Any> treeToValue(node: JsonNode, type: KClass<T>): T =
+    jsonMapper.treeToValue<T>(node, type.java)
+
+inline fun <reified T> treeToValue(node: JsonNode): T =
+    jsonMapper.treeToValue<T>(node)
 
 fun <T : Any> treeToValueOrNull(node: JsonNode?, type: KClass<T>): T? =
     if (node == null || node.isMissingOrNull) null else jsonMapper.treeToValue<T>(node, type.java)

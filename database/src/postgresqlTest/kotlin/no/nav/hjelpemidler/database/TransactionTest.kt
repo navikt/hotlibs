@@ -41,7 +41,7 @@ class TransactionTest {
 
 private fun JdbcOperations.lagre(): TestId = single<TestId>("INSERT INTO test DEFAULT VALUES RETURNING id")
 private fun JdbcOperations.hent(id: TestId) = single(
-    sql = "SELECT * FROM test WHERE id = :id",
+    sql = "SELECT *, (navn).* FROM test WHERE id = :id",
     queryParameters = id.toQueryParameters("id"),
     mapper = Row::toTestEntity,
 )

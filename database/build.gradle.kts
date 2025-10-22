@@ -29,7 +29,7 @@ dependencies {
 
     // Oracle
     oracleApi(project(path))
-    oracleRuntimeOnly(libs.ojdbc11)
+    oracleImplementation(libs.ojdbc11)
 
     // PostgreSQL
     postgresqlApi(project(path))

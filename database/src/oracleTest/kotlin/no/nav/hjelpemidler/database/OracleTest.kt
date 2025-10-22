@@ -20,8 +20,8 @@ class OracleTest {
             )
         }
         transactionAsync(testDataSource) {
-            val value = it.single("""SELECT "DATE" FROM test WHERE id = 1""") { row ->
-                row.localDate(1)
+            val value = it.single("""SELECT * FROM test WHERE id = 1""") { row ->
+                row.toTree()
             }
             println(value)
         }
