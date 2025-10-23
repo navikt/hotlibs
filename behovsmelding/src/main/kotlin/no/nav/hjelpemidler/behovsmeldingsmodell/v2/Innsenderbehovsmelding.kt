@@ -279,7 +279,9 @@ data class Funksjonsbeskrivelse(
 enum class InnbyggersVarigeFunksjonsnedsettelse {
     ALDERDOMSSVEKKELSE,
     ANNEN_VARIG_DIAGNOSE,
+    ANNEN_DIAGNOSE,
     UAVKLART,
+    UAVKLART_V2,
 }
 
 typealias Brukernummer = String
