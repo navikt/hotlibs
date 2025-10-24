@@ -1,5 +1,5 @@
 [versions]
-bigquery = "2.55.2"
+bigquery = "2.55.3"
 cacheApi = "1.1.1"
 caffeine = "3.2.2"
 classgraph = "4.8.184"
@@ -13,7 +13,7 @@ confluent = "8.1.0"
 contractPdlAvro = "1.0.3"
 cyclonedx = "3.0.1"
 ehcache = "3.11.1"
-flyway = "11.14.1"
+flyway = "11.15.0"
 graphql = "8.8.1"
 graphql-java = "24.3"
 h2 = "2.4.240"
@@ -32,7 +32,7 @@ kafka = "4.1.0"
 konfig = "1.6.10.0"
 kotest = "6.0.4"
 kotest-ktor = "2.0.0"
-kotlin = "2.2.20"
+kotlin = "2.2.21"
 kotlin-logging = "7.0.13"
 kotlin-logging-deprecated = "3.0.5"
 kotlinx-coroutines = "1.10.2"
@@ -40,12 +40,12 @@ kotlinx-metadata = "0.9.0"
 kotlinx-serialization = "1.9.0"
 kotliquery = "1.9.1"
 ktor = "3.3.1"
-lettuce = "6.8.1.RELEASE"
-logback = "1.5.19"
+lettuce = "7.0.0.RELEASE"
+logback = "1.5.20"
 logback-logstash = "8.1"
 logback-syslog4j = "1.0.0"
 micrometer = "1.15.5"
-microprofile = "4.1"
+microprofile = "4.1.1"
 mockk = "1.14.6"
 mustache = "0.9.14"
 netty = "4.2.7.Final"
@@ -66,7 +66,7 @@ spotless = "8.0.0"
 swagger = "2.2.39"
 swaggerParser = "2.1.35"
 tbdLibs = "2025.09.19-15.24-1a9c113f"
-testcontainers = "1.21.3"
+testcontainers = "2.0.1"
 tmsKtorTokenSupport = "5.0.4"
 tmsVarsel = "2.1.1"
 unleash = "11.1.1"
@@ -250,13 +250,13 @@ tbdLibs-rapidsAndRivers-api = { module = "com.github.navikt.tbd-libs:rapids-and-
 tbdLibs-rapidsAndRivers-test = { module = "com.github.navikt.tbd-libs:rapids-and-rivers-test", version.ref = "tbdLibs" }
 testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
 testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version.ref = "testcontainers" }
-testcontainers-jdbc = { module = "org.testcontainers:jdbc", version.ref = "testcontainers" }
-testcontainers-junit = { module = "org.testcontainers:junit-jupiter", version.ref = "testcontainers" }
-testcontainers-kafka = { module = "org.testcontainers:kafka", version.ref = "testcontainers" }
-testcontainers-mockserver = { module = "org.testcontainers:mockserver", version.ref = "testcontainers" }
-testcontainers-oracle-free = { module = "org.testcontainers:oracle-free", version.ref = "testcontainers" }
-testcontainers-oracle-xe = { module = "org.testcontainers:oracle-xe", version.ref = "testcontainers" }
-testcontainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "testcontainers" }
+testcontainers-jdbc = { module = "org.testcontainers:testcontainers-jdbc", version.ref = "testcontainers" }
+testcontainers-junit = { module = "org.testcontainers:testcontainers-junit-jupiter", version.ref = "testcontainers" }
+testcontainers-kafka = { module = "org.testcontainers:testcontainers-kafka", version.ref = "testcontainers" }
+testcontainers-mockserver = { module = "org.testcontainers:testcontainers-mockserver", version.ref = "testcontainers" }
+testcontainers-oracle-free = { module = "org.testcontainers:testcontainers-oracle-free", version.ref = "testcontainers" }
+testcontainers-oracle-xe = { module = "org.testcontainers:testcontainers-oracle-xe", version.ref = "testcontainers" }
+testcontainers-postgresql = { module = "org.testcontainers:testcontainers-postgresql", version.ref = "testcontainers" }
 tokendings-exchange = { module = "no.nav.tms.token.support:tokendings-exchange", version.ref = "tmsKtorTokenSupport" }
 tokenx-validation = { module = "no.nav.tms.token.support:tokenx-validation", version.ref = "tmsKtorTokenSupport" }
 tokenx-validation-mock = { module = "no.nav.tms.token.support:tokenx-validation-mock", version.ref = "tmsKtorTokenSupport" }
