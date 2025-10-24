@@ -6,12 +6,22 @@ import java.sql.Types
 class PostgreSQLAdapter : DatabaseAdapter {
     override fun handle(row: Row, columnIndex: Int, columnType: Int, metaData: ResultSetMetaData): Any? {
         return when (columnType) {
+            Types.TIME -> when (metaData.getColumnTypeName(columnIndex)) {
+                PostgreSQLTypeName.TIMETZ -> row.offsetTimeOrNull(columnIndex)
+                else -> row.localTimeOrNull(columnIndex)
+            }
+
+            Types.TIMESTAMP -> when (metaData.getColumnTypeName(columnIndex)) {
+                PostgreSQLTypeName.TIMESTAMPTZ -> row.offsetDateTimeOrNull(columnIndex)
+                else -> row.localDateTimeOrNull(columnIndex)
+            }
+
             // Egendefinerte typer (i.e. CREATE TYPE)
             Types.STRUCT -> TODO("sqlType: $columnType ikke støttet")
 
             // JSON
             Types.OTHER -> when (metaData.getColumnTypeName(columnIndex)) {
-                "json", "jsonb" -> row.treeOrNull(columnIndex)
+                PostgreSQLTypeName.JSON, PostgreSQLTypeName.JSONB -> row.treeOrNull(columnIndex)
                 else -> row.anyOrNull(columnIndex)
             }
 
@@ -19,4 +29,11 @@ class PostgreSQLAdapter : DatabaseAdapter {
             else -> row.anyOrNull(columnIndex)
         }
     }
+}
+
+internal object PostgreSQLTypeName {
+    const val JSON = "json"
+    const val JSONB = "jsonb"
+    const val TIMETZ = "timetz"
+    const val TIMESTAMPTZ = "timestamptz"
 }

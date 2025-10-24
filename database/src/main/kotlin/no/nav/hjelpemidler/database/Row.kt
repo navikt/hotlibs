@@ -23,6 +23,7 @@ import java.sql.Clob
 import java.sql.ResultSet
 import java.sql.ResultSetMetaData
 import java.sql.Types
+import java.sql.Wrapper
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -39,7 +40,7 @@ import kotlin.reflect.KClass
  * Noen funksjoner fra [kotliquery.Row] er med vilje utelatt her, bla. funksjoner for Joda-Time
  * og java.sql.Date / java.sql.Time / java.sql.Timestamp. Vi benytter kun java.time.* (Java Time / JSR 310).
  */
-class Row(private val resultSet: ResultSet) : DatabaseRecord, AutoCloseable by resultSet {
+class Row(private val resultSet: ResultSet) : DatabaseRecord, Wrapper by resultSet, AutoCloseable by resultSet {
     val metaData: ResultSetMetaData get() = resultSet.metaData
 
     fun any(columnIndex: Int): Any = anyOrNull(columnIndex)!!
@@ -245,20 +246,9 @@ class Row(private val resultSet: ResultSet) : DatabaseRecord, AutoCloseable by r
         (1..metaData.columnCount).forEach { columnIndex ->
             val propertyName = metaData.getColumnLabel(columnIndex)
             val value = when (val columnType = metaData.getColumnType(columnIndex)) {
-                // Date / Time / Timestamp
+                Types.CLOB -> stringOrNull(columnIndex)
                 Types.DATE -> localDateOrNull(columnIndex)
 
-                Types.TIME -> when (metaData.getColumnTypeName(columnIndex)) {
-                    "timetz" -> offsetTimeOrNull(columnIndex)
-                    else -> localTimeOrNull(columnIndex)
-                }
-
-                Types.TIMESTAMP -> when (metaData.getColumnTypeName(columnIndex)) {
-                    "timestamptz" -> offsetDateTimeOrNull(columnIndex)
-                    else -> localDateTimeOrNull(columnIndex)
-                }
-
-                // Array
                 Types.ARRAY -> {
                     val array = arrayOrNull<Any?>(columnIndex)
                     if (array == null) {
