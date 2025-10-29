@@ -1,7 +1,7 @@
 [versions]
 bigquery = "2.55.3"
 cacheApi = "1.1.1"
-caffeine = "3.2.2"
+caffeine = "3.2.3"
 classgraph = "4.8.184"
 commons-compress = "1.28.0"
 commons-csv = "1.14.1"
@@ -52,18 +52,17 @@ netty = "4.2.7.Final"
 nocommons = "0.16.0"
 openapi = "7.14.0"
 openhtmltopdf = "1.1.31"
-oracle = "23.9.0.25.07"
+oracle = "23.26.0.0.0"
 postgresql = "42.7.8"
-prometheus = "1.4.1"
+prometheus = "1.4.2"
 prometheus-deprecated = "0.16.0"
 protobuf = "4.33.0"
 rapidsAndRivers = "2025092210081758528498.1d4b108f2c61"
-reactor-kafka = "1.3.24"
 redisson = "3.52.0"
 shadow = "8.1.1"
 slf4j = "2.0.17"
 spotless = "8.0.0"
-swagger = "2.2.39"
+swagger = "2.2.40"
 swaggerParser = "2.1.35"
 tbdLibs = "2025.09.19-15.24-1a9c113f"
 testcontainers = "2.0.1"
@@ -235,7 +234,6 @@ prometheus-metrics-core = { module = "io.prometheus:prometheus-metrics-core", ve
 prometheus-metrics-simpleclient-bridge = { module = "io.prometheus:prometheus-metrics-simpleclient-bridge", version.ref = "prometheus" }
 protobuf-bom = { module = "com.google.protobuf:protobuf-bom", version.ref = "protobuf" }
 rapidsAndRivers = { module = "com.github.navikt:rapids-and-rivers", version.ref = "rapidsAndRivers" }
-reactor-kafka = { module = "io.projectreactor.kafka:reactor-kafka", version.ref = "reactor-kafka" }
 redisson = { module = "org.redisson:redisson", version.ref = "redisson" }
 slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 slf4j-bom = { module = "org.slf4j:slf4j-bom", version.ref = "slf4j" }
@@ -255,7 +253,6 @@ testcontainers-junit = { module = "org.testcontainers:testcontainers-junit-jupit
 testcontainers-kafka = { module = "org.testcontainers:testcontainers-kafka", version.ref = "testcontainers" }
 testcontainers-mockserver = { module = "org.testcontainers:testcontainers-mockserver", version.ref = "testcontainers" }
 testcontainers-oracle-free = { module = "org.testcontainers:testcontainers-oracle-free", version.ref = "testcontainers" }
-testcontainers-oracle-xe = { module = "org.testcontainers:testcontainers-oracle-xe", version.ref = "testcontainers" }
 testcontainers-postgresql = { module = "org.testcontainers:testcontainers-postgresql", version.ref = "testcontainers" }
 tokendings-exchange = { module = "no.nav.tms.token.support:tokendings-exchange", version.ref = "tmsKtorTokenSupport" }
 tokenx-validation = { module = "no.nav.tms.token.support:tokenx-validation", version.ref = "tmsKtorTokenSupport" }
