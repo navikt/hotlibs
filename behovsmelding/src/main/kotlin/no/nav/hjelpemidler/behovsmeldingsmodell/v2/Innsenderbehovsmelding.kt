@@ -17,6 +17,8 @@ import no.nav.hjelpemidler.behovsmeldingsmodell.Prioritet
 import no.nav.hjelpemidler.behovsmeldingsmodell.Signaturtype
 import no.nav.hjelpemidler.behovsmeldingsmodell.UtleveringsmåteV2
 import no.nav.hjelpemidler.behovsmeldingsmodell.UtlevertTypeV2
+import no.nav.hjelpemidler.domain.geografi.Bydel
+import no.nav.hjelpemidler.domain.geografi.Kommune
 import no.nav.hjelpemidler.domain.geografi.Veiadresse
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.HarPersonnavn
@@ -99,6 +101,8 @@ data class Levering(
      */
     val utleveringsmåte: UtleveringsmåteV2?,
     val annenUtleveringsadresse: Veiadresse?,
+    val annenUtleveringskommune: Kommune? = null,
+    val annenUtleveringsbydel: Bydel? = null,
 
     // utleveringKontaktperson == null => alle hjm. er allerede utlevert
     val utleveringKontaktperson: KontaktpersonV2?,
