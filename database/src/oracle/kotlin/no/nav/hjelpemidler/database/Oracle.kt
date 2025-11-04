@@ -14,5 +14,7 @@ object Oracle : DataSourceConfigurationFactory<OracleDataSourceConfiguration> {
                         "oracle.jdbc.defaultConnectionValidation" to "LOCAL",
                     )
                 )
+                // Setter jdbcUrl til null, brukes kun som property for OracleDataSource og gir warning hvis satt.
+                jdbcUrl = null
             }
 }
