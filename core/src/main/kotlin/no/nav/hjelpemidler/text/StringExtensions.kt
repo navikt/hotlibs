@@ -47,3 +47,23 @@ inline fun <reified T : Any> String.parseTo(): T =
         UUID::class -> toUUID()
         else -> error("Ukjent type: '$type'")
     } as T
+
+fun String.isWrappedWith(prefix: String, suffix: String = prefix, ignoreCase: Boolean = false): Boolean =
+    startsWith(prefix, ignoreCase) && endsWith(suffix, ignoreCase)
+
+fun String.isWrappedWith(startChar: Char, endChar: Char = startChar, ignoreCase: Boolean = false): Boolean =
+    startsWith(startChar, ignoreCase) && endsWith(endChar, ignoreCase)
+
+fun String.quoted(): String = when {
+    isEmpty() -> "''"
+    isWrappedWith("'") -> this
+    else -> "'$this'"
+}
+
+fun String.doubleQuoted(): String = when {
+    isEmpty() -> "\"\""
+    isWrappedWith('"') -> this
+    else -> "\"$this\""
+}
+
+fun String.unquoted(): String = removeSurrounding("'").removeSurrounding("\"")
