@@ -180,7 +180,7 @@ data class Hjelpemidler(
         get() = artikler.mapTo(sortedSetOf(), ArtikkelBase::hmsArtNr)
 
     /**
-     * Liste av alle artikler, både hjelpemidler med tilbehør og frittstående tilbehør.
+     * Liste av alle artikler, både hjelpemidler med tilhørende tilbehør og frittstående tilbehør.
      */
     val artikler: List<ArtikkelBase>
         @JsonIgnore

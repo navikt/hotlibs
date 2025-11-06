@@ -2,25 +2,7 @@ package no.nav.hjelpemidler.behovsmeldingsmodell.v2
 
 import java.util.UUID
 
-fun lagHjelpemidler(): Hjelpemidler {
-    val hjelpemidler = listOf(
-        lagHjelpemiddel("100001", 1),
-        lagHjelpemiddel("100002", 1),
-    )
-    val tilbehør = listOf(
-        lagTilbehør("300001", 1),
-        lagTilbehør("300002", 2),
-    )
-    return Hjelpemidler(
-        hjelpemidler = hjelpemidler,
-        tilbehør = tilbehør,
-        totaltAntall = hjelpemidler
-            .sumOf { hjelpemiddel -> hjelpemiddel.antall + tilbehør.sumOf(ArtikkelBase::antall) }
-                + tilbehør.sumOf(ArtikkelBase::antall),
-    )
-}
-
-fun lagHjelpemiddel(hmsArtNr: String, antall: Int = 1) = Hjelpemiddel(
+fun lagHjelpemiddel(hmsArtNr: String, antall: Int = 1, tilbehør: List<Tilbehør> = emptyList()) = Hjelpemiddel(
     hjelpemiddelId = UUID.randomUUID().toString(),
     antall = antall,
     produkt = HjelpemiddelProdukt(
@@ -32,10 +14,7 @@ fun lagHjelpemiddel(hmsArtNr: String, antall: Int = 1) = Hjelpemiddel(
         delkontraktId = null,
         rangering = 1,
     ),
-    tilbehør = listOf(
-        lagTilbehør("200001", 1),
-        lagTilbehør("200002", 2),
-    ),
+    tilbehør = tilbehør,
     bytter = emptyList(),
     bruksarenaer = emptySet(),
     utlevertinfo = Utlevertinfo(
