@@ -49,7 +49,7 @@ data class Innsenderbehovsmelding(
     override val prioritet: Prioritet = tilPrioritet(levering.hast),
 ) : BehovsmeldingBase
 
-data class Vedlegg (
+data class Vedlegg(
     val id: UUID,
     val navn: String,
     val type: VedleggType,
@@ -187,6 +187,11 @@ data class Hjelpemidler(
 }
 
 interface ArtikkelBase {
+    /**
+     * Unik ID for hjelpemiddel/tilbehør i behovsmeldingen. Brukes bla. til å identifisere hvilket hjelpemiddel/tilbehør
+     * saksbehandlere ønsker å endre ifm. saksbehandling.
+     */
+    val id: String
     val hmsArtNr: String
     val artikkelnavn: String
     val antall: Int
@@ -210,6 +215,10 @@ data class Hjelpemiddel(
     val varsler: List<Varsel>,
     val saksbehandlingvarsel: List<Varsel> = emptyList(),
 ) : ArtikkelBase {
+    override val id: String
+        @JsonIgnore
+        get() = hjelpemiddelId
+
     override val hmsArtNr: String
         @JsonIgnore
         get() = produkt.hmsArtNr
@@ -235,13 +244,19 @@ data class HjelpemiddelProdukt(
     val iso8: Iso8,
     val iso8Tittel: String,
     val delkontrakttittel: String,
-    val sortimentkategori: String, // fra digithot-sortiment
-    val delkontraktId: String?, // Brukt av hm-saksfordeling for å sortere til Gosys.
+    /**
+     * Fra digihot-sortiment.
+     */
+    val sortimentkategori: String,
+    /**
+     * Brukt av hm-saksfordeling for å sortere til Gosys.
+     */
+    val delkontraktId: String?,
 
-    /*
-    null -> ikke på rammeavtale
-    Har i sjeldne tilfeller skjedd at formidler får søkt om produkt som ikke lenger er på rammeavtale, antageligvis pga
-    endring i produkter på rammeavtale etter lansering av rammeavtalen.
+    /**
+     * null -> ikke på rammeavtale
+     * Har i sjeldne tilfeller skjedd at formidler får søkt om produkt som ikke lenger er på rammeavtale, antageligvis pga.
+     * endring i produkter på rammeavtale etter lansering av rammeavtalen.
      */
     val rangering: Int?,
 )
@@ -256,6 +271,10 @@ data class Tilbehør(
     val opplysninger: List<Opplysning> = emptyList(),
     val saksbehandlingvarsel: List<Varsel> = emptyList(),
 ) : ArtikkelBase {
+    override val id: String
+        @JsonIgnore
+        get() = tilbehørId?.toString() ?: error("Tilbehør mangler unik id, hmsArtNr: $hmsArtNr")
+
     override val artikkelnavn: String
         @JsonIgnore
         get() = navn
@@ -329,7 +348,7 @@ data class Tekst(
     init {
         require(
             (forhåndsdefinertTekst != null && fritekst == null) ||
-                (forhåndsdefinertTekst == null && fritekst != null),
+                    (forhåndsdefinertTekst == null && fritekst != null),
         ) { "Én, og bare én, av forhåndsdefinertTekst eller fritekst må ha verdi. Mottok forhåndsdefinertTekst <$forhåndsdefinertTekst> og fritekst <$fritekst>" }
 
         sanitize(begrepsforklaring)
