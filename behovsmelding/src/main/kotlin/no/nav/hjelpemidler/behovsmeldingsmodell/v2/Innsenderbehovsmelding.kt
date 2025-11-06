@@ -177,13 +177,14 @@ data class Hjelpemidler(
      */
     val hmsArtNrs: Set<String>
         @JsonIgnore
-        get() {
-            val destination = hjelpemidler.flatMapTo(sortedSetOf()) {
-                it.tilbehør.mapTo(sortedSetOf(it.hmsArtNr), Tilbehør::hmsArtNr)
-            }
-            tilbehør.mapTo(destination, Tilbehør::hmsArtNr)
-            return destination
-        }
+        get() = artikler.mapTo(sortedSetOf(), ArtikkelBase::hmsArtNr)
+
+    /**
+     * Liste av alle artikler, både hjelpemidler med tilbehør og frittstående tilbehør.
+     */
+    val artikler: List<ArtikkelBase>
+        @JsonIgnore
+        get() = hjelpemidler.flatMap { listOf(it) + it.tilbehør } + tilbehør
 }
 
 interface ArtikkelBase {
