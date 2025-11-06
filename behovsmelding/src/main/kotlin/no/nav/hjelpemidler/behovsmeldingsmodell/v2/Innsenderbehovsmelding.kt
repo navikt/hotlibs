@@ -20,6 +20,7 @@ import no.nav.hjelpemidler.behovsmeldingsmodell.UtlevertTypeV2
 import no.nav.hjelpemidler.domain.geografi.Bydel
 import no.nav.hjelpemidler.domain.geografi.Kommune
 import no.nav.hjelpemidler.domain.geografi.Veiadresse
+import no.nav.hjelpemidler.domain.artikkel.Artikkellinje
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.HarPersonnavn
 import no.nav.hjelpemidler.domain.person.Personnavn
@@ -177,25 +178,14 @@ data class Hjelpemidler(
      */
     val hmsArtNrs: Set<String>
         @JsonIgnore
-        get() = artikler.mapTo(sortedSetOf(), ArtikkelBase::hmsArtNr)
+        get() = artikler.mapTo(sortedSetOf(), Artikkellinje::hmsArtNr)
 
     /**
      * Liste av alle artikler, både hjelpemidler med tilhørende tilbehør og frittstående tilbehør.
      */
-    val artikler: List<ArtikkelBase>
+    val artikler: List<Artikkellinje>
         @JsonIgnore
         get() = hjelpemidler.flatMap { listOf(it) + it.tilbehør } + tilbehør
-}
-
-interface ArtikkelBase {
-    /**
-     * Unik ID for hjelpemiddel/tilbehør i behovsmeldingen. Brukes bla. til å identifisere hvilket hjelpemiddel/tilbehør
-     * saksbehandlere ønsker å endre ifm. saksbehandling.
-     */
-    val id: String
-    val hmsArtNr: String
-    val artikkelnavn: String
-    val antall: Int
 }
 
 data class Hjelpemiddel(
@@ -215,7 +205,7 @@ data class Hjelpemiddel(
     val opplysninger: List<Opplysning>,
     val varsler: List<Varsel>,
     val saksbehandlingvarsel: List<Varsel> = emptyList(),
-) : ArtikkelBase {
+) : Artikkellinje {
     override val id: String
         @JsonIgnore
         get() = hjelpemiddelId
@@ -253,7 +243,6 @@ data class HjelpemiddelProdukt(
      * Brukt av hm-saksfordeling for å sortere til Gosys.
      */
     val delkontraktId: String?,
-
     /**
      * null -> ikke på rammeavtale
      * Har i sjeldne tilfeller skjedd at formidler får søkt om produkt som ikke lenger er på rammeavtale, antageligvis pga.
@@ -271,10 +260,10 @@ data class Tilbehør(
     val fritakFraBegrunnelseÅrsak: FritakFraBegrunnelseÅrsak?,
     val opplysninger: List<Opplysning> = emptyList(),
     val saksbehandlingvarsel: List<Varsel> = emptyList(),
-) : ArtikkelBase {
+) : Artikkellinje {
     override val id: String
         @JsonIgnore
-        get() = tilbehørId?.toString() ?: error("Tilbehør mangler unik id, hmsArtNr: $hmsArtNr")
+        get() = tilbehørId?.toString() ?: ""
 
     override val artikkelnavn: String
         @JsonIgnore
