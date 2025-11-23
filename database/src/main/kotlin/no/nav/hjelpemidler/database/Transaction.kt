@@ -22,11 +22,20 @@ interface Transaction<T : Any> {
  */
 suspend fun <T> transaction(
     dataSource: DataSource,
+    readOnly: Boolean = false,
     returnGeneratedKeys: Boolean = false,
     strict: Boolean = true,
     queryTimeout: Int? = null,
     block: (JdbcOperations) -> T,
-): T = withTransactionContext(createSession(dataSource, returnGeneratedKeys, strict, queryTimeout)) { session ->
+): T = withTransactionContext(
+    createSession(
+        dataSource = dataSource,
+        readOnly = readOnly,
+        returnGeneratedKeys = returnGeneratedKeys,
+        strict = strict,
+        queryTimeout = queryTimeout,
+    ),
+) { session ->
     session.transaction { block(SessionJdbcOperations(it)) }
 }
 
@@ -42,13 +51,20 @@ suspend fun <T> transaction(
  */
 suspend fun <T> transactionAsync(
     dataSource: DataSource,
+    readOnly: Boolean = false,
     returnGeneratedKeys: Boolean = false,
     strict: Boolean = true,
     queryTimeout: Int? = null,
     block: suspend (JdbcOperations) -> T,
 ): T {
     val context = currentTransactionContext() ?: return withTransactionContext(
-        createSession(dataSource, returnGeneratedKeys, strict, queryTimeout)
+        createSession(
+            dataSource = dataSource,
+            readOnly = readOnly,
+            returnGeneratedKeys = returnGeneratedKeys,
+            strict = strict,
+            queryTimeout = queryTimeout,
+        )
     ) { session ->
         session.transaction {
             val tx = SessionJdbcOperations(it)
