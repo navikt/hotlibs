@@ -14,7 +14,7 @@ internal fun createSession(
         connection = kotliquery.Connection(connection.apply { isReadOnly = readOnly }),
         returnGeneratedKeys = returnGeneratedKeys,
         strict = strict,
-        queryTimeout = queryTimeout
+        queryTimeout = queryTimeout,
     )
 
 
