@@ -5,13 +5,14 @@ import java.sql.Types
 
 class PostgreSQLAdapter : DatabaseAdapter {
     override fun handle(row: Row, columnIndex: Int, columnType: Int, metaData: ResultSetMetaData): Any? {
+        val columnTypeName = metaData.getColumnTypeName(columnIndex)
         return when (columnType) {
-            Types.TIME -> when (metaData.getColumnTypeName(columnIndex)) {
+            Types.TIME -> when (columnTypeName) {
                 PostgreSQLTypeName.TIMETZ -> row.offsetTimeOrNull(columnIndex)
                 else -> row.localTimeOrNull(columnIndex)
             }
 
-            Types.TIMESTAMP -> when (metaData.getColumnTypeName(columnIndex)) {
+            Types.TIMESTAMP -> when (columnTypeName) {
                 PostgreSQLTypeName.TIMESTAMPTZ -> row.offsetDateTimeOrNull(columnIndex)
                 else -> row.localDateTimeOrNull(columnIndex)
             }
@@ -20,7 +21,7 @@ class PostgreSQLAdapter : DatabaseAdapter {
             Types.STRUCT -> TODO("sqlType: $columnType ikke støttet")
 
             // JSON
-            Types.OTHER -> when (metaData.getColumnTypeName(columnIndex)) {
+            Types.OTHER -> when (columnTypeName) {
                 PostgreSQLTypeName.JSON, PostgreSQLTypeName.JSONB -> row.treeOrNull(columnIndex)
                 else -> row.anyOrNull(columnIndex)
             }

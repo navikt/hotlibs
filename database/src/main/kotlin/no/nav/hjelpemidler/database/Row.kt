@@ -1,5 +1,6 @@
 package no.nav.hjelpemidler.database
 
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.JsonNode
 import no.nav.hjelpemidler.collections.toEnumSet
 import no.nav.hjelpemidler.domain.enhet.Enhet
@@ -9,15 +10,13 @@ import no.nav.hjelpemidler.domain.geografi.Kommune
 import no.nav.hjelpemidler.domain.person.AktørId
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.Personnavn
-import no.nav.hjelpemidler.serialization.jackson.add
 import no.nav.hjelpemidler.serialization.jackson.jsonMapper
 import no.nav.hjelpemidler.serialization.jackson.jsonToTreeOrNull
 import no.nav.hjelpemidler.serialization.jackson.jsonToValue
-import no.nav.hjelpemidler.serialization.jackson.put
+import no.nav.hjelpemidler.serialization.jackson.node
 import no.nav.hjelpemidler.serialization.jackson.treeToValueOrNull
 import java.io.InputStream
 import java.math.BigDecimal
-import java.math.BigInteger
 import java.sql.Blob
 import java.sql.Clob
 import java.sql.ResultSet
@@ -41,7 +40,7 @@ import kotlin.reflect.KClass
  * og java.sql.Date / java.sql.Time / java.sql.Timestamp. Vi benytter kun java.time.* (Java Time / JSR 310).
  */
 class Row(private val resultSet: ResultSet) : DatabaseRecord, Wrapper by resultSet, AutoCloseable by resultSet {
-    val metaData: ResultSetMetaData get() = resultSet.metaData
+    val resultSetMetaData: ResultSetMetaData get() = resultSet.metaData
 
     fun any(columnIndex: Int): Any = anyOrNull(columnIndex)!!
     fun any(columnLabel: String): Any = anyOrNull(columnLabel)!!
@@ -222,7 +221,7 @@ class Row(private val resultSet: ResultSet) : DatabaseRecord, Wrapper by resultS
         ifPresent(columnLabel, Row::uuidOrNull, transform)
 
     override fun toMap(): Map<String, Any?> {
-        val metaData = this.metaData
+        val metaData = this.resultSetMetaData
         return (1..metaData.columnCount).associate { columnIndex ->
             metaData.getColumnLabel(columnIndex) to anyOrNull(columnIndex)
         }
@@ -241,43 +240,18 @@ class Row(private val resultSet: ResultSet) : DatabaseRecord, Wrapper by resultS
     fun treeOrNull(columnLabel: String): JsonNode? = stringOrNull(columnLabel)?.let { jsonToTreeOrNull(it) }
 
     fun toTree(): JsonNode {
-        val metaData = this.metaData
-        val rootNode = jsonMapper.createObjectNode()
-        (1..metaData.columnCount).forEach { columnIndex ->
-            val propertyName = metaData.getColumnLabel(columnIndex)
-            val value = when (val columnType = metaData.getColumnType(columnIndex)) {
-                Types.CLOB -> stringOrNull(columnIndex)
-                Types.DATE -> localDateOrNull(columnIndex)
-
-                Types.ARRAY -> {
-                    val array = arrayOrNull<Any?>(columnIndex)
-                    if (array == null) {
-                        null
-                    } else {
-                        val arrayNode = rootNode.arrayNode(array.size)
-                        array.forEach(arrayNode::add)
-                        arrayNode
-                    }
-                }
-
-                // Fallback til databasespesifikk håndtering av kolonne
-                else -> databaseAdapter.handle(this, columnIndex, columnType, metaData)
-            }
-            if (value is JsonNode) {
-                rootNode.set(propertyName, value)
-            } else {
-                rootNode.put(propertyName, value)
-            }
+        val metaData = resultSetMetaData
+        if (metaData.columnCount == 1) {
+            return tree(1, metaData)
         }
-        // Hvis kun én kolonne returnerer vi kun denne ene verdien
-        return if (metaData.columnCount == 1) {
-            rootNode.values().next()
-        } else {
-            rootNode
+        val properties = (1..metaData.columnCount).associate { columnIndex ->
+            metaData.getColumnLabel(columnIndex) to tree(columnIndex, metaData)
         }
+        return jsonMapper.createObjectNode().setAll(properties)
     }
 
     fun <T : Any> toValue(type: KClass<T>): T = toValueOrNull(type)!!
+    fun <T : Any> toValue(type: TypeReference<T>): T = toValueOrNull(type)!!
     inline fun <reified T : Any> toValue(): T = toValueOrNull<T>()!!
 
     /**
@@ -294,13 +268,38 @@ class Row(private val resultSet: ResultSet) : DatabaseRecord, Wrapper by resultS
     /**
      * @see [isValueType]
      */
+    fun <T : Any> toValueOrNull(type: TypeReference<T>): T? {
+        return if (type.isValueType) {
+            anyOrNull(1, (type.type as Class<T>).kotlin)
+        } else {
+            treeToValueOrNull(toTree(), type)
+        }
+    }
+
+    /**
+     * @see [isValueType]
+     */
     inline fun <reified T : Any> toValueOrNull(): T? {
         val type = T::class
         return if (type.isValueType) {
             anyOrNull(1, type)
         } else {
-            treeToValueOrNull<T>(toTree(), type) // fixme
+            treeToValueOrNull<T>(toTree())
         }
+    }
+
+    /**
+     * @see [com.fasterxml.jackson.databind.node.JsonNodeFactory.node]
+     */
+    private fun tree(columnIndex: Int, metaData: ResultSetMetaData): JsonNode {
+        val value = when (val columnType = metaData.getColumnType(columnIndex)) {
+            Types.ARRAY -> arrayOrNull<Any?>(columnIndex)
+            Types.CLOB -> stringOrNull(columnIndex)
+            Types.DATE -> localDateOrNull(columnIndex)
+            // Fallback til databasespesifikk håndtering av kolonne
+            else -> databaseAdapter.handle(this, columnIndex, columnType, metaData)
+        }
+        return value as? JsonNode ?: jsonMapper.nodeFactory.node(value)
     }
 
     // END JSON
@@ -343,29 +342,3 @@ class Row(private val resultSet: ResultSet) : DatabaseRecord, Wrapper by resultS
 
     private fun <T> nullable(value: T): T? = if (resultSet.wasNull()) null else value
 }
-
-val KClass<*>.isValueType: Boolean
-    get() = when (this) {
-        BigDecimal::class,
-        BigInteger::class,
-        Boolean::class,
-        Byte::class,
-        ByteArray::class,
-        Double::class,
-        Float::class,
-        Int::class,
-        Long::class,
-        Short::class,
-        String::class,
-        UUID::class,
-
-        Instant::class,
-        LocalDate::class,
-        LocalDateTime::class,
-        LocalTime::class,
-        OffsetDateTime::class,
-        OffsetTime::class,
-            -> true
-
-        else -> false
-    }

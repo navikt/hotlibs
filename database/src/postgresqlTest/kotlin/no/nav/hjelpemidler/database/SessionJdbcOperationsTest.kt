@@ -201,8 +201,8 @@ class SessionJdbcOperationsTest {
             data = valueToTree(mapOf("k1" to 1, "k2" to "2")),
             // navn = null,
         )
-        val id = transactionAsync(testDataSource) { it.lagre(nyEntity) }
-        val lagretEntity = transactionAsync(testDataSource) {
+        val id = transaction(testDataSource) { it.lagre(nyEntity) }
+        val lagretEntity = transaction(testDataSource) {
             it.single<TestEntity>(
                 sql = "SELECT $columns FROM test WHERE id = :id",
                 queryParameters = id.toQueryParameters("id"),

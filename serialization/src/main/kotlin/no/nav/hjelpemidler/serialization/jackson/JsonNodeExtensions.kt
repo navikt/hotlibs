@@ -35,3 +35,5 @@ fun JsonNode?.fødselsnummerValueOrNull(): Fødselsnummer? = ifText(::Fødselsnu
 
 inline fun <reified T : Any> JsonNode.value(): T = treeToValue<T>(this)
 inline fun <reified T : Any> JsonNode?.valueOrNull(): T? = treeToValueOrNull<T>(this)
+
+fun JsonNode.orNull(): JsonNode? = takeUnless(JsonNode::isMissingOrNull)
