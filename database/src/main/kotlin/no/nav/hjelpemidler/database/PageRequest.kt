@@ -14,6 +14,8 @@ data class PageRequest(
     val limit: Int @JsonIgnore get() = pageSize
     val offset: Int @JsonIgnore get() = (pageNumber - 1) * pageSize
 
+    fun next() = copy(pageNumber = pageNumber + 1)
+
     override fun toString(): String = "$pageNumber/$pageSize"
 
     companion object {

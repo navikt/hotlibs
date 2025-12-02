@@ -8,7 +8,7 @@ inline fun <reified T : Any> JdbcOperations.single(
     queryParameters: QueryParameters = emptyMap(),
 ): T = single(sql, queryParameters, jacksonTypeRef<T>())
 
-inline fun <reified T : Any> JdbcOperations.singleOrNull(
+inline fun <reified T> JdbcOperations.singleOrNull(
     @Language("SQL") sql: CharSequence,
     queryParameters: QueryParameters = emptyMap(),
 ): T? = singleOrNull(sql, queryParameters, jacksonTypeRef<T>())

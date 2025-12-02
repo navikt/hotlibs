@@ -250,10 +250,6 @@ class Row(private val resultSet: ResultSet) : DatabaseRecord, Wrapper by resultS
         return jsonMapper.createObjectNode().setAll(properties)
     }
 
-    fun <T : Any> toValue(type: KClass<T>): T = toValueOrNull(type)!!
-    fun <T : Any> toValue(type: TypeReference<T>): T = toValueOrNull(type)!!
-    inline fun <reified T : Any> toValue(): T = toValueOrNull<T>()!!
-
     /**
      * @see [isValueType]
      */
@@ -268,9 +264,10 @@ class Row(private val resultSet: ResultSet) : DatabaseRecord, Wrapper by resultS
     /**
      * @see [isValueType]
      */
-    fun <T : Any> toValueOrNull(type: TypeReference<T>): T? {
+    @Suppress("UNCHECKED_CAST")
+    fun <T> toValueOrNull(type: TypeReference<T>): T? {
         return if (type.isValueType) {
-            anyOrNull(1, (type.type as Class<T>).kotlin)
+            resultSet.getObject(1, type.type as Class<T>)
         } else {
             treeToValueOrNull(toTree(), type)
         }

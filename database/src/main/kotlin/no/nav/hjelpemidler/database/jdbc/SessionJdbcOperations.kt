@@ -5,7 +5,6 @@ import no.nav.hjelpemidler.database.JdbcOperations
 import no.nav.hjelpemidler.database.Page
 import no.nav.hjelpemidler.database.PageRequest
 import no.nav.hjelpemidler.database.QueryParameters
-import no.nav.hjelpemidler.database.ResultMapper
 import no.nav.hjelpemidler.database.Row
 import no.nav.hjelpemidler.database.UpdateResult
 import no.nav.hjelpemidler.database.pageOf
@@ -20,20 +19,19 @@ internal class SessionJdbcOperations(private val session: Session) : JdbcOperati
     override fun <T : Any> single(
         sql: CharSequence,
         queryParameters: QueryParameters,
-        mapper: ResultMapper<T>,
-    ): T = singleOrNull(sql, queryParameters, mapper)
-        ?: throw NoSuchElementException("Spørringen ga ingen treff i databasen")
+        mapper: (Row) -> T?,
+    ): T = singleOrNull(sql, queryParameters, mapper) ?: noResultError()
 
-    override fun <T : Any> singleOrNull(
+    override fun <T> singleOrNull(
         sql: CharSequence,
         queryParameters: QueryParameters,
-        mapper: ResultMapper<T>,
+        mapper: (Row) -> T?,
     ): T? = session.single(queryOf(sql, queryParameters)) { mapper(Row(it.underlying)) }
 
     override fun <T : Any> list(
         sql: CharSequence,
         queryParameters: QueryParameters,
-        mapper: ResultMapper<T>,
+        mapper: (Row) -> T?,
     ): List<T> = session.list(queryOf(sql, queryParameters)) { mapper(Row(it.underlying)) }
 
     /**
@@ -44,7 +42,7 @@ internal class SessionJdbcOperations(private val session: Session) : JdbcOperati
         queryParameters: QueryParameters,
         pageRequest: PageRequest,
         totalElementsLabel: String,
-        mapper: ResultMapper<T>,
+        mapper: (Row) -> T?,
     ): Page<T> {
         val limit = pageRequest.limit
         val offset = pageRequest.offset
@@ -108,3 +106,5 @@ internal class SessionJdbcOperations(private val session: Session) : JdbcOperati
         queryParameters: Collection<QueryParameters>,
     ): List<Long> = session.batchPreparedNamedStatementAndReturnGeneratedKeys(sql.toString(), queryParameters.prepare())
 }
+
+private fun noResultError(): Nothing = throw NoSuchElementException("Spørringen ga ingen treff i databasen")

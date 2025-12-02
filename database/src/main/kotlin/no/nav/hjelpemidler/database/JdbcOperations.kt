@@ -14,7 +14,7 @@ interface JdbcOperations : DatabaseOperations {
     fun <T : Any> single(
         @Language("SQL") sql: CharSequence,
         queryParameters: QueryParameters = emptyMap(),
-        mapper: ResultMapper<T>,
+        mapper: (Row) -> T?,
     ): T
 
     /**
@@ -24,7 +24,7 @@ interface JdbcOperations : DatabaseOperations {
         @Language("SQL") sql: CharSequence,
         queryParameters: QueryParameters = emptyMap(),
         type: KClass<T>,
-    ): T = single(sql, queryParameters) { it.toValue(type) }
+    ): T = single(sql, queryParameters) { it.toValueOrNull(type) }
 
     /**
      * @throws NoSuchElementException hvis spørringen ikke gir treff i databasen
@@ -33,12 +33,12 @@ interface JdbcOperations : DatabaseOperations {
         @Language("SQL") sql: CharSequence,
         queryParameters: QueryParameters = emptyMap(),
         type: TypeReference<T>,
-    ): T = single(sql, queryParameters) { it.toValue(type) }
+    ): T = single(sql, queryParameters) { it.toValueOrNull(type) }
 
-    fun <T : Any> singleOrNull(
+    fun <T> singleOrNull(
         @Language("SQL") sql: CharSequence,
         queryParameters: QueryParameters = emptyMap(),
-        mapper: ResultMapper<T>,
+        mapper: (Row) -> T?,
     ): T?
 
     fun <T : Any> singleOrNull(
@@ -47,7 +47,7 @@ interface JdbcOperations : DatabaseOperations {
         type: KClass<T>,
     ): T? = singleOrNull(sql, queryParameters) { it.toValueOrNull(type) }
 
-    fun <T : Any> singleOrNull(
+    fun <T> singleOrNull(
         @Language("SQL") sql: CharSequence,
         queryParameters: QueryParameters = emptyMap(),
         type: TypeReference<T>,
@@ -56,27 +56,27 @@ interface JdbcOperations : DatabaseOperations {
     fun <T : Any> list(
         @Language("SQL") sql: CharSequence,
         queryParameters: QueryParameters = emptyMap(),
-        mapper: ResultMapper<T>,
+        mapper: (Row) -> T?,
     ): List<T>
 
     fun <T : Any> list(
         @Language("SQL") sql: CharSequence,
         queryParameters: QueryParameters = emptyMap(),
         type: KClass<T>,
-    ): List<T> = list(sql, queryParameters) { it.toValue(type) }
+    ): List<T> = list(sql, queryParameters) { it.toValueOrNull(type) }
 
     fun <T : Any> list(
         @Language("SQL") sql: CharSequence,
         queryParameters: QueryParameters = emptyMap(),
         type: TypeReference<T>,
-    ): List<T> = list(sql, queryParameters) { it.toValue(type) }
+    ): List<T> = list(sql, queryParameters) { it.toValueOrNull(type) }
 
     fun <T : Any> page(
         @Language("SQL") sql: CharSequence,
         queryParameters: QueryParameters = emptyMap(),
         pageRequest: PageRequest,
         totalElementsLabel: String = "total_elements",
-        mapper: ResultMapper<T>,
+        mapper: (Row) -> T?,
     ): Page<T>
 
     fun execute(
@@ -110,7 +110,7 @@ interface JdbcOperations : DatabaseOperations {
         queryParameters: Collection<QueryParameters> = emptyList(),
     ): List<Long>
 
-    fun <T : Any> batchAndReturnGeneratedKeys(
+    fun <T> batchAndReturnGeneratedKeys(
         @Language("SQL") sql: CharSequence,
         items: Collection<T> = emptyList(),
         block: (T) -> QueryParameters,
