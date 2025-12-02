@@ -239,13 +239,18 @@ class Row(private val resultSet: ResultSet) : DatabaseRecord, Wrapper by resultS
     fun treeOrNull(columnIndex: Int): JsonNode? = stringOrNull(columnIndex)?.let { jsonToTreeOrNull(it) }
     fun treeOrNull(columnLabel: String): JsonNode? = stringOrNull(columnLabel)?.let { jsonToTreeOrNull(it) }
 
+    /**
+     * Konverter hele raden til [JsonNode].
+     * Hvis resultatet inneholder flere kolonner returneres [com.fasterxml.jackson.databind.node.ObjectNode],
+     * ellers returneres en [JsonNode] basert på kolonnetypen.
+     */
     fun toTree(): JsonNode {
         val metaData = resultSetMetaData
         if (metaData.columnCount == 1) {
-            return tree(1, metaData)
+            return jsonNode(1, metaData)
         }
         val properties = (1..metaData.columnCount).associate { columnIndex ->
-            metaData.getColumnLabel(columnIndex) to tree(columnIndex, metaData)
+            metaData.getColumnLabel(columnIndex) to jsonNode(columnIndex, metaData)
         }
         return jsonMapper.createObjectNode().setAll(properties)
     }
@@ -288,7 +293,7 @@ class Row(private val resultSet: ResultSet) : DatabaseRecord, Wrapper by resultS
     /**
      * @see [com.fasterxml.jackson.databind.node.JsonNodeFactory.node]
      */
-    private fun tree(columnIndex: Int, metaData: ResultSetMetaData): JsonNode {
+    private fun jsonNode(columnIndex: Int, metaData: ResultSetMetaData): JsonNode {
         val value = when (val columnType = metaData.getColumnType(columnIndex)) {
             Types.ARRAY -> arrayOrNull<Any?>(columnIndex)
             Types.CLOB -> stringOrNull(columnIndex)
