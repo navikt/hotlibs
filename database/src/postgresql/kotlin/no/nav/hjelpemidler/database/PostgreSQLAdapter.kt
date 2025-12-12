@@ -1,5 +1,6 @@
 package no.nav.hjelpemidler.database
 
+import no.nav.hjelpemidler.serialization.jackson.jsonToTreeOrNull
 import java.sql.ResultSetMetaData
 import java.sql.Types
 
@@ -22,7 +23,10 @@ class PostgreSQLAdapter : DatabaseAdapter {
 
             // JSON
             Types.OTHER -> when (columnTypeName) {
-                PostgreSQLTypeName.JSON, PostgreSQLTypeName.JSONB -> row.treeOrNull(columnIndex)
+                PostgreSQLTypeName.JSON,
+                PostgreSQLTypeName.JSONB,
+                    -> row.stringOrNull(columnIndex)?.let { jsonToTreeOrNull(it) }
+
                 else -> row.anyOrNull(columnIndex)
             }
 

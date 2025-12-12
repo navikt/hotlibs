@@ -1,4 +1,4 @@
-package no.nav.hjelpemidler.database
+package no.nav.hjelpemidler.database.jdbc
 
 import com.fasterxml.jackson.databind.node.MissingNode
 import com.fasterxml.jackson.databind.node.NullNode
@@ -8,28 +8,40 @@ import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.coroutines.test.runTest
+import no.nav.hjelpemidler.database.JdbcOperations
+import no.nav.hjelpemidler.database.PageRequest
+import no.nav.hjelpemidler.database.Row
+import no.nav.hjelpemidler.database.UpdateResult
+import no.nav.hjelpemidler.database.list
+import no.nav.hjelpemidler.database.pgJsonbOf
+import no.nav.hjelpemidler.database.single
 import no.nav.hjelpemidler.database.sql.Sql
 import no.nav.hjelpemidler.database.test.TestEntity
 import no.nav.hjelpemidler.database.test.TestEnum
 import no.nav.hjelpemidler.database.test.TestId
 import no.nav.hjelpemidler.database.test.testDataSource
 import no.nav.hjelpemidler.database.test.toTestEntity
+import no.nav.hjelpemidler.database.toQueryParameters
+import no.nav.hjelpemidler.database.transaction
 import no.nav.hjelpemidler.serialization.jackson.valueToTree
+import java.time.Instant
+import java.time.ZonedDateTime
+import kotlin.test.Ignore
 import kotlin.test.Test
 
 class SessionJdbcOperationsTest {
     @Test
     fun `Henter ett innslag`() = runTest {
         val nyEntity = TestEntity()
-        val id = transactionAsync(testDataSource) { it.lagre(nyEntity) }
-        val lagretEntity = transactionAsync(testDataSource) { it.hent(id) }
+        val id = transaction(testDataSource) { it.lagre(nyEntity) }
+        val lagretEntity = transaction(testDataSource) { it.hent(id) }
         lagretEntity shouldBe nyEntity.copy(id = id)
     }
 
     @Test
     fun `Henter flere innslag`() = runTest {
         val ids = lagreEntities(10)
-        val result = transactionAsync(testDataSource) {
+        val result = transaction(testDataSource) {
             it.list<Long>(
                 sql = "SELECT id FROM test WHERE id = ANY (:ids)",
                 queryParameters = mapOf("ids" to ids.toTypedArray()),
@@ -42,7 +54,7 @@ class SessionJdbcOperationsTest {
     @Test
     fun `Henter side`() = runTest {
         val ids = lagreEntities(20)
-        val result = transactionAsync(testDataSource) { tx ->
+        val result = transaction(testDataSource) { tx ->
             tx.page(
                 sql = "SELECT $columns, COUNT(1) OVER() AS total_elements FROM test WHERE id = ANY (:ids) ORDER BY id",
                 queryParameters = mapOf("ids" to ids.toTypedArray()),
@@ -59,16 +71,16 @@ class SessionJdbcOperationsTest {
     @Test
     fun `Henter JSON`() = runTest {
         val nyEntity = TestEntity(data = null)
-        val id = transactionAsync(testDataSource) { it.lagre(nyEntity) }
-        val result = transactionAsync(testDataSource) { it.hent(id) }
+        val id = transaction(testDataSource) { it.lagre(nyEntity) }
+        val result = transaction(testDataSource) { it.hent(id) }
 
         result.data shouldBe nyEntity.data
     }
 
     @Test
     fun `Oppdaterer innslag`() = runTest {
-        val id = transactionAsync(testDataSource) { it.lagre() }
-        val result = transactionAsync(testDataSource) {
+        val id = lagre()
+        val result = transaction(testDataSource) {
             it.update(
                 sql = "UPDATE test SET integer = :integer WHERE id = :id",
                 queryParameters = mapOf("integer" to 50, "id" to id),
@@ -80,8 +92,8 @@ class SessionJdbcOperationsTest {
 
     @Test
     fun `Sletter innslag`() = runTest {
-        val id = transactionAsync(testDataSource) { it.lagre() }
-        val result = transactionAsync(testDataSource) {
+        val id = lagre()
+        val result = transaction(testDataSource) {
             it.update(
                 sql = "DELETE FROM test WHERE id = :id",
                 queryParameters = id.toQueryParameters("id"),
@@ -99,7 +111,7 @@ class SessionJdbcOperationsTest {
             TestEntity(string = "x3", integer = 3, enum = TestEnum.C, data = valueToTree(mapOf("key" to "t3"))),
         )
 
-        val rows1 = transactionAsync(testDataSource) { tx ->
+        val rows1 = transaction(testDataSource) { tx ->
             tx.batch(insertSql, items) {
                 it.toQueryParameters() + mapOf(
                     "data" to pgJsonbOf(it.data),
@@ -109,8 +121,11 @@ class SessionJdbcOperationsTest {
 
         rows1 shouldHaveSize 3
 
-        val rows2 = transactionAsync(testDataSource) { tx ->
-            tx.list("SELECT $columns FROM test WHERE string LIKE 'x%'", mapper = Row::toTestEntity)
+        val rows2 = transaction(testDataSource) { tx ->
+            tx.list(
+                "SELECT $columns FROM test WHERE string LIKE 'x%'",
+                mapper = Row::toTestEntity
+            )
         }
 
         rows2 shouldHaveSize 3
@@ -118,47 +133,47 @@ class SessionJdbcOperationsTest {
 
     @Test
     fun `Skal sette inn og hente null som null`() = runTest {
-        val id = transactionAsync(testDataSource) {
+        val id = transaction(testDataSource) {
             it.single<TestId>(
                 sql = """INSERT INTO test (data) VALUES (:data) RETURNING id""",
                 queryParameters = mapOf("data" to pgJsonbOf(null)),
             )
         }
-        val result = transactionAsync(testDataSource) { it.hent(id) }
+        val result = transaction(testDataSource) { it.hent(id) }
 
         result.data.shouldBeNull()
     }
 
     @Test
     fun `Skal sette inn og hente MissingNode som null`() = runTest {
-        val id = transactionAsync(testDataSource) {
+        val id = transaction(testDataSource) {
             it.single<TestId>(
                 sql = """INSERT INTO test (data) VALUES (:data) RETURNING id""",
                 queryParameters = mapOf("data" to pgJsonbOf(MissingNode.getInstance())),
             )
         }
-        val result = transactionAsync(testDataSource) { it.hent(id) }
+        val result = transaction(testDataSource) { it.hent(id) }
 
         result.data.shouldBeNull()
     }
 
     @Test
     fun `Skal sette inn og hente NullNode som null`() = runTest {
-        val id = transactionAsync(testDataSource) {
+        val id = transaction(testDataSource) {
             it.single<TestId>(
                 sql = """INSERT INTO test (data) VALUES (:data) RETURNING id""",
                 queryParameters = mapOf("data" to pgJsonbOf(NullNode.getInstance())),
             )
         }
-        val result = transactionAsync(testDataSource) { it.hent(id) }
+        val result = transaction(testDataSource) { it.hent(id) }
 
         result.data.shouldBeNull()
     }
 
     @Test
     fun `Skal hente som JsonNode`() = runTest {
-        val id = transactionAsync(testDataSource) { it.lagre() }
-        val result = transactionAsync(dataSource = testDataSource) {
+        val id = lagre()
+        val result = transaction(dataSource = testDataSource) {
             it.single(
                 sql = "SELECT $columns FROM test WHERE id = :id",
                 queryParameters = id.toQueryParameters("id"),
@@ -171,8 +186,8 @@ class SessionJdbcOperationsTest {
 
     @Test
     fun `Skal hente som TestId`() = runTest {
-        val id = transactionAsync(testDataSource) { it.lagre() }
-        val result = transactionAsync(dataSource = testDataSource) {
+        val id = lagre()
+        val result = transaction(dataSource = testDataSource) {
             it.single<TestId>(
                 sql = "SELECT id FROM test WHERE id = :id",
                 queryParameters = id.toQueryParameters("id"),
@@ -184,8 +199,8 @@ class SessionJdbcOperationsTest {
 
     @Test
     fun `Skal hente som TestEnum`() = runTest {
-        val id = transactionAsync(testDataSource) { it.lagre() }
-        val result = transactionAsync(dataSource = testDataSource) {
+        val id = lagre()
+        val result = transaction(dataSource = testDataSource) {
             it.single<TestEnum>(
                 sql = "SELECT enum FROM test WHERE id = :id",
                 queryParameters = id.toQueryParameters("id"),
@@ -199,7 +214,6 @@ class SessionJdbcOperationsTest {
     fun `Skal hente som TestEntity`() = runTest {
         val nyEntity = TestEntity(
             data = valueToTree(mapOf("k1" to 1, "k2" to "2")),
-            // navn = null,
         )
         val id = transaction(testDataSource) { it.lagre(nyEntity) }
         val lagretEntity = transaction(testDataSource) {
@@ -213,8 +227,8 @@ class SessionJdbcOperationsTest {
 
     @Test
     fun `Skal hente personnavn som JsonNode`() = runTest {
-        val id = transactionAsync(testDataSource) { it.lagre() }
-        val result = transactionAsync(testDataSource) {
+        val id = lagre()
+        val result = transaction(testDataSource) {
             it.single("SELECT (navn).* FROM test WHERE id = :id", id.toQueryParameters("id")) { row ->
                 row.toTree()
             }
@@ -222,7 +236,37 @@ class SessionJdbcOperationsTest {
         result.shouldBeInstanceOf<ObjectNode>()
     }
 
-    private suspend fun lagreEntities(antall: Int): List<Long> = transactionAsync(testDataSource) { tx ->
+    @Test
+    @Ignore("TODO")
+    fun `Skal hente timestamp som Instant`() = runTest {
+        val id = lagre()
+        val result = hent<Instant>(id, "timestamp_with_timezone")
+        result.shouldBeInstanceOf<Instant>()
+    }
+
+    @Test
+    @Ignore("TODO")
+    fun `Skal hente timestamp som ZonedDateTime`() = runTest {
+        val id = lagre()
+        val result = hent<ZonedDateTime>(id, "timestamp_with_timezone")
+        result.shouldBeInstanceOf<ZonedDateTime>()
+    }
+
+    private suspend fun lagre(): TestId = transaction(testDataSource) { it.lagre() }
+
+    private suspend inline fun <reified T : Any> hent(id: TestId, vararg columns: String): T =
+        transaction(testDataSource) {
+            it.single<T>(
+                sql = """
+                    SELECT ${columns.joinToString(", ")}
+                    FROM test
+                    WHERE id = :id
+                """.trimIndent(),
+                queryParameters = id.toQueryParameters("id"),
+            )
+        }
+
+    private suspend fun lagreEntities(antall: Int): List<Long> = transaction(testDataSource) { tx ->
         tx.batchAndReturnGeneratedKeys(
             sql = "INSERT INTO test DEFAULT VALUES RETURNING id",
             queryParameters = (1..antall).map { emptyMap() },

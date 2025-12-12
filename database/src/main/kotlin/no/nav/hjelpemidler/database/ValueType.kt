@@ -12,6 +12,7 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.OffsetDateTime
 import java.time.OffsetTime
+import java.time.ZonedDateTime
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.KClass
@@ -40,6 +41,7 @@ val KClass<*>.isValueType: Boolean
         LocalTime::class,
         OffsetDateTime::class,
         OffsetTime::class,
+        ZonedDateTime::class,
             -> true
 
         else -> false
