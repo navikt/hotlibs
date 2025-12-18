@@ -35,10 +35,10 @@ enum class BehovsmeldingStatus {
     companion object {
         fun fraVedtaksresultat(vedtaksresultat: Vedtaksresultat): BehovsmeldingStatus {
             return when (vedtaksresultat.vedtaksresultat) {
-                "A" -> VEDTAKSRESULTAT_AVSLÅTT
-                "DI" -> VEDTAKSRESULTAT_DELVIS_INNVILGET
+                "A", "AVSLÅTT" -> VEDTAKSRESULTAT_AVSLÅTT
+                "DI", "DELVIS_INNVILGET" -> VEDTAKSRESULTAT_DELVIS_INNVILGET
                 "IM" -> VEDTAKSRESULTAT_MUNTLIG_INNVILGET
-                "I" -> VEDTAKSRESULTAT_INNVILGET
+                "I", "INNVILGET" -> VEDTAKSRESULTAT_INNVILGET
                 "HB" -> VEDTAKSRESULTAT_HENLAGTBORTFALT
                 else -> VEDTAKSRESULTAT_ANNET
             }
