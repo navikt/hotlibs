@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonAlias
 import no.nav.hjelpemidler.text.isInteger
 
 class Bydel(
-    @param:JsonAlias("bydelsnummer")
+    @JsonAlias("bydelsnummer")
     override val nummer: String,
-    @param:JsonAlias("bydelsnavn")
+    @JsonAlias("bydelsnavn")
     override val navn: String,
 ) : GeografiskEnhet() {
     init {

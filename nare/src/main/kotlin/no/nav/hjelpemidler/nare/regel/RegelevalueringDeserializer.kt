@@ -44,7 +44,7 @@ internal class RegelevalueringDeserializer : StdNodeBasedDeserializer<Regelevalu
         val årsak: Årsak?,
         val lovreferanse: Lovreferanse?,
         val beskrivelse: String,
-        @param:JsonAlias("identifikator")
+        @JsonAlias("identifikator")
         val id: String,
         val barn: List<Regelevaluering>?,
     )

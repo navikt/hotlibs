@@ -34,9 +34,9 @@ data class TestEntity(
     val timestamp: LocalDateTime? = LocalDateTime.of(date, time),
     val timestampWithTimezone: OffsetDateTime? = timestamp?.atOffset(ZoneOffset.UTC),
     val fnr: Fødselsnummer? = Fødselsnummer(50.år),
-    @param:JsonAlias("aktor_id")
+    @JsonAlias("aktor_id")
     val aktørId: AktørId? = AktørId("1234567891011"),
-    @param:JsonFormat(shape = JsonFormat.Shape.ARRAY)
+    @JsonFormat(shape = JsonFormat.Shape.ARRAY)
     val navn: Personnavn? = Personnavn("Grønn Rolig", null, "Bolle"),
     val strings: List<String>? = listOf("a", "b", "c"),
     val integers: List<Int>? = listOf(1, 2, 3),
