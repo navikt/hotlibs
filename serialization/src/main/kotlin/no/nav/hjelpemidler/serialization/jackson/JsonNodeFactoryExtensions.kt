@@ -13,6 +13,8 @@ import java.util.UUID
 fun JsonNodeFactory.node(value: Any?): JsonNode = when (value) {
     null -> nullNode()
 
+    is JsonNode -> value
+
     is Boolean -> booleanNode(value)
     is String -> textNode(value)
     is UUID -> textNode(value.toString())

@@ -2,6 +2,7 @@ package no.nav.hjelpemidler.database
 
 import io.mockk.mockk
 import io.mockk.verifySequence
+import no.nav.hjelpemidler.database.jdbc.ResultSetAdapter
 import no.nav.hjelpemidler.test.NamedTestCase
 import no.nav.hjelpemidler.test.testFactory
 import org.junit.jupiter.api.TestFactory
@@ -64,7 +65,7 @@ class RowTest {
         override fun getPayload(): Case = this
         override fun invoke() {
             val columnIndex = 1
-            val resultSet = mockk<ResultSet>(relaxed = true)
+            val resultSet = mockk<ResultSetAdapter>(relaxed = true)
             val row = Row(resultSet)
             row.rowFn(columnIndex)
             verifySequence {

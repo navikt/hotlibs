@@ -26,7 +26,6 @@ import no.nav.hjelpemidler.database.transaction
 import no.nav.hjelpemidler.serialization.jackson.valueToTree
 import java.time.Instant
 import java.time.ZonedDateTime
-import kotlin.test.Ignore
 import kotlin.test.Test
 
 class SessionJdbcOperationsTest {
@@ -177,7 +176,7 @@ class SessionJdbcOperationsTest {
             it.single(
                 sql = "SELECT $columns FROM test WHERE id = :id",
                 queryParameters = id.toQueryParameters("id"),
-                mapper = Row::toTree,
+                mapper = Row::asTree,
             )
         }
 
@@ -230,14 +229,13 @@ class SessionJdbcOperationsTest {
         val id = lagre()
         val result = transaction(testDataSource) {
             it.single("SELECT (navn).* FROM test WHERE id = :id", id.toQueryParameters("id")) { row ->
-                row.toTree()
+                row.asTree()
             }
         }
         result.shouldBeInstanceOf<ObjectNode>()
     }
 
     @Test
-    @Ignore("TODO")
     fun `Skal hente timestamp som Instant`() = runTest {
         val id = lagre()
         val result = hent<Instant>(id, "timestamp_with_timezone")
@@ -245,7 +243,6 @@ class SessionJdbcOperationsTest {
     }
 
     @Test
-    @Ignore("TODO")
     fun `Skal hente timestamp som ZonedDateTime`() = runTest {
         val id = lagre()
         val result = hent<ZonedDateTime>(id, "timestamp_with_timezone")

@@ -1,8 +1,8 @@
 package no.nav.hjelpemidler.database
 
-import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.JsonNode
 import no.nav.hjelpemidler.collections.toEnumSet
+import no.nav.hjelpemidler.database.jdbc.ResultSetAdapter
 import no.nav.hjelpemidler.domain.enhet.Enhet
 import no.nav.hjelpemidler.domain.enhet.Enhetsnummer
 import no.nav.hjelpemidler.domain.geografi.Bydel
@@ -13,15 +13,11 @@ import no.nav.hjelpemidler.domain.person.Personnavn
 import no.nav.hjelpemidler.serialization.jackson.jsonMapper
 import no.nav.hjelpemidler.serialization.jackson.jsonToTreeOrNull
 import no.nav.hjelpemidler.serialization.jackson.jsonToValue
-import no.nav.hjelpemidler.serialization.jackson.node
 import no.nav.hjelpemidler.serialization.jackson.treeToValueOrNull
 import java.io.InputStream
 import java.math.BigDecimal
 import java.sql.Blob
 import java.sql.Clob
-import java.sql.ResultSet
-import java.sql.ResultSetMetaData
-import java.sql.Types
 import java.sql.Wrapper
 import java.time.Instant
 import java.time.LocalDate
@@ -34,38 +30,26 @@ import java.util.UUID
 import kotlin.reflect.KClass
 
 /**
- * Erstatning av [kotliquery.Row] for å legge til flere funksjoner og for å ikke eksponere kotliquery ut av
- * hotlibs/database.
+ * Erstatter [kotliquery.Row] for å legge til flere funksjoner og for å ikke eksponere kotliquery ut av hotlibs/database.
  * Noen funksjoner fra [kotliquery.Row] er med vilje utelatt her, bla. funksjoner for Joda-Time
  * og java.sql.Date / java.sql.Time / java.sql.Timestamp. Vi benytter kun java.time.* (Java Time / JSR 310).
  */
-class Row(private val resultSet: ResultSet) : DatabaseRecord, Wrapper by resultSet, AutoCloseable by resultSet {
-    val resultSetMetaData: ResultSetMetaData get() = resultSet.metaData
-
+class Row(private val resultSet: ResultSetAdapter) : DatabaseRecord, Wrapper by resultSet, AutoCloseable by resultSet {
     fun any(columnIndex: Int): Any = anyOrNull(columnIndex)!!
     fun any(columnLabel: String): Any = anyOrNull(columnLabel)!!
     fun anyOrNull(columnIndex: Int): Any? = nullable(resultSet.getObject(columnIndex))
     fun anyOrNull(columnLabel: String): Any? = nullable(resultSet.getObject(columnLabel))
 
-    fun <T : Any> any(columnIndex: Int, type: KClass<T>): T = anyOrNull(columnIndex, type)!!
-    fun <T : Any> any(columnLabel: String, type: KClass<T>): T = anyOrNull(columnLabel, type)!!
-
-    fun <T : Any> anyOrNull(columnIndex: Int, type: KClass<T>): T? =
-        nullable(resultSet.getObject<T>(columnIndex, type.java))
-
-    fun <T : Any> anyOrNull(columnLabel: String, type: KClass<T>): T? =
-        nullable(resultSet.getObject<T>(columnLabel, type.java))
-
     inline fun <reified T> array(columnIndex: Int): Array<T> = arrayOrNull<T>(columnIndex)!!
     inline fun <reified T> array(columnLabel: String): Array<T> = arrayOrNull<T>(columnLabel)!!
 
     inline fun <reified T> arrayOrNull(columnIndex: Int): Array<T>? {
-        val result = sqlArrayOrNull(columnIndex)?.array as Array<*>? ?: return null
+        val result = sqlArrayOrNull(columnIndex)?.array as? Array<*>? ?: return null
         return result.map { it as T }.toTypedArray<T>()
     }
 
     inline fun <reified T> arrayOrNull(columnLabel: String): Array<T>? {
-        val result = sqlArrayOrNull(columnLabel)?.array as Array<*>? ?: return null
+        val result = sqlArrayOrNull(columnLabel)?.array as? Array<*>? ?: return null
         return result.map { it as T }.toTypedArray<T>()
     }
 
@@ -164,8 +148,18 @@ class Row(private val resultSet: ResultSet) : DatabaseRecord, Wrapper by resultS
 
     fun uuid(columnLabel: String): UUID = uuidOrNull(columnLabel)!!
     fun uuid(columnIndex: Int): UUID = uuidOrNull(columnIndex)!!
-    fun uuidOrNull(columnIndex: Int): UUID? = anyOrNull(columnIndex, UUID::class)
-    fun uuidOrNull(columnLabel: String): UUID? = anyOrNull(columnLabel, UUID::class)
+    fun uuidOrNull(columnIndex: Int): UUID? = valueOrNull(columnIndex)
+    fun uuidOrNull(columnLabel: String): UUID? = valueOrNull(columnLabel)
+
+    fun <T : Any> value(columnIndex: Int, type: KClass<T>): T = valueOrNull(columnIndex, type)!!
+    fun <T : Any> value(columnLabel: String, type: KClass<T>): T = valueOrNull(columnLabel, type)!!
+    fun <T : Any> valueOrNull(columnIndex: Int, type: KClass<T>): T? = resultSet.valueOrNull(columnIndex, type)
+    fun <T : Any> valueOrNull(columnLabel: String, type: KClass<T>): T? = resultSet.valueOrNull(columnLabel, type)
+
+    inline fun <reified T : Any> value(columnIndex: Int): T = value(columnIndex, T::class)
+    inline fun <reified T : Any> value(columnLabel: String): T = value(columnLabel, T::class)
+    inline fun <reified T : Any> valueOrNull(columnIndex: Int): T? = valueOrNull(columnIndex, T::class)
+    inline fun <reified T : Any> valueOrNull(columnLabel: String): T? = valueOrNull(columnLabel, T::class)
 
     // START Java Time / JSR 310
 
@@ -176,28 +170,28 @@ class Row(private val resultSet: ResultSet) : DatabaseRecord, Wrapper by resultS
 
     fun localDate(columnIndex: Int): LocalDate = localDateOrNull(columnIndex)!!
     fun localDate(columnLabel: String): LocalDate = localDateOrNull(columnLabel)!!
-    fun localDateOrNull(columnIndex: Int): LocalDate? = anyOrNull(columnIndex, LocalDate::class)
-    fun localDateOrNull(columnLabel: String): LocalDate? = anyOrNull(columnLabel, LocalDate::class)
+    fun localDateOrNull(columnIndex: Int): LocalDate? = valueOrNull(columnIndex)
+    fun localDateOrNull(columnLabel: String): LocalDate? = valueOrNull(columnLabel)
 
     fun localTime(columnIndex: Int): LocalTime = localTimeOrNull(columnIndex)!!
     fun localTime(columnLabel: String): LocalTime = localTimeOrNull(columnLabel)!!
-    fun localTimeOrNull(columnIndex: Int): LocalTime? = anyOrNull(columnIndex, LocalTime::class)
-    fun localTimeOrNull(columnLabel: String): LocalTime? = anyOrNull(columnLabel, LocalTime::class)
+    fun localTimeOrNull(columnIndex: Int): LocalTime? = valueOrNull(columnIndex)
+    fun localTimeOrNull(columnLabel: String): LocalTime? = valueOrNull(columnLabel)
 
     fun localDateTime(columnIndex: Int): LocalDateTime = localDateTimeOrNull(columnIndex)!!
     fun localDateTime(columnLabel: String): LocalDateTime = localDateTimeOrNull(columnLabel)!!
-    fun localDateTimeOrNull(columnIndex: Int): LocalDateTime? = anyOrNull(columnIndex, LocalDateTime::class)
-    fun localDateTimeOrNull(columnLabel: String): LocalDateTime? = anyOrNull(columnLabel, LocalDateTime::class)
+    fun localDateTimeOrNull(columnIndex: Int): LocalDateTime? = valueOrNull(columnIndex)
+    fun localDateTimeOrNull(columnLabel: String): LocalDateTime? = valueOrNull(columnLabel)
 
     fun offsetTime(columnIndex: Int): OffsetTime = offsetTimeOrNull(columnIndex)!!
     fun offsetTime(columnLabel: String): OffsetTime = offsetTimeOrNull(columnLabel)!!
-    fun offsetTimeOrNull(columnIndex: Int): OffsetTime? = anyOrNull(columnIndex, OffsetTime::class)
-    fun offsetTimeOrNull(columnLabel: String): OffsetTime? = anyOrNull(columnLabel, OffsetTime::class)
+    fun offsetTimeOrNull(columnIndex: Int): OffsetTime? = valueOrNull(columnIndex)
+    fun offsetTimeOrNull(columnLabel: String): OffsetTime? = valueOrNull(columnLabel)
 
     fun offsetDateTime(columnIndex: Int): OffsetDateTime = offsetDateTimeOrNull(columnIndex)!!
     fun offsetDateTime(columnLabel: String): OffsetDateTime = offsetDateTimeOrNull(columnLabel)!!
-    fun offsetDateTimeOrNull(columnIndex: Int): OffsetDateTime? = anyOrNull(columnIndex, OffsetDateTime::class)
-    fun offsetDateTimeOrNull(columnLabel: String): OffsetDateTime? = anyOrNull(columnLabel, OffsetDateTime::class)
+    fun offsetDateTimeOrNull(columnIndex: Int): OffsetDateTime? = valueOrNull(columnIndex)
+    fun offsetDateTimeOrNull(columnLabel: String): OffsetDateTime? = valueOrNull(columnLabel)
 
     fun zonedDateTime(columnIndex: Int): ZonedDateTime = zonedDateTimeOrNull(columnIndex)!!
     fun zonedDateTime(columnLabel: String): ZonedDateTime = zonedDateTimeOrNull(columnLabel)!!
@@ -205,27 +199,6 @@ class Row(private val resultSet: ResultSet) : DatabaseRecord, Wrapper by resultS
     fun zonedDateTimeOrNull(columnLabel: String): ZonedDateTime? = offsetDateTimeOrNull(columnLabel)?.toZonedDateTime()
 
     // END Java Time / JSR 310
-
-    fun <K, V> ifPresent(columnLabel: String, valueOrNull: Row.(String) -> K?, transform: Row.(K) -> V): V? {
-        val value = valueOrNull(columnLabel) ?: return null
-        return transform(value)
-    }
-
-    fun <T> ifLongPresent(columnLabel: String, transform: Row.(Long) -> T): T? =
-        ifPresent(columnLabel, Row::longOrNull, transform)
-
-    fun <T> ifStringPresent(columnLabel: String, transform: Row.(String) -> T): T? =
-        ifPresent(columnLabel, Row::stringOrNull, transform)
-
-    fun <T> ifUuidPresent(columnLabel: String, transform: Row.(UUID) -> T): T? =
-        ifPresent(columnLabel, Row::uuidOrNull, transform)
-
-    override fun toMap(): Map<String, Any?> {
-        val metaData = this.resultSetMetaData
-        return (1..metaData.columnCount).associate { columnIndex ->
-            metaData.getColumnLabel(columnIndex) to anyOrNull(columnIndex)
-        }
-    }
 
     // START JSON
 
@@ -239,74 +212,9 @@ class Row(private val resultSet: ResultSet) : DatabaseRecord, Wrapper by resultS
     fun treeOrNull(columnIndex: Int): JsonNode? = stringOrNull(columnIndex)?.let { jsonToTreeOrNull(it) }
     fun treeOrNull(columnLabel: String): JsonNode? = stringOrNull(columnLabel)?.let { jsonToTreeOrNull(it) }
 
-    /**
-     * Konverter hele raden til [JsonNode].
-     * Hvis resultatet inneholder flere kolonner returneres [com.fasterxml.jackson.databind.node.ObjectNode],
-     * ellers returneres en [JsonNode] basert på kolonnetypen.
-     */
-    fun toTree(): JsonNode {
-        val metaData = resultSetMetaData
-        if (metaData.columnCount == 1) {
-            return jsonNode(1, metaData)
-        }
-        val properties = (1..metaData.columnCount).associate { columnIndex ->
-            metaData.getColumnLabel(columnIndex) to jsonNode(columnIndex, metaData)
-        }
-        return jsonMapper.createObjectNode().setAll(properties)
-    }
-
-    /**
-     * @see [isValueType]
-     */
-    fun <T : Any> toValueOrNull(type: KClass<T>): T? {
-        return if (type.isValueType) {
-            anyOrNull(1, type)
-        } else {
-            treeToValueOrNull(toTree(), type)
-        }
-    }
-
-    /**
-     * @see [isValueType]
-     */
-    @Suppress("UNCHECKED_CAST")
-    fun <T> toValueOrNull(type: TypeReference<T>): T? {
-        return if (type.isValueType) {
-            resultSet.getObject(1, type.type as Class<T>)
-        } else {
-            treeToValueOrNull(toTree(), type)
-        }
-    }
-
-    /**
-     * @see [isValueType]
-     */
-    inline fun <reified T : Any> toValueOrNull(): T? {
-        val type = T::class
-        return if (type.isValueType) {
-            anyOrNull(1, type)
-        } else {
-            treeToValueOrNull<T>(toTree())
-        }
-    }
-
-    /**
-     * @see [com.fasterxml.jackson.databind.node.JsonNodeFactory.node]
-     */
-    private fun jsonNode(columnIndex: Int, metaData: ResultSetMetaData): JsonNode {
-        val value = when (val columnType = metaData.getColumnType(columnIndex)) {
-            Types.ARRAY -> arrayOrNull<Any?>(columnIndex)
-            Types.CLOB -> stringOrNull(columnIndex)
-            Types.DATE -> localDateOrNull(columnIndex)
-            // Fallback til databasespesifikk håndtering av kolonne
-            else -> databaseAdapter.handle(this, columnIndex, columnType, metaData)
-        }
-        return value as? JsonNode ?: jsonMapper.nodeFactory.node(value)
-    }
-
     // END JSON
 
-    // START DOMAIN
+    // START Domain
 
     fun aktørId(columnLabel: String): AktørId = aktørIdOrNull(columnLabel)!!
     fun aktørIdOrNull(columnLabel: String): AktørId? = stringOrNull(columnLabel)?.let(::AktørId)
@@ -340,7 +248,70 @@ class Row(private val resultSet: ResultSet) : DatabaseRecord, Wrapper by resultS
             Bydel(nummer = nummer, navn = string(columnLabelOf("bydelsnavn", prefix)))
         }
 
-    // END DOMAIN
+    // END Domain
+
+    // START Convert
+
+    /**
+     * Konverter hele raden til [Map].
+     */
+    override fun asMap(): Map<String, Any?> {
+        val metaData = resultSet.metaData
+        return (1..metaData.columnCount).associate { columnIndex ->
+            metaData.getColumnLabel(columnIndex) to anyOrNull(columnIndex)
+        }
+    }
+
+    /**
+     * Konverter hele raden til [JsonNode].
+     *
+     * NB! Hvis resultatet inneholder flere kolonner returneres [com.fasterxml.jackson.databind.node.ObjectNode],
+     * ellers returneres en [JsonNode] basert på kolonnetypen.
+     */
+    fun asTree(): JsonNode {
+        val metaData = resultSet.metaData
+        if (metaData.columnCount == 1) {
+            return resultSet.asTree(1)
+        }
+        val properties = (1..metaData.columnCount).associate { columnIndex ->
+            metaData.getColumnLabel(columnIndex) to resultSet.asTree(columnIndex)
+        }
+        return jsonMapper.createObjectNode().setAll(properties)
+    }
+
+    /**
+     * Konverter hele raden til [T].
+     *
+     * @see [isValueType]
+     */
+    inline fun <reified T : Any> asValueOrNull(): T? {
+        val type = T::class
+        return if (type.isValueType) {
+            valueOrNull(1, type)
+        } else {
+            treeToValueOrNull<T>(asTree())
+        }
+    }
+
+    // END Convert
+
+    // START Utilities
+
+    fun <K, V> ifPresent(columnLabel: String, getter: Row.(String) -> K?, transform: Row.(K) -> V): V? {
+        val value = getter(columnLabel) ?: return null
+        return transform(value)
+    }
+
+    fun <T> ifLongPresent(columnLabel: String, transform: Row.(Long) -> T): T? =
+        ifPresent(columnLabel, Row::longOrNull, transform)
+
+    fun <T> ifStringPresent(columnLabel: String, transform: Row.(String) -> T): T? =
+        ifPresent(columnLabel, Row::stringOrNull, transform)
+
+    fun <T> ifUuidPresent(columnLabel: String, transform: Row.(UUID) -> T): T? =
+        ifPresent(columnLabel, Row::uuidOrNull, transform)
 
     private fun <T> nullable(value: T): T? = if (resultSet.wasNull()) null else value
+
+    // END Utilities
 }

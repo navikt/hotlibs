@@ -1,6 +1,5 @@
 package no.nav.hjelpemidler.database
 
-import com.fasterxml.jackson.core.type.TypeReference
 import no.nav.hjelpemidler.domain.id.Id
 import no.nav.hjelpemidler.domain.id.LongId
 import no.nav.hjelpemidler.domain.id.StringId
@@ -49,18 +48,6 @@ val KClass<*>.isValueType: Boolean
 
 val KClass<*>.isIdType: Boolean
     get() = isSubclassOf(Id::class)
-
-val TypeReference<*>.isValueType: Boolean
-    get() {
-        val type = this.type as? Class<*> ?: return false
-        return type.kotlin.isValueType
-    }
-
-val TypeReference<*>.isIdType: Boolean
-    get() {
-        val type = this.type as? Class<*> ?: return false
-        return type.kotlin.isIdType
-    }
 
 internal fun <T : LongId> lagId(value: Long, type: KClass<T>): T = primaryConstructorFor(type).call(value)
 internal fun <T : StringId> lagId(value: String, type: KClass<T>): T = primaryConstructorFor(type).call(value)

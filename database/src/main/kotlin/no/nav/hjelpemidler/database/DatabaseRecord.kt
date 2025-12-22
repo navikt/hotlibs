@@ -2,7 +2,7 @@ package no.nav.hjelpemidler.database
 
 interface DatabaseRecord {
     /**
-     * Transformer hele raden til `Map<String, Any?>`.
+     * Konverter hele raden til [Map].
      */
-    fun toMap(): Map<String, Any?>
+    fun asMap(): Map<String, Any?>
 }
