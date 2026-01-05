@@ -10,15 +10,15 @@ fun FluentConfiguration.initSql(@Language("SQL") vararg initSql: String): Fluent
 fun FluentConfiguration.createRole(role: String) {
     initSql(
         initSql ?: "",
-        """
+        $$"""
             DO
-            ${'$'}${'$'}
+            $$
                 BEGIN
-                    CREATE ROLE $role;
+                    CREATE ROLE $$role;
                 EXCEPTION
                     WHEN duplicate_object THEN RAISE NOTICE '%, skipping', sqlerrm USING ERRCODE = sqlstate;
                 END
-            ${'$'}${'$'};
+            $$;
         """.trimIndent(),
     )
 }

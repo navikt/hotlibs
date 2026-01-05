@@ -4,10 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.JsonNodeFactory
 import java.math.BigDecimal
 import java.math.BigInteger
-import java.sql.Date
-import java.sql.Time
-import java.sql.Timestamp
 import java.time.temporal.Temporal
+import java.time.temporal.TemporalAmount
 import java.util.UUID
 
 fun JsonNodeFactory.node(value: Any?): JsonNode = when (value) {
@@ -29,11 +27,17 @@ fun JsonNodeFactory.node(value: Any?): JsonNode = when (value) {
     is BigInteger -> numberNode(value)
     is BigDecimal -> numberNode(value)
 
-    // datetime
+    // java.time.*
     is Temporal -> textNode(value.toString())
-    is Date -> textNode(value.toLocalDate().toString())
-    is Time -> textNode(value.toLocalTime().toString())
-    is Timestamp -> textNode(value.toLocalDateTime().toString())
+    is TemporalAmount -> textNode(value.toString())
+
+    // java.sql.*
+    is java.sql.Array -> node(value.array)
+    is java.sql.Blob -> value.binaryStream.use { binaryNode(it.readBytes()) }
+    is java.sql.Clob -> value.characterStream.use { textNode(it.readText()) }
+    is java.sql.Date -> textNode(value.toLocalDate().toString())
+    is java.sql.Time -> textNode(value.toLocalTime().toString())
+    is java.sql.Timestamp -> textNode(value.toLocalDateTime().toString())
 
     is Array<*> -> {
         val node = arrayNode(value.size)

@@ -1,12 +1,12 @@
 package no.nav.hjelpemidler.database.jdbc
 
 import kotliquery.Session
+import no.nav.hjelpemidler.database.DatabaseVendorAdapter
 import no.nav.hjelpemidler.database.JdbcOperations
 import no.nav.hjelpemidler.database.Page
 import no.nav.hjelpemidler.database.PageRequest
 import no.nav.hjelpemidler.database.QueryParameters
 import no.nav.hjelpemidler.database.Row
-import no.nav.hjelpemidler.database.RowFactory
 import no.nav.hjelpemidler.database.UpdateResult
 import no.nav.hjelpemidler.database.pageOf
 import no.nav.hjelpemidler.database.prepare
@@ -17,7 +17,7 @@ import java.io.Closeable
  * Implementasjon av [no.nav.hjelpemidler.database.JdbcOperations] basert på [kotliquery.Session].
  */
 internal class SessionJdbcOperations(private val session: Session) : JdbcOperations, Closeable by session {
-    private val rowFactory: RowFactory = session.connection.underlying.vendor.rowFactory
+    private val adapter: DatabaseVendorAdapter = session.connection.underlying.vendor.adapter
 
     override fun <T : Any> single(
         sql: CharSequence,
@@ -29,13 +29,13 @@ internal class SessionJdbcOperations(private val session: Session) : JdbcOperati
         sql: CharSequence,
         queryParameters: QueryParameters,
         mapper: (Row) -> T?,
-    ): T? = session.single(queryOf(sql, queryParameters)) { mapper(rowFactory(it.underlying)) }
+    ): T? = session.single(queryOf(sql, queryParameters)) { mapper(adapter.rowFactory(it.underlying)) }
 
     override fun <T : Any> list(
         sql: CharSequence,
         queryParameters: QueryParameters,
         mapper: (Row) -> T?,
-    ): List<T> = session.list(queryOf(sql, queryParameters)) { mapper(rowFactory(it.underlying)) }
+    ): List<T> = session.list(queryOf(sql, queryParameters)) { mapper(adapter.rowFactory(it.underlying)) }
 
     /**
      * NB! Implementasjonen fungerer ikke med Oracle pt.
@@ -72,7 +72,7 @@ internal class SessionJdbcOperations(private val session: Session) : JdbcOperati
 
         val content = session.list(query) {
             totalElements = it.longOrNull(totalElementsLabel) ?: -1
-            mapper(rowFactory(it.underlying))
+            mapper(adapter.rowFactory(it.underlying))
         }
 
         return pageOf(

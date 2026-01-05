@@ -2,7 +2,6 @@ package no.nav.hjelpemidler.database
 
 import com.fasterxml.jackson.databind.JsonNode
 import no.nav.hjelpemidler.collections.toEnumSet
-import no.nav.hjelpemidler.database.jdbc.ResultSetAdapter
 import no.nav.hjelpemidler.domain.enhet.Enhet
 import no.nav.hjelpemidler.domain.enhet.Enhetsnummer
 import no.nav.hjelpemidler.domain.geografi.Bydel
@@ -13,12 +12,13 @@ import no.nav.hjelpemidler.domain.person.Personnavn
 import no.nav.hjelpemidler.serialization.jackson.jsonMapper
 import no.nav.hjelpemidler.serialization.jackson.jsonToTreeOrNull
 import no.nav.hjelpemidler.serialization.jackson.jsonToValue
+import no.nav.hjelpemidler.serialization.jackson.node
 import no.nav.hjelpemidler.serialization.jackson.treeToValueOrNull
 import java.io.InputStream
 import java.math.BigDecimal
 import java.sql.Blob
 import java.sql.Clob
-import java.sql.Wrapper
+import java.sql.ResultSet
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -34,7 +34,7 @@ import kotlin.reflect.KClass
  * Noen funksjoner fra [kotliquery.Row] er med vilje utelatt her, bla. funksjoner for Joda-Time
  * og java.sql.Date / java.sql.Time / java.sql.Timestamp. Vi benytter kun java.time.* (Java Time / JSR 310).
  */
-class Row(private val resultSet: ResultSetAdapter) : DatabaseRecord, Wrapper by resultSet, AutoCloseable by resultSet {
+abstract class Row(protected val resultSet: ResultSet) : AutoCloseable by resultSet {
     fun any(columnIndex: Int): Any = anyOrNull(columnIndex)!!
     fun any(columnLabel: String): Any = anyOrNull(columnLabel)!!
     fun anyOrNull(columnIndex: Int): Any? = nullable(resultSet.getObject(columnIndex))
@@ -153,8 +153,10 @@ class Row(private val resultSet: ResultSetAdapter) : DatabaseRecord, Wrapper by 
 
     fun <T : Any> value(columnIndex: Int, type: KClass<T>): T = valueOrNull(columnIndex, type)!!
     fun <T : Any> value(columnLabel: String, type: KClass<T>): T = valueOrNull(columnLabel, type)!!
-    fun <T : Any> valueOrNull(columnIndex: Int, type: KClass<T>): T? = resultSet.valueOrNull(columnIndex, type)
-    fun <T : Any> valueOrNull(columnLabel: String, type: KClass<T>): T? = resultSet.valueOrNull(columnLabel, type)
+
+    abstract fun <T : Any> valueOrNull(columnIndex: Int, type: KClass<T>): T?
+    fun <T : Any> valueOrNull(columnLabel: String, type: KClass<T>): T? =
+        valueOrNull(resultSet.findColumn(columnLabel), type)
 
     inline fun <reified T : Any> value(columnIndex: Int): T = value(columnIndex, T::class)
     inline fun <reified T : Any> value(columnLabel: String): T = value(columnLabel, T::class)
@@ -255,7 +257,7 @@ class Row(private val resultSet: ResultSetAdapter) : DatabaseRecord, Wrapper by 
     /**
      * Konverter hele raden til [Map].
      */
-    override fun asMap(): Map<String, Any?> {
+    fun asMap(): Map<String, Any?> {
         val metaData = resultSet.metaData
         return (1..metaData.columnCount).associate { columnIndex ->
             metaData.getColumnLabel(columnIndex) to anyOrNull(columnIndex)
@@ -271,13 +273,17 @@ class Row(private val resultSet: ResultSetAdapter) : DatabaseRecord, Wrapper by 
     fun asTree(): JsonNode {
         val metaData = resultSet.metaData
         if (metaData.columnCount == 1) {
-            return resultSet.asTree(1)
+            return asTree(1)
         }
         val properties = (1..metaData.columnCount).associate { columnIndex ->
-            metaData.getColumnLabel(columnIndex) to resultSet.asTree(columnIndex)
+            metaData.getColumnLabel(columnIndex) to asTree(columnIndex)
         }
         return jsonMapper.createObjectNode().setAll(properties)
     }
+
+    abstract fun asTree(columnIndex: Int): JsonNode
+
+    fun asTree(columnLabel: String): JsonNode = asTree(resultSet.findColumn(columnLabel))
 
     /**
      * Konverter hele raden til [T].
@@ -311,7 +317,9 @@ class Row(private val resultSet: ResultSetAdapter) : DatabaseRecord, Wrapper by 
     fun <T> ifUuidPresent(columnLabel: String, transform: Row.(UUID) -> T): T? =
         ifPresent(columnLabel, Row::uuidOrNull, transform)
 
-    private fun <T> nullable(value: T): T? = if (resultSet.wasNull()) null else value
+    protected fun node(value: Any?): JsonNode = value as? JsonNode ?: jsonMapper.nodeFactory.node(value)
+
+    protected fun <T> nullable(value: T): T? = if (resultSet.wasNull()) null else value
 
     // END Utilities
 }

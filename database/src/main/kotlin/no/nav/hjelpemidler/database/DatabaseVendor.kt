@@ -10,12 +10,8 @@ enum class DatabaseVendor(val databaseProductName: String) {
     POSTGRESQL(databaseProductName = "PostgreSQL"),
     ;
 
-    val rowFactory: RowFactory
-        get() = if (this == GENERIC) {
-            GenericRowFactory
-        } else {
-            rowFactories[this] ?: error("Fant ikke RowFactory for $this")
-        }
+    val adapter: DatabaseVendorAdapter
+        get() = databaseVendorAdapters[this] ?: error("Fant ikke DatabaseVendorAdapter for $this")
 
     companion object {
         fun of(databaseProductName: String): DatabaseVendor = entries.firstOrNull {
