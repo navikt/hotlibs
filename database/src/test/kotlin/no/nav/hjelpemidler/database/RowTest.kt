@@ -2,6 +2,7 @@ package no.nav.hjelpemidler.database
 
 import io.mockk.mockk
 import io.mockk.verifySequence
+import no.nav.hjelpemidler.database.generic.GenericRow
 import no.nav.hjelpemidler.test.NamedTestCase
 import no.nav.hjelpemidler.test.testFactory
 import org.junit.jupiter.api.TestFactory

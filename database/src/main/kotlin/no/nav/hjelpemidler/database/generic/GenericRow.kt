@@ -1,6 +1,7 @@
-package no.nav.hjelpemidler.database
+package no.nav.hjelpemidler.database.generic
 
 import com.fasterxml.jackson.databind.JsonNode
+import no.nav.hjelpemidler.database.Row
 import java.sql.ResultSet
 import kotlin.reflect.KClass
 
