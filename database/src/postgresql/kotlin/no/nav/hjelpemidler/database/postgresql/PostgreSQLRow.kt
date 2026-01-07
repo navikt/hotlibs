@@ -2,6 +2,7 @@ package no.nav.hjelpemidler.database.postgresql
 
 import com.fasterxml.jackson.databind.JsonNode
 import no.nav.hjelpemidler.database.Row
+import no.nav.hjelpemidler.database.jdbc.getObject
 import java.sql.ResultSet
 import java.sql.Types
 import java.time.Instant
@@ -13,7 +14,7 @@ internal class PostgreSQLRow(resultSet: ResultSet) : Row(resultSet) {
     override fun <T : Any> valueOrNull(columnIndex: Int, type: KClass<T>): T? = when (type) {
         Instant::class -> instantOrNull(columnIndex) as T?
         ZonedDateTime::class -> zonedDateTimeOrNull(columnIndex) as T?
-        else -> nullable(resultSet.getObject(columnIndex, type.java))
+        else -> resultSet.getObject(columnIndex, type)
     }
 
     override fun asTree(columnIndex: Int): JsonNode {

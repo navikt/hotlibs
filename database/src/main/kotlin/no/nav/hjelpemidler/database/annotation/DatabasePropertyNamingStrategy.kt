@@ -1,4 +1,4 @@
-package no.nav.hjelpemidler.database
+package no.nav.hjelpemidler.database.annotation
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 

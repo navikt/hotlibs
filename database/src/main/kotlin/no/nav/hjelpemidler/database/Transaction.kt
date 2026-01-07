@@ -2,9 +2,9 @@ package no.nav.hjelpemidler.database
 
 import kotlinx.coroutines.withContext
 import no.nav.hjelpemidler.database.jdbc.JdbcTransactionContext
-import no.nav.hjelpemidler.database.jdbc.SessionJdbcOperations
-import no.nav.hjelpemidler.database.jdbc.createSession
 import no.nav.hjelpemidler.database.jdbc.currentTransactionContext
+import no.nav.hjelpemidler.database.kotliquery.SessionJdbcOperations
+import no.nav.hjelpemidler.database.kotliquery.createSession
 import javax.sql.DataSource
 
 interface Transaction<T : Any> {
@@ -16,7 +16,7 @@ interface Transaction<T : Any> {
  *
  * Tillater ikke suspending functions i transaksjonen og støtter ikke nestede transaksjoner.
  *
- * Bruk [transactionAsync] for å gjøre nettverkskall etc. i transaksjonen.
+ * NB! Bruk [transactionAsync] for å gjøre nettverkskall etc. i transaksjonen.
  *
  * @see [transactionAsync]
  */
@@ -44,7 +44,7 @@ suspend fun <T> transaction(
  *
  * Tillater suspending functions i transaksjonen for nettverkskall etc.
  *
- * Bruk [transaction] hvis du ikke trenger å gjøre nettverkskall etc. i transaksjonen.
+ * NB! Bruk [transaction] hvis du ikke trenger å gjøre nettverkskall etc. i transaksjonen.
  *
  * @see [transaction]
  * @see [JdbcTransactionContext]

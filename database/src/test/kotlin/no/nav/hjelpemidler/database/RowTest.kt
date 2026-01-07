@@ -1,13 +1,15 @@
 package no.nav.hjelpemidler.database
 
+import com.fasterxml.jackson.databind.JsonNode
 import io.mockk.mockk
 import io.mockk.verifySequence
-import no.nav.hjelpemidler.database.generic.GenericRow
+import no.nav.hjelpemidler.database.jdbc.getObject
 import no.nav.hjelpemidler.test.NamedTestCase
 import no.nav.hjelpemidler.test.testFactory
 import org.junit.jupiter.api.TestFactory
 import java.sql.ResultSet
 import java.util.UUID
+import kotlin.reflect.KClass
 
 class RowTest {
     private val uuid: UUID = UUID.randomUUID()
@@ -66,7 +68,12 @@ class RowTest {
         override fun invoke() {
             val columnIndex = 1
             val resultSet = mockk<ResultSet>(relaxed = true)
-            val row = GenericRow(resultSet)
+            val row = object : Row(resultSet) {
+                override fun <T : Any> valueOrNull(columnIndex: Int, type: KClass<T>): T? =
+                    resultSet.getObject(columnIndex, type)
+
+                override fun asTree(columnIndex: Int): JsonNode = node(anyOrNull(columnIndex))
+            }
             row.rowFn(columnIndex)
             verifySequence {
                 resultSet.resultSetFn(columnIndex)

@@ -51,6 +51,24 @@ java {
 testing {
     suites {
         val test by getting(JvmTestSuite::class)
+        val h2Test by registering(JvmTestSuite::class) {
+            dependencies {
+                implementation(testFixtures(project(path)))
+                implementation(project(path)) {
+                    capabilities {
+                        requireCapability("${project.group}:${project.name}-${h2.name}")
+                    }
+                }
+            }
+
+            targets {
+                all {
+                    testTask.configure {
+                        shouldRunAfter(test)
+                    }
+                }
+            }
+        }
         val oracleTest by registering(JvmTestSuite::class) {
             dependencies {
                 implementation(testFixtures(project(path)))

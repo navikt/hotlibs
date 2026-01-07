@@ -155,8 +155,7 @@ abstract class Row(protected val resultSet: ResultSet) : AutoCloseable by result
     fun <T : Any> value(columnLabel: String, type: KClass<T>): T = valueOrNull(columnLabel, type)!!
 
     abstract fun <T : Any> valueOrNull(columnIndex: Int, type: KClass<T>): T?
-    fun <T : Any> valueOrNull(columnLabel: String, type: KClass<T>): T? =
-        valueOrNull(resultSet.findColumn(columnLabel), type)
+    fun <T : Any> valueOrNull(columnLabel: String, type: KClass<T>): T? = valueOrNull(findColumn(columnLabel), type)
 
     inline fun <reified T : Any> value(columnIndex: Int): T = value(columnIndex, T::class)
     inline fun <reified T : Any> value(columnLabel: String): T = value(columnLabel, T::class)
@@ -282,8 +281,7 @@ abstract class Row(protected val resultSet: ResultSet) : AutoCloseable by result
     }
 
     abstract fun asTree(columnIndex: Int): JsonNode
-
-    fun asTree(columnLabel: String): JsonNode = asTree(resultSet.findColumn(columnLabel))
+    fun asTree(columnLabel: String): JsonNode = asTree(findColumn(columnLabel))
 
     /**
      * Konverter hele raden til [T].
@@ -320,6 +318,8 @@ abstract class Row(protected val resultSet: ResultSet) : AutoCloseable by result
     protected fun node(value: Any?): JsonNode = value as? JsonNode ?: jsonMapper.nodeFactory.node(value)
 
     protected fun <T> nullable(value: T): T? = if (resultSet.wasNull()) null else value
+
+    protected fun findColumn(columnLabel: String): Int = resultSet.findColumn(columnLabel)
 
     // END Utilities
 }

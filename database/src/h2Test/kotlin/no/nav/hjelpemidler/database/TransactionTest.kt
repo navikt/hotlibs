@@ -1,13 +1,11 @@
 package no.nav.hjelpemidler.database
 
 import io.kotest.matchers.types.shouldBeSameInstanceAs
-import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Test
-import javax.sql.DataSource
+import kotlin.test.Test
 
 class TransactionTest {
-    private val dataSource = mockk<DataSource>(relaxed = true)
+    private val dataSource = createDataSource(H2)
 
     @Test
     fun `Nestet transaksjon bruker samme JdbcOperations`() = runTest {
