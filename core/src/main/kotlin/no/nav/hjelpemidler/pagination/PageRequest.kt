@@ -1,4 +1,4 @@
-package no.nav.hjelpemidler.database
+package no.nav.hjelpemidler.pagination
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 

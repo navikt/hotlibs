@@ -1,5 +1,7 @@
 package no.nav.hjelpemidler.database
 
+import no.nav.hjelpemidler.pagination.Page
+import no.nav.hjelpemidler.pagination.PageRequest
 import org.intellij.lang.annotations.Language
 
 /**

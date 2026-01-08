@@ -1,4 +1,4 @@
-package no.nav.hjelpemidler.database
+package no.nav.hjelpemidler.pagination
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe

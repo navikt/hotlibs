@@ -9,7 +9,6 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.coroutines.test.runTest
 import no.nav.hjelpemidler.database.JdbcOperations
-import no.nav.hjelpemidler.database.PageRequest
 import no.nav.hjelpemidler.database.Row
 import no.nav.hjelpemidler.database.UpdateResult
 import no.nav.hjelpemidler.database.list
@@ -23,6 +22,7 @@ import no.nav.hjelpemidler.database.test.testDataSource
 import no.nav.hjelpemidler.database.test.toTestEntity
 import no.nav.hjelpemidler.database.toQueryParameters
 import no.nav.hjelpemidler.database.transaction
+import no.nav.hjelpemidler.pagination.PageRequest
 import no.nav.hjelpemidler.serialization.jackson.valueToTree
 import java.time.Instant
 import java.time.ZonedDateTime
