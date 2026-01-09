@@ -107,7 +107,10 @@ val dataSource = createDataSource(H2) {
 For å kjøre Flyway må følgende legges til i build.gradle.kts.
 
 ```kotlin
-tasks.shadowJar { mergeServiceFiles() }
+tasks.shadowJar {
+    mergeServiceFiles()
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
 ```
 
 ### Transaction
