@@ -2,7 +2,6 @@ package no.nav.hjelpemidler.domain.enhet
 
 import io.kotest.assertions.json.shouldEqualJson
 import io.kotest.matchers.shouldBe
-import no.nav.hjelpemidler.domain.geografi.Enhet
 import no.nav.hjelpemidler.serialization.jackson.Json
 import no.nav.hjelpemidler.serialization.jackson.valueToJson
 import kotlin.test.Test
