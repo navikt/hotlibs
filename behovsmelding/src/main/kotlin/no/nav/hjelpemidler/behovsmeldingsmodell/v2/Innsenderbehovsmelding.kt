@@ -235,6 +235,11 @@ data class HjelpemiddelProdukt(
     val artikkelnavn: String,
     val iso8: Iso8,
     val iso8Tittel: String,
+    /**
+     * Brukes blant annet til generering av dokumenttittel.
+     * Defaulter til tom string for gamle saker sendt inn før feltet ble lagt til (ca 2026-01-09).
+     */
+    val iso8KortTittel: String = "",
     val delkontrakttittel: String,
     /**
      * Fra digihot-sortiment.
