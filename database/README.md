@@ -118,6 +118,6 @@ tasks.shadowJar {
 ```kotlin
 val result: Map<String, Any?> = transaction(dataSource) {
     it.update("INSERT INTO table_v1 (name) VALUES (:name)", mapOf("name" to "test"))
-    it.single("SELECT * FROM table_v1 WHERE id = 1") { row: Row -> row.toMap() }
+    it.single("SELECT * FROM table_v1 WHERE id = 1") { row: Row -> row.asMap() }
 }
 ```
