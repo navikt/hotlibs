@@ -261,6 +261,11 @@ data class Tilbehør(
     val tilbehørId: UUID? = null,
     override val hmsArtNr: String,
     val navn: String,
+    /**
+     * Brukes blant annet til generering av dokumenttittel.
+     * Defaulter til null for gamle saker sendt inn før feltet ble lagt til (ca 2026-01-13).
+     */
+    val iso6: Iso6? = null,
     override val antall: Int,
     val begrunnelse: String?,
     val fritakFraBegrunnelseÅrsak: FritakFraBegrunnelseÅrsak?,
