@@ -310,7 +310,23 @@ enum class InnbyggersVarigeFunksjonsnedsettelse {
 
 typealias Brukernummer = String
 
+/**
+ * Nøkkel som gir mulighet for å identifisere opplysninger som tilhører spesifikke spørsmål.
+ * Se hm-soknad for gyldige verdier.
+ * Finnes ikke for eldre saker (pre ca 2026-01-15).
+ * - id: En stabil identifikator for et spørsmål/konsept i behovsmeldingen. Skal ikke endre seg selv om ordlyden i spørsmålet justeres.
+ * - versjon: Representerer versjonen av spørsmålet/konseptet. Gjør det mulig å skille mellom justeringer på ordlyd osv.
+ *
+ * Eksempel på bruk:
+ * val begrunnelseLavereRangering = opplysninger.find { it.key.id == "BEGRUNNELSE_LAVERE_RANGERING" }?.fritekst
+ */
+data class OpplysningKey(
+    val id: String,
+    val versjon: Int
+)
+
 data class Opplysning(
+    val key: OpplysningKey? = null,
     val ledetekst: LokalisertTekst,
     val innhold: List<Tekst>,
 ) {
