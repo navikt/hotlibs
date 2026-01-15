@@ -13,6 +13,7 @@ import no.nav.hjelpemidler.behovsmeldingsmodell.InnsenderRolle
 import no.nav.hjelpemidler.behovsmeldingsmodell.KontaktpersonV2
 import no.nav.hjelpemidler.behovsmeldingsmodell.LeveringTilleggsinfo
 import no.nav.hjelpemidler.behovsmeldingsmodell.OppfølgingsansvarligV2
+import no.nav.hjelpemidler.behovsmeldingsmodell.OpplysningId
 import no.nav.hjelpemidler.behovsmeldingsmodell.Prioritet
 import no.nav.hjelpemidler.behovsmeldingsmodell.Signaturtype
 import no.nav.hjelpemidler.behovsmeldingsmodell.UtleveringsmåteV2
@@ -21,6 +22,8 @@ import no.nav.hjelpemidler.domain.geografi.Bydel
 import no.nav.hjelpemidler.domain.geografi.Kommune
 import no.nav.hjelpemidler.domain.geografi.Veiadresse
 import no.nav.hjelpemidler.domain.artikkel.Artikkellinje
+import no.nav.hjelpemidler.domain.kodeverk.Kodeverk
+import no.nav.hjelpemidler.domain.kodeverk.UkjentKode
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.HarPersonnavn
 import no.nav.hjelpemidler.domain.person.Personnavn
@@ -310,7 +313,30 @@ enum class InnbyggersVarigeFunksjonsnedsettelse {
 
 typealias Brukernummer = String
 
+/**
+ * Nøkkel som gir mulighet for å identifisere opplysninger som tilhører spesifikke spørsmål.
+ * Finnes ikke for eldre saker (pre ca 2026-01-15).
+ * - id: En stabil identifikator for et spørsmål/konsept i behovsmeldingen. Skal ikke endre seg selv om ordlyden i spørsmålet justeres.
+ * - versjon: Representerer versjonen av spørsmålet/konseptet. Gjør det mulig å skille mellom justeringer på ordlyd osv.
+ *
+ * Eksempel på bruk:
+ *     val begrunnelseLavereRangering = opplysninger.find {
+ *         it.key?.id == OpplysningId.BEGRUNNELSE_LAVERE_RANGERING
+ *     }?.innhold?.first()?.fritekst
+ *
+ *     opplysninger.forEach {
+ *         if (it.key?.id is UkjentKode<*>) {
+ *             println("Ukjent kode: ${it.key.id.name}")
+ *         }
+ *     }
+ */
+data class OpplysningKey(
+    val id: Kodeverk<OpplysningId>,
+    val versjon: Int
+)
+
 data class Opplysning(
+    val key: OpplysningKey? = null,
     val ledetekst: LokalisertTekst,
     val innhold: List<Tekst>,
 ) {
