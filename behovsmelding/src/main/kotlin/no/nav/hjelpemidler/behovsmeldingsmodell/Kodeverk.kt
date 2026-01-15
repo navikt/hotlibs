@@ -2,6 +2,7 @@ package no.nav.hjelpemidler.behovsmeldingsmodell
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import no.nav.hjelpemidler.behovsmeldingsmodell.sak.Vedtaksresultat
+import no.nav.hjelpemidler.domain.kodeverk.Kodeverk
 
 enum class BehovsmeldingType {
     SØKNAD,
@@ -392,4 +393,8 @@ enum class FritakFraBegrunnelseÅrsak {
 enum class Prioritet {
     NORMAL,
     HAST,
+}
+
+enum class OpplysningId : Kodeverk<OpplysningId> {
+    BEGRUNNELSE_LAVERE_RANGERING
 }
