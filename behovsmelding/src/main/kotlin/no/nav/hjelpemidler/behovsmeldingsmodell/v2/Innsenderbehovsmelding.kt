@@ -318,7 +318,7 @@ typealias Brukernummer = String
  * - versjon: Representerer versjonen av spørsmålet/konseptet. Gjør det mulig å skille mellom justeringer på ordlyd osv.
  *
  * Eksempel på bruk:
- * val begrunnelseLavereRangering = opplysninger.find { it.key.id == "BEGRUNNELSE_LAVERE_RANGERING" }?.fritekst
+ * val begrunnelseLavereRangering = opplysninger.find {it.key?.id == "BEGRUNNELSE_LAVERE_RANGERING" }?.innhold?.first()?.fritekst
  */
 data class OpplysningKey(
     val id: String,
