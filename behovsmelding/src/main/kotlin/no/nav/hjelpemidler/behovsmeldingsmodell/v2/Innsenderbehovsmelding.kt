@@ -30,6 +30,7 @@ import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.HarPersonnavn
 import no.nav.hjelpemidler.domain.person.Personnavn
 import no.nav.hjelpemidler.domain.person.TilknyttetPerson
+import no.nav.hjelpemidler.domain.kodeverk.UkjentKode
 import org.owasp.html.HtmlPolicyBuilder
 import java.time.Instant
 import java.time.LocalDate
@@ -344,6 +345,7 @@ data class OpplysningKey(
 )
 
 data class Opplysning(
+    val key: OpplysningKey? = null,
     val ledetekst: LokalisertTekst,
     val innhold: List<Tekst>,
 ) {
