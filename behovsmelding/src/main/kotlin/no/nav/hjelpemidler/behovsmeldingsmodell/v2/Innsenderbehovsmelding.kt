@@ -1,6 +1,7 @@
 package no.nav.hjelpemidler.behovsmeldingsmodell.v2
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.hjelpemidler.behovsmeldingsmodell.BehovsmeldingType
 import no.nav.hjelpemidler.behovsmeldingsmodell.Brukerkilde
 import no.nav.hjelpemidler.behovsmeldingsmodell.BrukersituasjonVilkårtype
@@ -9,6 +10,7 @@ import no.nav.hjelpemidler.behovsmeldingsmodell.BytteÅrsak
 import no.nav.hjelpemidler.behovsmeldingsmodell.FritakFraBegrunnelseÅrsak
 import no.nav.hjelpemidler.behovsmeldingsmodell.Funksjonsnedsettelser
 import no.nav.hjelpemidler.behovsmeldingsmodell.Hasteårsak
+import no.nav.hjelpemidler.behovsmeldingsmodell.ISO4_TITLER
 import no.nav.hjelpemidler.behovsmeldingsmodell.InnsenderRolle
 import no.nav.hjelpemidler.behovsmeldingsmodell.KontaktpersonV2
 import no.nav.hjelpemidler.behovsmeldingsmodell.LeveringTilleggsinfo
@@ -18,12 +20,12 @@ import no.nav.hjelpemidler.behovsmeldingsmodell.Prioritet
 import no.nav.hjelpemidler.behovsmeldingsmodell.Signaturtype
 import no.nav.hjelpemidler.behovsmeldingsmodell.UtleveringsmåteV2
 import no.nav.hjelpemidler.behovsmeldingsmodell.UtlevertTypeV2
+import no.nav.hjelpemidler.configuration.Environment
+import no.nav.hjelpemidler.domain.artikkel.Artikkellinje
 import no.nav.hjelpemidler.domain.geografi.Bydel
 import no.nav.hjelpemidler.domain.geografi.Kommune
 import no.nav.hjelpemidler.domain.geografi.Veiadresse
-import no.nav.hjelpemidler.domain.artikkel.Artikkellinje
 import no.nav.hjelpemidler.domain.kodeverk.Kodeverk
-import no.nav.hjelpemidler.domain.kodeverk.UkjentKode
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.HarPersonnavn
 import no.nav.hjelpemidler.domain.person.Personnavn
@@ -32,6 +34,8 @@ import org.owasp.html.HtmlPolicyBuilder
 import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID
+
+private val log = KotlinLogging.logger {}
 
 data class Innsenderbehovsmelding(
     val bruker: Bruker,
@@ -52,8 +56,12 @@ data class Innsenderbehovsmelding(
     override val skjemaversjon: Int = 2,
     override val hjmBrukersFnr: Fødselsnummer = bruker.fnr,
     override val prioritet: Prioritet = tilPrioritet(levering.hast),
-) : BehovsmeldingBase
-
+) : BehovsmeldingBase {
+    val behovsmeldingGjelder: String @JsonIgnore get() {
+        val sammendrag = lagTittel(this)
+        return sammendrag
+    }
+}
 data class Vedlegg(
     val id: UUID,
     val navn: String,
@@ -336,7 +344,6 @@ data class OpplysningKey(
 )
 
 data class Opplysning(
-    val key: OpplysningKey? = null,
     val ledetekst: LokalisertTekst,
     val innhold: List<Tekst>,
 ) {
@@ -408,4 +415,70 @@ private fun sanitize(tekst: LokalisertTekst?) {
     if (tekst == null) return
     require(tekst.nb == htmlPolicy.sanitize(tekst.nb)) { "Ugyldig HTML i nb" }
     require(tekst.nn == htmlPolicy.sanitize(tekst.nn)) { "Ugyldig HTML i nn" }
+}
+
+private fun lagTittel(behovsmelding : Innsenderbehovsmelding) : String{
+    val behovsmeldingType = behovsmelding.type
+
+    if (Environment.current.isLocal) {
+        return defaultTitle(behovsmeldingType)
+    }
+
+    val titlerForHjelpemidler = behovsmelding.hjelpemidler.hjelpemidler
+        .asSequence()
+        .filter { it.produkt.iso8KortTittel.isNotEmpty() }
+        .sortedWith(
+            compareBy<Hjelpemiddel>(
+                { it.produkt.rangering == 1 },
+                { it.produkt.iso8KortTittel.lowercase() }
+            )
+        )
+        .map { it.produkt.iso8KortTittel }
+        .joinToString(separator = ", ")
+        .lowercase()
+
+    val titlerForTilbehør = behovsmelding.hjelpemidler.tilbehør
+        .asSequence()
+        .mapNotNull {
+            val iso6 = it.iso6 ?: run {
+                log.error { "Mangler iso6 for hmsnr ${it.hmsArtNr}, kan ikke slå opp tittel" }
+                return@mapNotNull null
+            }
+
+            val iso4 = iso6.toString().take(4)
+            val tilbehørTittel = ISO4_TITLER[iso4]
+
+            if (tilbehørTittel.isNullOrBlank()) {
+                log.error { "Mangler 4-sifret mapping for isokode $iso6 for hmsnr ${it.hmsArtNr}, den bør legges til" }
+                null
+            } else {
+                tilbehørTittel
+            }
+        }
+        .map { "tilbehør ${it}" }
+        .filter { it.isNotEmpty() }
+        .toSet()
+        .sorted()
+        .joinToString(separator = ", ")
+        .lowercase()
+
+    val title = listOf(titlerForHjelpemidler, titlerForTilbehør).filter { it.isNotEmpty() }.joinToString(", ")
+
+    if (title.isEmpty()) {
+        log.warn { "Kunne ikke utlede tittel for hmsnrs: ${behovsmelding.hjelpemidler.hmsArtNrs}, behovsmeldingType: $behovsmeldingType" }
+        return defaultTitle(behovsmeldingType)
+    }
+
+    return when (behovsmeldingType) {
+        BehovsmeldingType.BESTILLING -> "Bestilling av: $title"
+        BehovsmeldingType.SØKNAD -> "Søknad om: $title"
+        BehovsmeldingType.BYTTE, BehovsmeldingType.BRUKERPASSBYTTE -> "Bytte av: $title"
+    }
+}
+
+private fun defaultTitle(behovsmeldingType: BehovsmeldingType) =
+    when (behovsmeldingType) {
+        BehovsmeldingType.BESTILLING -> "Bestilling av hjelpemidler"
+        BehovsmeldingType.SØKNAD -> "Søknad om hjelpemidler"
+        BehovsmeldingType.BYTTE, BehovsmeldingType.BRUKERPASSBYTTE -> "Bytte av hjelpemidler"
 }
