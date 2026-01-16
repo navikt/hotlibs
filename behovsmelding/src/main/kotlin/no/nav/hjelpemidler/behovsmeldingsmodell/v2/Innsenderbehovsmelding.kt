@@ -422,10 +422,6 @@ private fun sanitize(tekst: LokalisertTekst?) {
 private fun lagTittel(behovsmelding : Innsenderbehovsmelding) : String{
     val behovsmeldingType = behovsmelding.type
 
-    if (Environment.current.isLocal) {
-        return defaultTitle(behovsmeldingType)
-    }
-
     val titlerForHjelpemidler = behovsmelding.hjelpemidler.hjelpemidler
         .asSequence()
         .filter { it.produkt.iso8KortTittel.isNotEmpty() }
