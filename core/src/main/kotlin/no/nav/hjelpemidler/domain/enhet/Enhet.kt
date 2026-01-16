@@ -6,8 +6,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 open class Enhet(
     /**
      * Alias: "enhetNr" er bla. brukt i NORG2.
+     * Alias: "enhetnummer" er bla. brukt i Entra-proxy.
      */
-    @JsonAlias("enhetsnummer", "enhetNr")
+    @JsonAlias("enhetsnummer", "enhetNr", "enhetnummer")
     final override val nummer: Enhetsnummer,
     @JsonAlias("enhetsnavn")
     final override val navn: String,
