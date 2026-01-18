@@ -3,21 +3,34 @@ package no.nav.hjelpemidler.domain.enhet
 import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonIgnore
 
-open class Enhet(
+class Enhet(
     /**
      * Alias: "enhetNr" er bla. brukt i NORG2.
      * Alias: "enhetnummer" er bla. brukt i Entra-proxy.
      */
     @JsonAlias("enhetsnummer", "enhetNr", "enhetnummer")
-    final override val nummer: Enhetsnummer,
+    val nummer: Enhetsnummer,
     @JsonAlias("enhetsnavn")
-    final override val navn: String,
-) : AbstractEnhet() {
+    val navn: String,
+) : Comparable<Enhet> {
     @JsonIgnore
     constructor(nummer: String, navn: String) : this(Enhetsnummer(nummer), navn)
 
-    @JsonIgnore
-    constructor(enhet: Enhet) : this(enhet.nummer, enhet.navn)
+    operator fun component1(): Enhetsnummer = nummer
+    operator fun component2(): String = navn
+
+    override fun compareTo(other: Enhet): Int = nummer.compareTo(other.nummer)
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+        other as Enhet
+        return nummer == other.nummer
+    }
+
+    override fun hashCode(): Int = nummer.hashCode()
+
+    override fun toString(): String = "$navn ($nummer)"
 
     /**
      * NB! Dette er ikke en fullstendig liste av enheter. Kun de som brukes i logikk og/eller tester.

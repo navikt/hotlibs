@@ -37,16 +37,6 @@ class EnhetTest {
         enhetA.compareTo(enhetB) shouldNotBe 0
     }
 
-    @Test
-    fun `Ulike underklasser av Enhet er ulike`() {
-        val enhetA = object : Enhet("2050", "A") {}
-        val enhetB = object : Enhet(enhetA) {}
-
-        enhetA shouldNotBe enhetB
-
-        enhetA.compareTo(enhetB) shouldNotBe 0
-    }
-
     @TestFactory
     fun `Enhetsnummer består av fire siffer`() = testFactory(
         sequenceOf(
@@ -80,7 +70,7 @@ class EnhetTest {
             response.statusCode() shouldBe 200
 
             val body = response.body()
-            body.shouldContainJsonKeyValue("enhetNr", it.nummer)
+            body.shouldContainJsonKeyValue("enhetNr", it.nummer.value)
             body.shouldContainJsonKeyValue("navn", it.navn)
         }
     }
