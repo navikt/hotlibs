@@ -6,10 +6,11 @@ import no.nav.hjelpemidler.domain.id.StringId
 @JsonDeserialize(using = PersonIdentDeserializer::class)
 sealed class PersonIdent(value: String) : StringId(value)
 
-fun String.toPersonIdent(): PersonIdent? = when {
-    AktørId.erGyldig(this) -> toAktørId()
-    Fødselsnummer.erGyldig(this) -> toFødselsnummer()
+fun personIdentOf(value: String): PersonIdent =
+    personIdentOrNullOf(value) ?: throw IllegalArgumentException("Ugyldig PersonIdent")
+
+fun personIdentOrNullOf(value: String): PersonIdent? = when {
+    AktørId.erGyldig(value) -> AktørId(value)
+    Fødselsnummer.erGyldig(value) -> Fødselsnummer(value)
     else -> null
 }
-
-internal fun String.toPersonIdentOrThrow() = toPersonIdent() ?: throw IllegalArgumentException("Ugyldig PersonIdent")

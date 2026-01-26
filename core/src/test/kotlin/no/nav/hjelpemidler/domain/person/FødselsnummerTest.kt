@@ -11,7 +11,7 @@ class FødselsnummerTest {
     fun `Fødselsnummer skal være gyldig`() {
         shouldThrow<IllegalArgumentException> { Fødselsnummer("12345678910") }
         shouldNotThrowAny { Fødselsnummer(40.år) }
-        Fødselsnummer(40.år).toString().toPersonIdent().shouldBeInstanceOf<Fødselsnummer>()
+        personIdentOf(Fødselsnummer(40.år).toString()).shouldBeInstanceOf<Fødselsnummer>()
     }
 
     @Test
