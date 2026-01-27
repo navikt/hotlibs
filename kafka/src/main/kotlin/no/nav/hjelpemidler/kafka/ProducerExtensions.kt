@@ -1,6 +1,7 @@
 package no.nav.hjelpemidler.kafka
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import org.apache.kafka.clients.producer.Callback
 import org.apache.kafka.clients.producer.Producer
@@ -16,7 +17,7 @@ import kotlin.coroutines.suspendCoroutine
 suspend inline fun <reified K : Any, reified V : Any> Producer<K, V>.sendAsync(
     record: ProducerRecord<K, V>,
 ): RecordMetadata = withContext(Dispatchers.IO) {
-    suspendCoroutine { continuation ->
+    suspendCancellableCoroutine { continuation ->
         val callback = Callback { metadata, exception ->
             if (exception == null) {
                 continuation.resume(metadata)

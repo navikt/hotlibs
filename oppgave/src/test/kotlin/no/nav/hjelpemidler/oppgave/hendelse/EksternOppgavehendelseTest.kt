@@ -8,12 +8,12 @@ import no.nav.hjelpemidler.serialization.jackson.jsonMapper
 import no.nav.hjelpemidler.serialization.jackson.readResourceAsValue
 import kotlin.test.Test
 
-class EksternOppgaveEventTest {
+class EksternOppgavehendelseTest {
     @Test
     fun `Deserialiser JSON til EksternOppgaveEvent`() {
-        val event = jsonMapper.readResourceAsValue<EksternOppgaveEvent>("/oppgavehendelse_1.json")
-        assertSoftly(event) {
-            hendelse.hendelsestype shouldBe Hendelse.Type.OPPGAVE_ENDRET
+        val oppgavehendelse = jsonMapper.readResourceAsValue<EksternOppgavehendelse>("/ekstern_oppgavehendelse_1.json")
+        assertSoftly(oppgavehendelse) {
+            hendelse.hendelsestype shouldBe EksternOppgavehendelse.Hendelse.Type.OPPGAVE_ENDRET
 
             utførtAv.id shouldBe NavIdent("Z123456")
             utførtAv.enhetsnummer shouldBe Enhetsnummer("4715")
