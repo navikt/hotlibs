@@ -31,6 +31,7 @@ include(
     "katalog",
     "logging",
     "nare",
+    "oppgave",
     "platform",
     "rapids-and-rivers",
     "serialization",

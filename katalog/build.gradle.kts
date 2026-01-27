@@ -24,6 +24,7 @@ catalog {
             "kafka",
             "logging",
             "nare",
+            "oppgave",
             "platform",
             "rapids-and-rivers",
             "serialization",

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonValue
+import no.nav.hjelpemidler.text.isInteger
 
 data class HotsakSakId @JsonCreator constructor(@JsonValue val value: String) :
     Fagsak.Id,
@@ -17,9 +18,7 @@ data class HotsakSakId @JsonCreator constructor(@JsonValue val value: String) :
     override fun toString(): String = value
 
     companion object {
-        private val regex = Regex("^[0-9]*$")
-
-        fun erGyldig(value: String) = value matches regex
+        fun erGyldig(value: String) = value.isInteger()
     }
 }
 

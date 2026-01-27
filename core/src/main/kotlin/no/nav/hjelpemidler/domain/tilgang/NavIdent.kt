@@ -1,5 +1,7 @@
 package no.nav.hjelpemidler.domain.tilgang
 
+import no.nav.hjelpemidler.text.isInteger
+
 /**
  * Nav-ident med følgende format: `A123456`
  */
@@ -11,9 +13,9 @@ class NavIdent(value: String) : UtførtAvId(value) {
     }
 
     companion object {
-        private val regex: Regex = Regex("^[A-Z][0-9]{6}$")
+        private val range: CharRange = 'A'..'Z'
 
-        fun erGyldig(value: String): Boolean = value.matches(regex)
+        fun erGyldig(value: String): Boolean = value.length == 7 && value[0] in range && value.drop(1).isInteger()
 
         val UKJENT = NavIdent("Z999999")
     }

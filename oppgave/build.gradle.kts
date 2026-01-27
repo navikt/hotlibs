@@ -7,8 +7,7 @@ plugins {
 dependencies {
     api(project(":core"))
 
-    implementation(libs.bundles.jackson)
-    implementation(libs.owasp.java.html.sanitizer)
+    implementation(libs.jackson.annotations)
 
-    testImplementation(libs.bundles.test)
+    testImplementation(project(":serialization"))
 }

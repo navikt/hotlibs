@@ -1,0 +1,34 @@
+{
+  "hendelse": {
+    "hendelsestype": "OPPGAVE_ENDRET",
+    "tidspunkt": "2026-01-27T10:15:30"
+  },
+  "utfortAv": {
+    "navIdent": "Z123456",
+    "enhetsnr": "4715"
+  },
+  "oppgave": {
+    "oppgaveId": 987654321,
+    "versjon": 3,
+    "tilordning": {
+      "enhetsnr": "4715",
+      "enhetsmappeId": 102030,
+      "navIdent": "Z123456"
+    },
+    "kategorisering": {
+      "tema": "HJE",
+      "oppgavetype": "BEH_SAK",
+      "behandlingstema": "behandlingstema",
+      "behandlingstype": "behandlingstype",
+      "prioritet": "HOY"
+    },
+    "behandlingsperiode": {
+      "aktiv": "2026-01-01",
+      "frist": "2026-02-15"
+    },
+    "bruker": {
+      "ident": "13820599335",
+      "identType": "FOLKEREGISTERIDENT"
+    }
+  }
+}
