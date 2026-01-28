@@ -22,8 +22,13 @@ class Fødselsnummer(value: String) : PersonIdent(value) {
 
     private val internal: Fodselsnummer get() = FodselsnummerValidator.getFodselsnummer(value)
 
+    @Deprecated("Kjønn kan ikke sikkert utledes fra fødselsnummer, hent informasjonen fra PDL.")
     val erKvinne: Boolean get() = internal.isFemale
+
+    @Deprecated("Kjønn kan ikke sikkert utledes fra fødselsnummer, hent informasjonen fra PDL.")
     val erMann: Boolean get() = internal.isMale
+
+    @Deprecated("Fødselsdato kan ikke sikkert utledes fra fødselsnummer, hent informasjonen fra PDL.")
     val fødselsdato: Fødselsdato
         get() = internal.let {
             Fødselsdato.of(
