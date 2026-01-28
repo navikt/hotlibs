@@ -10,7 +10,7 @@ data class Personnavn(
         .joinToString(" ", transform = String::trim)
 
     companion object {
-        val UKJENT: Personnavn = Personnavn(fornavn = "Ukjent", etternavn = "Ukjent")
+        val UKJENT = Personnavn(fornavn = "Ukjent", etternavn = "Ukjent")
     }
 }
 

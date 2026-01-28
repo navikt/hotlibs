@@ -1,19 +1,20 @@
 package no.nav.hjelpemidler.domain.person
 
 import no.nav.hjelpemidler.text.isInteger
+import no.nav.hjelpemidler.validation.Validator
 
 /**
  * AktørId med 13 siffer.
  */
 class AktørId(value: String) : PersonIdent(value) {
     init {
-        if (!erGyldig(value)) {
-            throw IllegalArgumentException("Ugyldig aktørId")
-        }
+        require(erGyldig(value)) { "Ugyldig aktørId" }
     }
 
-    companion object {
-        fun erGyldig(value: String): Boolean = value.length == 13 && value.isInteger()
+    companion object : Validator<String> {
+        private const val LENGTH = 13
+
+        override fun erGyldig(value: String): Boolean = value.length == LENGTH && value.isInteger()
     }
 }
 

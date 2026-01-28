@@ -5,20 +5,19 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonValue
 import no.nav.hjelpemidler.text.isInteger
+import no.nav.hjelpemidler.validation.Validator
 
 data class HotsakSakId @JsonCreator constructor(@JsonValue val value: String) :
     Fagsak.Id,
     CharSequence by value {
     init {
-        require(erGyldig(value)) {
-            "'$value' er ikke en gyldig HotsakSakId"
-        }
+        require(erGyldig(value)) { "'$value' er ikke en gyldig HotsakSakId" }
     }
 
     override fun toString(): String = value
 
-    companion object {
-        fun erGyldig(value: String) = value.isInteger()
+    companion object : Validator<String> {
+        override fun erGyldig(value: String) = value.isInteger()
     }
 }
 
@@ -29,9 +28,7 @@ data class InfotrygdSakId @JsonCreator constructor(@JsonValue val value: String)
     Fagsak.Id,
     CharSequence by value {
     init {
-        require(erGyldig(value)) {
-            "'$value' er ikke en gyldig InfotrygdSakId"
-        }
+        require(erGyldig(value)) { "'$value' er ikke en gyldig InfotrygdSakId" }
     }
 
     @JsonCreator
@@ -50,9 +47,9 @@ data class InfotrygdSakId @JsonCreator constructor(@JsonValue val value: String)
 
     override fun toString(): String = value
 
-    companion object {
+    companion object : Validator<String> {
         private val regex = Regex("^[0-9]{4}[A-Z][0-9]{2}$")
 
-        fun erGyldig(value: String) = value matches regex
+        override fun erGyldig(value: String) = value matches regex
     }
 }

@@ -5,6 +5,7 @@ import no.bekk.bekkopen.person.Fodselsnummer
 import no.bekk.bekkopen.person.FodselsnummerCalculator
 import no.bekk.bekkopen.person.FodselsnummerValidator
 import no.nav.hjelpemidler.time.toDate
+import no.nav.hjelpemidler.validation.Validator
 
 /**
  * F-nummer/D-nummer med 11 siffer.
@@ -16,9 +17,7 @@ import no.nav.hjelpemidler.time.toDate
  */
 class Fødselsnummer(value: String) : PersonIdent(value) {
     init {
-        if (!erGyldig(value)) {
-            throw IllegalArgumentException("Ugyldig fødselsnummer")
-        }
+        require(erGyldig(value)) { "Ugyldig fødselsnummer" }
     }
 
     private val internal: Fodselsnummer get() = FodselsnummerValidator.getFodselsnummer(value)
@@ -44,8 +43,8 @@ class Fødselsnummer(value: String) : PersonIdent(value) {
             .toString()
     )
 
-    companion object {
-        fun erGyldig(value: String): Boolean = FodselsnummerValidator.isValid(value)
+    companion object : Validator<String> {
+        override fun erGyldig(value: String): Boolean = FodselsnummerValidator.isValid(value)
     }
 }
 
