@@ -22,6 +22,10 @@ class ThreeTenExtraModuleTest {
     fun `Deserialiser Interval til Kotlin med Jackson`() {
         jsonToValue<Interval?>("""null""") shouldBe null
         jsonToValue<Interval>(intervalJson) shouldBe interval
+        jsonToValue<Interval>("PT3600S/$now".doubleQuoted()) shouldBe interval
+        jsonToValue<Interval>("$now/PT3600S".doubleQuoted()) shouldBe interval
+            .withStart(now)
+            .withEnd(now.plusSeconds(3_600))
         shouldThrow<DateTimeParseException> { jsonToValue<Interval>(""""foobar"""") }
     }
 }
