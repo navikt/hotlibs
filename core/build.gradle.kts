@@ -5,6 +5,8 @@ plugins {
 }
 
 dependencies {
+    api(libs.threeten.extra)
+
     implementation(libs.kotlin.reflect)
     implementation(libs.nocommons)
 

@@ -25,15 +25,14 @@ internal class KodeverkDeserializer(
     }
 
     override fun createContextual(context: DeserializationContext, property: BeanProperty?): JsonDeserializer<*> {
-        if (property == null) return this
-        val propertyType = property.type
-        val valueType = propertyType.containedType(0)
-            ?: throw JsonMappingException.from(context, "valueType var null, propertyType: $propertyType")
+        val type = property?.type ?: context.contextualType
+        val containedType =
+            type.containedType(0) ?: throw JsonMappingException.from(context, "containedType var null, type: $type")
         return KodeverkDeserializer(
             context.factory.createEnumDeserializer(
                 context,
-                valueType,
-                context.config.introspect(valueType),
+                containedType,
+                context.config.introspect(containedType),
             ),
         )
     }

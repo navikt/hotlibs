@@ -6,32 +6,27 @@ import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.time.ZonedDateTime
 
-object LocalDateSerializer : AbstractStringSerializer<LocalDate>(
+object LocalDateSerializer : ToStringSerializer<LocalDate>(
     serialName = "no.nav.hjelpemidler.serialization.kotlinx.LocalDateSerializer",
-    toString = LocalDate::toString,
-    fromString = LocalDate::parse,
+    creator = LocalDate::parse,
 )
 
-object LocalDateTimeSerializer : AbstractStringSerializer<LocalDateTime>(
+object LocalDateTimeSerializer : ToStringSerializer<LocalDateTime>(
     serialName = "no.nav.hjelpemidler.serialization.kotlinx.LocalDateTimeSerializer",
-    toString = LocalDateTime::toString,
-    fromString = LocalDateTime::parse,
+    creator = LocalDateTime::parse,
 )
 
-object OffsetDateTimeSerializer : AbstractStringSerializer<OffsetDateTime>(
+object OffsetDateTimeSerializer : ToStringSerializer<OffsetDateTime>(
     serialName = "no.nav.hjelpemidler.serialization.kotlinx.OffsetDateTimeSerializer",
-    toString = OffsetDateTime::toString,
-    fromString = OffsetDateTime::parse,
+    creator = OffsetDateTime::parse,
 )
 
-object ZonedDateTimeSerializer : AbstractStringSerializer<ZonedDateTime>(
+object ZonedDateTimeSerializer : ToStringSerializer<ZonedDateTime>(
     serialName = "no.nav.hjelpemidler.serialization.kotlinx.ZonedDateTimeSerializer",
-    toString = ZonedDateTime::toString,
-    fromString = ZonedDateTime::parse,
+    creator = ZonedDateTime::parse,
 )
 
-object InstantSerializer : AbstractStringSerializer<Instant>(
+object InstantSerializer : ToStringSerializer<Instant>(
     serialName = "no.nav.hjelpemidler.serialization.kotlinx.InstantSerializer",
-    toString = Instant::toString,
-    fromString = Instant::parse,
+    creator = Instant::parse,
 )

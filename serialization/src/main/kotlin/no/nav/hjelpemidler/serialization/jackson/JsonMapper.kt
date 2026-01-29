@@ -27,6 +27,7 @@ fun JsonMapper.Builder.default(): JsonMapper.Builder =
     this
         .addModule(Jdk8Module())
         .addModule(JavaTimeModule())
+        .addModule(ThreeTenExtraModule())
         .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
         .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
         .configure(JsonParser.Feature.INCLUDE_SOURCE_IN_LOCATION, !Environment.current.isProd)
