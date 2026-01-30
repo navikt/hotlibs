@@ -10,27 +10,34 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.hjelpemidler.configuration.Environment
+import com.fasterxml.jackson.databind.Module as JacksonModule
 
 private val log = KotlinLogging.logger {}
+
+val jdk8Module: JacksonModule by lazy(::Jdk8Module)
+val javaTimeModule: JacksonModule by lazy(::JavaTimeModule)
+val threeTenExtraModule: JacksonModule by lazy(::ThreeTenExtraModule)
 
 /**
  * Definerer standardinnstillinger for [JsonMapper].
  * * Legger til [Jdk8Module] for å støtte java.util.Optional.
  * * Legger til [JavaTimeModule] for å støtte java.time.* (JSR 310).
+ * * Legger til [ThreeTenExtraModule] for å støtte org.threeten.extra.* (ThreeTen-Extra).
  * * Skrur av [SerializationFeature.WRITE_DATES_AS_TIMESTAMPS] for at datoer og tidspunkt skal serialiseres som tekst.
  * * Skrur av [DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES] for å tillate egenskaper i JSON som ikke finnes i Kotlin-klassen det mappes til.
  * * Skrur på [JsonParser.Feature.INCLUDE_SOURCE_IN_LOCATION] hvis IKKE produksjon slik at kilde-JSON inkluderes ved feil under deserialisering.
  *
  * @see [defaultJsonMapper]
  */
-fun JsonMapper.Builder.default(): JsonMapper.Builder =
-    this
-        .addModule(Jdk8Module())
-        .addModule(JavaTimeModule())
-        .addModule(ThreeTenExtraModule())
+fun JsonMapper.Builder.default(): JsonMapper.Builder {
+    return this
+        .addModule(jdk8Module)
+        .addModule(javaTimeModule)
+        .addModule(threeTenExtraModule)
         .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
         .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
         .configure(JsonParser.Feature.INCLUDE_SOURCE_IN_LOCATION, !Environment.current.isProd)
+}
 
 /**
  * Opprett [JsonMapper] med standardinnstillinger.
