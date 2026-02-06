@@ -29,6 +29,12 @@ enum class BehovsmeldingStatus {
     VEDTAKSRESULTAT_ANNET,
     UTSENDING_STARTET,
     VEDTAKSRESULTAT_HENLAGTBORTFALT,
+
+    /**
+     * Brukes når det endres fra brukerbekreftelse til fullmakt som en midlertidig status inntil
+     * ny PDF har blitt generert. Går deretter videre til GODKJENT_MED_FULLMAKT.
+     */
+    FULLMAKT_AVVENTER_PDF,
     ;
 
     fun isSlettetEllerUtløpt(): Boolean = this == SLETTET || this == UTLØPT
