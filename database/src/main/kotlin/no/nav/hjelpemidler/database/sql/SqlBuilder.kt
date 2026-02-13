@@ -1,5 +1,6 @@
 package no.nav.hjelpemidler.database.sql
 
+import no.nav.hjelpemidler.collections.OrderBy.Direction
 import org.intellij.lang.annotations.Language
 
 /**
@@ -25,16 +26,18 @@ class SqlBuilder internal constructor(
         WHERE(condition)
     }
 
-    fun ORDER_BY(columnName: String, order: SqlOrderBy.Order = SqlOrderBy.Order.ASC) {
-        orderBy.add(SqlOrderBy(columnName, order))
+    fun ORDER_BY(columnName: String, direction: Direction = Direction.ASCENDING) {
+        if (direction != Direction.NONE) {
+            orderBy.add(SqlOrderBy(columnName, direction))
+        }
     }
 
-    fun ORDER_BY(column: SqlColumn, order: SqlOrderBy.Order = SqlOrderBy.Order.ASC) =
-        ORDER_BY(column.columnName, order)
+    fun ORDER_BY(column: SqlColumn, direction: Direction = Direction.ASCENDING) =
+        ORDER_BY(column.columnName, direction)
 
     fun ORDER_BY(orderBy: SqlOrderBy?) {
-        val (columnName, order) = orderBy ?: return
-        ORDER_BY(columnName, order)
+        val (columnName, direction) = orderBy ?: return
+        ORDER_BY(columnName, direction)
     }
 
     fun copy(): SqlBuilder = SqlBuilder(baseSql, conditions.toMutableSet(), orderBy)

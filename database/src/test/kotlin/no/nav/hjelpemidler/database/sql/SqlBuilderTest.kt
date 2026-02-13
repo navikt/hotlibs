@@ -1,6 +1,7 @@
 package no.nav.hjelpemidler.database.sql
 
 import io.kotest.matchers.shouldBe
+import no.nav.hjelpemidler.collections.OrderBy
 import kotlin.test.Test
 
 class SqlBuilderTest {
@@ -10,7 +11,7 @@ class SqlBuilderTest {
             WHERE("foo = 'bar'")
             WHERE("bar = 'foo'")
             WHERE(SqlCondition("x > 10") OR SqlCondition("y < 10"))
-            ORDER_BY("foo", SqlOrderBy.Order.DESC)
+            ORDER_BY("foo", OrderBy.Direction.DESCENDING)
             ORDER_BY("bar")
         }
         sql.toString() shouldBe """
