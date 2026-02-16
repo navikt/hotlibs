@@ -49,7 +49,7 @@ internal class SessionJdbcOperations(private val session: kotliquery.Session) : 
     ): Page<T> {
         val limit = pageRequest.limit
         val offset = pageRequest.offset
-        var totalElements: Long = -1
+        var totalElements: Long = 0
 
         val query = if (pageRequest === PageRequest.ALL) {
             queryOf(sql, queryParameters)
