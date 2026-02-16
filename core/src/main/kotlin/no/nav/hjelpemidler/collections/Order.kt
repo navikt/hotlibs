@@ -9,16 +9,22 @@ interface OrderBy<T> {
     val direction: Direction
 
     enum class Direction {
-        @JsonAlias("asc", "ASC")
+        /**
+         * `NULLS LAST` is the default.
+         */
+        @JsonAlias("ASC")
         ASCENDING,
 
-        @JsonAlias("asc_nulls_first", "ASC_NULLS_FIRST")
+        @JsonAlias("ASC_NULLS_FIRST")
         ASCENDING_NULLS_FIRST,
 
-        @JsonAlias("desc", "DESC")
+        /**
+         * `NULLS FIRST` is the default.
+         */
+        @JsonAlias("DESC")
         DESCENDING,
 
-        @JsonAlias("desc_nulls_last", "DESC_NULLS_LAST")
+        @JsonAlias("DESC_NULLS_LAST")
         DESCENDING_NULLS_LAST,
 
         @JsonEnumDefaultValue
