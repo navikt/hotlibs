@@ -49,7 +49,6 @@ internal class SessionJdbcOperations(private val session: kotliquery.Session) : 
     ): Page<T> {
         val limit = pageRequest.limit
         val offset = pageRequest.offset
-        var totalElements: Long = 0
 
         val query = if (pageRequest === PageRequest.ALL) {
             queryOf(sql, queryParameters)
@@ -70,6 +69,7 @@ internal class SessionJdbcOperations(private val session: kotliquery.Session) : 
             )
         }
 
+        var totalElements: Long = 0
         val content = session.list(query) {
             totalElements = it.longOrNull(totalElementsLabel) ?: -1
             mapper(adapter.rowFactory(it.underlying))
