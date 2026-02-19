@@ -44,6 +44,8 @@ private val log = KotlinLogging.logger {}
  *     }
  * ```
  *
+ * NB! Her arver vi fra [TypeReference] for å fange den generiske typen [T].
+ *
  * @see [register]
  */
 abstract class KafkaMessageListener<T : KafkaMessage>(
