@@ -12,7 +12,7 @@ private val intRange: CharRange = '0'..'9'
  * @return `true` hvis teksten kun består av heltall.
  */
 fun CharSequence.isInteger(): Boolean =
-    all { it in intRange }
+    isNotEmpty() && all { it in intRange }
 
 /**
  * Konverter til [java.util.UUID].
