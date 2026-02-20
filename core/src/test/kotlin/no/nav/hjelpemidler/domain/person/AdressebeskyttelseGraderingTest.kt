@@ -5,101 +5,96 @@ import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import no.nav.hjelpemidler.collections.emptyEnumSet
 import no.nav.hjelpemidler.collections.enumSetOf
-import no.nav.hjelpemidler.domain.person.AdressebeskyttelseGradering.Kategori
 import kotlin.test.Test
 
 class AdressebeskyttelseGraderingTest {
     @Test
-    fun `Gradering tilhører riktig kategori`() {
-        setOf(
-            AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND,
+    fun `STRENGT_FORTROLIG_UTLAND er strengeste gradering`() {
+        enumSetOf(
+            AdressebeskyttelseGradering.UGRADERT,
+            AdressebeskyttelseGradering.FORTROLIG,
             AdressebeskyttelseGradering.STRENGT_FORTROLIG,
+            AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND,
+        ).strengeste.should { gradering ->
+            gradering shouldBe AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND
+        }
+    }
+
+    @Test
+    fun `STRENGT_FORTROLIG_UTLAND har presedens over UGRADERT`() {
+        enumSetOf(
+            AdressebeskyttelseGradering.UGRADERT,
+            AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND,
+        ).strengeste.should { gradering ->
+            gradering shouldBe AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND
+        }
+    }
+
+    @Test
+    fun `STRENGT_FORTROLIG er strengeste gradering`() {
+        enumSetOf(
+            AdressebeskyttelseGradering.UGRADERT,
+            AdressebeskyttelseGradering.FORTROLIG,
+            AdressebeskyttelseGradering.STRENGT_FORTROLIG,
+        ).strengeste.should { gradering ->
+            gradering shouldBe AdressebeskyttelseGradering.STRENGT_FORTROLIG
+        }
+    }
+
+    @Test
+    fun `STRENGT_FORTROLIG har presedens over UGRADERT`() {
+        enumSetOf(
+            AdressebeskyttelseGradering.UGRADERT,
+            AdressebeskyttelseGradering.STRENGT_FORTROLIG,
+        ).strengeste.should { gradering ->
+            gradering shouldBe AdressebeskyttelseGradering.STRENGT_FORTROLIG
+        }
+    }
+
+    @Test
+    fun `FORTROLIG er strengeste gradering`() {
+        enumSetOf(
+            AdressebeskyttelseGradering.UGRADERT,
+            AdressebeskyttelseGradering.FORTROLIG,
+        ).strengeste.should { gradering ->
+            gradering shouldBe AdressebeskyttelseGradering.FORTROLIG
+        }
+    }
+
+    @Test
+    fun `Tomt sett og sett av UGRADERT gir UGRADERT`() {
+        setOf(emptyEnumSet(), enumSetOf(AdressebeskyttelseGradering.UGRADERT))
+            .map(Set<AdressebeskyttelseGradering>::strengeste)
+            .forAll { gradering ->
+                gradering shouldBe AdressebeskyttelseGradering.UGRADERT
+            }
+    }
+
+    @Test
+    fun `Boolske felter gir riktig resultat`() {
+        enumSetOf(
+            AdressebeskyttelseGradering.STRENGT_FORTROLIG,
+            AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND,
         ).forAll { gradering ->
-            gradering.kategori shouldBe Kategori.STRENGT_FORTROLIG
-
-            gradering.strengtFortrolig shouldBe true
-            gradering.fortrolig shouldBe false
-            gradering.gradert shouldBe true
+            gradering.isStrengtFortrolig shouldBe true
+            gradering.isFortrolig shouldBe false
+            gradering.isGradert shouldBe true
         }
 
-        AdressebeskyttelseGradering.FORTROLIG.should { gradering ->
-            gradering.kategori shouldBe Kategori.FORTROLIG
-
-            gradering.strengtFortrolig shouldBe false
-            gradering.fortrolig shouldBe true
-            gradering.gradert shouldBe true
+        enumSetOf(
+            AdressebeskyttelseGradering.FORTROLIG,
+        ).forAll { gradering ->
+            gradering.isStrengtFortrolig shouldBe false
+            gradering.isFortrolig shouldBe true
+            gradering.isGradert shouldBe true
         }
 
-        setOf(AdressebeskyttelseGradering.UGRADERT, null).forAll { gradering ->
-            gradering.kategori shouldBe Kategori.UGRADERT
-
-            gradering.strengtFortrolig shouldBe false
-            gradering.fortrolig shouldBe false
-            gradering.gradert shouldBe false
-        }
-    }
-
-    @Test
-    fun `STRENGT_FORTROLIG_UTLAND har presedens over FORTROLIG`() {
         enumSetOf(
             AdressebeskyttelseGradering.UGRADERT,
-            AdressebeskyttelseGradering.FORTROLIG,
-            AdressebeskyttelseGradering.STRENGT_FORTROLIG,
-            AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND,
-        ).should { gradering ->
-            gradering.kategori shouldBe Kategori.STRENGT_FORTROLIG
-
-            gradering.kategori.strengtFortrolig shouldBe true
-            gradering.kategori.fortrolig shouldBe false
-            gradering.kategori.gradert shouldBe true
-
-            gradering.gradert shouldBe true
-        }
-    }
-
-    @Test
-    fun `STRENGT_FORTROLIG har presedens over FORTROLIG`() {
-        enumSetOf(
-            AdressebeskyttelseGradering.UGRADERT,
-            AdressebeskyttelseGradering.FORTROLIG,
-            AdressebeskyttelseGradering.STRENGT_FORTROLIG,
-        ).should { gradering ->
-            gradering.kategori shouldBe Kategori.STRENGT_FORTROLIG
-
-            gradering.kategori.strengtFortrolig shouldBe true
-            gradering.kategori.fortrolig shouldBe false
-            gradering.kategori.gradert shouldBe true
-
-            gradering.gradert shouldBe true
-        }
-    }
-
-    @Test
-    fun `FORTROLIG har presedens over UGRADERT`() {
-        enumSetOf(
-            AdressebeskyttelseGradering.UGRADERT,
-            AdressebeskyttelseGradering.FORTROLIG,
-        ).should { gradering ->
-            gradering.kategori shouldBe Kategori.FORTROLIG
-
-            gradering.kategori.strengtFortrolig shouldBe false
-            gradering.kategori.fortrolig shouldBe true
-            gradering.kategori.gradert shouldBe true
-
-            gradering.gradert shouldBe true
-        }
-    }
-
-    @Test
-    fun `Tomt sett og sett av UGRADERT gir riktige resultater`() {
-        setOf(emptyEnumSet(), enumSetOf(AdressebeskyttelseGradering.UGRADERT)).forAll { gradering ->
-            gradering.kategori shouldBe Kategori.UGRADERT
-
-            gradering.kategori.strengtFortrolig shouldBe false
-            gradering.kategori.fortrolig shouldBe false
-            gradering.kategori.gradert shouldBe false
-
-            gradering.gradert shouldBe false
+        ).forAll { gradering ->
+            gradering.isStrengtFortrolig shouldBe false
+            gradering.isFortrolig shouldBe false
+            gradering.isGradert shouldBe false
         }
     }
 }
