@@ -9,9 +9,9 @@ class TransactionTest {
 
     @Test
     fun `Nestet transaksjon bruker samme JdbcOperations`() = runTest {
-        transactionAsync(dataSource) { t1 ->
-            transactionAsync(dataSource) { t2 ->
-                transactionAsync(dataSource) { t3 ->
+        transaction(dataSource) { t1 ->
+            transaction(dataSource) { t2 ->
+                transaction(dataSource) { t3 ->
                     t1 shouldBeSameInstanceAs t2
                     t2 shouldBeSameInstanceAs t3
                 }

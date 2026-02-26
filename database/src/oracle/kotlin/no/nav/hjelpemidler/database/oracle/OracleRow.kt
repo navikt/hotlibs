@@ -2,7 +2,7 @@ package no.nav.hjelpemidler.database.oracle
 
 import com.fasterxml.jackson.databind.JsonNode
 import no.nav.hjelpemidler.database.Row
-import no.nav.hjelpemidler.database.jdbc.getObject
+import no.nav.hjelpemidler.database.getObject
 import oracle.jdbc.OracleTypes
 import java.sql.ResultSet
 import java.time.Instant

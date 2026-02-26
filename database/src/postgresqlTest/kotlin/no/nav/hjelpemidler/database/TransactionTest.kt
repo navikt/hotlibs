@@ -14,18 +14,18 @@ import kotlin.time.Duration.Companion.seconds
 class TransactionTest {
     @Test
     fun `Lagrer og henter innslag i transaksjon`() = runTest {
-        val id = transactionAsync(testDataSource) { it.lagre() }
-        val entity = transactionAsync(testDataSource) { it.hent(id) }
+        val id = transaction(testDataSource) { it.lagre() }
+        val entity = transaction(testDataSource) { it.hent(id) }
         entity.id shouldBe id
     }
 
     @Test
     fun `Nestet transaksjon`() = runTest {
-        val id = transactionAsync(testDataSource) { it.lagre() }
-        transactionAsync(testDataSource) { tx1 ->
+        val id = transaction(testDataSource) { it.lagre() }
+        transaction(testDataSource) { tx1 ->
             someSuspendingFunction()
             val entity1 = tx1.hent(id)
-            val entity2 = transactionAsync(testDataSource) { tx2 ->
+            val entity2 = transaction(testDataSource) { tx2 ->
                 tx1 shouldBeSameInstanceAs tx2
                 someSuspendingFunction()
                 tx2.hent(id)

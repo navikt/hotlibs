@@ -1,4 +1,4 @@
-package no.nav.hjelpemidler.database.jdbc
+package no.nav.hjelpemidler.database.kotliquery
 
 import com.fasterxml.jackson.databind.node.MissingNode
 import com.fasterxml.jackson.databind.node.NullNode

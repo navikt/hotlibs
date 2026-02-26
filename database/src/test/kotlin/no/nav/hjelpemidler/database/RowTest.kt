@@ -3,7 +3,6 @@ package no.nav.hjelpemidler.database
 import com.fasterxml.jackson.databind.JsonNode
 import io.mockk.mockk
 import io.mockk.verifySequence
-import no.nav.hjelpemidler.database.jdbc.getObject
 import no.nav.hjelpemidler.test.NamedTestCase
 import no.nav.hjelpemidler.test.testFactory
 import org.junit.jupiter.api.TestFactory

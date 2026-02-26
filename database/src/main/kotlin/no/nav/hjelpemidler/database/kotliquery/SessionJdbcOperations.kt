@@ -5,9 +5,9 @@ import no.nav.hjelpemidler.database.JdbcOperations
 import no.nav.hjelpemidler.database.QueryParameters
 import no.nav.hjelpemidler.database.Row
 import no.nav.hjelpemidler.database.UpdateResult
-import no.nav.hjelpemidler.database.jdbc.vendor
 import no.nav.hjelpemidler.database.prepare
 import no.nav.hjelpemidler.database.queryOf
+import no.nav.hjelpemidler.database.vendor
 import no.nav.hjelpemidler.pagination.Page
 import no.nav.hjelpemidler.pagination.PageRequest
 import no.nav.hjelpemidler.pagination.pageOf

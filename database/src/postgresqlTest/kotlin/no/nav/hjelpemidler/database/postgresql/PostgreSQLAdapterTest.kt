@@ -5,7 +5,7 @@ import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.coroutines.test.runTest
 import no.nav.hjelpemidler.database.single
 import no.nav.hjelpemidler.database.test.testDataSource
-import no.nav.hjelpemidler.database.transactionAsync
+import no.nav.hjelpemidler.database.transaction
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.time.Instant
@@ -21,7 +21,7 @@ import kotlin.test.Test
 class PostgreSQLAdapterTest {
     @Test
     fun `Henter alle value types`() = runTest {
-        transactionAsync(testDataSource) {
+        transaction(testDataSource) {
             it.single<BigDecimal>("SELECT 3.14::NUMERIC") shouldBe BigDecimal("3.14")
             it.single<BigInteger>("SELECT 1::BIGINT") shouldBe BigInteger.ONE
             it.single<Boolean>("SELECT TRUE") shouldBe true

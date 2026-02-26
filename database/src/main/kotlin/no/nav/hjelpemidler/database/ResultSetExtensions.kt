@@ -1,4 +1,4 @@
-package no.nav.hjelpemidler.database.jdbc
+package no.nav.hjelpemidler.database
 
 import java.sql.ResultSet
 import kotlin.reflect.KClass
