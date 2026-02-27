@@ -13,7 +13,7 @@ confluent = "8.1.1"
 contractPdlAvro = "1.0.3"
 cyclonedx = "3.2.0"
 ehcache = "3.11.1"
-flyway = "12.0.2"
+flyway = "12.0.3"
 graphql = "9.0.0"
 graphql-java = "25.0"
 h2 = "2.4.240"
@@ -56,7 +56,7 @@ oracle = "23.26.1.0.0"
 postgresql = "42.7.10"
 prometheus = "1.5.0"
 prometheus-deprecated = "0.16.0"
-protobuf = "4.33.5"
+protobuf = "4.34.0"
 rapidsAndRivers = "2026021921161771532161.7a37f8c9e0cc"
 redisson = "4.2.0"
 shadow = "8.1.1"
@@ -68,7 +68,7 @@ tbdLibs = "2026.02.19-20.58-521cdd3c"
 testcontainers = "2.0.3"
 threeten = "1.8.0"
 tmsKtorTokenSupport = "5.0.6"
-tmsVarsel = "2.1.1"
+tmsVarsel = "2.2.0"
 unleash = "12.1.2"
 unleash-deprecated = "4.4.1"
 valkey = "5.5.0"
@@ -155,7 +155,7 @@ kotlin-logging-deprecated = { module = "io.github.microutils:kotlin-logging", ve
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 kotlin-serialization = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
-kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+kotlin-test-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5", version.ref = "kotlin" }
 kotlinx-coroutines-bom = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-bom", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-debug = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-debug", version.ref = "kotlinx-coroutines" }
@@ -280,15 +280,6 @@ jackson = [
     "jackson-datatype-jsr310",
     "jackson-module-kotlin",
 ]
-junit = [
-    "junit-jupiter-api",
-    "junit-jupiter-engine",
-    "junit-jupiter-params",
-]
-kotest = [
-    "kotest-assertions-core",
-    "kotest-assertions-json",
-]
 ktor-client = [
     "ktor-client-cio",
     "ktor-client-content-negotiation",
@@ -309,24 +300,7 @@ ktor-server = [
     "ktor-server-netty",
     "ktor-server-status-pages",
 ]
-ktor-server-test = [
-    "kotest-assertions-core",
-    "kotest-assertions-json",
-    "kotest-assertions-ktor",
-    "kotlin-test",
-    "kotlinx-coroutines-test",
-    "ktor-server-test-host",
-    "mockk",
-    "nimbus-jose-jwt",
-]
 logging-runtime = [
     "logback-classic",
     "logstash-logback-encoder",
-]
-test = [
-    "kotest-assertions-core",
-    "kotest-assertions-json",
-    "kotlin-test",
-    "kotlinx-coroutines-test",
-    "mockk",
 ]

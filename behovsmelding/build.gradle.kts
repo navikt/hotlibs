@@ -9,6 +9,4 @@ dependencies {
 
     implementation(libs.bundles.jackson)
     implementation(libs.owasp.java.html.sanitizer)
-
-    testImplementation(libs.bundles.test)
 }

@@ -3,20 +3,13 @@ plugins {
 }
 
 dependencies {
-    api(libs.junit.jupiter)
-    api(libs.kotlin.test)
+    api(libs.junit.jupiter.api)
     api(libs.kotlinx.coroutines.test)
+    api(libs.mockk)
 
+    // kotest
     api(libs.kotest.assertions.core)
     api(libs.kotest.assertions.json)
-    constraints {
-        // CVE-2024-57699
-        implementation("net.minidev:json-smart:2.6.0")
-    }
-
-    api(libs.mockk) {
-        exclude("junit", "junit")
-    }
 
     runtimeOnly(libs.logback.classic)
 }
