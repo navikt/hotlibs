@@ -3,7 +3,6 @@ package no.nav.hjelpemidler.kafka
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.clients.consumer.MockConsumer
-import org.apache.kafka.clients.consumer.OffsetResetStrategy
 import org.apache.kafka.common.serialization.StringDeserializer
 import java.util.Properties
 
@@ -22,6 +21,5 @@ fun createKafkaConsumer(configure: Properties.() -> Unit = {}): Consumer<String,
     )
 }
 
-fun createMockConsumer(offsetResetStrategy: OffsetResetStrategy = OffsetResetStrategy.NONE): MockConsumer<String, String> {
-    return MockConsumer<String, String>(offsetResetStrategy)
-}
+fun createMockConsumer(offsetResetStrategy: String = "none"): MockConsumer<String, String> =
+    MockConsumer<String, String>(offsetResetStrategy)
