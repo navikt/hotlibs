@@ -423,20 +423,17 @@ private fun lagTittel(behovsmelding : Innsenderbehovsmelding) : String{
     val behovsmeldingType = behovsmelding.type
 
     val titlerForHjelpemidler = behovsmelding.hjelpemidler.hjelpemidler
-        .asSequence()
         .filter { it.produkt.iso8KortTittel.isNotEmpty() }
         .sortedWith(
             compareBy<Hjelpemiddel>(
                 { it.produkt.rangering == 1 },
                 { it.produkt.iso8KortTittel.lowercase() }
             )
-        )
-        .map { it.produkt.iso8KortTittel }
-        .joinToString(separator = ", ")
+        ).distinctBy { it.produkt.iso8KortTittel.lowercase() }
+        .joinToString(separator = ", ") { it.produkt.iso8KortTittel }
         .lowercase()
 
     val titlerForTilbehør = behovsmelding.hjelpemidler.tilbehør
-        .asSequence()
         .mapNotNull {
             val iso6 = it.iso6 ?: run {
                 log.error { "Mangler iso6 for hmsnr ${it.hmsArtNr}, kan ikke slå opp tittel" }
@@ -454,9 +451,7 @@ private fun lagTittel(behovsmelding : Innsenderbehovsmelding) : String{
             }
         }
         .map { "tilbehør ${it}" }
-        .filter { it.isNotEmpty() }
-        .toSet()
-        .sorted()
+        .toSortedSet(String.CASE_INSENSITIVE_ORDER)
         .joinToString(separator = ", ")
         .lowercase()
 
