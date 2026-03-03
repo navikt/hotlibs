@@ -3,10 +3,10 @@ package no.nav.hjelpemidler.nare.regel
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonInclude.Include
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import no.nav.hjelpemidler.nare.core.Grunnlag
 import no.nav.hjelpemidler.nare.evaluering.Evaluering
 import no.nav.hjelpemidler.nare.evaluering.Operator
+import tools.jackson.databind.annotation.JsonDeserialize
 
 @JsonDeserialize(using = RegelevalueringDeserializer::class)
 class Regelevaluering internal constructor(

@@ -3,11 +3,11 @@ package no.nav.hjelpemidler.http.openid
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy
-import com.fasterxml.jackson.databind.annotation.JsonNaming
 import no.nav.hjelpemidler.time.minus
 import no.nav.hjelpemidler.time.nå
 import no.nav.hjelpemidler.time.plus
+import tools.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy
+import tools.jackson.databind.annotation.JsonNaming
 import java.time.Instant
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds

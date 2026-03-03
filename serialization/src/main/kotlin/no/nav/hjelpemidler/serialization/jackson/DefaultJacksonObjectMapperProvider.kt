@@ -1,9 +1,9 @@
 package no.nav.hjelpemidler.serialization.jackson
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.hjelpemidler.service.LoadOrder
 import no.nav.hjelpemidler.service.loadService
+import tools.jackson.databind.ObjectMapper
 
 private val log = KotlinLogging.logger {}
 

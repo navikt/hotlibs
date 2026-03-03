@@ -1,17 +1,17 @@
 package no.nav.hjelpemidler.serialization.jackson
 
-import com.fasterxml.jackson.databind.node.ArrayNode
-import com.fasterxml.jackson.databind.node.BooleanNode
-import com.fasterxml.jackson.databind.node.IntNode
-import com.fasterxml.jackson.databind.node.NullNode
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.TextNode
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.maps.shouldBeEmpty
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
+import tools.jackson.databind.node.ArrayNode
+import tools.jackson.databind.node.BooleanNode
+import tools.jackson.databind.node.IntNode
+import tools.jackson.databind.node.NullNode
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.StringNode
 import kotlin.test.Test
 
 class JsonTest {
@@ -20,7 +20,7 @@ class JsonTest {
         Json("null").toTree().shouldBeInstanceOf<NullNode>()
         Json("-1").toTree().shouldBeInstanceOf<IntNode>()
         Json("false").toTree().shouldBeInstanceOf<BooleanNode>()
-        Json("\"foobar\"").toTree().shouldBeInstanceOf<TextNode>()
+        Json("\"foobar\"").toTree().shouldBeInstanceOf<StringNode>()
         Json("{}").toTree().shouldBeInstanceOf<ObjectNode>()
         Json("[]").toTree().shouldBeInstanceOf<ArrayNode>()
     }

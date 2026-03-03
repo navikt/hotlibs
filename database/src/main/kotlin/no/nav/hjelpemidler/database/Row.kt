@@ -1,6 +1,5 @@
 package no.nav.hjelpemidler.database
 
-import com.fasterxml.jackson.databind.JsonNode
 import no.nav.hjelpemidler.collections.toEnumSet
 import no.nav.hjelpemidler.domain.enhet.Enhet
 import no.nav.hjelpemidler.domain.enhet.Enhetsnummer
@@ -14,6 +13,7 @@ import no.nav.hjelpemidler.serialization.jackson.jsonToTreeOrNull
 import no.nav.hjelpemidler.serialization.jackson.jsonToValue
 import no.nav.hjelpemidler.serialization.jackson.node
 import no.nav.hjelpemidler.serialization.jackson.treeToValueOrNull
+import tools.jackson.databind.JsonNode
 import java.io.InputStream
 import java.math.BigDecimal
 import java.sql.Blob

@@ -1,6 +1,5 @@
 package no.nav.hjelpemidler.rapids_and_rivers
 
-import com.fasterxml.jackson.core.type.TypeReference
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.River.PacketListener
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageContext
@@ -13,6 +12,7 @@ import kotlinx.coroutines.runBlocking
 import no.nav.hjelpemidler.kafka.KafkaMessage
 import no.nav.hjelpemidler.logging.teamInfo
 import no.nav.hjelpemidler.serialization.jackson.jsonMapper
+import tools.jackson.core.type.TypeReference
 
 private val log = KotlinLogging.logger {}
 
@@ -72,7 +72,7 @@ abstract class KafkaMessageListener<T : KafkaMessage>(
         if (skipMessage(packet, messageContext, metadata, meterRegistry)) {
             val eventId: String? = packet[KafkaMessage.EVENT_ID_KEY].textValue()
             val eventName: String? = packet[KafkaMessage.EVENT_NAME_KEY].textValue()
-            log.info { "skipMessage() returnerte true, eventId: '$eventId', eventName: '$eventName'" }
+            log.warn { "skipMessage() returnerte true, eventId: '$eventId', eventName: '$eventName'" }
             return
         }
         val message = jsonMapper.readValue(packet.toJson(), this)

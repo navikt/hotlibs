@@ -2,12 +2,12 @@ package no.nav.hjelpemidler.domain.kodeverk
 
 import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.MapperFeature
-import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
-import com.fasterxml.jackson.module.kotlin.readValue
 import io.kotest.matchers.shouldBe
 import no.nav.hjelpemidler.test.testFactory
 import org.junit.jupiter.api.TestFactory
+import tools.jackson.databind.MapperFeature
+import tools.jackson.module.kotlin.jacksonMapperBuilder
+import tools.jackson.module.kotlin.readValue
 
 class KodeverkDeserializerTest {
     private val jsonMapper = jacksonMapperBuilder()

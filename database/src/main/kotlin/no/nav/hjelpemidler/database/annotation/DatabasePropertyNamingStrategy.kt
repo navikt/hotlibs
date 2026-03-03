@@ -1,9 +1,9 @@
 package no.nav.hjelpemidler.database.annotation
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies
+import tools.jackson.databind.PropertyNamingStrategies
 
 /**
- * @see [com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy]
+ * @see [tools.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy]
  */
 internal class DatabasePropertyNamingStrategy : PropertyNamingStrategies.SnakeCaseStrategy() {
     override fun translate(input: String?): String? {

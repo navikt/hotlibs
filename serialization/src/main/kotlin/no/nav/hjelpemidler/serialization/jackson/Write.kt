@@ -1,7 +1,7 @@
 package no.nav.hjelpemidler.serialization.jackson
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectWriter
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.ObjectWriter
 
 fun valueToTree(value: Any?): JsonNode = jsonMapper.valueToTree(value)
 

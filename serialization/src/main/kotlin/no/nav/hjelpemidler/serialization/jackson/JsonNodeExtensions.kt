@@ -1,7 +1,8 @@
 package no.nav.hjelpemidler.serialization.jackson
 
-import com.fasterxml.jackson.databind.JsonNode
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.StringNode
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -10,28 +11,29 @@ import java.util.UUID
 
 val JsonNode?.isMissingOrNull: Boolean get() = this == null || isMissingNode || isNull
 
-inline fun <T : Any> JsonNode?.ifText(transform: (String) -> T): T? = this?.textValue()?.let(transform)
+inline fun <T : Any> JsonNode?.ifStringNode(transform: (String) -> T): T? =
+    takeIf { this is StringNode }?.let { transform(it.stringValue()) }
 
-fun JsonNode.uuidValue(): UUID = UUID.fromString(textValue())
-fun JsonNode?.uuidValueOrNull(): UUID? = ifText(UUID::fromString)
+fun JsonNode.uuidValue(): UUID = UUID.fromString(stringValue())
+fun JsonNode?.uuidValueOrNull(): UUID? = ifStringNode(UUID::fromString)
 
-fun JsonNode.localDateValue(): LocalDate = LocalDate.parse(textValue())
-fun JsonNode?.localDateValueOrNull(): LocalDate? = ifText(LocalDate::parse)
+fun JsonNode.localDateValue(): LocalDate = LocalDate.parse(stringValue())
+fun JsonNode?.localDateValueOrNull(): LocalDate? = ifStringNode(LocalDate::parse)
 
-fun JsonNode.localDateTimeValue(): LocalDateTime = LocalDateTime.parse(textValue())
-fun JsonNode?.localDateTimeValueOrNull(): LocalDateTime? = ifText(LocalDateTime::parse)
+fun JsonNode.localDateTimeValue(): LocalDateTime = LocalDateTime.parse(stringValue())
+fun JsonNode?.localDateTimeValueOrNull(): LocalDateTime? = ifStringNode(LocalDateTime::parse)
 
-fun JsonNode.instantValue(): Instant = Instant.parse(textValue())
-fun JsonNode?.instantValueOrNull(): Instant? = ifText(Instant::parse)
+fun JsonNode.instantValue(): Instant = Instant.parse(stringValue())
+fun JsonNode?.instantValueOrNull(): Instant? = ifStringNode(Instant::parse)
 
-fun JsonNode.zonedDateTime(): ZonedDateTime = ZonedDateTime.parse(textValue())
-fun JsonNode?.zonedDateTimeOrNull(): ZonedDateTime? = ifText(ZonedDateTime::parse)
+fun JsonNode.zonedDateTime(): ZonedDateTime = ZonedDateTime.parse(stringValue())
+fun JsonNode?.zonedDateTimeOrNull(): ZonedDateTime? = ifStringNode(ZonedDateTime::parse)
 
-inline fun <reified E : Enum<E>> JsonNode.enumValue(): E = enumValueOf<E>(textValue())
-inline fun <reified E : Enum<E>> JsonNode?.enumValueOrNull(): E? = ifText(::enumValueOf)
+inline fun <reified E : Enum<E>> JsonNode.enumValue(): E = enumValueOf<E>(stringValue())
+inline fun <reified E : Enum<E>> JsonNode?.enumValueOrNull(): E? = ifStringNode(::enumValueOf)
 
-fun JsonNode.fødselsnummerValue(): Fødselsnummer = Fødselsnummer(textValue())
-fun JsonNode?.fødselsnummerValueOrNull(): Fødselsnummer? = ifText(::Fødselsnummer)
+fun JsonNode.fødselsnummerValue(): Fødselsnummer = Fødselsnummer(stringValue())
+fun JsonNode?.fødselsnummerValueOrNull(): Fødselsnummer? = ifStringNode(::Fødselsnummer)
 
 inline fun <reified T : Any> JsonNode.value(): T = treeToValue<T>(this)
 inline fun <reified T : Any> JsonNode?.valueOrNull(): T? = treeToValueOrNull<T>(this)
