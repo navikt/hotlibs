@@ -19,7 +19,7 @@ dependencies {
     api(libs.ktor.client.logging)
     api(libs.ktor.client.mock)
     implementation(libs.ktor.client.content.negotiation)
-    implementation(libs.ktor.serialization.jackson)
+    implementation(libs.ktor.serialization.jackson3)
 
     // JWT
     implementation(libs.java.jwt)
