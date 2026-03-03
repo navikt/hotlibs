@@ -1,16 +1,16 @@
 package no.nav.hjelpemidler.http
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.json.JsonMapper
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.logging.LoggingConfig
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
-import io.ktor.serialization.jackson.JacksonConverter
+import io.ktor.serialization.jackson3.JacksonConverter
 import no.nav.hjelpemidler.serialization.jackson.defaultJsonMapper
 import no.nav.hjelpemidler.serialization.jackson.jsonMapper
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.databind.json.JsonMapper
 
 fun HttpClientConfig<*>.jackson(objectMapper: ObjectMapper = jsonMapper) =
     install(ContentNegotiation) {

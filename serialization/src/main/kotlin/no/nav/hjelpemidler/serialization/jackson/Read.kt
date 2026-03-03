@@ -1,9 +1,9 @@
 package no.nav.hjelpemidler.serialization.jackson
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.module.kotlin.readValue
-import com.fasterxml.jackson.module.kotlin.treeToValue
 import org.intellij.lang.annotations.Language
+import tools.jackson.databind.JsonNode
+import tools.jackson.module.kotlin.readValue
+import tools.jackson.module.kotlin.treeToValue
 
 inline fun <reified T> treeToValue(node: JsonNode): T =
     jsonMapper.treeToValue<T>(node)

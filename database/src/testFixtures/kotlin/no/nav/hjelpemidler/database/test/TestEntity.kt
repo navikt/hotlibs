@@ -2,7 +2,6 @@ package no.nav.hjelpemidler.database.test
 
 import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonFormat
-import com.fasterxml.jackson.databind.JsonNode
 import no.nav.hjelpemidler.database.QueryParameters
 import no.nav.hjelpemidler.database.QueryParametersProvider
 import no.nav.hjelpemidler.database.Row
@@ -11,6 +10,7 @@ import no.nav.hjelpemidler.domain.person.AktørId
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.Personnavn
 import no.nav.hjelpemidler.domain.person.år
+import tools.jackson.databind.JsonNode
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime

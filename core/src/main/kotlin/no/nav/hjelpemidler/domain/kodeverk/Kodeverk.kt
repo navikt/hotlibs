@@ -1,6 +1,6 @@
 package no.nav.hjelpemidler.domain.kodeverk
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import tools.jackson.databind.annotation.JsonDeserialize
 
 /**
  * Felles interface for kodeverk.

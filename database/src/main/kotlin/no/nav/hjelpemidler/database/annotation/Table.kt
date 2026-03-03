@@ -1,7 +1,7 @@
 package no.nav.hjelpemidler.database.annotation
 
 import com.fasterxml.jackson.annotation.JacksonAnnotationsInside
-import com.fasterxml.jackson.databind.annotation.JsonNaming
+import tools.jackson.databind.annotation.JsonNaming
 
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)

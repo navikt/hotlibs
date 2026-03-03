@@ -1,13 +1,12 @@
 package no.nav.hjelpemidler.rapids_and_rivers
 
-import com.fasterxml.jackson.databind.PropertyName
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import no.nav.hjelpemidler.collections.filterNotNull
 import no.nav.hjelpemidler.collections.mapOfNotNull
 import no.nav.hjelpemidler.kafka.KafkaMessage
 import no.nav.hjelpemidler.serialization.jackson.JacksonIntrospector
 import no.nav.hjelpemidler.serialization.jackson.jsonToValue
-import no.nav.hjelpemidler.serialization.jackson.uuidValue
+import tools.jackson.databind.PropertyName
 import java.util.UUID
 
 fun jsonMessageOf(map: Map<String, Any?>): JsonMessage =
@@ -16,7 +15,7 @@ fun jsonMessageOf(map: Map<String, Any?>): JsonMessage =
 fun jsonMessageOf(vararg pairs: Pair<String, Any?>): JsonMessage =
     jsonMessageOf(mapOfNotNull(*pairs))
 
-val JsonMessage.eventId: UUID get() = this[KafkaMessage.EVENT_ID_KEY].uuidValue()
+val JsonMessage.eventId: UUID get() = this[KafkaMessage.EVENT_ID_KEY].textValue().let(UUID::fromString)
 val JsonMessage.eventName: String get() = this[KafkaMessage.EVENT_NAME_KEY].textValue()
 
 /**

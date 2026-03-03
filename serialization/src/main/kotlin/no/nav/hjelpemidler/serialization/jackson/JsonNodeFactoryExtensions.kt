@@ -1,7 +1,7 @@
 package no.nav.hjelpemidler.serialization.jackson
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.JsonNodeFactory
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.JsonNodeFactory
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.time.temporal.Temporal
@@ -14,8 +14,8 @@ fun JsonNodeFactory.node(value: Any?): JsonNode = when (value) {
     is JsonNode -> value
 
     is Boolean -> booleanNode(value)
-    is String -> textNode(value)
-    is UUID -> textNode(value.toString())
+    is String -> stringNode(value)
+    is UUID -> stringNode(value.toString())
 
     // numbers
     is Byte -> numberNode(value)
@@ -28,16 +28,16 @@ fun JsonNodeFactory.node(value: Any?): JsonNode = when (value) {
     is BigDecimal -> numberNode(value)
 
     // java.time.*
-    is Temporal -> textNode(value.toString())
-    is TemporalAmount -> textNode(value.toString())
+    is Temporal -> stringNode(value.toString())
+    is TemporalAmount -> stringNode(value.toString())
 
     // java.sql.*
     is java.sql.Array -> node(value.array)
     is java.sql.Blob -> value.binaryStream.use { binaryNode(it.readBytes()) }
-    is java.sql.Clob -> value.characterStream.use { textNode(it.readText()) }
-    is java.sql.Date -> textNode(value.toLocalDate().toString())
-    is java.sql.Time -> textNode(value.toLocalTime().toString())
-    is java.sql.Timestamp -> textNode(value.toLocalDateTime().toString())
+    is java.sql.Clob -> value.characterStream.use { stringNode(it.readText()) }
+    is java.sql.Date -> stringNode(value.toLocalDate().toString())
+    is java.sql.Time -> stringNode(value.toLocalTime().toString())
+    is java.sql.Timestamp -> stringNode(value.toLocalDateTime().toString())
 
     is Array<*> -> {
         val node = arrayNode(value.size)

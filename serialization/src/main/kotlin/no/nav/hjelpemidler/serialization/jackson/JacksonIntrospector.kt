@@ -1,9 +1,10 @@
 package no.nav.hjelpemidler.serialization.jackson
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.BeanDescription
-import com.fasterxml.jackson.databind.JavaType
-import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import tools.jackson.core.type.TypeReference
+import tools.jackson.databind.BeanDescription
+import tools.jackson.databind.JavaType
+import tools.jackson.databind.introspect.ClassIntrospector
+import tools.jackson.module.kotlin.jacksonTypeRef
 import java.util.concurrent.ConcurrentHashMap
 
 object JacksonIntrospector {
@@ -11,6 +12,7 @@ object JacksonIntrospector {
     val beanDescriptionForSerializationCache: MutableMap<JavaType, BeanDescription> = ConcurrentHashMap()
     val beanDescriptionForDeserializationCache: MutableMap<JavaType, BeanDescription> = ConcurrentHashMap()
     val beanDescriptionForCreationCache: MutableMap<JavaType, BeanDescription> = ConcurrentHashMap()
+    val introspector: ClassIntrospector = jsonMapper.serializationConfig().classIntrospectorInstance()
 
     inline fun <reified T> constructType(): JavaType =
         javaTypeCache.computeIfAbsent(jacksonTypeRef<T>()) {
@@ -19,16 +21,16 @@ object JacksonIntrospector {
 
     inline fun <reified T> introspectForSerialization(): BeanDescription =
         beanDescriptionForSerializationCache.computeIfAbsent(constructType<T>()) {
-            jsonMapper.serializationConfig.introspect(it)
+            introspector.introspectForSerialization(it, introspector.introspectClassAnnotations(it))
         }
 
     inline fun <reified T> introspectForDeserialization(): BeanDescription =
         beanDescriptionForDeserializationCache.computeIfAbsent(constructType<T>()) {
-            jsonMapper.deserializationConfig.introspect(it)
+            introspector.introspectForDeserialization(it, introspector.introspectClassAnnotations(it))
         }
 
     inline fun <reified T> introspectForCreation(): BeanDescription =
         beanDescriptionForCreationCache.computeIfAbsent(constructType<T>()) {
-            jsonMapper.deserializationConfig.introspectForCreation(it)
+            introspector.introspectForCreation(it, introspector.introspectClassAnnotations(it))
         }
 }

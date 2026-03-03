@@ -1,10 +1,10 @@
 package no.nav.hjelpemidler.domain.person
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import no.nav.hjelpemidler.serialization.jackson.jsonToValue
 import no.nav.hjelpemidler.serialization.jackson.valueToJson
+import tools.jackson.databind.exc.InvalidFormatException
 import kotlin.test.Test
 
 class PersonIdentJacksonTest {

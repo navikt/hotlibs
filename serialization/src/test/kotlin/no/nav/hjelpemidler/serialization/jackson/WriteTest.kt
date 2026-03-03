@@ -1,8 +1,8 @@
 package no.nav.hjelpemidler.serialization.jackson
 
-import com.fasterxml.jackson.databind.node.NullNode
-import com.fasterxml.jackson.databind.node.TextNode
 import io.kotest.matchers.types.shouldBeInstanceOf
+import tools.jackson.databind.node.NullNode
+import tools.jackson.databind.node.StringNode
 import kotlin.test.Test
 
 class WriteTest {
@@ -13,6 +13,6 @@ class WriteTest {
 
     @Test
     fun `String til JsonNode`() {
-        valueToTree("test").shouldBeInstanceOf<TextNode>()
+        valueToTree("test").shouldBeInstanceOf<StringNode>()
     }
 }

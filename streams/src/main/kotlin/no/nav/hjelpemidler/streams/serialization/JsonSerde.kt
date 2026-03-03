@@ -1,10 +1,10 @@
 package no.nav.hjelpemidler.streams.serialization
 
-import com.fasterxml.jackson.core.type.TypeReference
 import no.nav.hjelpemidler.serialization.jackson.jsonMapper
 import org.apache.kafka.common.serialization.Deserializer
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.common.serialization.Serializer
+import tools.jackson.core.type.TypeReference
 
 class JsonSerde<T>(private val typeReference: TypeReference<T>) : Serdes.WrapperSerde<T>(
     Serializer<T> { _, data ->

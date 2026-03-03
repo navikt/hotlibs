@@ -1,6 +1,5 @@
 package no.nav.hjelpemidler.streams.serialization
 
-import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import io.confluent.kafka.streams.serdes.avro.GenericAvroSerde
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
@@ -9,6 +8,7 @@ import org.apache.avro.generic.GenericRecord
 import org.apache.avro.specific.SpecificRecord
 import org.apache.kafka.common.serialization.Serde
 import org.apache.kafka.common.serialization.Serdes
+import tools.jackson.module.kotlin.jacksonTypeRef
 
 inline fun <reified T> serde(): Serde<T> =
     Serdes.serdeFrom(T::class.java)

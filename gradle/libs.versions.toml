@@ -20,7 +20,7 @@ h2 = "2.4.240"
 handlebars = "4.5.0"
 hikaricp = "7.0.2"
 htmlSanitizer = "20260102.1"
-jackson = "2.21.1"
+jackson = "3.1.0"
 java = "21"
 javaJwt = "4.5.1"
 jedis = "7.4.0"
@@ -120,15 +120,13 @@ hm-contract-pdl-avro = { module = "no.nav.hjelpemidler:hm-contract-pdl-avro", ve
 idporten-sidecar = { module = "no.nav.tms.token.support:idporten-sidecar", version.ref = "tmsKtorTokenSupport" }
 idporten-sidecar-mock = { module = "no.nav.tms.token.support:idporten-sidecar-mock", version.ref = "tmsKtorTokenSupport" }
 jackson-annotations = "com.fasterxml.jackson.core:jackson-annotations:2.21"
-jackson-bom = { module = "com.fasterxml.jackson:jackson-bom", version.ref = "jackson" }
-jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
-jackson-dataformat-cbor = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor", version.ref = "jackson" }
-jackson-dataformat-csv = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-csv", version.ref = "jackson" }
-jackson-dataformat-xml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-xml", version.ref = "jackson" }
-jackson-dataformat-yaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jackson" }
-jackson-datatype-jdk8 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jdk8", version.ref = "jackson" }
-jackson-datatype-jsr310 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version.ref = "jackson" }
-jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
+jackson-bom = { module = "tools.jackson:jackson-bom", version.ref = "jackson" }
+jackson-databind = { module = "tools.jackson.core:jackson-databind", version.ref = "jackson" }
+jackson-dataformat-cbor = { module = "tools.jackson.dataformat:jackson-dataformat-cbor", version.ref = "jackson" }
+jackson-dataformat-csv = { module = "tools.jackson.dataformat:jackson-dataformat-csv", version.ref = "jackson" }
+jackson-dataformat-xml = { module = "tools.jackson.dataformat:jackson-dataformat-xml", version.ref = "jackson" }
+jackson-dataformat-yaml = { module = "tools.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jackson" }
+jackson-module-kotlin = { module = "tools.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
 java-jwt = { module = "com.auth0:java-jwt", version.ref = "javaJwt" }
 jclOverSlf4j = { module = "org.slf4j:jcl-over-slf4j", version.ref = "slf4j" }
 jedis = { module = "redis.clients:jedis", version.ref = "jedis" }
@@ -184,7 +182,7 @@ ktor-client-mock = { module = "io.ktor:ktor-client-mock-jvm", version.ref = "kto
 ktor-client-resources = { module = "io.ktor:ktor-client-resources-jvm", version.ref = "ktor" }
 ktor-gradle-plugin = { module = "io.ktor.plugin:plugin", version.ref = "ktor" }
 ktor-resources = { module = "io.ktor:ktor-resources-jvm", version.ref = "ktor" }
-ktor-serialization-jackson = { module = "io.ktor:ktor-serialization-jackson-jvm", version.ref = "ktor" }
+ktor-serialization-jackson = { module = "io.ktor:ktor-serialization-jackson3-jvm", version.ref = "ktor" }
 ktor-server-auth = { module = "io.ktor:ktor-server-auth-jvm", version.ref = "ktor" }
 ktor-server-auth-jwt = { module = "io.ktor:ktor-server-auth-jwt-jvm", version.ref = "ktor" }
 ktor-server-call-id = { module = "io.ktor:ktor-server-call-id-jvm", version.ref = "ktor" }
@@ -276,8 +274,6 @@ graphql-client = [
 ]
 jackson = [
     "jackson-databind",
-    "jackson-datatype-jdk8",
-    "jackson-datatype-jsr310",
     "jackson-module-kotlin",
 ]
 ktor-client = [

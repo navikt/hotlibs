@@ -1,8 +1,8 @@
 package no.nav.hjelpemidler.serialization.jackson
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.kotest.matchers.types.shouldBeInstanceOf
 import no.nav.hjelpemidler.service.LoadOrder
+import tools.jackson.databind.ObjectMapper
 import kotlin.test.Test
 
 class JacksonObjectMapperProviderTest {

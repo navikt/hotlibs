@@ -1,7 +1,7 @@
 package no.nav.hjelpemidler.serialization.jackson
 
-import com.fasterxml.jackson.databind.JsonNode
 import org.intellij.lang.annotations.Language
+import tools.jackson.databind.JsonNode
 import java.util.stream.IntStream
 
 @JvmInline
