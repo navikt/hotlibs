@@ -9,6 +9,7 @@ on:
       - "CODEOWNERS"
     branches:
       - main
+      - jackson3
 
 jobs:
   publish-jar:
