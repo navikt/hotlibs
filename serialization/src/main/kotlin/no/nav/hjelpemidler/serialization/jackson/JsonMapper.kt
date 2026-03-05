@@ -2,6 +2,7 @@ package no.nav.hjelpemidler.serialization.jackson
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.hjelpemidler.configuration.Environment
+import no.nav.hjelpemidler.domain.serialization.DomainModule
 import tools.jackson.core.StreamReadFeature
 import tools.jackson.databind.DeserializationFeature
 import tools.jackson.databind.JacksonModule
@@ -12,6 +13,7 @@ import tools.jackson.module.kotlin.jacksonMapperBuilder
 
 private val log = KotlinLogging.logger {}
 
+val domainModule: JacksonModule by lazy(::DomainModule)
 val threeTenExtraModule: JacksonModule by lazy(::ThreeTenExtraModule)
 
 /**
@@ -25,6 +27,7 @@ val threeTenExtraModule: JacksonModule by lazy(::ThreeTenExtraModule)
  */
 fun JsonMapper.Builder.default(): JsonMapper.Builder {
     return this
+        .addModule(domainModule)
         .addModule(threeTenExtraModule)
         .disable(DateTimeFeature.WRITE_DATES_AS_TIMESTAMPS)
         .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)

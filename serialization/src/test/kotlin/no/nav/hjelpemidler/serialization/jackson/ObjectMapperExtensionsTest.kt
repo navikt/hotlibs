@@ -10,7 +10,7 @@ class ObjectMapperExtensionsTest {
     fun `Skal lese resource som JsonNode`() {
         val node = jsonMapper.readResourceAsTree("/message.json")
 
-        node["value"].textValue() shouldBe "Hello, world!"
+        node["value"].stringValue() shouldBe "Hello, world!"
     }
 
     @Test
