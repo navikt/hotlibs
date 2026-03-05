@@ -1,3 +1,8 @@
+import org.jetbrains.kotlin.gradle.fus.internal.isGitHubActions
+import java.time.OffsetDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+
 plugins {
     `maven-publish`
 }
@@ -11,8 +16,25 @@ publishing {
                 password = System.getenv("GITHUB_TOKEN")
             }
         }
+        isGitHubActions()
     }
 }
 
+val zoneId: ZoneId = ZoneId.of("Europe/Oslo")
+val versionFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yy.DDD.HHmmss")
+
 group = "no.nav.hjelpemidler"
-version = System.getenv("VERSION_TAG") ?: System.getenv("GITHUB_REF_NAME") ?: "local"
+version = run {
+    val isGitHubActions = System.getenv("GITHUB_ACTIONS") == "true"
+    val refType = System.getenv("GITHUB_REF_TYPE")
+    val refName = System.getenv("GITHUB_REF_NAME")
+
+    val baseVersion = OffsetDateTime.now(zoneId).format(versionFormatter)
+
+    when {
+        !isGitHubActions -> "$baseVersion-SNAPSHOT"
+        refType == "tag" && refName != null -> refName
+        refName == "main" -> baseVersion
+        else -> "$baseVersion-SNAPSHOT"
+    }
+}
