@@ -3,14 +3,16 @@ package no.nav.hjelpemidler.domain.kodeverk
 import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.kotest.matchers.shouldBe
+import no.nav.hjelpemidler.domain.serialization.DomainModule
 import no.nav.hjelpemidler.test.testFactory
 import org.junit.jupiter.api.TestFactory
 import tools.jackson.databind.MapperFeature
 import tools.jackson.module.kotlin.jacksonMapperBuilder
 import tools.jackson.module.kotlin.readValue
 
-class KodeverkDeserializerTest {
+class KodeverkJacksonTest {
     private val jsonMapper = jacksonMapperBuilder()
+        .addModule(DomainModule())
         .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
         .build()
 

@@ -1,7 +1,5 @@
 package no.nav.hjelpemidler.domain.kodeverk
 
-import tools.jackson.databind.annotation.JsonDeserialize
-
 /**
  * Felles interface for kodeverk.
  *
@@ -9,7 +7,6 @@ import tools.jackson.databind.annotation.JsonDeserialize
  *
  * @param E typen enum som inneholder "kjente" kodeverdier, dvs. kodeverdier som typisk skal benyttes i logikk.
  */
-@JsonDeserialize(using = KodeverkDeserializer::class)
 interface Kodeverk<E : Enum<E>> {
     val name: String
 }
