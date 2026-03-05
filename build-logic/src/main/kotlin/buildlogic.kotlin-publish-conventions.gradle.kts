@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.fus.internal.isGitHubActions
 import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -16,7 +15,6 @@ publishing {
                 password = System.getenv("GITHUB_TOKEN")
             }
         }
-        isGitHubActions()
     }
 }
 
