@@ -1,5 +1,4 @@
-import java.time.OffsetDateTime
-import java.time.ZoneId
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 plugins {
@@ -18,21 +17,20 @@ publishing {
     }
 }
 
-val zoneId: ZoneId = ZoneId.of("Europe/Oslo")
-val versionFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yy.DDD.HHmmss")
+val isGitHubActions: Boolean = System.getenv("GITHUB_ACTIONS") == "true"
+val refType: String? = System.getenv("GITHUB_REF_TYPE")
+val refName: String? = System.getenv("GITHUB_REF_NAME")
+
+val snapshotVersion by lazy {
+    val yearDayFormatter = DateTimeFormatter.ofPattern("yy.DDD")
+    val yearDay = LocalDate.now().format(yearDayFormatter)
+    "$yearDay-SNAPSHOT"
+}
 
 group = "no.nav.hjelpemidler"
-version = run {
-    val isGitHubActions = System.getenv("GITHUB_ACTIONS") == "true"
-    val refType = System.getenv("GITHUB_REF_TYPE")
-    val refName = System.getenv("GITHUB_REF_NAME")
-
-    val baseVersion = OffsetDateTime.now(zoneId).format(versionFormatter)
-
-    when {
-        !isGitHubActions -> "$baseVersion-SNAPSHOT"
-        refType == "tag" && refName != null -> refName
-        refName == "main" -> baseVersion
-        else -> "$baseVersion-SNAPSHOT"
-    }
+version = when {
+    !isGitHubActions -> snapshotVersion
+    refType == "tag" && refName != null -> refName
+    refName == "main" -> System.getenv("VERSION_TAG")
+    else -> snapshotVersion
 }
