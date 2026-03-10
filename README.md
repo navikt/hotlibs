@@ -23,6 +23,13 @@ Samling av fellesbiblioteker for DigiHoT.
 
 Nye versjoner av alle biblioteker publiseres ved push til main.
 
+## Migrering fra Jackson 2 til 3
+
+1. Endre alle importer fra `com.fasterxml.jackson.*` til `tools.jackson.*`, bortsett fra
+   `com.fasterxml.jackson.annotation.*`.
+2. Fjern bruk av `JavaTimeModule`, den er nå med som default siden Jackson 3.0 krever JDK >= 17.
+3. TODO
+
 ## Oracle
 
 ```bash

@@ -10,39 +10,55 @@ import tools.jackson.databind.ValueDeserializer
 import tools.jackson.databind.ValueSerializer
 import tools.jackson.databind.deser.std.StdDeserializer
 import tools.jackson.databind.ser.std.StdSerializer
+import java.math.BigDecimal
+import java.math.BigInteger
 
 internal class JsonNullableSerializer : StdSerializer<JsonNullable<*>> {
-    private val valueType: JavaType?
-    private val valueSerializer: ValueSerializer<Any?>?
+    private val childType: JavaType?
+    private val childSerializer: ValueSerializer<Any?>?
 
     constructor() : super(JsonNullable::class.java) {
-        this.valueType = null
-        this.valueSerializer = null
+        this.childType = null
+        this.childSerializer = null
     }
 
     constructor(
         source: JsonNullableSerializer,
-        valueType: JavaType,
-        valueSerializer: ValueSerializer<Any?>,
+        childType: JavaType,
+        childSerializer: ValueSerializer<Any?>,
     ) : super(source) {
-        this.valueType = valueType
-        this.valueSerializer = valueSerializer
+        this.childType = childType
+        this.childSerializer = childSerializer
     }
 
     override fun createContextual(context: SerializationContext, property: BeanProperty?): ValueSerializer<*> {
-        val type = property?.type ?: TODO()
-        val valueType = type.containedTypeOrUnknown(0)
-        val valueSerializer = context.findValueSerializer(valueType)
-        if (valueType == this.valueType && valueSerializer == this.valueSerializer) return this
-        return JsonNullableSerializer(this, valueType, valueSerializer)
+        val parentType = property?.type ?: return this
+        val childType = parentType.containedTypeOrUnknown(0)
+        val childSerializer = context.findValueSerializer(childType)
+        if (childType == this.childType && childSerializer == this.childSerializer) return this
+        return JsonNullableSerializer(this, childType, childSerializer)
     }
 
     override fun serialize(value: JsonNullable<Any?>, generator: JsonGenerator, context: SerializationContext) {
         if (value !is JsonNullable.Present || value.value == null) {
             generator.writeNull()
+        } else if (childSerializer == null) {
+            when (value.value) {
+                is Boolean -> generator.writeBoolean(value.value)
+
+                is String -> generator.writeString(value.value)
+
+                is Int -> generator.writeNumber(value.value)
+                is Long -> generator.writeNumber(value.value)
+                is Float -> generator.writeNumber(value.value)
+                is Double -> generator.writeNumber(value.value)
+                is BigInteger -> generator.writeNumber(value.value)
+                is BigDecimal -> generator.writeNumber(value.value)
+
+                else -> generator.writePOJO(value.value)
+            }
         } else {
-            checkNotNull(valueSerializer)
-            valueSerializer.serialize(value.value, generator, context)
+            childSerializer.serialize(value.value, generator, context)
         }
     }
 
@@ -51,34 +67,34 @@ internal class JsonNullableSerializer : StdSerializer<JsonNullable<*>> {
 }
 
 internal class JsonNullableDeserializer : StdDeserializer<JsonNullable<*>> {
-    private val valueType: JavaType?
-    private val valueDeserializer: ValueDeserializer<*>?
+    private val childType: JavaType?
+    private val childDeserializer: ValueDeserializer<*>?
 
     constructor() : super(JsonNullable::class.java) {
-        this.valueType = null
-        this.valueDeserializer = null
+        this.childType = null
+        this.childDeserializer = null
     }
 
     constructor(
         source: JsonNullableDeserializer,
-        valueType: JavaType,
-        valueDeserializer: ValueDeserializer<*>,
+        childType: JavaType,
+        childDeserializer: ValueDeserializer<*>,
     ) : super(source) {
-        this.valueType = valueType
-        this.valueDeserializer = valueDeserializer
+        this.childType = childType
+        this.childDeserializer = childDeserializer
     }
 
     override fun createContextual(context: DeserializationContext, property: BeanProperty?): ValueDeserializer<*> {
-        val type = property?.type ?: context.contextualType
-        val valueType = type.containedTypeOrUnknown(0)
-        val valueDeserializer = context.findContextualValueDeserializer(valueType, null)
-        if (valueType == this.valueType && valueDeserializer == this.valueDeserializer) return this
-        return JsonNullableDeserializer(this, valueType, valueDeserializer)
+        val parentType = property?.type ?: context.contextualType
+        val childType = parentType.containedTypeOrUnknown(0)
+        val childDeserializer = context.findContextualValueDeserializer(childType, property)
+        if (childType == this.childType && childDeserializer == this.childDeserializer) return this
+        return JsonNullableDeserializer(this, childType, childDeserializer)
     }
 
     override fun deserialize(parser: JsonParser, context: DeserializationContext): JsonNullable<*> {
-        checkNotNull(valueDeserializer)
-        val value = valueDeserializer.deserialize(parser, context)
+        checkNotNull(childDeserializer)
+        val value = childDeserializer.deserialize(parser, context)
         return JsonNullable.Present(value)
     }
 

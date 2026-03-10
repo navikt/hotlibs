@@ -9,6 +9,7 @@ import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.år
 import no.nav.hjelpemidler.serialization.jackson.jsonToValue
 import no.nav.hjelpemidler.serialization.jackson.valueToJson
+import no.nav.hjelpemidler.text.doubleQuoted
 import java.util.UUID
 import kotlin.test.Test
 
@@ -54,6 +55,13 @@ class JsonNullableJacksonTest {
             enhetsnummer shouldBe JsonNullable.of(this@JsonNullableJacksonTest.enhetsnummer)
         }
         valueToJson(request) shouldBe json
+    }
+
+    @Test
+    fun `Root value`() {
+        valueToJson(JsonNullable.Undefined) shouldBe "null"
+        valueToJson(JsonNullable.Null) shouldBe "null"
+        valueToJson(JsonNullable.of("test")) shouldBe "test".doubleQuoted()
     }
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)

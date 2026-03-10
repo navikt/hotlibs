@@ -10,35 +10,35 @@ import tools.jackson.databind.exc.InvalidFormatException
 import tools.jackson.databind.type.LogicalType
 
 internal class KodeverkDeserializer : StdScalarDeserializer<Kodeverk<*>> {
-    private val valueType: JavaType?
-    private val valueDeserializer: ValueDeserializer<*>?
+    private val enumType: JavaType?
+    private val enumDeserializer: ValueDeserializer<*>?
 
     constructor() : super(Kodeverk::class.java) {
-        this.valueType = null
-        this.valueDeserializer = null
+        this.enumType = null
+        this.enumDeserializer = null
     }
 
     constructor(
         source: KodeverkDeserializer,
-        valueType: JavaType,
-        valueDeserializer: ValueDeserializer<*>,
+        enumType: JavaType,
+        enumDeserializer: ValueDeserializer<*>,
     ) : super(source) {
-        this.valueType = valueType
-        this.valueDeserializer = valueDeserializer
+        this.enumType = enumType
+        this.enumDeserializer = enumDeserializer
     }
 
     override fun createContextual(context: DeserializationContext, property: BeanProperty?): ValueDeserializer<*> {
-        val type = property?.type ?: context.contextualType
-        val valueType = type.containedTypeOrUnknown(0)
-        val valueDeserializer = context.findContextualValueDeserializer(valueType, null)
-        if (valueType == this.valueType && valueDeserializer == this.valueDeserializer) return this
-        return KodeverkDeserializer(this, valueType, valueDeserializer)
+        val parentType = property?.type ?: context.contextualType
+        val enumType = parentType.containedTypeOrUnknown(0)
+        val enumDeserializer = context.findContextualValueDeserializer(enumType, property)
+        if (enumType == this.enumType && enumDeserializer == this.enumDeserializer) return this
+        return KodeverkDeserializer(this, enumType, enumDeserializer)
     }
 
     override fun deserialize(parser: JsonParser, context: DeserializationContext): Kodeverk<*> {
-        checkNotNull(valueDeserializer)
+        checkNotNull(enumDeserializer)
         return try {
-            valueDeserializer.deserialize(parser, context) as Kodeverk<*>
+            enumDeserializer.deserialize(parser, context) as Kodeverk<*>
         } catch (e: InvalidFormatException) {
             UkjentKode(e.value.toString())
         }
