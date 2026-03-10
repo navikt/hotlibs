@@ -1,5 +1,6 @@
 package no.nav.hjelpemidler.domain.serialization
 
+import no.nav.hjelpemidler.domain.id.Id
 import tools.jackson.core.JsonGenerator
 import tools.jackson.core.JsonParser
 import tools.jackson.databind.BeanProperty
@@ -43,19 +44,21 @@ internal class JsonNullableSerializer : StdSerializer<JsonNullable<*>> {
         if (value !is JsonNullable.Present || value.value == null) {
             generator.writeNull()
         } else if (childSerializer == null) {
-            when (value.value) {
-                is Boolean -> generator.writeBoolean(value.value)
+            when (val v = value.value) {
+                is Boolean -> generator.writeBoolean(v)
 
-                is String -> generator.writeString(value.value)
+                is String -> generator.writeString(v)
 
-                is Int -> generator.writeNumber(value.value)
-                is Long -> generator.writeNumber(value.value)
-                is Float -> generator.writeNumber(value.value)
-                is Double -> generator.writeNumber(value.value)
-                is BigInteger -> generator.writeNumber(value.value)
-                is BigDecimal -> generator.writeNumber(value.value)
+                is Int -> generator.writeNumber(v)
+                is Long -> generator.writeNumber(v)
+                is Float -> generator.writeNumber(v)
+                is Double -> generator.writeNumber(v)
+                is BigInteger -> generator.writeNumber(v)
+                is BigDecimal -> generator.writeNumber(v)
 
-                else -> generator.writePOJO(value.value)
+                is Id<*> -> generator.writeString(v.toString())
+
+                else -> generator.writePOJO(v)
             }
         } else {
             childSerializer.serialize(value.value, generator, context)

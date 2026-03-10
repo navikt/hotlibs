@@ -1,6 +1,11 @@
 package no.nav.hjelpemidler.database
 
 import no.nav.hjelpemidler.domain.ValueType
+import no.nav.hjelpemidler.domain.kodeverk.Kodeverk
+import no.nav.hjelpemidler.domain.serialization.JsonNullable
+import no.nav.hjelpemidler.domain.serialization.asOptional
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 interface QueryParameter<out T> {
     val queryParameter: T
@@ -32,9 +37,12 @@ internal fun QueryParameters.prepare(): QueryParameters = mapValues { (_, value)
     when (value) {
         is String -> value // String er også CharSequence
         is CharSequence -> value.toString()
-        is Enum<*> -> value.name
+        is JsonNullable<*> -> value.asOptional().getOrNull()
+        is Optional<*> -> value.getOrNull()
         is QueryParameter<*> -> value.queryParameter
         is ValueType<*> -> value.value
+        is Kodeverk<*> -> value.name
+        is Enum<*> -> value.name
         else -> value
     }
 }

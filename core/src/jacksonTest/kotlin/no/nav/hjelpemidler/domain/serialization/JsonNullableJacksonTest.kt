@@ -5,6 +5,12 @@ import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.shouldBe
 import no.nav.hjelpemidler.domain.enhet.Enhet
 import no.nav.hjelpemidler.domain.enhet.Enhetsnummer
+import no.nav.hjelpemidler.domain.id.numberId
+import no.nav.hjelpemidler.domain.id.numberIdJsonString
+import no.nav.hjelpemidler.domain.id.stringId
+import no.nav.hjelpemidler.domain.id.stringIdJsonString
+import no.nav.hjelpemidler.domain.id.uuidId
+import no.nav.hjelpemidler.domain.id.uuidIdJsonString
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.år
 import no.nav.hjelpemidler.serialization.jackson.jsonToValue
@@ -62,6 +68,10 @@ class JsonNullableJacksonTest {
         valueToJson(JsonNullable.Undefined) shouldBe "null"
         valueToJson(JsonNullable.Null) shouldBe "null"
         valueToJson(JsonNullable.of("test")) shouldBe "test".doubleQuoted()
+
+        valueToJson(JsonNullable.of(numberId)) shouldBe numberIdJsonString
+        valueToJson(JsonNullable.of(stringId)) shouldBe stringIdJsonString
+        valueToJson(JsonNullable.of(uuidId)) shouldBe uuidIdJsonString
     }
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)

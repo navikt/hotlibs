@@ -1,5 +1,7 @@
 package no.nav.hjelpemidler.domain.serialization
 
+import java.util.Optional
+
 sealed interface JsonNullable<out T> {
     data object Undefined : JsonNullable<Nothing>
 
@@ -12,4 +14,10 @@ sealed interface JsonNullable<out T> {
 
         fun <T> of(value: T?): JsonNullable<T> = Present(value)
     }
+}
+
+fun <T> JsonNullable<T>?.asOptional(): Optional<T & Any> = if (this is JsonNullable.Present) {
+    Optional.ofNullable<T>(value)
+} else {
+    Optional.empty<T>()
 }
