@@ -1,5 +1,6 @@
 package no.nav.hjelpemidler.domain.kodeverk
 
+import no.nav.hjelpemidler.domain.serialization.error
 import tools.jackson.core.JsonParser
 import tools.jackson.databind.BeanProperty
 import tools.jackson.databind.DeserializationContext
@@ -28,17 +29,18 @@ internal class KodeverkDeserializer : StdScalarDeserializer<Kodeverk<*>> {
     }
 
     override fun createContextual(context: DeserializationContext, property: BeanProperty?): ValueDeserializer<*> {
-        val parentType = property?.type ?: context.contextualType
-        val enumType = parentType.containedTypeOrUnknown(0)
+        val parentType = property?.type ?: context.contextualType ?: context.error("Could not determine parent type")
+        val enumType = parentType.containedType(0) ?: context.error("Could not determine enum type")
         val enumDeserializer = context.findContextualValueDeserializer(enumType, property)
         if (enumType == this.enumType && enumDeserializer == this.enumDeserializer) return this
         return KodeverkDeserializer(this, enumType, enumDeserializer)
     }
 
     override fun deserialize(parser: JsonParser, context: DeserializationContext): Kodeverk<*> {
-        checkNotNull(enumDeserializer)
+        val deserializer = enumDeserializer
+            ?: context.error("KodeverkDeserializer used without contextualization (enumDeserializer is null)")
         return try {
-            enumDeserializer.deserialize(parser, context) as Kodeverk<*>
+            deserializer.deserialize(parser, context) as Kodeverk<*>
         } catch (e: InvalidFormatException) {
             UkjentKode(e.value.toString())
         }

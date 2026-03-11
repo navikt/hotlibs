@@ -34,7 +34,7 @@ internal class JsonNullableSerializer : StdSerializer<JsonNullable<*>> {
 
     override fun createContextual(context: SerializationContext, property: BeanProperty?): ValueSerializer<*> {
         val parentType = property?.type ?: return this
-        val childType = parentType.containedTypeOrUnknown(0)
+        val childType = parentType.containedType(0) ?: context.error("Could not determine child type")
         val childSerializer = context.findValueSerializer(childType)
         if (childType == this.childType && childSerializer == this.childSerializer) return this
         return JsonNullableSerializer(this, childType, childSerializer)
@@ -88,16 +88,17 @@ internal class JsonNullableDeserializer : StdDeserializer<JsonNullable<*>> {
     }
 
     override fun createContextual(context: DeserializationContext, property: BeanProperty?): ValueDeserializer<*> {
-        val parentType = property?.type ?: context.contextualType
-        val childType = parentType.containedTypeOrUnknown(0)
+        val parentType = property?.type ?: context.contextualType ?: context.error("Could not determine parent type")
+        val childType = parentType.containedType(0) ?: context.error("Could not determine child type")
         val childDeserializer = context.findContextualValueDeserializer(childType, property)
         if (childType == this.childType && childDeserializer == this.childDeserializer) return this
         return JsonNullableDeserializer(this, childType, childDeserializer)
     }
 
     override fun deserialize(parser: JsonParser, context: DeserializationContext): JsonNullable<*> {
-        checkNotNull(childDeserializer)
-        val value = childDeserializer.deserialize(parser, context)
+        val deserializer = childDeserializer
+            ?: context.error("JsonNullableDeserializer used without contextualization (childDeserializer is null)")
+        val value = deserializer.deserialize(parser, context)
         return JsonNullable.Present(value)
     }
 
