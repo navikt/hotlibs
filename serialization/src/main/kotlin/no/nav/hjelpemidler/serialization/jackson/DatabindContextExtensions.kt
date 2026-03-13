@@ -1,13 +1,13 @@
-package no.nav.hjelpemidler.domain.serialization
+package no.nav.hjelpemidler.serialization.jackson
 
 import tools.jackson.databind.DatabindException
 import tools.jackson.databind.DeserializationContext
 import tools.jackson.databind.SerializationContext
 
-internal fun SerializationContext.error(message: String): Nothing {
+fun SerializationContext.error(message: String): Nothing {
     throw DatabindException.from(this, message)
 }
 
-internal fun DeserializationContext.error(message: String): Nothing {
+fun DeserializationContext.error(message: String): Nothing {
     throw DatabindException.from(this, message)
 }

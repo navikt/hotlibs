@@ -1,9 +1,8 @@
 package no.nav.hjelpemidler.database
 
+import no.nav.hjelpemidler.domain.Maybe
 import no.nav.hjelpemidler.domain.ValueType
 import no.nav.hjelpemidler.domain.kodeverk.Kodeverk
-import no.nav.hjelpemidler.domain.serialization.JsonNullable
-import no.nav.hjelpemidler.domain.serialization.asOptional
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -37,7 +36,7 @@ internal fun QueryParameters.prepare(): QueryParameters = mapValues { (_, value)
     when (value) {
         is String -> value // String er også CharSequence
         is CharSequence -> value.toString()
-        is JsonNullable<*> -> value.asOptional().getOrNull()
+        is Maybe<*> -> value.orNull
         is Optional<*> -> value.getOrNull()
         is QueryParameter<*> -> value.queryParameter
         is ValueType<*> -> value.value
