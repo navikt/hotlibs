@@ -3,6 +3,16 @@ package no.nav.hjelpemidler.domain
 import no.nav.hjelpemidler.domain.Maybe.Absent
 import no.nav.hjelpemidler.domain.Maybe.Present
 
+/**
+ * Gjør det mulig å skille mellom `null` og `undefined` i f.eks. HTTP PATCH.
+ *
+ * NB! Husk å legge til [com.fasterxml.jackson.annotation.JsonInclude] på request-klasse:
+ * ```kotlin
+ * @JsonInclude(JsonInclude.Include.NON_EMPTY)
+ * data class PatchRequest(val value: Maybe<String> = Maybe.Absent)
+ * ```
+ * Dette vil gjøre at [Maybe.Absent] ikke blir med i JSON ved serialisering, mens `Maybe.Present(null)` blir det.
+ */
 sealed interface Maybe<out T> {
     val isAbsent: Boolean get() = this is Absent
     val isPresent: Boolean get() = this is Present
