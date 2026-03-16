@@ -36,7 +36,7 @@ internal fun QueryParameters.prepare(): QueryParameters = mapValues { (_, value)
     when (value) {
         is String -> value // String er også CharSequence
         is CharSequence -> value.toString()
-        is Maybe<*> -> value.orNull
+        is Maybe<*> -> value.valueOrNull
         is Optional<*> -> value.getOrNull()
         is QueryParameter<*> -> value.queryParameter
         is ValueType<*> -> value.value

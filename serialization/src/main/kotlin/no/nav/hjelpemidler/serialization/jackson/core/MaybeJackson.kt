@@ -64,11 +64,11 @@ internal class MaybeSerializer : ReferenceTypeSerializer<Maybe<*>> {
         suppressNulls,
     )
 
-    override fun _isValuePresent(value: Maybe<*>): Boolean = value is Maybe.Present
+    override fun _isValuePresent(value: Maybe<*>): Boolean = value.isPresent
 
-    override fun _getReferenced(value: Maybe<*>): Any? = value.orNull
+    override fun _getReferenced(value: Maybe<*>): Any? = value.valueOrNull
 
-    override fun _getReferencedIfPresent(value: Maybe<*>): Any? = value.orNull
+    override fun _getReferencedIfPresent(value: Maybe<*>): Any? = value.valueOrNull
 }
 
 internal class MaybeDeserializer : ReferenceTypeDeserializer<Maybe<*>> {
@@ -96,7 +96,7 @@ internal class MaybeDeserializer : ReferenceTypeDeserializer<Maybe<*>> {
 
     override fun updateReference(reference: Maybe<*>?, contents: Any?): Maybe<*> = Maybe(contents)
 
-    override fun getReferenced(reference: Maybe<*>): Any? = reference.orNull
+    override fun getReferenced(reference: Maybe<*>): Any? = reference.valueOrNull
 }
 
 internal object MaybeTypeModifier : TypeModifier() {
