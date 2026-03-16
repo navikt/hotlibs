@@ -4,48 +4,53 @@ import no.nav.hjelpemidler.domain.kodeverk.Kodeverk
 import no.nav.hjelpemidler.domain.kodeverk.UkjentKode
 import no.nav.hjelpemidler.serialization.jackson.error
 import tools.jackson.core.JsonParser
-import tools.jackson.core.JsonToken
 import tools.jackson.databind.BeanProperty
 import tools.jackson.databind.DeserializationContext
 import tools.jackson.databind.JavaType
 import tools.jackson.databind.ValueDeserializer
 import tools.jackson.databind.deser.std.StdScalarDeserializer
-import tools.jackson.databind.introspect.AnnotatedClassResolver
+import tools.jackson.databind.exc.InvalidFormatException
 import tools.jackson.databind.type.LogicalType
-import tools.jackson.databind.util.EnumResolver
 
 internal class KodeverkDeserializer : StdScalarDeserializer<Kodeverk<*>> {
     private val enumType: JavaType?
-    private val enumResolver: EnumResolver?
+    private val enumDeserializer: ValueDeserializer<*>?
 
     constructor() : super(Kodeverk::class.java) {
         this.enumType = null
-        this.enumResolver = null
+        this.enumDeserializer = null
     }
 
-    constructor(source: KodeverkDeserializer, enumType: JavaType, enumResolver: EnumResolver) : super(source) {
+    constructor(
+        source: KodeverkDeserializer,
+        enumType: JavaType,
+        enumDeserializer: ValueDeserializer<*>,
+    ) : super(source) {
         this.enumType = enumType
-        this.enumResolver = enumResolver
+        this.enumDeserializer = enumDeserializer
     }
 
     override fun createContextual(context: DeserializationContext, property: BeanProperty?): ValueDeserializer<*> {
         val parentType = property?.type ?: context.contextualType ?: context.error("Could not determine parent type")
         val enumType = parentType.containedType(0) ?: context.error("Could not determine enum type")
-        val annotatedClass = AnnotatedClassResolver.resolve(context.config, enumType, context.config)
-        val enumResolver = EnumResolver.constructFor(context.config, annotatedClass)
-        return KodeverkDeserializer(this, enumType, enumResolver)
+        val enumDeserializer = context.findContextualValueDeserializer(enumType, property)
+        if (enumType == this.enumType && enumDeserializer == this.enumDeserializer) return this
+        return KodeverkDeserializer(this, enumType, enumDeserializer)
     }
 
     override fun deserialize(parser: JsonParser, context: DeserializationContext): Kodeverk<*> {
-        val currentToken = parser.currentToken()
-        if (currentToken != JsonToken.VALUE_STRING) {
-            context.reportWrongTokenException(enumType, JsonToken.VALUE_STRING, null)
+        val deserializer = enumDeserializer
+            ?: context.error("KodeverkDeserializer used without contextualization (enumDeserializer is null)")
+        return try {
+            val value = deserializer.deserialize(parser, context)
+            if (value !is Kodeverk<*>) {
+                context.error("${value::class.qualifiedName} does not implement ${Kodeverk::class.qualifiedName}")
+            }
+            value
+        } catch (e: InvalidFormatException) {
+            val value = e.value ?: context.error("Could not determine unknown enum name, exception value was null", e)
+            UkjentKode(value.toString())
         }
-        val resolver =
-            enumResolver ?: context.error("KodeverkDeserializer used without contextualization (enumResolver is null)")
-        val stringValue = parser.string
-        val enumValue = resolver.findEnum(stringValue) as Kodeverk<*>?
-        return enumValue ?: UkjentKode(stringValue)
     }
 
     override fun logicalType(): LogicalType = LogicalType.Enum

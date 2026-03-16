@@ -8,6 +8,14 @@ fun SerializationContext.error(message: String): Nothing {
     throw DatabindException.from(this, message)
 }
 
+fun SerializationContext.error(message: String, problem: Throwable): Nothing {
+    throw DatabindException.from(this, message, problem)
+}
+
 fun DeserializationContext.error(message: String): Nothing {
     throw DatabindException.from(this, message)
+}
+
+fun DeserializationContext.error(message: String, problem: Throwable): Nothing {
+    throw DatabindException.from(this, message, problem)
 }
