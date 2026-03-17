@@ -78,8 +78,8 @@ sealed class Maybe<out T> {
     data class Present<out T>(val value: T) : Maybe<T>()
 
     companion object {
-        val Null: Present<Any?> = Present(null)
+        val Null: Maybe<Nothing?> = Present(null)
 
-        operator fun <T> invoke(value: T): Present<T> = Present(value)
+        operator fun <T> invoke(value: T): Maybe<T> = Present(value)
     }
 }
