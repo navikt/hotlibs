@@ -1,7 +1,7 @@
 package no.nav.hjelpemidler.domain.id
 
 import com.fasterxml.jackson.annotation.JsonValue
-import no.nav.hjelpemidler.domain.ValueType
+import no.nav.hjelpemidler.core.ValueType
 import java.nio.charset.Charset
 
 /**

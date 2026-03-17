@@ -1,6 +1,7 @@
 package no.nav.hjelpemidler.serialization.jackson.core
 
-import no.nav.hjelpemidler.domain.Maybe
+import no.nav.hjelpemidler.core.Maybe
+import no.nav.hjelpemidler.core.Maybe.Absent
 import tools.jackson.databind.BeanProperty
 import tools.jackson.databind.DeserializationContext
 import tools.jackson.databind.JavaType
@@ -64,11 +65,11 @@ internal class MaybeSerializer : ReferenceTypeSerializer<Maybe<*>> {
         suppressNulls,
     )
 
-    override fun _isValuePresent(value: Maybe<*>): Boolean = value.isPresent
+    override fun _isValuePresent(value: Maybe<*>): Boolean = value.isPresent()
 
-    override fun _getReferenced(value: Maybe<*>): Any? = value.valueOrNull
+    override fun _getReferenced(value: Maybe<*>): Any? = value.getOrNull()
 
-    override fun _getReferencedIfPresent(value: Maybe<*>): Any? = value.valueOrNull
+    override fun _getReferencedIfPresent(value: Maybe<*>): Any? = value.getOrNull()
 }
 
 internal class MaybeDeserializer : ReferenceTypeDeserializer<Maybe<*>> {
@@ -88,15 +89,15 @@ internal class MaybeDeserializer : ReferenceTypeDeserializer<Maybe<*>> {
     override fun getNullValue(context: DeserializationContext): Maybe<*> =
         Maybe(_valueDeserializer.getNullValue(context))
 
-    override fun getEmptyValue(context: DeserializationContext): Any = Maybe.Absent
+    override fun getEmptyValue(context: DeserializationContext): Any = Absent
 
-    override fun getAbsentValue(context: DeserializationContext): Any = Maybe.Absent
+    override fun getAbsentValue(context: DeserializationContext): Any = Absent
 
     override fun referenceValue(contents: Any?): Maybe<*> = Maybe(contents)
 
-    override fun updateReference(reference: Maybe<*>?, contents: Any?): Maybe<*> = Maybe(contents)
+    override fun updateReference(reference: Maybe<*>, contents: Any?): Maybe<*> = Maybe(contents)
 
-    override fun getReferenced(reference: Maybe<*>): Any? = reference.valueOrNull
+    override fun getReferenced(reference: Maybe<*>): Any? = reference.getOrNull()
 }
 
 internal object MaybeTypeModifier : TypeModifier() {

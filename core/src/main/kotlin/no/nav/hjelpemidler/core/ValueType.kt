@@ -1,4 +1,4 @@
-package no.nav.hjelpemidler.domain
+package no.nav.hjelpemidler.core
 
 /**
  * Wrapper for en enkelt verdi.

@@ -3,7 +3,7 @@ package no.nav.hjelpemidler.serialization.jackson.core
 import com.fasterxml.jackson.annotation.JsonInclude
 import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.shouldBe
-import no.nav.hjelpemidler.domain.Maybe
+import no.nav.hjelpemidler.core.Maybe
 import no.nav.hjelpemidler.domain.enhet.Enhet
 import no.nav.hjelpemidler.domain.enhet.Enhetsnummer
 import no.nav.hjelpemidler.domain.id.StringId

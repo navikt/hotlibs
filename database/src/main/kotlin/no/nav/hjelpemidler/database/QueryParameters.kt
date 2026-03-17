@@ -1,7 +1,7 @@
 package no.nav.hjelpemidler.database
 
-import no.nav.hjelpemidler.domain.Maybe
-import no.nav.hjelpemidler.domain.ValueType
+import no.nav.hjelpemidler.core.Maybe
+import no.nav.hjelpemidler.core.ValueType
 import no.nav.hjelpemidler.domain.kodeverk.Kodeverk
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -36,7 +36,7 @@ internal fun QueryParameters.prepare(): QueryParameters = mapValues { (_, value)
     when (value) {
         is String -> value // String er også CharSequence
         is CharSequence -> value.toString()
-        is Maybe<*> -> value.valueOrNull
+        is Maybe<*> -> value.getOrNull()
         is Optional<*> -> value.getOrNull()
         is QueryParameter<*> -> value.queryParameter
         is ValueType<*> -> value.value

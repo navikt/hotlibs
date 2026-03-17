@@ -1,7 +1,7 @@
 package no.nav.hjelpemidler.serialization.jackson.core
 
 import com.fasterxml.jackson.annotation.JsonFormat
-import no.nav.hjelpemidler.domain.Maybe
+import no.nav.hjelpemidler.core.Maybe
 import no.nav.hjelpemidler.domain.kodeverk.Kodeverk
 import tools.jackson.databind.BeanDescription
 import tools.jackson.databind.DeserializationConfig
