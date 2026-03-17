@@ -31,9 +31,16 @@ sealed class Maybe<out T> {
         return this is Present
     }
 
-    fun filterNotNull(): Maybe<T & Any> = when (this) {
-        is Absent -> this
-        is Present -> if (value == null) Absent else Present(value)
+    inline fun filter(predicate: (T) -> Boolean): Maybe<T> = flatMap { value ->
+        if (predicate(value)) Present(value) else Absent
+    }
+
+    inline fun filterNot(predicate: (T) -> Boolean): Maybe<T> = flatMap { value ->
+        if (predicate(value)) Absent else Present(value)
+    }
+
+    fun filterNotNull(): Maybe<T & Any> = flatMap { value ->
+        if (value == null) Absent else Present(value)
     }
 
     fun getOrNull(): T? = when (this) {
@@ -71,7 +78,7 @@ sealed class Maybe<out T> {
     data class Present<out T>(val value: T) : Maybe<T>()
 
     companion object {
-        val Null: Present<Nothing?> = Present(null)
+        val Null: Present<Any?> = Present(null)
 
         operator fun <T> invoke(value: T): Present<T> = Present(value)
     }
