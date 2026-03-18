@@ -1,15 +1,15 @@
 package no.nav.hjelpemidler.serialization.jackson
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.MissingNode
-import com.fasterxml.jackson.databind.node.NullNode
-import com.fasterxml.jackson.databind.node.TextNode
 import io.kotest.inspectors.forAll
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.år
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.MissingNode
+import tools.jackson.databind.node.NullNode
+import tools.jackson.databind.node.StringNode
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -21,7 +21,7 @@ class JsonNodeExtensionsText {
     @Test
     fun `JsonNode til UUID`() {
         val uuid = UUID.randomUUID()
-        textNodeOf(uuid).uuidValue() shouldBe uuid
+        stringNodeOf(uuid).uuidValue() shouldBe uuid
 
         verify { uuidValueOrNull() }
     }
@@ -29,7 +29,7 @@ class JsonNodeExtensionsText {
     @Test
     fun `JsonNode til LocalDate`() {
         val localDate = LocalDate.now()
-        textNodeOf(localDate).localDateValue() shouldBe localDate
+        stringNodeOf(localDate).localDateValue() shouldBe localDate
 
         verify { localDateValueOrNull() }
     }
@@ -37,7 +37,7 @@ class JsonNodeExtensionsText {
     @Test
     fun `JsonNode til LocalDateTime`() {
         val localDateTime = LocalDateTime.now()
-        textNodeOf(localDateTime).localDateTimeValue() shouldBe localDateTime
+        stringNodeOf(localDateTime).localDateTimeValue() shouldBe localDateTime
 
         verify { localDateTimeValueOrNull() }
     }
@@ -45,7 +45,7 @@ class JsonNodeExtensionsText {
     @Test
     fun `JsonNode til Instant`() {
         val instant = Instant.now()
-        textNodeOf(instant).instantValue() shouldBe instant
+        stringNodeOf(instant).instantValue() shouldBe instant
 
         verify { instantValueOrNull() }
     }
@@ -53,7 +53,7 @@ class JsonNodeExtensionsText {
     @Test
     fun `JsonNode til ZonedDateTime`() {
         val zonedDateTime = ZonedDateTime.now()
-        textNodeOf(zonedDateTime).zonedDateTime() shouldBe zonedDateTime
+        stringNodeOf(zonedDateTime).zonedDateTime() shouldBe zonedDateTime
 
         verify { zonedDateTimeOrNull() }
     }
@@ -61,7 +61,7 @@ class JsonNodeExtensionsText {
     @Test
     fun `JsonNode til Enum`() {
         val value = Foo.BAR
-        textNodeOf(value).enumValue<Foo>() shouldBe value
+        stringNodeOf(value).enumValue<Foo>() shouldBe value
 
         verify { enumValueOrNull<Foo>() }
     }
@@ -69,7 +69,7 @@ class JsonNodeExtensionsText {
     @Test
     fun `JsonNode til Fødselsnummer`() {
         val fnr = Fødselsnummer(40.år)
-        textNodeOf(fnr).fødselsnummerValue() shouldBe fnr
+        stringNodeOf(fnr).fødselsnummerValue() shouldBe fnr
 
         verify { fødselsnummerValueOrNull() }
     }
@@ -77,7 +77,7 @@ class JsonNodeExtensionsText {
     @Test
     fun `JsonNode til instans`() {
         val fnr = Fødselsnummer(40.år)
-        textNodeOf(fnr).value<Fødselsnummer>() shouldBe fnr
+        stringNodeOf(fnr).value<Fødselsnummer>() shouldBe fnr
 
         verify { valueOrNull<Fødselsnummer>() }
     }
@@ -93,4 +93,4 @@ class JsonNodeExtensionsText {
 
 private enum class Foo { BAR }
 
-private fun textNodeOf(value: Any): TextNode = TextNode.valueOf(value.toString())
+private fun stringNodeOf(value: Any): StringNode = StringNode.valueOf(value.toString())

@@ -1,9 +1,9 @@
 package no.nav.hjelpemidler.database.oracle
 
-import com.fasterxml.jackson.databind.JsonNode
 import no.nav.hjelpemidler.database.Row
 import no.nav.hjelpemidler.database.getObject
 import oracle.jdbc.OracleTypes
+import tools.jackson.databind.JsonNode
 import java.sql.ResultSet
 import java.time.Instant
 import kotlin.reflect.KClass

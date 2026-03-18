@@ -83,6 +83,7 @@ class Enhet(
         /**
          * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/4702">NORG2</a>
          */
+        @Deprecated("Under avvikling")
         val NAV_HJELPEMIDDELSENTRAL_AKERSHUS =
             Enhet(nummer = "4702", navn = "Nav hjelpemiddelsentral Akershus")
 

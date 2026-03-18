@@ -1,11 +1,11 @@
 package no.nav.hjelpemidler.database
 
-import com.fasterxml.jackson.databind.JsonNode
 import io.mockk.mockk
 import io.mockk.verifySequence
 import no.nav.hjelpemidler.test.NamedTestCase
 import no.nav.hjelpemidler.test.testFactory
 import org.junit.jupiter.api.TestFactory
+import tools.jackson.databind.JsonNode
 import java.sql.ResultSet
 import java.util.UUID
 import kotlin.reflect.KClass

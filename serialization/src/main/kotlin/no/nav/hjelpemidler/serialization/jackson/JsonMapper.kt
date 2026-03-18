@@ -1,42 +1,38 @@
 package no.nav.hjelpemidler.serialization.jackson
 
-import com.fasterxml.jackson.core.JsonParser
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.databind.json.JsonMapper
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.hjelpemidler.configuration.Environment
-import com.fasterxml.jackson.databind.Module as JacksonModule
+import no.nav.hjelpemidler.serialization.jackson.core.CoreModule
+import tools.jackson.core.StreamReadFeature
+import tools.jackson.databind.DeserializationFeature
+import tools.jackson.databind.JacksonModule
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.databind.cfg.DateTimeFeature
+import tools.jackson.databind.json.JsonMapper
+import tools.jackson.module.kotlin.jacksonMapperBuilder
 
 private val log = KotlinLogging.logger {}
 
-val jdk8Module: JacksonModule by lazy(::Jdk8Module)
-val javaTimeModule: JacksonModule by lazy(::JavaTimeModule)
+val coreModule: JacksonModule by lazy(::CoreModule)
 val threeTenExtraModule: JacksonModule by lazy(::ThreeTenExtraModule)
 
 /**
  * Definerer standardinnstillinger for [JsonMapper].
- * * Legger til [Jdk8Module] for å støtte java.util.Optional.
- * * Legger til [JavaTimeModule] for å støtte java.time.* (JSR 310).
+ * * Legger til [CoreModule] for å støtte hotlibs/core.
  * * Legger til [ThreeTenExtraModule] for å støtte org.threeten.extra.* (ThreeTen-Extra).
- * * Skrur av [SerializationFeature.WRITE_DATES_AS_TIMESTAMPS] for at datoer og tidspunkt skal serialiseres som tekst.
+ * * Skrur av [DateTimeFeature.WRITE_DATES_AS_TIMESTAMPS] for at datoer og tidspunkt skal serialiseres som tekst.
  * * Skrur av [DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES] for å tillate egenskaper i JSON som ikke finnes i Kotlin-klassen det mappes til.
- * * Skrur på [JsonParser.Feature.INCLUDE_SOURCE_IN_LOCATION] hvis IKKE produksjon slik at kilde-JSON inkluderes ved feil under deserialisering.
+ * * Skrur på [StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION] hvis IKKE produksjon slik at kilde-JSON inkluderes ved feil under deserialisering.
  *
  * @see [defaultJsonMapper]
  */
 fun JsonMapper.Builder.default(): JsonMapper.Builder {
     return this
-        .addModule(jdk8Module)
-        .addModule(javaTimeModule)
+        .addModule(coreModule)
         .addModule(threeTenExtraModule)
-        .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+        .disable(DateTimeFeature.WRITE_DATES_AS_TIMESTAMPS)
         .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-        .configure(JsonParser.Feature.INCLUDE_SOURCE_IN_LOCATION, !Environment.current.isProd)
+        .configure(StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION, !Environment.current.isProd)
 }
 
 /**

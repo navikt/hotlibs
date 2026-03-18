@@ -13,14 +13,14 @@ confluent = "8.2.0"
 contractPdlAvro = "1.0.3"
 cyclonedx = "3.2.2"
 ehcache = "3.11.1"
-flyway = "12.1.0"
+flyway = "12.1.1"
 graphql = "9.0.0"
 graphql-java = "25.0"
 h2 = "2.4.240"
 handlebars = "4.5.0"
 hikaricp = "7.0.2"
-htmlSanitizer = "20260102.1"
-jackson = "2.21.1"
+htmlSanitizer = "20260313.1"
+jackson = "3.1.0"
 java = "21"
 javaJwt = "4.5.1"
 jedis = "7.4.0"
@@ -30,11 +30,10 @@ jsoup = "1.22.1"
 junit = "6.0.3"
 kafka = "4.2.0"
 konfig = "1.6.10.0"
-kotest = "6.1.6"
+kotest = "6.1.7"
 kotest-ktor = "2.0.0"
-kotlin = "2.3.10"
+kotlin = "2.3.20"
 kotlin-logging = "8.0.01"
-kotlin-logging-deprecated = "3.0.5"
 kotlinx-coroutines = "1.10.2"
 kotlinx-metadata = "0.9.0"
 kotlinx-serialization = "1.10.0"
@@ -55,7 +54,6 @@ openhtmltopdf = "1.1.37"
 oracle = "23.26.1.0.0"
 postgresql = "42.7.10"
 prometheus = "1.5.0"
-prometheus-deprecated = "0.16.0"
 protobuf = "4.34.0"
 rapidsAndRivers = "2026031213281773318507.0cbb5b6ccab4"
 redisson = "4.3.0"
@@ -70,7 +68,6 @@ threeten = "1.8.0"
 tmsKtorTokenSupport = "5.0.6"
 tmsVarsel = "2.2.0"
 unleash = "12.2.0"
-unleash-deprecated = "4.4.1"
 valkey = "5.5.0"
 versionCatalogUpdate = "1.1.0"
 versions = "0.53.0"
@@ -78,11 +75,11 @@ wiremock = "3.13.2"
 zjsonpatch = "0.4.16"
 
 [plugins]
-bom = { id = "org.cyclonedx.bom", version.ref = "cyclonedx" }
+cyclonedx = { id = "org.cyclonedx.bom", version.ref = "cyclonedx" }
 flyway = { id = "org.flywaydb.flyway", version.ref = "flyway" }
 graphql = { id = "com.expediagroup.graphql", version.ref = "graphql" }
-kotlin-jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
 openapi = { id = "org.openapi.generator", version.ref = "openapi" }
@@ -101,7 +98,7 @@ classgraph = { module = "io.github.classgraph:classgraph", version.ref = "classg
 commons-compress = { module = "org.apache.commons:commons-compress", version.ref = "commons-compress" }
 commons-csv = { module = "org.apache.commons:commons-csv", version.ref = "commons-csv" }
 commons-io = { module = "commons-io:commons-io", version.ref = "commons-io" }
-commons-lang = { module = "org.apache.commons:commons-lang3", version.ref = "commons-lang" }
+commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "commons-lang" }
 commons-text = { module = "org.apache.commons:commons-text", version.ref = "commons-text" }
 ehcache = { module = "org.ehcache:ehcache", version.ref = "ehcache" }
 flyway-core = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }
@@ -120,17 +117,13 @@ hm-contract-pdl-avro = { module = "no.nav.hjelpemidler:hm-contract-pdl-avro", ve
 idporten-sidecar = { module = "no.nav.tms.token.support:idporten-sidecar", version.ref = "tmsKtorTokenSupport" }
 idporten-sidecar-mock = { module = "no.nav.tms.token.support:idporten-sidecar-mock", version.ref = "tmsKtorTokenSupport" }
 jackson-annotations = "com.fasterxml.jackson.core:jackson-annotations:2.21"
-jackson-bom = { module = "com.fasterxml.jackson:jackson-bom", version.ref = "jackson" }
-jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
-jackson-dataformat-cbor = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor", version.ref = "jackson" }
-jackson-dataformat-csv = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-csv", version.ref = "jackson" }
-jackson-dataformat-xml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-xml", version.ref = "jackson" }
-jackson-dataformat-yaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jackson" }
-jackson-datatype-jdk8 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jdk8", version.ref = "jackson" }
-jackson-datatype-jsr310 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version.ref = "jackson" }
-jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
+jackson-bom = { module = "tools.jackson:jackson-bom", version.ref = "jackson" }
+jackson-databind = { module = "tools.jackson.core:jackson-databind", version.ref = "jackson" }
+jackson-dataformat-csv = { module = "tools.jackson.dataformat:jackson-dataformat-csv", version.ref = "jackson" }
+jackson-dataformat-xml = { module = "tools.jackson.dataformat:jackson-dataformat-xml", version.ref = "jackson" }
+jackson-dataformat-yaml = { module = "tools.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jackson" }
+jackson-module-kotlin = { module = "tools.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
 java-jwt = { module = "com.auth0:java-jwt", version.ref = "javaJwt" }
-jclOverSlf4j = { module = "org.slf4j:jcl-over-slf4j", version.ref = "slf4j" }
 jedis = { module = "redis.clients:jedis", version.ref = "jedis" }
 jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains-annotations" }
 jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
@@ -151,9 +144,10 @@ kotest-runner-junit6 = { module = "io.kotest:kotest-runner-junit6", version.ref 
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-logging = { module = "io.github.oshai:kotlin-logging", version.ref = "kotlin-logging" }
-kotlin-logging-deprecated = { module = "io.github.microutils:kotlin-logging", version.ref = "kotlin-logging-deprecated" }
+kotlin-multiplatform-gradle-plugin = { module = "org.jetbrains.kotlin.multiplatform:org.jetbrains.kotlin.multiplatform.gradle.plugin", version.ref = "kotlin" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 kotlin-serialization = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
+kotlin-serialization-gradle-plugin = { module = "org.jetbrains.kotlin.plugin.serialization:org.jetbrains.kotlin.plugin.serialization.gradle.plugin", version.ref = "kotlin" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 kotlin-test-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5", version.ref = "kotlin" }
 kotlinx-coroutines-bom = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-bom", version.ref = "kotlinx-coroutines" }
@@ -165,9 +159,7 @@ kotlinx-coroutines-slf4j = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 kotlinx-metadata-jvm = { module = "org.jetbrains.kotlinx:kotlinx-metadata-jvm", version.ref = "kotlinx-metadata" }
 kotlinx-serialization-bom = { module = "org.jetbrains.kotlinx:kotlinx-serialization-bom", version.ref = "kotlinx-serialization" }
-kotlinx-serialization-cbor = { module = "org.jetbrains.kotlinx:kotlinx-serialization-cbor", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinx-serialization" }
-kotlinx-serialization-hocon = { module = "org.jetbrains.kotlinx:kotlinx-serialization-hocon", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-properties = { module = "org.jetbrains.kotlinx:kotlinx-serialization-properties", version.ref = "kotlinx-serialization" }
 kotliquery = { module = "com.github.seratch:kotliquery", version.ref = "kotliquery" }
@@ -184,7 +176,7 @@ ktor-client-mock = { module = "io.ktor:ktor-client-mock-jvm", version.ref = "kto
 ktor-client-resources = { module = "io.ktor:ktor-client-resources-jvm", version.ref = "ktor" }
 ktor-gradle-plugin = { module = "io.ktor.plugin:plugin", version.ref = "ktor" }
 ktor-resources = { module = "io.ktor:ktor-resources-jvm", version.ref = "ktor" }
-ktor-serialization-jackson = { module = "io.ktor:ktor-serialization-jackson-jvm", version.ref = "ktor" }
+ktor-serialization-jackson3 = { module = "io.ktor:ktor-serialization-jackson3-jvm", version.ref = "ktor" }
 ktor-server-auth = { module = "io.ktor:ktor-server-auth-jvm", version.ref = "ktor" }
 ktor-server-auth-jwt = { module = "io.ktor:ktor-server-auth-jwt-jvm", version.ref = "ktor" }
 ktor-server-call-id = { module = "io.ktor:ktor-server-call-id-jvm", version.ref = "ktor" }
@@ -206,7 +198,7 @@ ktor-server-status-pages = { module = "io.ktor:ktor-server-status-pages-jvm", ve
 ktor-server-swagger = { module = "io.ktor:ktor-server-swagger-jvm", version.ref = "ktor" }
 ktor-server-test-host = { module = "io.ktor:ktor-server-test-host-jvm", version.ref = "ktor" }
 ktor-utils = { module = "io.ktor:ktor-utils-jvm", version.ref = "ktor" }
-lettuce = { module = "io.lettuce:lettuce-core", version.ref = "lettuce" }
+lettuce-core = { module = "io.lettuce:lettuce-core", version.ref = "lettuce" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 logback-core = { module = "ch.qos.logback:logback-core", version.ref = "logback" }
 logback-syslog4j = { module = "com.papertrailapp:logback-syslog4j", version.ref = "logback-syslog4j" }
@@ -214,8 +206,7 @@ logstash-logback-encoder = { module = "net.logstash.logback:logstash-logback-enc
 micrometer-bom = { module = "io.micrometer:micrometer-bom", version.ref = "micrometer" }
 micrometer-core = { module = "io.micrometer:micrometer-core", version.ref = "micrometer" }
 micrometer-registry-prometheus = { module = "io.micrometer:micrometer-registry-prometheus", version.ref = "micrometer" }
-micrometer-registry-prometheus-deprecated = { module = "io.micrometer:micrometer-registry-prometheus-simpleclient", version.ref = "micrometer" }
-microprofile-openapi = { module = "org.eclipse.microprofile.openapi:microprofile-openapi-api", version.ref = "microprofile" }
+microprofile-openapi-api = { module = "org.eclipse.microprofile.openapi:microprofile-openapi-api", version.ref = "microprofile" }
 mockk = { module = "io.mockk:mockk-jvm", version.ref = "mockk" }
 mustache = { module = "com.github.spullara.mustache.java:compiler", version.ref = "mustache" }
 netty-bom = { module = "io.netty:netty-bom", version.ref = "netty" }
@@ -231,7 +222,6 @@ openhtmltopdf-slf4j = { module = "io.github.openhtmltopdf:openhtmltopdf-slf4j", 
 openhtmltopdf-svg-support = { module = "io.github.openhtmltopdf:openhtmltopdf-svg-support", version.ref = "openhtmltopdf" }
 owasp-java-html-sanitizer = { module = "com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer", version.ref = "htmlSanitizer" }
 postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
-prometheus-client-deprecated = { module = "io.prometheus:simpleclient_common", version.ref = "prometheus-deprecated" }
 prometheus-metrics-bom = { module = "io.prometheus:prometheus-metrics-bom", version.ref = "prometheus" }
 prometheus-metrics-core = { module = "io.prometheus:prometheus-metrics-core", version.ref = "prometheus" }
 prometheus-metrics-simpleclient-bridge = { module = "io.prometheus:prometheus-metrics-simpleclient-bridge", version.ref = "prometheus" }
@@ -240,11 +230,12 @@ rapidsAndRivers = { module = "com.github.navikt.rapids-and-rivers:rapids-and-riv
 redisson = { module = "org.redisson:redisson", version.ref = "redisson" }
 slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 slf4j-bom = { module = "org.slf4j:slf4j-bom", version.ref = "slf4j" }
+slf4j-jcl-over-slf4j = { module = "org.slf4j:jcl-over-slf4j", version.ref = "slf4j" }
 slf4j-jdk-platform-logging = { module = "org.slf4j:slf4j-jdk-platform-logging", version.ref = "slf4j" }
 slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
 spotless-gradle-plugin = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
 swagger-annotations = { module = "io.swagger.core.v3:swagger-annotations", version.ref = "swagger" }
-swagger-parser = { module = "io.swagger.parser.v3:swagger-parser-v3", version.ref = "swaggerParser" }
+swagger-parser-v3 = { module = "io.swagger.parser.v3:swagger-parser-v3", version.ref = "swaggerParser" }
 tbdLibs-kafka = { module = "com.github.navikt.tbd-libs:kafka", version.ref = "tbdLibs" }
 tbdLibs-rapidsAndRivers = { module = "com.github.navikt.tbd-libs:rapids-and-rivers", version.ref = "tbdLibs" }
 tbdLibs-rapidsAndRivers-api = { module = "com.github.navikt.tbd-libs:rapids-and-rivers-api", version.ref = "tbdLibs" }
@@ -252,7 +243,7 @@ tbdLibs-rapidsAndRivers-test = { module = "com.github.navikt.tbd-libs:rapids-and
 testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
 testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version.ref = "testcontainers" }
 testcontainers-jdbc = { module = "org.testcontainers:testcontainers-jdbc", version.ref = "testcontainers" }
-testcontainers-junit = { module = "org.testcontainers:testcontainers-junit-jupiter", version.ref = "testcontainers" }
+testcontainers-junit-jupiter = { module = "org.testcontainers:testcontainers-junit-jupiter", version.ref = "testcontainers" }
 testcontainers-kafka = { module = "org.testcontainers:testcontainers-kafka", version.ref = "testcontainers" }
 testcontainers-mockserver = { module = "org.testcontainers:testcontainers-mockserver", version.ref = "testcontainers" }
 testcontainers-oracle-free = { module = "org.testcontainers:testcontainers-oracle-free", version.ref = "testcontainers" }
@@ -262,8 +253,7 @@ tokendings-exchange = { module = "no.nav.tms.token.support:tokendings-exchange",
 tokenx-validation = { module = "no.nav.tms.token.support:tokenx-validation", version.ref = "tmsKtorTokenSupport" }
 tokenx-validation-mock = { module = "no.nav.tms.token.support:tokenx-validation-mock", version.ref = "tmsKtorTokenSupport" }
 ucp11 = { module = "com.oracle.database.jdbc:ucp11", version.ref = "oracle" }
-unleash = { module = "io.getunleash:unleash-client-java", version.ref = "unleash" }
-unleash-deprecated = { module = "no.finn.unleash:unleash-client-java", version.ref = "unleash-deprecated" }
+unleash-client = { module = "io.getunleash:unleash-client-java", version.ref = "unleash" }
 valkey = { module = "io.valkey:valkey-java", version.ref = "valkey" }
 varsel-kotlin-builder = { module = "no.nav.tms.varsel:kotlin-builder", version.ref = "tmsVarsel" }
 wiremock = { module = "org.wiremock:wiremock", version.ref = "wiremock" }
@@ -276,8 +266,6 @@ graphql-client = [
 ]
 jackson = [
     "jackson-databind",
-    "jackson-datatype-jdk8",
-    "jackson-datatype-jsr310",
     "jackson-module-kotlin",
 ]
 ktor-client = [
@@ -286,10 +274,10 @@ ktor-client = [
     "ktor-client-core",
     "ktor-client-logging",
     "ktor-client-mock",
-    "ktor-serialization-jackson",
+    "ktor-serialization-jackson3",
 ]
 ktor-server = [
-    "ktor-serialization-jackson",
+    "ktor-serialization-jackson3",
     "ktor-server-auth",
     "ktor-server-auth-jwt",
     "ktor-server-call-id",

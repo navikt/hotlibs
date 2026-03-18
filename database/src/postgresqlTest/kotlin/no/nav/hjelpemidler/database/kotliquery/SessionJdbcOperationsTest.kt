@@ -1,8 +1,5 @@
 package no.nav.hjelpemidler.database.kotliquery
 
-import com.fasterxml.jackson.databind.node.MissingNode
-import com.fasterxml.jackson.databind.node.NullNode
-import com.fasterxml.jackson.databind.node.ObjectNode
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
@@ -24,6 +21,9 @@ import no.nav.hjelpemidler.database.toQueryParameters
 import no.nav.hjelpemidler.database.transaction
 import no.nav.hjelpemidler.pagination.PageRequest
 import no.nav.hjelpemidler.serialization.jackson.valueToTree
+import tools.jackson.databind.node.MissingNode
+import tools.jackson.databind.node.NullNode
+import tools.jackson.databind.node.ObjectNode
 import java.time.Instant
 import java.time.ZonedDateTime
 import kotlin.test.Test

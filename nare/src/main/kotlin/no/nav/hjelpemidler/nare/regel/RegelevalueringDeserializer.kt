@@ -1,19 +1,19 @@
 package no.nav.hjelpemidler.nare.regel
 
 import com.fasterxml.jackson.annotation.JsonAlias
-import com.fasterxml.jackson.databind.DeserializationContext
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.deser.std.StdNodeBasedDeserializer
-import com.fasterxml.jackson.databind.node.ObjectNode
 import no.nav.hjelpemidler.nare.core.Grunnlag
 import no.nav.hjelpemidler.nare.evaluering.Operator
+import tools.jackson.databind.DeserializationContext
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.deser.std.StdNodeBasedDeserializer
+import tools.jackson.databind.node.ObjectNode
 
 internal class RegelevalueringDeserializer : StdNodeBasedDeserializer<Regelevaluering>(Regelevaluering::class.java) {
     override fun convert(root: JsonNode, context: DeserializationContext): Regelevaluering? {
         if (root !is ObjectNode) return null
 
-        val referanse = root["lovReferanse"]?.textValue() ?: ""
-        val url = root["lovdataLenke"]?.textValue() ?: ""
+        val referanse = root["lovReferanse"]?.stringValue() ?: ""
+        val url = root["lovdataLenke"]?.stringValue() ?: ""
         val lovreferanse = if (referanse.isBlank() && url.isBlank()) {
             null
         } else {

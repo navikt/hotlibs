@@ -1,7 +1,7 @@
 package no.nav.hjelpemidler.domain.person
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import no.nav.hjelpemidler.domain.id.StringId
+import tools.jackson.databind.annotation.JsonDeserialize
 
 @JsonDeserialize(using = PersonIdentDeserializer::class)
 sealed class PersonIdent(value: String) : StringId(value)

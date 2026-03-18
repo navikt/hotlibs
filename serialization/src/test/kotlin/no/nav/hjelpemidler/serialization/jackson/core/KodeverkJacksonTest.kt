@@ -1,16 +1,21 @@
-package no.nav.hjelpemidler.domain.kodeverk
+package no.nav.hjelpemidler.serialization.jackson.core
 
 import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.MapperFeature
-import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
-import com.fasterxml.jackson.module.kotlin.readValue
 import io.kotest.matchers.shouldBe
+import no.nav.hjelpemidler.domain.kodeverk.Kodeverk
+import no.nav.hjelpemidler.domain.kodeverk.UkjentKode
+import no.nav.hjelpemidler.serialization.jackson.coreModule
 import no.nav.hjelpemidler.test.testFactory
 import org.junit.jupiter.api.TestFactory
+import tools.jackson.databind.MapperFeature
+import tools.jackson.module.kotlin.jacksonMapperBuilder
+import tools.jackson.module.kotlin.readValue
+import kotlin.test.Test
 
-class KodeverkDeserializerTest {
+class KodeverkJacksonTest {
     private val jsonMapper = jacksonMapperBuilder()
+        .addModule(coreModule)
         .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
         .build()
 
@@ -45,6 +50,14 @@ class KodeverkDeserializerTest {
         data.testEnum shouldBe testEnum
     }
 
+    @Test
+    fun nullHandling() {
+        val data = TestData(null)
+        val json = """{"testEnum":null}"""
+        jsonMapper.writeValueAsString(data) shouldBe json
+        jsonMapper.readValue<TestData>(json) shouldBe data
+    }
+
     private enum class TestEnum : Kodeverk<TestEnum> {
         @JsonAlias("MOTTATT")
         OPPRETTET,
@@ -56,6 +69,6 @@ class KodeverkDeserializerTest {
     }
 
     private data class TestData(
-        val testEnum: Kodeverk<TestEnum>,
+        val testEnum: Kodeverk<TestEnum>?,
     )
 }

@@ -1,10 +1,10 @@
 package no.nav.hjelpemidler.collections
 
-import com.fasterxml.jackson.databind.MapperFeature
-import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
-import com.fasterxml.jackson.module.kotlin.readValue
 import io.kotest.matchers.shouldBe
 import no.nav.hjelpemidler.text.doubleQuoted
+import tools.jackson.databind.MapperFeature
+import tools.jackson.module.kotlin.jacksonMapperBuilder
+import tools.jackson.module.kotlin.readValue
 import kotlin.test.Test
 
 class OrderByJacksonTest {

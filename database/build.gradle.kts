@@ -1,8 +1,6 @@
 plugins {
     id("buildlogic.kotlin-database-conventions")
 
-    alias(libs.plugins.kotlin.jpa)
-
     `java-test-fixtures`
 }
 

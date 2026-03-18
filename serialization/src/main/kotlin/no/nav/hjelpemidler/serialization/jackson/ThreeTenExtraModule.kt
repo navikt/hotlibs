@@ -1,10 +1,5 @@
 package no.nav.hjelpemidler.serialization.jackson
 
-import com.fasterxml.jackson.databind.DeserializationContext
-import com.fasterxml.jackson.databind.deser.std.FromStringDeserializer
-import com.fasterxml.jackson.databind.module.SimpleModule
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
-import com.fasterxml.jackson.module.kotlin.addDeserializer
 import org.threeten.extra.Days
 import org.threeten.extra.HourMinute
 import org.threeten.extra.Hours
@@ -20,6 +15,11 @@ import org.threeten.extra.YearHalf
 import org.threeten.extra.YearQuarter
 import org.threeten.extra.YearWeek
 import org.threeten.extra.Years
+import tools.jackson.databind.DeserializationContext
+import tools.jackson.databind.deser.std.FromStringDeserializer
+import tools.jackson.databind.module.SimpleModule
+import tools.jackson.databind.ser.std.ToStringSerializer
+import tools.jackson.module.kotlin.addDeserializer
 import kotlin.reflect.KClass
 
 internal class ThreeTenExtraModule : SimpleModule() {
@@ -73,8 +73,8 @@ internal class ThreeTenExtraModule : SimpleModule() {
         addDeserializer(Interval::class, Interval::parse)
     }
 
-    private fun <T : Any> addDeserializer(type: KClass<T>, creator: (rawValue: String) -> T) =
-        addDeserializer(type, Deserializer(type, creator))
+    private inline fun <reified T : Any> addDeserializer(type: KClass<T>, noinline creator: (rawValue: String) -> T) =
+        addDeserializer<T>(type, Deserializer(type, creator)) // fixme -> se på denne
 
     class Deserializer<T : Any>(type: KClass<T>, private val creator: (rawValue: String) -> T) :
         FromStringDeserializer<T>(type.java) {
