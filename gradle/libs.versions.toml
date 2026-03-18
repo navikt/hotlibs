@@ -21,6 +21,7 @@ handlebars = "4.5.0"
 hikaricp = "7.0.2"
 htmlSanitizer = "20260313.1"
 jackson = "3.1.0"
+jackson2 = "2.21.1"
 java = "21"
 javaJwt = "4.5.1"
 jedis = "7.4.0"
@@ -123,6 +124,7 @@ jackson-dataformat-csv = { module = "tools.jackson.dataformat:jackson-dataformat
 jackson-dataformat-xml = { module = "tools.jackson.dataformat:jackson-dataformat-xml", version.ref = "jackson" }
 jackson-dataformat-yaml = { module = "tools.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jackson" }
 jackson-module-kotlin = { module = "tools.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
+jackson2-bom = { module = "com.fasterxml.jackson:jackson-bom", version.ref = "jackson2" }
 java-jwt = { module = "com.auth0:java-jwt", version.ref = "javaJwt" }
 jedis = { module = "redis.clients:jedis", version.ref = "jedis" }
 jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains-annotations" }
