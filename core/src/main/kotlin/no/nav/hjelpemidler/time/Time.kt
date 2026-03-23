@@ -15,6 +15,7 @@ val ZONE_ID_EUROPE_OSLO: ZoneId = TIME_ZONE_EUROPE_OSLO.toZoneId()
 
 fun nå(): Instant = Instant.now()
 fun iDag(): LocalDate = LocalDate.now()
+fun dagsDato(): LocalDate = LocalDate.now()
 
 fun nowWithOffset(): OffsetDateTime = OffsetDateTime.now(ZONE_ID_EUROPE_OSLO)
 fun nowWithTimeZone(): ZonedDateTime = ZonedDateTime.now(ZONE_ID_EUROPE_OSLO)
@@ -22,6 +23,8 @@ fun nowWithTimeZone(): ZonedDateTime = ZonedDateTime.now(ZONE_ID_EUROPE_OSLO)
 // Date
 fun Date.toLocalDate(): LocalDate = toInstant().toLocalDate()
 fun Date.toLocalDateTime(): LocalDateTime = toInstant().toLocalDateTime()
+fun Date.toOffsetDateTime(): OffsetDateTime = toInstant().toOffsetDateTime()
+fun Date.toZonedDateTime(): ZonedDateTime = toInstant().toZonedDateTime()
 
 // LocalDate
 fun LocalDate.toInstant(): Instant = atStartOfDay().atZone(ZONE_ID_EUROPE_OSLO).toInstant()
@@ -35,7 +38,14 @@ fun LocalDateTime.toDate(): Date = toInstant().toDate()
 // Instant
 fun Instant.toLocalDate(): LocalDate = ZonedDateTime.ofInstant(this, ZONE_ID_EUROPE_OSLO).toLocalDate()
 fun Instant.toLocalDateTime(): LocalDateTime = ZonedDateTime.ofInstant(this, ZONE_ID_EUROPE_OSLO).toLocalDateTime()
+fun Instant.toOffsetDateTime(): OffsetDateTime = atZone(ZONE_ID_EUROPE_OSLO).toOffsetDateTime()
 fun Instant.toZonedDateTime(): ZonedDateTime = atZone(ZONE_ID_EUROPE_OSLO)
 fun Instant.toDate(): Date = Date.from(this)
 operator fun Instant.minus(duration: Duration): Instant = minusNanos(duration.inWholeNanoseconds)
 operator fun Instant.plus(duration: Duration): Instant = plusNanos(duration.inWholeNanoseconds)
+
+// OffsetDateTime
+fun OffsetDateTime.toDate(): Date = Date.from(toInstant())
+
+// ZonedDateTime
+fun ZonedDateTime.toDate(): Date = Date.from(toInstant())
