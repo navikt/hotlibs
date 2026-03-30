@@ -4,8 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import no.bekk.bekkopen.person.Fodselsnummer
 import no.bekk.bekkopen.person.FodselsnummerCalculator
 import no.bekk.bekkopen.person.FodselsnummerValidator
-import no.nav.hjelpemidler.time.toDate
+import no.nav.hjelpemidler.time.ZONE_ID_EUROPE_OSLO
 import no.nav.hjelpemidler.validation.Validator
+import java.util.Date
 
 /**
  * F-nummer/D-nummer med 11 siffer.
@@ -44,7 +45,7 @@ class Fødselsnummer(value: String) : PersonIdent(value) {
     @JsonIgnore
     constructor(fødselsdato: Fødselsdato) : this(
         FodselsnummerCalculator
-            .getFodselsnummerForDate(fødselsdato.toDate())
+            .getFodselsnummerForDate(Date.from(fødselsdato.atStartOfDay(ZONE_ID_EUROPE_OSLO).toInstant()))
             .toString()
     )
 

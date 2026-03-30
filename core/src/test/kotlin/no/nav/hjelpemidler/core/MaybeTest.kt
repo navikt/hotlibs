@@ -7,24 +7,6 @@ import kotlin.test.Test
 
 class MaybeTest {
     @Test
-    fun isAbsent() {
-        val absent: Maybe<String> = Absent
-        assertSoftly(absent) {
-            isAbsent() shouldBe true
-            isPresent() shouldBe false
-        }
-    }
-
-    @Test
-    fun isPresent() {
-        val present: Maybe<String> = Maybe("test")
-        assertSoftly(present) {
-            isAbsent() shouldBe false
-            isPresent() shouldBe true
-        }
-    }
-
-    @Test
     fun filter() {
         val present = Maybe("permitted")
         assertSoftly(present) {

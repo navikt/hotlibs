@@ -1,8 +1,5 @@
 package no.nav.hjelpemidler.core
 
-import kotlin.contracts.ExperimentalContracts
-import kotlin.contracts.contract
-
 /**
  * Gjør det mulig å skille mellom `null` og `undefined` i f.eks. HTTP PATCH.
  *
@@ -13,24 +10,7 @@ import kotlin.contracts.contract
  * ```
  * Dette vil gjøre at [Maybe.Absent] ikke blir med i JSON ved serialisering, mens `Maybe.Present(null)` blir det.
  */
-@OptIn(ExperimentalContracts::class)
 sealed class Maybe<out T> {
-    fun isAbsent(): Boolean {
-        contract {
-            returns(true) implies (this@Maybe is Absent)
-            returns(false) implies (this@Maybe is Present)
-        }
-        return this is Absent
-    }
-
-    fun isPresent(): Boolean {
-        contract {
-            returns(false) implies (this@Maybe is Absent)
-            returns(true) implies (this@Maybe is Present)
-        }
-        return this is Present
-    }
-
     inline fun filter(predicate: (T) -> Boolean): Maybe<T> = flatMap { value ->
         if (predicate(value)) Present(value) else Absent
     }
@@ -58,19 +38,19 @@ sealed class Maybe<out T> {
     }
 
     inline fun ifAbsent(block: () -> Unit) {
-        if (isAbsent()) block()
+        if (this is Absent) block()
     }
 
     inline fun onAbsent(block: () -> Unit): Maybe<T> = also {
-        if (it.isAbsent()) block()
+        if (it is Absent) block()
     }
 
     inline fun ifPresent(block: (T) -> Unit) {
-        if (isPresent()) block(value)
+        if (this is Present) block(value)
     }
 
     inline fun onPresent(block: (T) -> Unit): Maybe<T> = also {
-        if (it.isPresent()) block(it.value)
+        if (it is Present) block(it.value)
     }
 
     data object Absent : Maybe<Nothing>()

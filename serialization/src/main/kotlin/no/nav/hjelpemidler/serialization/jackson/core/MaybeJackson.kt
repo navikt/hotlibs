@@ -2,6 +2,7 @@ package no.nav.hjelpemidler.serialization.jackson.core
 
 import no.nav.hjelpemidler.core.Maybe
 import no.nav.hjelpemidler.core.Maybe.Absent
+import no.nav.hjelpemidler.core.Maybe.Present
 import tools.jackson.databind.BeanProperty
 import tools.jackson.databind.DeserializationContext
 import tools.jackson.databind.JavaType
@@ -65,7 +66,7 @@ internal class MaybeSerializer : ReferenceTypeSerializer<Maybe<*>> {
         suppressNulls,
     )
 
-    override fun _isValuePresent(value: Maybe<*>): Boolean = value.isPresent()
+    override fun _isValuePresent(value: Maybe<*>): Boolean = value is Present
 
     override fun _getReferenced(value: Maybe<*>): Any? = value.getOrNull()
 
