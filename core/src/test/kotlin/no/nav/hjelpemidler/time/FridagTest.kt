@@ -14,8 +14,8 @@ class FridagTest {
         val palmesøndag = utledFørstePåskedagI(år) - 7.dager
         val expected = NorwegianDateUtil
             .getHolidays(år)
-            .filterNot { it.toInstant().asLocalDate() == palmesøndag } // palmesøndag er en vanlig søndag
-            .mapTo(sortedSetOf()) { it.toInstant().asLocalDate() }
+            .filterNot { it.toInstant().toLocalDate() == palmesøndag } // palmesøndag er en vanlig søndag
+            .mapTo(sortedSetOf()) { it.toInstant().toLocalDate() }
 
         val actual = fridagerI(år)
 

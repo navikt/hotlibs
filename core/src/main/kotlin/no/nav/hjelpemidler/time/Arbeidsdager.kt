@@ -1,18 +1,18 @@
 package no.nav.hjelpemidler.time
 
+import java.time.LocalDate
 import java.time.Period
 import java.time.temporal.ChronoUnit
 import java.time.temporal.Temporal
 import java.time.temporal.TemporalAmount
 import java.time.temporal.TemporalUnit
 import java.time.temporal.UnsupportedTemporalTypeException
+import kotlin.math.absoluteValue
 
 /**
  * @see [kotlin.Int.arbeidsdager]
  */
 class Arbeidsdager private constructor(private val arbeidsdager: Int) : TemporalAmount, Comparable<Arbeidsdager> {
-    private val zoneId = ZONE_ID_EUROPE_OSLO
-
     override fun get(unit: TemporalUnit?): Long {
         if (unit == ChronoUnit.DAYS) return arbeidsdager.toLong()
         throw UnsupportedTemporalTypeException("Unsupported unit: $unit")
@@ -22,33 +22,30 @@ class Arbeidsdager private constructor(private val arbeidsdager: Int) : Temporal
 
     override fun addTo(temporal: Temporal): Temporal {
         if (arbeidsdager == 0) return temporal
-        if (arbeidsdager < 0) return negate().subtractFrom(temporal)
-        val start = temporal.asLocalDate(zoneId)
-        var end = start
-        repeat(arbeidsdager) {
-            end = end.plusDays(1)
-            while (end.isFridag) {
-                end = end.plusDays(1)
-            }
-        }
-        return temporal + daysBetween(start, end)
+        if (arbeidsdager < 0) return negated().subtractFrom(temporal)
+        val days = countCalendarDays(LocalDate.from(temporal), step = 1)
+        return temporal + Period.ofDays(days)
     }
 
     override fun subtractFrom(temporal: Temporal): Temporal {
         if (arbeidsdager == 0) return temporal
-        if (arbeidsdager < 0) return negate().addTo(temporal)
-        val end = temporal.asLocalDate(zoneId)
-        var start = end
-        repeat(arbeidsdager) {
-            start = start.minusDays(1)
-            while (start.isFridag) {
-                start = start.minusDays(1)
-            }
-        }
-        return temporal - daysBetween(start, end)
+        if (arbeidsdager < 0) return negated().addTo(temporal)
+        val days = countCalendarDays(LocalDate.from(temporal), step = -1)
+        return temporal - Period.ofDays(days)
     }
 
-    private fun negate() = Arbeidsdager(-arbeidsdager)
+    private fun negated(): Arbeidsdager = Arbeidsdager(-arbeidsdager)
+
+    private fun countCalendarDays(from: LocalDate, step: Long): Int {
+        var current = from
+        repeat(arbeidsdager) {
+            current = current.plusDays(step)
+            while (current.isFridag) {
+                current = current.plusDays(step)
+            }
+        }
+        return ChronoUnit.DAYS.between(from, current).toInt().absoluteValue
+    }
 
     override fun compareTo(other: Arbeidsdager): Int = this.arbeidsdager.compareTo(other.arbeidsdager)
 
@@ -76,6 +73,3 @@ class Arbeidsdager private constructor(private val arbeidsdager: Int) : Temporal
         }
     }
 }
-
-private fun daysBetween(temporal1Inclusive: Temporal, temporal2Exclusive: Temporal) =
-    Period.ofDays(ChronoUnit.DAYS.between(temporal1Inclusive, temporal2Exclusive).toInt())
