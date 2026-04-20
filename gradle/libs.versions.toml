@@ -14,7 +14,7 @@ contractPdlAvro = "1.0.3"
 cyclonedx = "3.2.4"
 ehcache = "3.12.0"
 flyway = "12.4.0"
-graphql = "9.1.0"
+graphql = "9.2.0"
 graphql-java = "25.0"
 h2 = "2.4.240"
 handlebars = "4.5.0"
@@ -27,7 +27,7 @@ javaJwt = "4.5.1"
 jedis = "7.4.1"
 jetbrains-annotations = "26.1.0"
 joseJwt = "10.9"
-jsoup = "1.22.1"
+jsoup = "1.22.2"
 junit = "6.0.3"
 kafka = "4.2.0"
 konfig = "1.6.10.0"
@@ -56,22 +56,22 @@ oracle = "23.26.1.0.0"
 postgresql = "42.7.10"
 prometheus = "1.5.1"
 protobuf = "4.34.1"
-rapidsAndRivers = "2026031213281773318507.0cbb5b6ccab4"
+rapidsAndRivers = "2026042008201776666058"
 redisson = "4.3.1"
 shadow = "8.1.1"
 slf4j = "2.0.17"
 spotless = "8.4.0"
 swagger = "2.2.48"
 swaggerParser = "2.1.40"
-tbdLibs = "2026.04.14-17.50-10c5b8c1"
+tbdLibs = "20260416.1520"
 testcontainers = "2.0.4"
 threeten = "1.8.0"
 tmsKtorTokenSupport = "5.0.6"
 tmsVarsel = "2.2.0"
-unleash = "12.2.0"
+unleash = "12.2.1"
 valkey = "5.5.0"
 versionCatalogUpdate = "1.1.0"
-versions = "0.53.0"
+versions = "0.54.0"
 wiremock = "3.13.2"
 zjsonpatch = "0.4.16"
 
@@ -228,7 +228,9 @@ prometheus-metrics-bom = { module = "io.prometheus:prometheus-metrics-bom", vers
 prometheus-metrics-core = { module = "io.prometheus:prometheus-metrics-core", version.ref = "prometheus" }
 prometheus-metrics-simpleclient-bridge = { module = "io.prometheus:prometheus-metrics-simpleclient-bridge", version.ref = "prometheus" }
 protobuf-bom = { module = "com.google.protobuf:protobuf-bom", version.ref = "protobuf" }
-rapidsAndRivers = { module = "com.github.navikt.rapids-and-rivers:rapids-and-rivers", version.ref = "rapidsAndRivers" }
+rapidsAndRivers = { module = "com.github.navikt:rapids-and-rivers", version.ref = "rapidsAndRivers" }
+rapidsAndRivers-api = { module = "com.github.navikt.rapids-and-rivers:rapids-and-rivers-api", version.ref = "rapidsAndRivers" }
+rapidsAndRivers-test = { module = "com.github.navikt.rapids-and-rivers:rapids-and-rivers-test", version.ref = "rapidsAndRivers" }
 redisson = { module = "org.redisson:redisson", version.ref = "redisson" }
 slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 slf4j-bom = { module = "org.slf4j:slf4j-bom", version.ref = "slf4j" }

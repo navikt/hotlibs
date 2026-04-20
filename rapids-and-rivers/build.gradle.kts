@@ -8,5 +8,5 @@ dependencies {
     api(project(":serialization"))
     api(libs.rapidsAndRivers)
 
-    testImplementation(libs.tbdLibs.rapidsAndRivers.test)
+    testImplementation(libs.rapidsAndRivers.test)
 }
