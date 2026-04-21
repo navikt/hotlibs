@@ -295,6 +295,7 @@ class Row(private val resultSet: ResultSet) : AutoCloseable by resultSet {
 }
 
 private fun transform(value: Any?): Any? = when (value) {
+    is java.sql.Array -> value.array
     is java.sql.Date -> value.toLocalDate()
     is java.sql.Time -> value.toLocalTime()
     is java.sql.Timestamp -> value.toLocalDateTime()

@@ -1,6 +1,7 @@
 package no.nav.hjelpemidler.database.kotliquery
 
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.maps.shouldContain
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
@@ -194,6 +195,18 @@ class SessionJdbcOperationsTest {
         val id = lagre()
         val result = hent<ZonedDateTime>(id, "timestamp_with_timezone")
         result.shouldBeInstanceOf<ZonedDateTime>()
+    }
+
+    @Test
+    fun `Skal hente timestamp som Map`() = runTest {
+        val id = lagre()
+        val result = transaction(dataSource = testDataSource) {
+            it.single(
+                sql = "SELECT * FROM test WHERE id = :id",
+                queryParameters = id.toQueryParameters("id"),
+            ) { row -> row.asMap() }
+        }
+        result.shouldContain("id", id.value)
     }
 
     private suspend fun lagre(): TestId = transaction(testDataSource) { it.lagre() }
