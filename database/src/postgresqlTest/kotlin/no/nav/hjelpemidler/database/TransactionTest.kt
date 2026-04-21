@@ -39,7 +39,7 @@ class TransactionTest {
     }
 }
 
-private fun JdbcOperations.lagre(): TestId = single<TestId>("INSERT INTO test DEFAULT VALUES RETURNING id")
+private fun JdbcOperations.lagre(): TestId = single<Long>("INSERT INTO test DEFAULT VALUES RETURNING id").let(::TestId)
 private fun JdbcOperations.hent(id: TestId) = single(
     sql = "SELECT *, (navn).* FROM test WHERE id = :id",
     queryParameters = id.toQueryParameters("id"),

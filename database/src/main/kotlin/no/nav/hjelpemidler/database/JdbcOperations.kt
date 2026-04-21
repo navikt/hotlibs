@@ -7,7 +7,7 @@ import org.intellij.lang.annotations.Language
 /**
  * Interface for kommunikasjon med en database basert på JDBC.
  */
-interface JdbcOperations : DatabaseOperations {
+interface JdbcOperations {
     /**
      * @throws NoSuchElementException hvis spørringen ikke gir treff i databasen
      */

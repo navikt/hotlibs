@@ -8,11 +8,8 @@ import no.nav.hjelpemidler.domain.geografi.Kommune
 import no.nav.hjelpemidler.domain.person.AktørId
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.Personnavn
-import no.nav.hjelpemidler.serialization.jackson.jsonMapper
 import no.nav.hjelpemidler.serialization.jackson.jsonToTreeOrNull
 import no.nav.hjelpemidler.serialization.jackson.jsonToValue
-import no.nav.hjelpemidler.serialization.jackson.node
-import no.nav.hjelpemidler.serialization.jackson.treeToValueOrNull
 import tools.jackson.databind.JsonNode
 import java.io.InputStream
 import java.math.BigDecimal
@@ -34,11 +31,11 @@ import kotlin.reflect.KClass
  * Noen funksjoner fra [kotliquery.Row] er med vilje utelatt her, bla. funksjoner for Joda-Time
  * og java.sql.Date / java.sql.Time / java.sql.Timestamp. Vi benytter kun java.time.* (Java Time / JSR 310).
  */
-abstract class Row(protected val resultSet: ResultSet) : AutoCloseable by resultSet {
+class Row(private val resultSet: ResultSet) : AutoCloseable by resultSet {
     fun any(columnIndex: Int): Any = anyOrNull(columnIndex)!!
     fun any(columnLabel: String): Any = anyOrNull(columnLabel)!!
-    fun anyOrNull(columnIndex: Int): Any? = nullable(resultSet.getObject(columnIndex))
-    fun anyOrNull(columnLabel: String): Any? = nullable(resultSet.getObject(columnLabel))
+    fun anyOrNull(columnIndex: Int): Any? = transform(nullable(resultSet.getObject(columnIndex)))
+    fun anyOrNull(columnLabel: String): Any? = transform(nullable(resultSet.getObject(columnLabel)))
 
     inline fun <reified T> array(columnIndex: Int): Array<T> = arrayOrNull<T>(columnIndex)!!
     inline fun <reified T> array(columnLabel: String): Array<T> = arrayOrNull<T>(columnLabel)!!
@@ -154,8 +151,19 @@ abstract class Row(protected val resultSet: ResultSet) : AutoCloseable by result
     fun <T : Any> value(columnIndex: Int, type: KClass<T>): T = valueOrNull(columnIndex, type)!!
     fun <T : Any> value(columnLabel: String, type: KClass<T>): T = valueOrNull(columnLabel, type)!!
 
-    abstract fun <T : Any> valueOrNull(columnIndex: Int, type: KClass<T>): T?
-    fun <T : Any> valueOrNull(columnLabel: String, type: KClass<T>): T? = valueOrNull(findColumn(columnLabel), type)
+    @Suppress("UNCHECKED_CAST")
+    fun <T : Any> valueOrNull(columnIndex: Int, type: KClass<T>): T? = when (type) {
+        Instant::class -> resultSet.getObject(columnIndex, OffsetDateTime::class)?.toInstant() as T?
+        ZonedDateTime::class -> resultSet.getObject(columnIndex, OffsetDateTime::class)?.toZonedDateTime() as T?
+        else -> resultSet.getObject(columnIndex, type)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    fun <T : Any> valueOrNull(columnLabel: String, type: KClass<T>): T? = when (type) {
+        Instant::class -> resultSet.getObject(columnLabel, OffsetDateTime::class)?.toInstant() as T?
+        ZonedDateTime::class -> resultSet.getObject(columnLabel, OffsetDateTime::class)?.toZonedDateTime() as T?
+        else -> resultSet.getObject(columnLabel, type)
+    }
 
     inline fun <reified T : Any> value(columnIndex: Int): T = value(columnIndex, T::class)
     inline fun <reified T : Any> value(columnLabel: String): T = value(columnLabel, T::class)
@@ -263,40 +271,6 @@ abstract class Row(protected val resultSet: ResultSet) : AutoCloseable by result
         }
     }
 
-    /**
-     * Konverter hele raden til [JsonNode].
-     *
-     * NB! Hvis resultatet inneholder flere kolonner returneres [com.fasterxml.jackson.databind.node.ObjectNode],
-     * ellers returneres en [JsonNode] basert på kolonnetypen.
-     */
-    fun asTree(): JsonNode {
-        val metaData = resultSet.metaData
-        if (metaData.columnCount == 1) {
-            return asTree(1)
-        }
-        val properties = (1..metaData.columnCount).associate { columnIndex ->
-            metaData.getColumnLabel(columnIndex) to asTree(columnIndex)
-        }
-        return jsonMapper.createObjectNode().setAll(properties)
-    }
-
-    abstract fun asTree(columnIndex: Int): JsonNode
-    fun asTree(columnLabel: String): JsonNode = asTree(findColumn(columnLabel))
-
-    /**
-     * Konverter hele raden til [T].
-     *
-     * @see [isValueType]
-     */
-    inline fun <reified T : Any> asValueOrNull(): T? {
-        val type = T::class
-        return if (type.isValueType) {
-            valueOrNull(1, type)
-        } else {
-            treeToValueOrNull<T>(asTree())
-        }
-    }
-
     // END Convert
 
     // START Utilities
@@ -315,11 +289,14 @@ abstract class Row(protected val resultSet: ResultSet) : AutoCloseable by result
     fun <T> ifUuidPresent(columnLabel: String, transform: Row.(UUID) -> T): T? =
         ifPresent(columnLabel, Row::uuidOrNull, transform)
 
-    protected fun node(value: Any?): JsonNode = value as? JsonNode ?: jsonMapper.nodeFactory.node(value)
-
-    protected fun <T> nullable(value: T): T? = if (resultSet.wasNull()) null else value
-
-    protected fun findColumn(columnLabel: String): Int = resultSet.findColumn(columnLabel)
+    private fun <T> nullable(value: T): T? = if (resultSet.wasNull()) null else value
 
     // END Utilities
+}
+
+private fun transform(value: Any?): Any? = when (value) {
+    is java.sql.Date -> value.toLocalDate()
+    is java.sql.Time -> value.toLocalTime()
+    is java.sql.Timestamp -> value.toLocalDateTime()
+    else -> value
 }

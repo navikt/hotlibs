@@ -1,11 +1,9 @@
 package no.nav.hjelpemidler.database.test
 
-import com.fasterxml.jackson.annotation.JsonAlias
-import com.fasterxml.jackson.annotation.JsonFormat
 import no.nav.hjelpemidler.database.QueryParameters
 import no.nav.hjelpemidler.database.QueryParametersProvider
 import no.nav.hjelpemidler.database.Row
-import no.nav.hjelpemidler.database.annotation.Table
+import no.nav.hjelpemidler.database.toQueryParameters
 import no.nav.hjelpemidler.domain.person.AktørId
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.Personnavn
@@ -19,7 +17,6 @@ import java.time.OffsetTime
 import java.time.ZoneOffset
 import java.util.UUID
 
-@Table("test")
 data class TestEntity(
     val id: TestId = TestId(0),
     val boolean: Boolean? = null,
@@ -34,9 +31,7 @@ data class TestEntity(
     val timestamp: LocalDateTime? = LocalDateTime.of(date, time),
     val timestampWithTimezone: OffsetDateTime? = timestamp?.atOffset(ZoneOffset.UTC),
     val fnr: Fødselsnummer? = Fødselsnummer(50.år),
-    @JsonAlias("aktor_id")
     val aktørId: AktørId? = AktørId("1234567891011"),
-    @JsonFormat(shape = JsonFormat.Shape.ARRAY)
     val navn: Personnavn? = Personnavn("Grønn Rolig", null, "Bolle"),
     val strings: List<String>? = listOf("a", "b", "c"),
     val integers: List<Int>? = listOf(1, 2, 3),
@@ -59,7 +54,8 @@ data class TestEntity(
             "aktor_id" to aktørId,
             "strings" to strings?.toTypedArray<String>(),
             "integers" to integers?.toTypedArray<Int>(),
-        )
+            // "data" to pgJsonbOf(entity.data)
+        ) + navn.toQueryParameters()
     }
 }
 

@@ -25,7 +25,7 @@ class OracleTest {
         }
         transaction(testDataSource) {
             val value = it.single("""SELECT * FROM test WHERE id = 1""") { row ->
-                row.asTree()
+                row.asMap()
             }
             println(value)
             val r1 = it.single<Instant>("SELECT timestamp_with_timezone FROM test WHERE id = 1")
