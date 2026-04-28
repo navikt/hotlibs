@@ -8,6 +8,7 @@ import tools.jackson.databind.DeserializationFeature
 import tools.jackson.databind.JacksonModule
 import tools.jackson.databind.ObjectMapper
 import tools.jackson.databind.cfg.DateTimeFeature
+import tools.jackson.databind.introspect.DefaultAccessorNamingStrategy
 import tools.jackson.databind.json.JsonMapper
 import tools.jackson.module.kotlin.jacksonMapperBuilder
 
@@ -30,6 +31,10 @@ fun JsonMapper.Builder.default(): JsonMapper.Builder {
     return this
         .addModule(coreModule)
         .addModule(threeTenExtraModule)
+        .accessorNaming(
+            DefaultAccessorNamingStrategy.Provider()
+                .withFirstCharAcceptance(true, false)
+        )
         .disable(DateTimeFeature.WRITE_DATES_AS_TIMESTAMPS) // NB! Dette er default i Jackson 3
         .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES) // NB! Dette er default i Jackson 3
         .configure(StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION, !Environment.current.isProd)
