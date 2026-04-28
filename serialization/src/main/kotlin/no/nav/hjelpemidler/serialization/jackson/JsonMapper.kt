@@ -31,9 +31,13 @@ fun JsonMapper.Builder.default(): JsonMapper.Builder {
     return this
         .addModule(coreModule)
         .addModule(threeTenExtraModule)
+        /**
+         * Skrur på håndtering av spesialtegn som var default i Jackson 2.
+         * https://github.com/FasterXML/jackson/wiki/Jackson-Release-3.0#behavioral-changes
+         */
         .accessorNaming(
             DefaultAccessorNamingStrategy.Provider()
-                .withFirstCharAcceptance(true, false)
+                .withFirstCharAcceptance(true, true)
         )
         .disable(DateTimeFeature.WRITE_DATES_AS_TIMESTAMPS) // NB! Dette er default i Jackson 3
         .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES) // NB! Dette er default i Jackson 3
