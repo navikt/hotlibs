@@ -70,8 +70,8 @@ abstract class KafkaMessageListener<T : KafkaMessage>(
     ) {
         val messageContext = ExtendedMessageContext(context)
         if (skipMessage(packet, messageContext, metadata, meterRegistry)) {
-            val eventId: String? = packet[KafkaMessage.EVENT_ID_KEY].textValue()
-            val eventName: String? = packet[KafkaMessage.EVENT_NAME_KEY].textValue()
+            val eventId: String? = packet[KafkaMessage.EVENT_ID_KEY].stringValue()
+            val eventName: String? = packet[KafkaMessage.EVENT_NAME_KEY].stringValue()
             log.warn { "skipMessage() returnerte true, eventId: '$eventId', eventName: '$eventName'" }
             return
         }
