@@ -25,6 +25,9 @@ val threeTenExtraModule: JacksonModule by lazy(::ThreeTenExtraModule)
  * * Skrur av [DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES] for å tillate egenskaper i JSON som ikke finnes i Kotlin-klassen det mappes til.
  * * Skrur på [StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION] hvis IKKE produksjon slik at kilde-JSON inkluderes ved feil under deserialisering.
  *
+ * NB! Vi setter både `allowLowerCaseFirstChar` og `allowNonLetterFirstChar` til `true` her. Dette gjør bla. at properties
+ * som starter med norske tegn blir med i JSON ved serialisering som forventet.
+ *
  * @see [defaultJsonMapper]
  */
 fun JsonMapper.Builder.default(): JsonMapper.Builder {
