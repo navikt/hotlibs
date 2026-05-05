@@ -14,6 +14,8 @@ val JsonNode?.isMissingOrNull: Boolean get() = this == null || isMissingNode || 
 inline fun <T : Any> JsonNode?.ifStringNode(transform: (String) -> T): T? =
     takeIf { this is StringNode }?.let { transform(it.stringValue()) }
 
+fun JsonNode.stringValueOrNull(): String? = takeIf { this is StringNode }?.stringValue()
+
 fun JsonNode.uuidValue(): UUID = UUID.fromString(stringValue())
 fun JsonNode?.uuidValueOrNull(): UUID? = ifStringNode(UUID::fromString)
 
