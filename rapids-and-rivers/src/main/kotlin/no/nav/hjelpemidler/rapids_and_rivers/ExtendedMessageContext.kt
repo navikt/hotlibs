@@ -5,6 +5,9 @@ import no.nav.hjelpemidler.kafka.KafkaMessage
 import no.nav.hjelpemidler.serialization.jackson.jsonMapper
 
 class ExtendedMessageContext(private val messageContext: MessageContext) : MessageContext by messageContext {
+    fun <T : KafkaMessage> publish(message: T) =
+        publish(jsonMapper.writeValueAsString(message))
+
     fun <T : KafkaMessage> publish(key: String, message: T) =
         publish(key, jsonMapper.writeValueAsString(message))
 }

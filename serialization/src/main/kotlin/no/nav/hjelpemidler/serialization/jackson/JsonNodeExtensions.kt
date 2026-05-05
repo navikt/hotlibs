@@ -2,6 +2,7 @@ package no.nav.hjelpemidler.serialization.jackson
 
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.NumericIntNode
 import tools.jackson.databind.node.StringNode
 import java.time.Instant
 import java.time.LocalDate
@@ -11,9 +12,14 @@ import java.util.UUID
 
 val JsonNode?.isMissingOrNull: Boolean get() = this == null || isMissingNode || isNull
 
+inline fun <reified T : JsonNode, R : Any> JsonNode?.ifNode(transform: (T) -> R): R? =
+    takeIf { this is T }?.let { transform(it as T) }
+
 inline fun <T : Any> JsonNode?.ifStringNode(transform: (String) -> T): T? =
     takeIf { this is StringNode }?.let { transform(it.stringValue()) }
 
+fun JsonNode.intValueOrNull(): Int? = takeIf { this is NumericIntNode }?.intValue()
+fun JsonNode.longValueOrNull(): Long? = takeIf { this is NumericIntNode }?.longValue()
 fun JsonNode.stringValueOrNull(): String? = takeIf { this is StringNode }?.stringValue()
 
 fun JsonNode.uuidValue(): UUID = UUID.fromString(stringValue())
