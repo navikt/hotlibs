@@ -15,6 +15,7 @@ dependencies {
     api(platform(libs.kotlinx.coroutines.bom))
     api(platform(libs.kotlinx.serialization.bom))
     api(platform(libs.ktor.bom))
+    api(platform(libs.netty.bom))
     api(platform(libs.protobuf.bom))
     api(platform(libs.slf4j.bom))
 
