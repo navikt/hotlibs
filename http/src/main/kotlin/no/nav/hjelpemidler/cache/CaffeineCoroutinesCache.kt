@@ -29,7 +29,7 @@ internal class CaffeineCoroutinesCache<K : Any, V>(private val wrapped: AsyncCac
             .await()
     }
 
-    override suspend fun put(key: K, value: V) =
+    override fun put(key: K, value: V) =
         wrapped.put(key, CompletableFuture.completedFuture(value))
 
     override suspend fun computeIfAbsent(key: K, loader: suspend CoroutineScope.(K) -> V): V = coroutineScope {
@@ -53,6 +53,6 @@ internal class CaffeineCoroutinesCache<K : Any, V>(private val wrapped: AsyncCac
     override suspend fun remove(key: K): V? =
         wrapped.asMap().remove(key)?.await()
 
-    override suspend fun asMap(): Map<K, Deferred<V>> =
+    override fun asMap(): Map<K, Deferred<V>> =
         wrapped.asMap().mapValues { (_, value) -> value.asDeferred() }
 }

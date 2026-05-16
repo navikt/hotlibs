@@ -45,7 +45,7 @@ class MapCoroutinesCache<K : Any, V> private constructor(
         result
     }
 
-    override suspend fun put(key: K, value: V) {
+    override fun put(key: K, value: V) {
         wrapped[key] = CompletableDeferred(value)
     }
 
@@ -69,5 +69,5 @@ class MapCoroutinesCache<K : Any, V> private constructor(
 
     override suspend fun remove(key: K): V? = wrapped.remove(key)?.await()
 
-    override suspend fun asMap(): Map<K, Deferred<V>> = wrapped.toMap()
+    override fun asMap(): Map<K, Deferred<V>> = wrapped.toMap()
 }

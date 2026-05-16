@@ -17,7 +17,7 @@ class NoOpCoroutinesCache<K : Any, V> : CoroutinesCache<K, V> {
         loader: suspend CoroutineScope.(Set<K>) -> Map<K, V & Any>,
     ): Map<K, V & Any> = coroutineScope { loader(keys.toSet()) }
 
-    override suspend fun put(key: K, value: V) = Unit
+    override fun put(key: K, value: V) = Unit
 
     override suspend fun computeIfAbsent(key: K, loader: suspend CoroutineScope.(K) -> V): V =
         coroutineScope { loader(key) }
@@ -29,5 +29,5 @@ class NoOpCoroutinesCache<K : Any, V> : CoroutinesCache<K, V> {
 
     override suspend fun remove(key: K): V? = null
 
-    override suspend fun asMap(): Map<K, Deferred<V>> = emptyMap()
+    override fun asMap(): Map<K, Deferred<V>> = emptyMap()
 }
