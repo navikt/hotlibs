@@ -53,9 +53,9 @@ class JsonNodeExtensionsText {
     @Test
     fun `JsonNode til ZonedDateTime`() {
         val zonedDateTime = ZonedDateTime.now()
-        stringNodeOf(zonedDateTime).zonedDateTime() shouldBe zonedDateTime
+        stringNodeOf(zonedDateTime).zonedDateTimeValue() shouldBe zonedDateTime
 
-        verify { zonedDateTimeOrNull() }
+        verify { zonedDateTimeOrValueNull() }
     }
 
     @Test

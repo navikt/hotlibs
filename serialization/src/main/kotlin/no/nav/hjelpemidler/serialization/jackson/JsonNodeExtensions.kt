@@ -7,13 +7,11 @@ import tools.jackson.databind.node.StringNode
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.time.ZonedDateTime
 import java.util.UUID
 
 val JsonNode?.isMissingOrNull: Boolean get() = this == null || isMissingNode || isNull
-
-inline fun <reified T : JsonNode, R : Any> JsonNode?.ifNode(transform: (T) -> R): R? =
-    takeIf { this is T }?.let { transform(it as T) }
 
 inline fun <T : Any> JsonNode?.ifStringNode(transform: (String) -> T): T? =
     takeIf { this is StringNode }?.let { transform(it.stringValue()) }
@@ -34,8 +32,11 @@ fun JsonNode?.localDateTimeValueOrNull(): LocalDateTime? = ifStringNode(LocalDat
 fun JsonNode.instantValue(): Instant = Instant.parse(stringValue())
 fun JsonNode?.instantValueOrNull(): Instant? = ifStringNode(Instant::parse)
 
-fun JsonNode.zonedDateTime(): ZonedDateTime = ZonedDateTime.parse(stringValue())
-fun JsonNode?.zonedDateTimeOrNull(): ZonedDateTime? = ifStringNode(ZonedDateTime::parse)
+fun JsonNode.offsetDateTimeValue(): OffsetDateTime = OffsetDateTime.parse(stringValue())
+fun JsonNode?.offsetDateTimeValueOrNull(): OffsetDateTime? = ifStringNode(OffsetDateTime::parse)
+
+fun JsonNode.zonedDateTimeValue(): ZonedDateTime = ZonedDateTime.parse(stringValue())
+fun JsonNode?.zonedDateTimeOrValueNull(): ZonedDateTime? = ifStringNode(ZonedDateTime::parse)
 
 inline fun <reified E : Enum<E>> JsonNode.enumValue(): E = enumValueOf<E>(stringValue())
 inline fun <reified E : Enum<E>> JsonNode?.enumValueOrNull(): E? = ifStringNode(::enumValueOf)
@@ -45,5 +46,7 @@ fun JsonNode?.fødselsnummerValueOrNull(): Fødselsnummer? = ifStringNode(::Fød
 
 inline fun <reified T : Any> JsonNode.value(): T = treeToValue<T>(this)
 inline fun <reified T : Any> JsonNode?.valueOrNull(): T? = treeToValueOrNull<T>(this)
+
+fun JsonNode.asMap() = treeToValue<Map<String, Any?>>(this)
 
 fun JsonNode.orNull(): JsonNode? = takeUnless(JsonNode::isMissingOrNull)
