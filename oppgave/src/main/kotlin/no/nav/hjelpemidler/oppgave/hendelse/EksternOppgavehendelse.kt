@@ -74,6 +74,8 @@ data class EksternOppgavehendelse(
             val isOppgavetypeHotsak: Boolean @JsonIgnore get() = oppgavetype in OPPGAVETYPER_HOTSAK
 
             enum class Prioritet {
+                KRITISK,
+
                 @JsonAlias("HOY")
                 HØY,
                 NORMAL,
