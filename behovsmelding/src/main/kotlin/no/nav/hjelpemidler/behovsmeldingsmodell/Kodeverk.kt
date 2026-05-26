@@ -29,6 +29,7 @@ enum class BehovsmeldingStatus {
     VEDTAKSRESULTAT_ANNET,
     UTSENDING_STARTET,
     VEDTAKSRESULTAT_HENLAGTBORTFALT,
+    VEDTAKSRESULTAT_HENLAGT,
 
     /**
      * Brukes når det endres fra brukerbekreftelse til fullmakt som en midlertidig status inntil
@@ -47,6 +48,7 @@ enum class BehovsmeldingStatus {
                 "IM" -> VEDTAKSRESULTAT_MUNTLIG_INNVILGET
                 "I", "INNVILGET" -> VEDTAKSRESULTAT_INNVILGET
                 "HB" -> VEDTAKSRESULTAT_HENLAGTBORTFALT
+                "HENLAGT" -> VEDTAKSRESULTAT_HENLAGT
                 else -> VEDTAKSRESULTAT_ANNET
             }
         }
