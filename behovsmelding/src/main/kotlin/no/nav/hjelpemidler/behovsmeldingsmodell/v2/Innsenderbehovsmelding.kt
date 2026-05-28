@@ -184,6 +184,7 @@ data class Innsender(
 data class Hjelpemidler(
     val hjelpemidler: List<Hjelpemiddel>,
     val tilbehør: List<Tilbehør> = emptyList(),
+    val produktkategorier: List<Produktkategori> = emptyList(),
     val totaltAntall: Int,
 ) : Iterable<Hjelpemiddel> by hjelpemidler {
     /**
@@ -230,6 +231,19 @@ data class Hjelpemiddel(
     override val artikkelnavn: String
         @JsonIgnore
         get() = produkt.artikkelnavn
+}
+
+data class Produktkategori(
+    val id: UUID,
+    val type: ProduktkategoriType,
+    val navn: String,
+    val delkontrakttittel: String,
+    val bruksarenaer: List<BruksarenaV2>,
+    val opplysninger: List<Opplysning>,
+)
+
+enum class ProduktkategoriType {
+    LYDOVERFØRINGSANLEGG
 }
 
 data class Bytte(
