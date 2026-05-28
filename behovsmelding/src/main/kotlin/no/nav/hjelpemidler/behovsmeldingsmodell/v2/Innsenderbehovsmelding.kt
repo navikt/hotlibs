@@ -358,10 +358,15 @@ data class OpplysningKey(
     val versjon: Int
 )
 
+/**
+ * innholdstype lagt til i ettertid. Den har derfor default verdi som gjenspeiler de
+ * gamle måtene å vise frem innholdet på.
+ */
 data class Opplysning(
     val key: OpplysningKey? = null,
     val ledetekst: LokalisertTekst,
     val innhold: List<Tekst>,
+    val innholdstype: OpplysningInnholdstype = if (innhold.size>1) OpplysningInnholdstype.LISTE else OpplysningInnholdstype.TEKST
 ) {
     constructor(ledetekst: LokalisertTekst, innhold: Tekst) : this(ledetekst = ledetekst, innhold = listOf(innhold))
 
@@ -377,6 +382,24 @@ data class Opplysning(
     }
 }
 
+enum class OpplysningInnholdstype {
+    /**
+     * Vises som en enkel tekst.
+     */
+    TEKST,
+
+    /**
+     * Vises som en punktliste
+     */
+    LISTE,
+
+    /**
+     * Vises med `ledetekst` + fritekst/forhåndsdefinertTekst.
+     * En linje per tekst.
+     */
+    NØKKEL_VERDI,
+}
+
 data class EnkelOpplysning(
     val ledetekst: LokalisertTekst,
     val innhold: LokalisertTekst,
@@ -386,6 +409,7 @@ data class Tekst(
     val fritekst: String? = null,
     val forhåndsdefinertTekst: LokalisertTekst? = null,
     val begrepsforklaring: LokalisertTekst? = null, // feks forklaring av "avlastningsbolig". Ikke relevant for fritekst.
+    val ledetekst: LokalisertTekst? = null, // Brukes kun ved innholdstype NØKKEL_VERDI
 ) {
     constructor(forhåndsdefinertTekst: LokalisertTekst) : this(
         forhåndsdefinertTekst = forhåndsdefinertTekst,
