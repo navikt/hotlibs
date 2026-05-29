@@ -237,6 +237,7 @@ data class Produktkategori(
     val id: UUID,
     val type: ProduktkategoriType,
     val navn: String,
+    val antall: Int,
     val delkontrakttittel: String,
     val bruksarenaer: List<BruksarenaV2>,
     val opplysninger: List<Opplysning>,
