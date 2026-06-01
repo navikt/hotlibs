@@ -117,6 +117,7 @@ data class Levering(
     val annenUtleveringsadresse: Veiadresse?,
     val annenUtleveringskommune: Kommune? = null,
     val annenUtleveringsbydel: Bydel? = null,
+    val annenUtleveringMottaker: String? = null,
 
     // utleveringKontaktperson == null => alle hjm. er allerede utlevert
     val utleveringKontaktperson: KontaktpersonV2?,
