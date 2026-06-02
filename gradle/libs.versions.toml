@@ -12,6 +12,7 @@ confluent = "8.2.1"
 # Nyeste versjon finner du her: https://github.com/navikt/hm-contract-pdl-avro/packages
 contractPdlAvro = "1.0.3"
 cyclonedx = "3.2.4"
+dbScheduler = "16.12.0"
 ehcache = "3.12.0"
 flyway = "12.6.2"
 graphql = "9.2.0"
@@ -103,6 +104,7 @@ commons-csv = { module = "org.apache.commons:commons-csv", version.ref = "common
 commons-io = { module = "commons-io:commons-io", version.ref = "commons-io" }
 commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "commons-lang" }
 commons-text = { module = "org.apache.commons:commons-text", version.ref = "commons-text" }
+dbScheduler = { module = "com.github.kagkarlsson:db-scheduler", version.ref = "dbScheduler" }
 ehcache = { module = "org.ehcache:ehcache", version.ref = "ehcache" }
 flyway-core = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }
 flyway-database-oracle = { module = "org.flywaydb:flyway-database-oracle", version.ref = "flyway" }
