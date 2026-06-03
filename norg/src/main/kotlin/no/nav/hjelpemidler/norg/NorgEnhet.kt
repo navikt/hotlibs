@@ -1,4 +1,4 @@
-package no.nav.hjelpemidler.saksbehandling.integrations.norg
+package no.nav.hjelpemidler.norg
 
 import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonIgnore

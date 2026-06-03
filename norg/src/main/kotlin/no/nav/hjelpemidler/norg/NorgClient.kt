@@ -19,7 +19,6 @@ import no.nav.hjelpemidler.domain.enhet.Enhet
 import no.nav.hjelpemidler.domain.enhet.Enhetsnummer
 import no.nav.hjelpemidler.domain.enhet.TilknyttetEnhet
 import no.nav.hjelpemidler.http.createHttpClient
-import no.nav.hjelpemidler.saksbehandling.integrations.norg.NorgEnhet
 
 private val log = KotlinLogging.logger {}
 
@@ -57,6 +56,8 @@ class NorgClient(
         log.debug { "Henter enhet med url: '$url', enhetsnummer: '$id'" }
         return client.get(url).body()
     }
+
+    suspend fun hentNorgEnhet(id: String): NorgEnhet = hentNorgEnhet(Enhetsnummer(id))
 
     suspend fun hentNorgEnhet(tilknyttetEnhet: TilknyttetEnhet): NorgEnhet = hentNorgEnhet(tilknyttetEnhet.enhetsnummer)
 
