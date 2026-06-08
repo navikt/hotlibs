@@ -48,7 +48,7 @@ enum class BehovsmeldingStatus {
                 "IM" -> VEDTAKSRESULTAT_MUNTLIG_INNVILGET
                 "I", "INNVILGET" -> VEDTAKSRESULTAT_INNVILGET
                 "HB" -> VEDTAKSRESULTAT_HENLAGTBORTFALT
-                "HENLAGT" -> VEDTAKSRESULTAT_HENLAGT //manuelle henleggelser
+                "HENLAGT_SØKNAD_TRUKKET", "HENLAGT_FEIL_HJELPEMIDDEL", "HENLAGT_FLERE_SØKNADER_SAMME_BEHOV", "HENLAGT_ANNET" -> VEDTAKSRESULTAT_HENLAGT
                 else -> VEDTAKSRESULTAT_ANNET
             }
         }
