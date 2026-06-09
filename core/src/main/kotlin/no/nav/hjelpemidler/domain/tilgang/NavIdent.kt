@@ -6,7 +6,7 @@ import no.nav.hjelpemidler.validation.Validator
 /**
  * Nav-ident med følgende format: `A123456`
  */
-class NavIdent(value: String) : UtførtAvId(value) {
+class NavIdent(value: String) : UtførtAvId(value.uppercase()) {
     init {
         require(erGyldig(value)) { "Ugyldig Nav-ident: '$value'" }
     }
@@ -16,7 +16,7 @@ class NavIdent(value: String) : UtførtAvId(value) {
         private val RANGE: CharRange = 'A'..'Z'
 
         override fun erGyldig(value: String): Boolean =
-            value.length == LENGTH && value[0] in RANGE && value.drop(1).isInteger()
+            value.length == LENGTH && value[0].uppercaseChar() in RANGE && value.drop(1).isInteger()
 
         val UKJENT = NavIdent("Z999999")
     }
