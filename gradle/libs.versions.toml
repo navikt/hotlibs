@@ -19,7 +19,7 @@ graphql = "10.0.0"
 graphql-java = "26.0"
 h2 = "2.4.240"
 handlebars = "4.5.1"
-hikaricp = "7.0.2"
+hikaricp = "7.1.0"
 htmlSanitizer = "20260313.1"
 jackson = "3.1.4"
 jackson2 = "2.22.0"
@@ -32,7 +32,7 @@ jsoup = "1.22.2"
 junit = "6.1.0"
 kafka = "4.2.1"
 konfig = "1.6.10.0"
-kotest = "6.1.11"
+kotest = "6.2.0"
 kotest-ktor = "2.0.0"
 kotlin = "2.3.21"
 kotlin-logging = "8.0.4"
@@ -59,7 +59,7 @@ postgresql = "42.7.11"
 prometheus = "1.8.0"
 protobuf = "4.35.1"
 rapidsAndRivers = "2026051812441779101082"
-redisson = "4.5.0"
+redisson = "4.6.0"
 shadow = "8.1.1"
 slf4j = "2.0.18"
 spotless = "8.6.0"
@@ -88,7 +88,7 @@ ktfmt = { id = "com.ncorti.ktfmt.gradle", version.ref = "ktfmtGradle" }
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
 openapi = { id = "org.openapi.generator", version.ref = "openapi" }
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
-spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+spotless = "com.diffplug.spotless:8.7.0"
 version-catalog-update = { id = "nl.littlerobots.version-catalog-update", version.ref = "versionCatalogUpdate" }
 versions = { id = "com.github.ben-manes.versions", version.ref = "versions" }
 
