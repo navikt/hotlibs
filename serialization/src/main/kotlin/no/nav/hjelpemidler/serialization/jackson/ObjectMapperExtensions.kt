@@ -1,16 +1,15 @@
 package no.nav.hjelpemidler.serialization.jackson
 
 import no.nav.hjelpemidler.io.useResourceAsStream
+import tools.jackson.databind.BeanDescription
 import tools.jackson.databind.JavaType
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.ObjectMapper
 import tools.jackson.databind.node.MissingNode
 import tools.jackson.databind.node.NullNode
+import tools.jackson.module.kotlin.jacksonTypeRef
 import tools.jackson.module.kotlin.readValue
 import java.nio.file.Path
-import kotlin.reflect.KType
-import kotlin.reflect.jvm.javaType
-import kotlin.reflect.typeOf
 
 fun ObjectMapper.readResourceAsTree(name: String): JsonNode =
     this::class.useResourceAsStream<JsonNode>(name, ::readTree)
@@ -27,8 +26,18 @@ fun <T> ObjectMapper.writeValueAsStringOrNull(value: T): String? = when (value) 
     else -> writeValueAsString(value)
 }
 
-fun ObjectMapper.constructType(type: KType): JavaType =
-    constructType(type.javaType)
+inline fun <reified T> ObjectMapper.constructType(): JavaType = constructType(jacksonTypeRef<T>())
 
-inline fun <reified T> ObjectMapper.constructType(): JavaType =
-    constructType(typeOf<T>())
+inline fun <reified T> ObjectMapper.introspectForSerialization(): BeanDescription {
+    val type = constructType<T>()
+    val introspector = serializationConfig().classIntrospectorInstance()
+    val annotatedClass = introspector.introspectClassAnnotations(type)
+    return introspector.introspectForSerialization(type, annotatedClass)
+}
+
+inline fun <reified T> ObjectMapper.introspectForDeserialization(): BeanDescription {
+    val type = constructType<T>()
+    val introspector = deserializationConfig().classIntrospectorInstance()
+    val annotatedClass = introspector.introspectClassAnnotations(type)
+    return introspector.introspectForDeserialization(type, annotatedClass)
+}
