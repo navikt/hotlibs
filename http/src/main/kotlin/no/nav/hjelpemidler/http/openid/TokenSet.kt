@@ -41,4 +41,7 @@ data class TokenSet(
         (expiresAt - leeway).let {
             it == at || it.isBefore(at)
         }
+
+    @JsonIgnore
+    fun asTokenSetProvider(): TokenSetProvider = TokenSetProvider { this }
 }
