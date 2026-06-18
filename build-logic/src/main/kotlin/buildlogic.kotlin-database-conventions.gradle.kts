@@ -21,94 +21,38 @@ val postgresql: SourceSet = sourceSets.create("postgresql") // inkluderer flyway
 val testcontainers: SourceSet = sourceSets.create("testcontainers")
 
 java {
-    registerFeature(h2.name) {
-        usingSourceSet(h2)
-        withSourcesJar()
-    }
+    registerFeature(h2)
+    registerFeature(ktor)
+    registerFeature(oracle)
+    registerFeature(postgresql)
+    registerFeature(testcontainers)
+}
 
-    registerFeature(ktor.name) {
-        usingSourceSet(ktor)
-        withSourcesJar()
-    }
-
-    registerFeature(oracle.name) {
-        usingSourceSet(oracle)
-        withSourcesJar()
-    }
-
-    registerFeature(postgresql.name) {
-        usingSourceSet(postgresql)
-        withSourcesJar()
-    }
-
-    registerFeature(testcontainers.name) {
-        usingSourceSet(testcontainers)
-        withSourcesJar()
-    }
+fun JavaPluginExtension.registerFeature(sourceSet: SourceSet) = registerFeature(sourceSet.name) {
+    usingSourceSet(sourceSet)
+    withSourcesJar()
 }
 
 @Suppress("UnstableApiUsage")
 testing {
-    suites {
-        val test by getting(JvmTestSuite::class)
-        val h2Test by registering(JvmTestSuite::class) {
-            dependencies {
-                implementation(testFixtures(project(path)))
-                implementation(project(path)) {
-                    capabilities {
-                        requireCapability("${project.group}:${project.name}-${h2.name}")
-                    }
-                }
-            }
+    val test by suites.getting(JvmTestSuite::class)
+    val h2Test by featureTest(h2)
+    val oracleTest by featureTest(oracle)
+    val postgresqlTest by featureTest(postgresql, testcontainers)
+}
 
-            targets {
-                all {
-                    testTask.configure {
-                        shouldRunAfter(test)
-                    }
+@Suppress("UnstableApiUsage")
+fun TestingExtension.featureTest(vararg sourceSets: SourceSet) = suites.registering(JvmTestSuite::class) {
+    val currentProject = project
+    dependencies {
+        implementation(project())
+        sourceSets.forEach { sourceSet ->
+            implementation(project()) {
+                capabilities {
+                    requireCapability("${currentProject.group}:${currentProject.name}-${sourceSet.name}")
                 }
             }
         }
-        val oracleTest by registering(JvmTestSuite::class) {
-            dependencies {
-                implementation(testFixtures(project(path)))
-                implementation(project(path)) {
-                    capabilities {
-                        requireCapability("${project.group}:${project.name}-${oracle.name}")
-                    }
-                }
-            }
-
-            targets {
-                all {
-                    testTask.configure {
-                        shouldRunAfter(test)
-                    }
-                }
-            }
-        }
-        val postgresqlTest by registering(JvmTestSuite::class) {
-            dependencies {
-                implementation(testFixtures(project(path)))
-                implementation(project(path)) {
-                    capabilities {
-                        requireCapability("${project.group}:${project.name}-${postgresql.name}")
-                    }
-                }
-                implementation(project(path)) {
-                    capabilities {
-                        requireCapability("${project.group}:${project.name}-${testcontainers.name}")
-                    }
-                }
-            }
-
-            targets {
-                all {
-                    testTask.configure {
-                        shouldRunAfter(test)
-                    }
-                }
-            }
-        }
+        implementation(testFixtures(project()))
     }
 }
