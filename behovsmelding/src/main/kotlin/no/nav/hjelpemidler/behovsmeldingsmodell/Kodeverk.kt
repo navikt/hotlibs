@@ -100,7 +100,6 @@ enum class Boform {
 }
 
 enum class BrukersituasjonVilkår {
-
     @Deprecated("Ikke lenger et valg i hm-soknad")
     NEDSATT_FUNKSJON,
 
@@ -125,7 +124,6 @@ enum class BrukersituasjonVilkår {
 }
 
 enum class BrukersituasjonVilkårtype {
-
     @Deprecated("Ikke lenger et valg i hm-soknad")
     NEDSATT_FUNKSJON,
 
