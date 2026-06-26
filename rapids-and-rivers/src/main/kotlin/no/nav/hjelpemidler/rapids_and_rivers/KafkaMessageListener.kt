@@ -30,7 +30,7 @@ private val log = KotlinLogging.logger {}
  *         ): Boolean = false
  *
  *         override suspend fun onMessage(
- *             message: Any,
+ *             message: SakOpprettetMessage,
  *             context: ExtendedMessageContext,
  *             metadata: MessageMetadata,
  *             meterRegistry: MeterRegistry,
