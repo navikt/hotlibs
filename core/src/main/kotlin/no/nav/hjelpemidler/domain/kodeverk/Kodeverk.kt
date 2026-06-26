@@ -9,6 +9,7 @@ package no.nav.hjelpemidler.domain.kodeverk
  */
 interface Kodeverk<E : Enum<E>> {
     val name: String
+    val beskrivelse: String get() = name
 }
 
 /**
