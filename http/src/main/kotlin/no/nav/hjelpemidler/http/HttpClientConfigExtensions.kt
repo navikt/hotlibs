@@ -14,7 +14,7 @@ import tools.jackson.databind.json.JsonMapper
 
 fun HttpClientConfig<*>.jackson(objectMapper: ObjectMapper = jsonMapper) =
     install(ContentNegotiation) {
-        register(ContentType.Application.Json, JacksonConverter(objectMapper, streamRequestBody = true))
+        register(ContentType.Application.Json, JacksonConverter(objectMapper, streamBody = true))
     }
 
 fun HttpClientConfig<*>.jackson(block: JsonMapper.Builder.() -> Unit = {}) =
