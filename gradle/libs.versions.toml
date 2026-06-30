@@ -62,7 +62,7 @@ rapidsAndRivers = "2026051812441779101082"
 redisson = "4.6.1"
 shadow = "8.1.1"
 slf4j = "2.0.18"
-spotless = "8.7.0"
+spotless = "8.8.0"
 swagger = "2.2.52"
 swaggerParser = "2.1.45"
 tbdLibs = "20260629.1519"
@@ -88,7 +88,7 @@ ktfmt = { id = "com.ncorti.ktfmt.gradle", version.ref = "ktfmtGradle" }
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
 openapi = { id = "org.openapi.generator", version.ref = "openapi" }
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
-spotless = "com.diffplug.spotless:8.7.0"
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 version-catalog-update = { id = "nl.littlerobots.version-catalog-update", version.ref = "versionCatalogUpdate" }
 versions = { id = "com.github.ben-manes.versions", version.ref = "versions" }
 
