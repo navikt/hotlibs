@@ -13,6 +13,8 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
+import no.nav.hjelpemidler.collections.filterNotNull
+import no.nav.hjelpemidler.collections.mapOfNotNull
 import no.nav.hjelpemidler.configuration.Environment
 import tools.jackson.core.JsonGenerator
 import tools.jackson.core.JsonParser
@@ -50,6 +52,14 @@ data class ProblemDetails(
         } else {
             this
         }
+
+    fun asMap(): Map<String, Any> = mapOfNotNull(
+        "type" to type.toString(),
+        "title" to title,
+        "status" to status.value,
+        "detail" to detail,
+        "instance" to instance?.toString(),
+    ) + extensions.filterNotNull()
 
     companion object {
         val DEFAULT_TYPE: URI = URI.create("https://teamdigihot.intern.nav.no/problems/unknown")
