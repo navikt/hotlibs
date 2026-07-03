@@ -24,7 +24,7 @@ class ProblemDetailsTest {
                     //language=JSON
                     """
                         {
-                          "type": "about:blank",
+                          "type": "https://teamdigihot.intern.nav.no/problems/unknown",
                           "status": 401,
                           "cause": "Ingen tilgang!"
                         }
@@ -49,13 +49,19 @@ class ProblemDetailsTest {
 
     @Test
     fun `Lager forventet JSON for status`() {
-        val details = ProblemDetails(HttpStatusCode.Forbidden, "Ingen tilgang!", extensions = mapOf("test" to null))
+        val status = HttpStatusCode.Forbidden
+        val details = ProblemDetails(
+            title = status.description,
+            status = status,
+            detail = "Ingen tilgang!",
+            extensions = mutableMapOf("test" to null)
+        )
 
         val detailsJson = valueToJson(details)
 
         detailsJson shouldEqualSpecifiedJson """
             {
-              "type" : "io.ktor.http.HttpStatusCode",
+              "type" : "https://teamdigihot.intern.nav.no/problems/unknown",
               "title" : "Forbidden",
               "status" : 403,
               "detail": "Ingen tilgang!"
@@ -66,14 +72,19 @@ class ProblemDetailsTest {
     @Test
     fun `Lager forventet JSON for throwable`() {
         val throwable = TestException(RuntimeException("Og dette er grunnen!"))
-        val details = ProblemDetails(throwable)
+        val details = ProblemDetails(
+            title = throwable.status.description,
+            status = throwable.status,
+            detail = throwable.message,
+            extensions = throwable.asProblemDetailsExtensions(),
+        )
 
         val detailsJson = valueToJson(details)
 
         detailsJson shouldEqualSpecifiedJson """
             {
-              "type" : "no.nav.hjelpemidler.http.TestException",
-              "title" : "TestException",
+              "type" : "https://teamdigihot.intern.nav.no/problems/unknown",
+              "title" : "Service Unavailable",
               "status" : 503,
               "detail" : "Noe gikk galt!",
               "cause" : "java.lang.RuntimeException: Og dette er grunnen!"
