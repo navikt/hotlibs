@@ -2,7 +2,6 @@ package no.nav.hjelpemidler.http
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
-import com.fasterxml.jackson.annotation.JsonDeserializeAs
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonInclude.Include
 import io.ktor.client.HttpClientConfig
@@ -30,7 +29,6 @@ import java.net.URI
  * @see <a href="https://datatracker.ietf.org/doc/html/rfc9457">RFC 9457 - Problem Details for HTTP APIs</a>
  */
 @JsonInclude(Include.NON_NULL)
-@JsonDeserializeAs(DefaultProblemDetails::class)
 interface ProblemDetails {
     val type: URI
     val title: String?
