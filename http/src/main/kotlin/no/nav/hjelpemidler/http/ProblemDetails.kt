@@ -26,6 +26,10 @@ import tools.jackson.databind.deser.std.StdScalarDeserializer
 import tools.jackson.databind.ser.std.StdScalarSerializer
 import java.net.URI
 
+/**
+ * @see <a href="https://datatracker.ietf.org/doc/html/rfc9457">RFC 9457 - Problem Details for HTTP APIs</a>
+ */
+@JsonInclude(Include.NON_NULL)
 @JsonDeserializeAs(DefaultProblemDetails::class)
 interface ProblemDetails {
     val type: URI
@@ -42,10 +46,6 @@ interface ProblemDetails {
     }
 }
 
-/**
- * @see <a href="https://datatracker.ietf.org/doc/html/rfc9457">RFC 9457 - Problem Details for HTTP APIs</a>
- */
-@JsonInclude(Include.NON_NULL)
 data class DefaultProblemDetails(
     override val type: URI = ProblemDetails.DEFAULT_TYPE,
     override val title: String? = null,
