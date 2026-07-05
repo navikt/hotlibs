@@ -50,7 +50,7 @@ class ProblemDetailsTest {
     @Test
     fun `Lager forventet JSON for status`() {
         val status = HttpStatusCode.Forbidden
-        val details = ProblemDetails(
+        val details = DefaultProblemDetails(
             title = status.description,
             status = status,
             detail = "Ingen tilgang!",
@@ -72,7 +72,7 @@ class ProblemDetailsTest {
     @Test
     fun `Lager forventet JSON for throwable`() {
         val throwable = TestException(RuntimeException("Og dette er grunnen!"))
-        val details = ProblemDetails(
+        val details = DefaultProblemDetails(
             title = throwable.status.description,
             status = throwable.status,
             detail = throwable.message,

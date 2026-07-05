@@ -2,9 +2,9 @@ package no.nav.hjelpemidler.http
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonDeserializeAs
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonInclude.Include
-import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.call.body
 import io.ktor.client.plugins.HttpResponseValidator
@@ -26,27 +26,41 @@ import tools.jackson.databind.deser.std.StdScalarDeserializer
 import tools.jackson.databind.ser.std.StdScalarSerializer
 import java.net.URI
 
+@JsonDeserializeAs(DefaultProblemDetails::class)
+interface ProblemDetails {
+    val type: URI
+    val title: String?
+
+    @get:JsonSerialize(using = HttpStatusCodeSerializer::class)
+    @get:JsonDeserialize(using = HttpStatusCodeDeserializer::class)
+    val status: HttpStatusCode
+    val detail: String?
+    val instance: URI?
+
+    companion object {
+        val DEFAULT_TYPE: URI = URI.create("https://teamdigihot.intern.nav.no/problems/unknown")
+    }
+}
+
 /**
  * @see <a href="https://datatracker.ietf.org/doc/html/rfc9457">RFC 9457 - Problem Details for HTTP APIs</a>
  */
 @JsonInclude(Include.NON_NULL)
-data class ProblemDetails(
-    val type: URI = DEFAULT_TYPE,
-    val title: String? = null,
-    @JsonSerialize(using = HttpStatusCodeSerializer::class)
-    @JsonDeserialize(using = HttpStatusCodeDeserializer::class)
-    val status: HttpStatusCode = HttpStatusCode.InternalServerError,
-    val detail: String? = null,
-    val instance: URI? = null,
+data class DefaultProblemDetails(
+    override val type: URI = ProblemDetails.DEFAULT_TYPE,
+    override val title: String? = null,
+    override val status: HttpStatusCode = HttpStatusCode.InternalServerError,
+    override val detail: String? = null,
+    override val instance: URI? = null,
     @JsonAnySetter
     @get:JsonAnyGetter
     @get:JsonInclude(Include.NON_EMPTY, content = Include.NON_NULL)
     val extensions: Map<String, Any?> = emptyMap(),
-) {
+) : ProblemDetails {
     /**
      * Fjern [detail] hvis [HttpStatusCode.Unauthorized] eller [HttpStatusCode.Forbidden].
      */
-    fun sanitize(): ProblemDetails =
+    fun sanitize(): DefaultProblemDetails =
         if (Environment.current.isProd && status in SENSITIVE_STATUSES) {
             copy(detail = null)
         } else {
@@ -62,8 +76,6 @@ data class ProblemDetails(
     ) + extensions.filterNotNull()
 
     companion object {
-        val DEFAULT_TYPE: URI = URI.create("https://teamdigihot.intern.nav.no/problems/unknown")
-
         private val SENSITIVE_STATUSES = setOf(
             HttpStatusCode.Unauthorized,
             HttpStatusCode.Forbidden,
@@ -71,18 +83,17 @@ data class ProblemDetails(
     }
 }
 
-suspend fun HttpResponse.problemDetails(): ProblemDetails? {
+suspend inline fun <reified T : ProblemDetails> HttpResponse.problemDetails(): T? {
     val contentType = contentType() ?: return null
     return if (contentType.withoutParameters() == ContentType.Application.ProblemJson) {
-        runCatching { body<ProblemDetails>() }
-            .onFailure { log.warn(it) { "Kunne ikke lese ProblemDetails fra HttpResponse" } }
-            .getOrNull()
+        body<T>()
     } else {
         null
     }
 }
 
-private val log = KotlinLogging.logger {}
+@JvmName("defaultProblemDetails")
+suspend fun HttpResponse.problemDetails() = problemDetails<DefaultProblemDetails>()
 
 private class HttpStatusCodeSerializer : StdScalarSerializer<HttpStatusCode>(HttpStatusCode::class.java) {
     override fun serialize(value: HttpStatusCode, generator: JsonGenerator, context: SerializationContext) {
@@ -100,17 +111,28 @@ fun Throwable.asProblemDetailsExtensions(): Map<String, Any?> = mapOf(
     "stackTrace" to stackTraceToString(),
 )
 
+private val ProblemDetails.message: String?
+    get() = when {
+        title != null && detail != null -> "$title: $detail"
+        title != null -> title
+        detail != null -> detail
+        else -> null
+    }
+
 class ProblemDetailsException(
     val details: ProblemDetails,
     cause: Throwable? = null,
-) : RuntimeException(cause)
+) : RuntimeException(details.message, cause)
 
-fun HttpClientConfig<*>.problemDetailsExceptionHandler() {
+inline fun <reified T : ProblemDetails> HttpClientConfig<*>.problemDetailsExceptionHandler() {
     HttpResponseValidator {
         handleResponseException { cause ->
             if (cause !is ResponseException) return@handleResponseException
-            val details = cause.response.problemDetails() ?: return@handleResponseException
+            val details = cause.response.problemDetails<T>() ?: return@handleResponseException
             throw ProblemDetailsException(details, cause)
         }
     }
 }
+
+@JvmName("defaultProblemDetailsExceptionHandler")
+fun HttpClientConfig<*>.problemDetailsExceptionHandler() = problemDetailsExceptionHandler<DefaultProblemDetails>()
