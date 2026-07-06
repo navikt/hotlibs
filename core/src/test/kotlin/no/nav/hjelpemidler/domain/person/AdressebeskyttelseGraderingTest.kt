@@ -9,13 +9,13 @@ import kotlin.test.Test
 
 class AdressebeskyttelseGraderingTest {
     @Test
-    fun `STRENGT_FORTROLIG_UTLAND er strengeste gradering`() {
+    fun `STRENGT_FORTROLIG_UTLAND er gjeldende gradering`() {
         enumSetOf(
             AdressebeskyttelseGradering.UGRADERT,
             AdressebeskyttelseGradering.FORTROLIG,
             AdressebeskyttelseGradering.STRENGT_FORTROLIG,
             AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND,
-        ).strengeste.should { gradering ->
+        ).gjeldende.should { gradering ->
             gradering shouldBe AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND
         }
     }
@@ -25,18 +25,18 @@ class AdressebeskyttelseGraderingTest {
         enumSetOf(
             AdressebeskyttelseGradering.UGRADERT,
             AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND,
-        ).strengeste.should { gradering ->
+        ).gjeldende.should { gradering ->
             gradering shouldBe AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND
         }
     }
 
     @Test
-    fun `STRENGT_FORTROLIG er strengeste gradering`() {
+    fun `STRENGT_FORTROLIG er gjeldende gradering`() {
         enumSetOf(
             AdressebeskyttelseGradering.UGRADERT,
             AdressebeskyttelseGradering.FORTROLIG,
             AdressebeskyttelseGradering.STRENGT_FORTROLIG,
-        ).strengeste.should { gradering ->
+        ).gjeldende.should { gradering ->
             gradering shouldBe AdressebeskyttelseGradering.STRENGT_FORTROLIG
         }
     }
@@ -46,17 +46,17 @@ class AdressebeskyttelseGraderingTest {
         enumSetOf(
             AdressebeskyttelseGradering.UGRADERT,
             AdressebeskyttelseGradering.STRENGT_FORTROLIG,
-        ).strengeste.should { gradering ->
+        ).gjeldende.should { gradering ->
             gradering shouldBe AdressebeskyttelseGradering.STRENGT_FORTROLIG
         }
     }
 
     @Test
-    fun `FORTROLIG er strengeste gradering`() {
+    fun `FORTROLIG er gjeldende gradering`() {
         enumSetOf(
             AdressebeskyttelseGradering.UGRADERT,
             AdressebeskyttelseGradering.FORTROLIG,
-        ).strengeste.should { gradering ->
+        ).gjeldende.should { gradering ->
             gradering shouldBe AdressebeskyttelseGradering.FORTROLIG
         }
     }
@@ -64,7 +64,7 @@ class AdressebeskyttelseGraderingTest {
     @Test
     fun `Tomt sett og sett av UGRADERT gir UGRADERT`() {
         setOf(emptyEnumSet(), enumSetOf(AdressebeskyttelseGradering.UGRADERT))
-            .map(Set<AdressebeskyttelseGradering>::strengeste)
+            .map(Set<AdressebeskyttelseGradering>::gjeldende)
             .forAll { gradering ->
                 gradering shouldBe AdressebeskyttelseGradering.UGRADERT
             }
