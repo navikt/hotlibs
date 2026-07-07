@@ -12,10 +12,8 @@ fun HttpMessageBuilder.bearerAuth(tokenSet: TokenSet) = bearerAuth(tokenSet.acce
  * Sett `target` for request.
  */
 fun HttpRequestBuilder.target(target: String) {
-    attributes[TargetKey] = TargetValue(target)
+    attributes[TargetValue.KEY] = TargetValue(target)
 }
-
-internal data object AsApplicationValue
 
 /**
  * Gjør request som applikasjon, uansett kontekst.
@@ -24,7 +22,7 @@ internal data object AsApplicationValue
  * @see [OpenIDContext]
  */
 fun HttpRequestBuilder.asApplication() {
-    attributes[AsApplicationKey] = AsApplicationValue
+    attributes[AsApplicationValue.KEY] = AsApplicationValue
 }
 
 /**
@@ -33,7 +31,7 @@ fun HttpRequestBuilder.asApplication() {
  * @see [HttpRequestBuilder.asApplication]
  */
 fun HttpRequestBuilder.onBehalfOf(userToken: String) {
-    attributes[UserTokenKey] = UserTokenValue(userToken)
+    attributes[UserTokenValue.KEY] = UserTokenValue(userToken)
 }
 
 /**
@@ -46,13 +44,21 @@ fun HttpRequestBuilder.onBehalfOf(userToken: DecodedJWT) = onBehalfOf(userToken.
 @JvmInline
 internal value class TargetValue(private val value: String) {
     override fun toString(): String = value
+
+    companion object {
+        val KEY = AttributeKey<TargetValue>("Target")
+    }
+}
+
+internal data object AsApplicationValue {
+    val KEY = AttributeKey<AsApplicationValue>("AsApplication")
 }
 
 @JvmInline
 internal value class UserTokenValue(private val value: String) {
     override fun toString(): String = value
-}
 
-internal val TargetKey = AttributeKey<TargetValue>("Target")
-internal val AsApplicationKey = AttributeKey<AsApplicationValue>("AsApplication")
-internal val UserTokenKey = AttributeKey<UserTokenValue>("UserToken")
+    companion object {
+        val KEY = AttributeKey<UserTokenValue>("UserToken")
+    }
+}

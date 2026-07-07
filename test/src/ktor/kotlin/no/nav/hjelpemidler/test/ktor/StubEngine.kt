@@ -9,9 +9,6 @@ import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.config.MapApplicationConfig
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.server.plugins.statuspages.StatusPages
-import io.ktor.server.request.httpMethod
-import io.ktor.server.request.uri
 import io.ktor.server.testing.ApplicationTestBuilder
 import io.ktor.server.testing.ExternalServicesBuilder
 import no.nav.hjelpemidler.serialization.jackson.jsonMapper
@@ -44,11 +41,6 @@ fun ExternalServicesBuilder.baseUrl(
     hosts(host) {
         install(ContentNegotiation) {
             register(ContentType.Application.Json, JacksonConverter(jsonMapper))
-        }
-        install(StatusPages) {
-            unhandled {
-                log.warn("Mangler svar for: '${it.request.httpMethod.value} ${it.request.uri}'")
-            }
         }
         block(path)
     }

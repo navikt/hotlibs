@@ -8,7 +8,7 @@ private val log = KotlinLogging.logger {}
 
 class TokenSetProviderFactory internal constructor(private val client: TexasClient) {
     private suspend fun openIDContext() =
-        currentCoroutineContext()[OpenIDContext] ?: OpenIDContext(asApplication = false, userToken = null)
+        currentCoroutineContext()[OpenIDContext] ?: OpenIDContext(isApplication = false, userToken = null)
 
     /**
      * [TokenSetProvider] som alltid henter Machine-To-Machine-token (M2M-token) for [defaultTarget] (eller overstyrt target).
@@ -51,7 +51,7 @@ class TokenSetProviderFactory internal constructor(private val client: TexasClie
             val (provider, reason) = when {
                 request.asApplication -> applicationProvider to "request.asApplication er sann"
                 !request.userToken.isNullOrBlank() -> userProvider to "request.userToken er satt"
-                openIDContext.asApplication -> applicationProvider to "openIDContext.asApplication er sann"
+                openIDContext.isApplication -> applicationProvider to "openIDContext.isApplication er sann"
                 !openIDContext.userToken.isNullOrBlank() -> userProvider to "openIDContext.userToken er satt"
                 else -> applicationProvider to "fallback til applicationProvider"
             }
@@ -61,6 +61,6 @@ class TokenSetProviderFactory internal constructor(private val client: TexasClie
     }
 }
 
-private val HttpRequestBuilder.target: String? get() = attributes.getOrNull(TargetKey)?.toString()
-private val HttpRequestBuilder.asApplication: Boolean get() = attributes.getOrNull(AsApplicationKey) != null
-private val HttpRequestBuilder.userToken: String? get() = attributes.getOrNull(UserTokenKey)?.toString()
+private val HttpRequestBuilder.target: String? get() = attributes.getOrNull(TargetValue.KEY)?.toString()
+private val HttpRequestBuilder.asApplication: Boolean get() = attributes.getOrNull(AsApplicationValue.KEY) != null
+private val HttpRequestBuilder.userToken: String? get() = attributes.getOrNull(UserTokenValue.KEY)?.toString()
