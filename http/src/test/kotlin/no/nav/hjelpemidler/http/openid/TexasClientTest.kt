@@ -34,7 +34,7 @@ class TexasClientTest {
 
         val tokenSet = client.token(identityProvider, target)
 
-        client.asOpenIDClient(identityProvider).grant(target) shouldBe tokenSet
+        tokenSet.accessToken shouldBe "accessToken"
     }
 
     @Test
@@ -57,7 +57,7 @@ class TexasClientTest {
 
         val tokenSet = client.exchange(identityProvider, target, userToken)
 
-        client.asOpenIDClient(identityProvider).grant(target, userToken) shouldBe tokenSet
+        tokenSet.accessToken shouldBe "accessToken"
     }
 
     @Test

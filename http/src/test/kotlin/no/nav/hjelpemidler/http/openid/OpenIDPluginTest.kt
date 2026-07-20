@@ -14,7 +14,10 @@ import kotlin.test.Test
 import kotlin.time.Duration.Companion.hours
 
 class OpenIDPluginTest {
-    private val userOpenIDContext = OpenIDContext(false, "userTokenFromContext")
+    private val userPrincipalContext = AuthenticationContext(object : AuthenticatedUser {
+        override val userToken: String get() = ""
+        override fun getName(): String = "testUser"
+    })
 
     @Test
     fun `Skal hente og bruke access token fra klient`() = runTest {
@@ -41,7 +44,7 @@ class OpenIDPluginTest {
             openID(IdentityProvider.ENTRA_ID, "test")
         }
 
-        val response = withContext(userOpenIDContext) {
+        val response = withContext(userPrincipalContext) {
             client.get("/sak/1")
         }
 

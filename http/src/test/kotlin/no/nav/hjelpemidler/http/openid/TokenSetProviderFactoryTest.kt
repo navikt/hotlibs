@@ -16,8 +16,11 @@ class TokenSetProviderFactoryTest {
     private val defaultTarget = "test1"
     private val factory = TokenSetProviderFactory(client)
 
-    private val userOpenIDContext = OpenIDContext(false, "userTokenFromContext")
-    private val applicationOpenIDContext = OpenIDContext(true, null)
+    private val applicationPrincipalContext = AuthenticationContext(AuthenticatedApplication("testApplication"))
+    private val userPrincipalContext = AuthenticationContext(object : AuthenticatedUser {
+        override val userToken: String get() = ""
+        override fun getName(): String = "testUser"
+    })
 
     @Nested
     inner class Application {
@@ -72,9 +75,9 @@ class TokenSetProviderFactoryTest {
 
         @Test
         fun `Gjør token exchange med userToken i context`() = runTest {
-            val userTokenFromContext = userOpenIDContext.userToken.shouldNotBeNull()
+            val userTokenFromContext = userPrincipalContext.principal.userToken.shouldNotBeNull()
 
-            withContext(userOpenIDContext) {
+            withContext(userPrincipalContext) {
                 provider(request())
             }
 
@@ -118,10 +121,10 @@ class TokenSetProviderFactoryTest {
 
         @Test
         fun `Gjør token exchange med userToken fra request`() = runTest {
-            val userTokenFromContext = userOpenIDContext.userToken.shouldNotBeNull()
+            val userTokenFromContext = userPrincipalContext.principal.userToken.shouldNotBeNull()
             val userTokenFromRequest = "userTokenFromRequest"
 
-            withContext(userOpenIDContext) {
+            withContext(userPrincipalContext) {
                 provider(request { onBehalfOf(userTokenFromRequest) })
             }
 
@@ -138,9 +141,9 @@ class TokenSetProviderFactoryTest {
 
         @Test
         fun `Gjør token exchange med userToken fra context`() = runTest {
-            val userTokenFromContext = userOpenIDContext.userToken.shouldNotBeNull()
+            val userTokenFromContext = userPrincipalContext.principal.userToken.shouldNotBeNull()
 
-            withContext(userOpenIDContext) {
+            withContext(userPrincipalContext) {
                 provider(request())
             }
 
@@ -154,7 +157,7 @@ class TokenSetProviderFactoryTest {
 
         @Test
         fun `Ikke gjør token exchange hvis request as application`() = runTest {
-            withContext(userOpenIDContext) {
+            withContext(userPrincipalContext) {
                 provider(request { asApplication() })
             }
 
@@ -168,7 +171,7 @@ class TokenSetProviderFactoryTest {
 
         @Test
         fun `Ikke gjør token exchange hvis principal er application`() = runTest {
-            withContext(applicationOpenIDContext) {
+            withContext(applicationPrincipalContext) {
                 provider(request())
             }
 
@@ -183,9 +186,9 @@ class TokenSetProviderFactoryTest {
         @Test
         fun `Overstyr target`() = runTest {
             val otherTarget = "test2"
-            val userTokenFromContext = userOpenIDContext.userToken.shouldNotBeNull()
+            val userTokenFromContext = userPrincipalContext.principal.userToken.shouldNotBeNull()
 
-            withContext(userOpenIDContext) {
+            withContext(userPrincipalContext) {
                 provider(request { target(otherTarget) })
             }
 

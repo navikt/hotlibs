@@ -19,7 +19,7 @@ fun HttpRequestBuilder.target(target: String) {
  * Gjør request som applikasjon, uansett kontekst.
  *
  * @see [HttpRequestBuilder.onBehalfOf]
- * @see [OpenIDContext]
+ * @see [AuthenticationContext]
  */
 fun HttpRequestBuilder.asApplication() {
     attributes[AsApplicationValue.KEY] = AsApplicationValue
@@ -40,6 +40,17 @@ fun HttpRequestBuilder.onBehalfOf(userToken: String) {
  * @see [HttpRequestBuilder.asApplication]
  */
 fun HttpRequestBuilder.onBehalfOf(userToken: DecodedJWT) = onBehalfOf(userToken.token)
+
+/**
+ * Gjør request på vegne av bruker.
+ *
+ * @see [HttpRequestBuilder.asApplication]
+ * @see [HttpRequestBuilder.onBehalfOf]
+ */
+fun HttpRequestBuilder.asPrincipal(principal: AuthenticatedPrincipal) = when (principal) {
+    is AuthenticatedApplication -> asApplication()
+    is AuthenticatedUser -> onBehalfOf(principal.userToken)
+}
 
 @JvmInline
 internal value class TargetValue(private val value: String) {

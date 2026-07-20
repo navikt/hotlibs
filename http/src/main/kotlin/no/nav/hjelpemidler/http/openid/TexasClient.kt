@@ -109,12 +109,6 @@ class TexasClient(
      */
     fun tokenX(defaultTarget: String): TokenSetProvider =
         factory.userProvider(IdentityProvider.TOKEN_X, defaultTarget)
-
-    /**
-     * Opprett [OpenIDClient] for [identityProvider].
-     */
-    fun asOpenIDClient(identityProvider: IdentityProvider): OpenIDClient =
-        TexasOpenIDClientAdapter(this, identityProvider)
 }
 
 private fun ParametersBuilder.identityProvider(value: IdentityProvider) = append("identity_provider", value.toString())

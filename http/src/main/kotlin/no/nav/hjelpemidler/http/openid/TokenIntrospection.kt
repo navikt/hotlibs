@@ -2,6 +2,8 @@ package no.nav.hjelpemidler.http.openid
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonInclude.Include
 
 /**
  * @see <a href="https://docs.nais.io/auth/explanations/#texas">Texas</a>
@@ -9,5 +11,8 @@ import com.fasterxml.jackson.annotation.JsonAnySetter
 data class TokenIntrospection(
     val active: Boolean,
     val error: String? = null,
-    @field:JsonAnyGetter @field:JsonAnySetter val additionalProperties: Map<String, Any?> = mutableMapOf(),
+    @JsonAnySetter
+    @get:JsonAnyGetter
+    @get:JsonInclude(Include.NON_EMPTY, content = Include.NON_NULL)
+    val additionalProperties: Map<String, Any?> = emptyMap(),
 )
