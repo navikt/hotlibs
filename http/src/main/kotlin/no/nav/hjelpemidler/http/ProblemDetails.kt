@@ -30,24 +30,24 @@ import java.net.URI
  */
 @JsonInclude(Include.NON_NULL)
 interface ProblemDetails {
-    val type: URI
+    val type: URI?
     val title: String?
 
     @get:JsonSerialize(using = HttpStatusCodeSerializer::class)
     @get:JsonDeserialize(using = HttpStatusCodeDeserializer::class)
-    val status: HttpStatusCode
+    val status: HttpStatusCode?
     val detail: String?
     val instance: URI?
 
     companion object {
-        val DEFAULT_TYPE: URI = URI.create("https://teamdigihot.intern.nav.no/problems/unknown")
+        val DEFAULT_TYPE: URI = URI.create("https://teamdigihot.ansatt.nav.no/problems/unknown")
     }
 }
 
 data class DefaultProblemDetails(
-    override val type: URI = ProblemDetails.DEFAULT_TYPE,
+    override val type: URI? = ProblemDetails.DEFAULT_TYPE,
     override val title: String? = null,
-    override val status: HttpStatusCode = HttpStatusCode.InternalServerError,
+    override val status: HttpStatusCode? = null,
     override val detail: String? = null,
     override val instance: URI? = null,
     @JsonAnySetter
@@ -68,7 +68,7 @@ data class DefaultProblemDetails(
     fun asMap(): Map<String, Any> = mapOfNotNull(
         "type" to type.toString(),
         "title" to title,
-        "status" to status.value,
+        "status" to status?.value,
         "detail" to detail,
         "instance" to instance?.toString(),
     ) + extensions.filterNotNull()

@@ -24,7 +24,7 @@ class ProblemDetailsTest {
                     //language=JSON
                     """
                         {
-                          "type": "https://teamdigihot.intern.nav.no/problems/unknown",
+                          "type": "https://teamdigihot.ansatt.nav.no/problems/unknown",
                           "status": 401,
                           "cause": "Ingen tilgang!"
                         }
@@ -61,7 +61,7 @@ class ProblemDetailsTest {
 
         detailsJson shouldEqualSpecifiedJson """
             {
-              "type" : "https://teamdigihot.intern.nav.no/problems/unknown",
+              "type" : "https://teamdigihot.ansatt.nav.no/problems/unknown",
               "title" : "Forbidden",
               "status" : 403,
               "detail": "Ingen tilgang!"
@@ -83,7 +83,7 @@ class ProblemDetailsTest {
 
         detailsJson shouldEqualSpecifiedJson """
             {
-              "type" : "https://teamdigihot.intern.nav.no/problems/unknown",
+              "type" : "https://teamdigihot.ansatt.nav.no/problems/unknown",
               "title" : "Service Unavailable",
               "status" : 503,
               "detail" : "Noe gikk galt!",
