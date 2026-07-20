@@ -47,7 +47,7 @@ interface ProblemDetails {
 data class DefaultProblemDetails(
     override val type: URI? = ProblemDetails.DEFAULT_TYPE,
     override val title: String? = null,
-    override val status: HttpStatusCode? = null,
+    override val status: HttpStatusCode? = HttpStatusCode.InternalServerError,
     override val detail: String? = null,
     override val instance: URI? = null,
     @JsonAnySetter
