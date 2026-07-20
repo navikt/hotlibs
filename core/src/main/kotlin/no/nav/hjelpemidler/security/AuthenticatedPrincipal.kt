@@ -1,4 +1,4 @@
-package no.nav.hjelpemidler.http.openid
+package no.nav.hjelpemidler.security
 
 import java.security.Principal
 
@@ -9,8 +9,6 @@ value class AuthenticatedApplication(private val name: String) : AuthenticatedPr
     override fun getName(): String = name
 }
 
-interface AuthenticatedUser : AuthenticatedPrincipal {
-    val userToken: String
+abstract class AuthenticatedUser(private val name: String, val userToken: String) : AuthenticatedPrincipal {
+    override fun getName(): String = name
 }
-
-internal val AuthenticatedPrincipal.userToken: String? get() = (this as? AuthenticatedUser)?.userToken

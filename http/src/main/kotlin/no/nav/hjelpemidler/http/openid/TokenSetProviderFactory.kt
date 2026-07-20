@@ -3,6 +3,10 @@ package no.nav.hjelpemidler.http.openid
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.request.HttpRequestBuilder
 import kotlinx.coroutines.currentCoroutineContext
+import no.nav.hjelpemidler.security.AuthenticatedApplication
+import no.nav.hjelpemidler.security.AuthenticatedPrincipal
+import no.nav.hjelpemidler.security.AuthenticatedUser
+import no.nav.hjelpemidler.security.currentAuthenticatedPrincipal
 
 private val log = KotlinLogging.logger {}
 
@@ -60,6 +64,8 @@ class TokenSetProviderFactory internal constructor(private val client: TexasClie
     private suspend fun currentPrincipal(): AuthenticatedPrincipal? =
         currentCoroutineContext().currentAuthenticatedPrincipal()
 }
+
+internal val AuthenticatedPrincipal.userToken: String? get() = (this as? AuthenticatedUser)?.userToken
 
 private val HttpRequestBuilder.target: String? get() = attributes.getOrNull(TargetValue.KEY)?.toString()
 private val HttpRequestBuilder.asApplication: Boolean get() = attributes.getOrNull(AsApplicationValue.KEY) != null

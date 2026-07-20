@@ -10,14 +10,13 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
 import no.nav.hjelpemidler.http.createHttpClient
 import no.nav.hjelpemidler.http.test.respondJson
+import no.nav.hjelpemidler.security.AuthenticatedUser
+import no.nav.hjelpemidler.security.AuthenticationContext
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.hours
 
 class OpenIDPluginTest {
-    private val userPrincipalContext = AuthenticationContext(object : AuthenticatedUser {
-        override val userToken: String get() = ""
-        override fun getName(): String = "testUser"
-    })
+    private val userPrincipalContext = AuthenticationContext(object : AuthenticatedUser("testUser", "userToken") {})
 
     @Test
     fun `Skal hente og bruke access token fra klient`() = runTest {

@@ -1,4 +1,4 @@
-package no.nav.hjelpemidler.http.openid
+package no.nav.hjelpemidler.security
 
 import kotlin.coroutines.AbstractCoroutineContextElement
 import kotlin.coroutines.CoroutineContext

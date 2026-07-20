@@ -5,6 +5,9 @@ import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.bearerAuth
 import io.ktor.http.HttpMessageBuilder
 import io.ktor.util.AttributeKey
+import no.nav.hjelpemidler.security.AuthenticatedApplication
+import no.nav.hjelpemidler.security.AuthenticatedPrincipal
+import no.nav.hjelpemidler.security.AuthenticatedUser
 
 fun HttpMessageBuilder.bearerAuth(tokenSet: TokenSet) = bearerAuth(tokenSet.accessToken)
 
