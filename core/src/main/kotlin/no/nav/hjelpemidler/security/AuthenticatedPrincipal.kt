@@ -13,7 +13,9 @@ sealed interface AuthenticatedPrincipal : Principal {
 }
 
 @JvmInline
-value class AuthenticatedApplication(override val id: Applikasjonsnavn) : AuthenticatedPrincipal
+value class AuthenticatedApplication(override val id: Applikasjonsnavn) : AuthenticatedPrincipal {
+    override fun toString(): String = id.value
+}
 
 interface AuthenticatedUser : AuthenticatedPrincipal {
     val userToken: String
