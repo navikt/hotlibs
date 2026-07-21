@@ -27,4 +27,7 @@ dependencies {
 
     // Cache
     api(libs.caffeine)
+
+    // Testing
+    testImplementation(testFixtures(project(":core")))
 }

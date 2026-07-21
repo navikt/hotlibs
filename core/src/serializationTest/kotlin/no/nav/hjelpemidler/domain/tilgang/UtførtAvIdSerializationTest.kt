@@ -8,12 +8,12 @@ class UtførtAvIdSerializationTest {
     @Test
     fun `Serialiser til JSON med kotlinx-serialization-json`() {
         Json.encodeToString(UtførtAvIdSerializer, navIdent) shouldBe navIdentJson
-        Json.encodeToString(UtførtAvIdSerializer, systemnavn) shouldBe systemnavnJson
+        Json.encodeToString(UtførtAvIdSerializer, applikasjonsnavn) shouldBe applikasjonsnavnJson
     }
 
     @Test
     fun `Deserialiser til Kotlin med kotlinx-serialization-json`() {
         Json.decodeFromString(UtførtAvIdSerializer, navIdentJson) shouldBe navIdent
-        Json.decodeFromString(UtførtAvIdSerializer, systemnavnJson) shouldBe systemnavn
+        Json.decodeFromString(UtførtAvIdSerializer, applikasjonsnavnJson) shouldBe applikasjonsnavn
     }
 }

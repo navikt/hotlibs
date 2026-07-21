@@ -7,9 +7,10 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
+import no.nav.hjelpemidler.domain.tilgang.applikasjonsnavn
 import no.nav.hjelpemidler.security.AuthenticatedApplication
-import no.nav.hjelpemidler.security.AuthenticatedUser
 import no.nav.hjelpemidler.security.AuthenticationContext
+import no.nav.hjelpemidler.security.TestAuthenticatedUser
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -19,8 +20,8 @@ class TokenSetProviderFactoryTest {
     private val defaultTarget = "test1"
     private val factory = TokenSetProviderFactory(client)
 
-    private val applicationPrincipalContext = AuthenticationContext(AuthenticatedApplication("testApplication"))
-    private val userPrincipalContext = AuthenticationContext(object : AuthenticatedUser("testUser", "userToken") {})
+    private val applicationPrincipalContext = AuthenticationContext(AuthenticatedApplication(applikasjonsnavn))
+    private val userPrincipalContext = AuthenticationContext(TestAuthenticatedUser)
 
     @Nested
     inner class Application {

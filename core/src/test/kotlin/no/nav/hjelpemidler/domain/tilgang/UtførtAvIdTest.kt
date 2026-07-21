@@ -7,6 +7,6 @@ class UtførtAvIdTest {
     @Test
     fun `Konverter String til UtførtAvId`() {
         utførtAvIdOf("A123456").shouldBeInstanceOf<NavIdent>()
-        utførtAvIdOf("hm-saksbehandling").shouldBeInstanceOf<Systemnavn>()
+        utførtAvIdOf("hm-saksbehandling").shouldBeInstanceOf<Applikasjonsnavn>()
     }
 }

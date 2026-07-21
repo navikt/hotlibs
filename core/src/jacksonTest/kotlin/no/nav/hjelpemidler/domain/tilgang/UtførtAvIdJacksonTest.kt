@@ -9,19 +9,19 @@ class UtførtAvIdJacksonTest {
     @Test
     fun `Serialiser til JSON med Jackson`() {
         valueToJson(navIdent) shouldBe navIdentJson
-        valueToJson(systemnavn) shouldBe systemnavnJson
+        valueToJson(applikasjonsnavn) shouldBe applikasjonsnavnJson
     }
 
     @Test
     fun `Deserialiser til Kotlin med Jackson`() {
         jsonToValue<UtførtAvId?>("""null""") shouldBe null
         jsonToValue<UtførtAvId>(navIdentJson) shouldBe navIdent
-        jsonToValue<UtførtAvId>(systemnavnJson) shouldBe systemnavn
+        jsonToValue<UtførtAvId>(applikasjonsnavnJson) shouldBe applikasjonsnavn
 
         jsonToValue<Request>("""{}""") shouldBe Request(null)
         jsonToValue<Request>("""{ "id": null }""") shouldBe Request(null)
         jsonToValue<Request>("""{ "id": "$navIdent" }""") shouldBe Request(navIdent)
-        jsonToValue<Request>("""{ "id": "$systemnavn" }""") shouldBe Request(systemnavn)
+        jsonToValue<Request>("""{ "id": "$applikasjonsnavn" }""") shouldBe Request(applikasjonsnavn)
     }
 }
 

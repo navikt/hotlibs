@@ -9,14 +9,14 @@ PostgreSQL:
 ```kotlin
 dependencies {
     // Database
-    implementation(libs.hm.database) {
+    implementation(libs.hotlibs.database) {
         capabilities {
             requireCapability("no.nav.hjelpemidler:database-postgresql")
         }
     }
 
     // Testing
-    testImplementation(libs.hm.database) {
+    testImplementation(libs.hotlibs.database) {
         capabilities {
             requireCapability("no.nav.hjelpemidler:database-testcontainers")
         }
@@ -29,14 +29,14 @@ Oracle:
 ```kotlin
 dependencies {
     // Database
-    implementation(libs.hm.database) {
+    implementation(libs.hotlibs.database) {
         capabilities {
             requireCapability("no.nav.hjelpemidler:database-oracle")
         }
     }
 
     // Testing
-    testImplementation(libs.hm.database) {
+    testImplementation(libs.hotlibs.database) {
         capabilities {
             requireCapability("no.nav.hjelpemidler:database-h2")
         }
