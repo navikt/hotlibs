@@ -7,20 +7,12 @@ import kotlin.time.toJavaDuration
 private fun <T> Caffeine<Any, Any>.setIf(
     value: T?,
     block: (T) -> Caffeine<Any, Any>,
-): Caffeine<Any, Any> =
-    when (value) {
-        null -> this
-        else -> block(value)
-    }
+): Caffeine<Any, Any> = if (value == null) this else block(value)
 
 private fun Caffeine<Any, Any>.setIf(
     value: Boolean,
     block: () -> Caffeine<Any, Any>,
-): Caffeine<Any, Any> =
-    when (value) {
-        false -> this
-        else -> block()
-    }
+): Caffeine<Any, Any> = if (value) block() else this
 
 internal fun Caffeine<Any, Any>.configure(configuration: CacheConfiguration): Caffeine<Any, Any> =
     this
@@ -38,17 +30,11 @@ internal fun Caffeine<Any, Any>.configure(configuration: CacheConfiguration): Ca
 fun Caffeine<Any, Any>.configure(block: CacheConfiguration.() -> Unit): Caffeine<Any, Any> =
     configure(CacheConfiguration().apply(block))
 
-fun <K : Any, V : Any> Caffeine<K, V>.expireAfterWrite(
-    duration: Duration,
-): Caffeine<K, V> =
+fun <K : Any, V : Any> Caffeine<K, V>.expireAfterWrite(duration: Duration): Caffeine<K, V> =
     expireAfterWrite(duration.toJavaDuration())
 
-fun <K : Any, V : Any> Caffeine<K, V>.expireAfterAccess(
-    duration: Duration,
-): Caffeine<K, V> =
+fun <K : Any, V : Any> Caffeine<K, V>.expireAfterAccess(duration: Duration): Caffeine<K, V> =
     expireAfterAccess(duration.toJavaDuration())
 
-fun <K : Any, V : Any> Caffeine<K, V>.refreshAfterWrite(
-    duration: Duration,
-): Caffeine<K, V> =
+fun <K : Any, V : Any> Caffeine<K, V>.refreshAfterWrite(duration: Duration): Caffeine<K, V> =
     refreshAfterWrite(duration.toJavaDuration())
