@@ -6,7 +6,7 @@ import kotlinx.coroutines.currentCoroutineContext
 import no.nav.hjelpemidler.security.AuthenticatedApplication
 import no.nav.hjelpemidler.security.AuthenticatedPrincipal
 import no.nav.hjelpemidler.security.AuthenticatedUser
-import no.nav.hjelpemidler.security.currentAuthenticatedPrincipal
+import no.nav.hjelpemidler.security.principal
 
 private val log = KotlinLogging.logger {}
 
@@ -61,8 +61,7 @@ class TokenSetProviderFactory internal constructor(private val client: TexasClie
         }
     }
 
-    private suspend fun currentPrincipal(): AuthenticatedPrincipal? =
-        currentCoroutineContext().currentAuthenticatedPrincipal()
+    private suspend fun currentPrincipal(): AuthenticatedPrincipal? = currentCoroutineContext().principal()
 }
 
 internal val AuthenticatedPrincipal.userToken: String? get() = (this as? AuthenticatedUser)?.userToken
