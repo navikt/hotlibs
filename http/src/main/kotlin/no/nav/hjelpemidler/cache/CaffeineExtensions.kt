@@ -1,6 +1,7 @@
 package no.nav.hjelpemidler.cache
 
 import com.github.benmanes.caffeine.cache.Caffeine
+import kotlinx.coroutines.CoroutineScope
 import kotlin.time.Duration
 import kotlin.time.toJavaDuration
 
@@ -38,3 +39,8 @@ fun <K : Any, V : Any> Caffeine<K, V>.expireAfterAccess(duration: Duration): Caf
 
 fun <K : Any, V : Any> Caffeine<K, V>.refreshAfterWrite(duration: Duration): Caffeine<K, V> =
     refreshAfterWrite(duration.toJavaDuration())
+
+fun <K : Any, V : Any> Caffeine<K, V>.buildAsync(
+    scope: CoroutineScope,
+    loader: CoroutinesCacheLoader<K, V>,
+): CoroutinesLoadingCache<K, V> = buildAsync(CaffeineCoroutinesCacheLoader(scope, loader)).coroutines()
