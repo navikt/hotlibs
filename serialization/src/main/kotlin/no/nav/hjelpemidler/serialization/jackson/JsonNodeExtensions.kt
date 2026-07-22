@@ -1,5 +1,8 @@
 package no.nav.hjelpemidler.serialization.jackson
 
+import no.nav.hjelpemidler.domain.enhet.Enhetsnummer
+import no.nav.hjelpemidler.domain.organisasjon.Organisasjonsnummer
+import no.nav.hjelpemidler.domain.person.AktørId
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.NumericIntNode
@@ -41,8 +44,17 @@ fun JsonNode?.zonedDateTimeOrValueNull(): ZonedDateTime? = ifStringNode(ZonedDat
 inline fun <reified E : Enum<E>> JsonNode.enumValue(): E = enumValueOf<E>(stringValue())
 inline fun <reified E : Enum<E>> JsonNode?.enumValueOrNull(): E? = ifStringNode(::enumValueOf)
 
+fun JsonNode.aktørIdValue(): AktørId = AktørId(stringValue())
+fun JsonNode?.aktørIdValueOrNull(): AktørId? = ifStringNode(::AktørId)
+
 fun JsonNode.fødselsnummerValue(): Fødselsnummer = Fødselsnummer(stringValue())
 fun JsonNode?.fødselsnummerValueOrNull(): Fødselsnummer? = ifStringNode(::Fødselsnummer)
+
+fun JsonNode.organisasjonsnummerValue(): Organisasjonsnummer = Organisasjonsnummer(stringValue())
+fun JsonNode?.organisasjonsnummerValueOrNull(): Organisasjonsnummer? = ifStringNode(::Organisasjonsnummer)
+
+fun JsonNode.enhetsnummerValue(): Enhetsnummer = Enhetsnummer(stringValue())
+fun JsonNode?.enhetsnummerValueOrNull(): Enhetsnummer? = ifStringNode(::Enhetsnummer)
 
 inline fun <reified T : Any> JsonNode.value(): T = treeToValue<T>(this)
 inline fun <reified T : Any> JsonNode?.valueOrNull(): T? = treeToValueOrNull<T>(this)
