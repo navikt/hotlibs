@@ -30,10 +30,10 @@ dependencies {
     "ktorImplementation"(project(":serialization"))
 }
 
-@Suppress("UnstableApiUsage")
 testing {
     suites {
-        val ktorTest by registering(JvmTestSuite::class) {
+        @Suppress("UnstableApiUsage")
+        val ktorTest = register<JvmTestSuite>("ktorTest") {
             useKotlinTest(libs.versions.kotlin.asProvider())
             val currentProject = project
             dependencies {

@@ -33,14 +33,14 @@ fun JavaPluginExtension.registerFeature(sourceSet: SourceSet) = registerFeature(
 
 @Suppress("UnstableApiUsage")
 testing {
-    val test by suites.getting(JvmTestSuite::class)
-    val h2Test by featureTest(h2)
-    val oracleTest by featureTest(oracle)
-    val postgresqlTest by featureTest(postgresql, testcontainers)
+    val test = suites.named<JvmTestSuite>("test")
+    val h2Test = featureTest("h2Test", h2)
+    val oracleTest = featureTest("oracleTest", oracle)
+    val postgresqlTest = featureTest("postgresqlTest", postgresql, testcontainers)
 }
 
 @Suppress("UnstableApiUsage")
-fun TestingExtension.featureTest(vararg sourceSets: SourceSet) = suites.registering(JvmTestSuite::class) {
+fun TestingExtension.featureTest(name: String, vararg sourceSets: SourceSet) = suites.register<JvmTestSuite>(name) {
     useKotlinTest(libs.versions.kotlin.asProvider())
     val currentProject = project
     dependencies {

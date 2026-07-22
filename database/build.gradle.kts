@@ -38,9 +38,8 @@ dependencies {
     testcontainersRuntimeOnly(libs.testcontainers.postgresql) // fixme -> kunne vi valgt oracle hvis oracle-capability?
 }
 
-
-@Suppress("UnstableApiUsage")
 tasks.named("check") {
+    @Suppress("UnstableApiUsage")
     dependsOn(
         testing.suites.named("oracleTest"),
         testing.suites.named("postgresqlTest"),

@@ -19,8 +19,8 @@ dependencies {
     implementation(libs.kotlin.logging)
 }
 
-@Suppress("UnstableApiUsage")
 testing {
+    @Suppress("UnstableApiUsage")
     suites {
         withType<JvmTestSuite> {
             useKotlinTest(libs.versions.kotlin.asProvider())

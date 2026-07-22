@@ -40,12 +40,12 @@ testing {
             }
         }
 
-        val jacksonTest by registering(JvmTestSuite::class) {
+        val jacksonTest = register<JvmTestSuite>("jacksonTest") {
             dependencies {
                 implementation(project(":serialization"))
             }
         }
-        val serializationTest by registering(JvmTestSuite::class) {
+        val serializationTest = register<JvmTestSuite>("serializationTest") {
             dependencies {
                 implementation(libs.kotlinx.serialization.json)
             }
@@ -53,7 +53,10 @@ testing {
     }
 }
 
-@Suppress("UnstableApiUsage")
 tasks.named("check") {
-    dependsOn(testing.suites.named("jacksonTest"), testing.suites.named("serializationTest"))
+    @Suppress("UnstableApiUsage")
+    dependsOn(
+        testing.suites.named("jacksonTest"),
+        testing.suites.named("serializationTest"),
+    )
 }
