@@ -3,7 +3,6 @@ package no.nav.hjelpemidler.cache
 import com.github.benmanes.caffeine.cache.AsyncCacheLoader
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
-import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.future.future
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
@@ -22,8 +21,5 @@ internal class CaffeineCoroutinesCacheLoader<K : Any, V>(
         future(executor) { loader.reload(key, oldValue) }
 
     private fun <T> future(executor: Executor, block: suspend CoroutineScope.() -> T): CompletableFuture<T> =
-        scope.future(executor.asCoroutineDispatcher()) {
-            ensureActive()
-            block()
-        }
+        scope.future(executor.asCoroutineDispatcher()) { block() }
 }
