@@ -22,7 +22,7 @@ fun HttpRequestBuilder.target(target: String) {
  * Gjør request som applikasjon, uansett kontekst.
  *
  * @see [HttpRequestBuilder.onBehalfOf]
- * @see [AuthenticationContext]
+ * @see [no.nav.hjelpemidler.security.AuthenticationContext]
  */
 fun HttpRequestBuilder.asApplication() {
     attributes[AsApplicationValue.KEY] = AsApplicationValue

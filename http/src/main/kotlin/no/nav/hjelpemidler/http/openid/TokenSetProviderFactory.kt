@@ -23,11 +23,11 @@ class TokenSetProviderFactory internal constructor(private val client: TexasClie
 
     /**
      * [TokenSetProvider] som alltid henter On-Behalf-Of-token (OBO-token) for [defaultTarget] (eller overstyrt target).
-     * `userToken` defineres med [io.ktor.client.request.HttpRequestBuilder.onBehalfOf] eller hentes fra [AuthenticationContext].
+     * `userToken` defineres med [io.ktor.client.request.HttpRequestBuilder.onBehalfOf] eller hentes fra [no.nav.hjelpemidler.security.AuthenticationContext].
      *
      * @see [HttpRequestBuilder.target]
      * @see [HttpRequestBuilder.onBehalfOf]
-     * @see [AuthenticationContext]
+     * @see [no.nav.hjelpemidler.security.AuthenticationContext]
      */
     fun userProvider(identityProvider: IdentityProvider, defaultTarget: String): TokenSetProvider =
         TokenSetProvider { request ->
@@ -36,13 +36,13 @@ class TokenSetProviderFactory internal constructor(private val client: TexasClie
         }
 
     /**
-     * [TokenSetProvider] som henter Machine-To-Machine-token (M2M-token) eller On-Behalf-Of-token (OBO-token)
-     * for [defaultTarget] (eller overstyrt target) avhengig av [HttpRequestBuilder]/[AuthenticationContext].
+     * [TokenSetProvider] som henter Machine-To-Machine-token (M2M-token) eller On-Behalf-Of-token (OBO-token) for
+     * [defaultTarget] (eller overstyrt target) avhengig av [HttpRequestBuilder]/[no.nav.hjelpemidler.security.AuthenticationContext].
      *
      * @see [HttpRequestBuilder.target]
      * @see [HttpRequestBuilder.asApplication]
      * @see [HttpRequestBuilder.onBehalfOf]
-     * @see [AuthenticationContext]
+     * @see [no.nav.hjelpemidler.security.AuthenticationContext]
      */
     fun delegateProvider(identityProvider: IdentityProvider, defaultTarget: String): TokenSetProvider {
         val applicationProvider = applicationProvider(identityProvider, defaultTarget)
