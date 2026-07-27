@@ -6,7 +6,7 @@ import no.nav.hjelpemidler.validation.Validator
 /**
  * AktørId med 13 siffer.
  */
-class AktørId(value: String) : PersonIdent(value) {
+class AktørId(value: String) : PersonId(value) {
     init {
         require(erGyldig(value)) { "Ugyldig aktørId" }
     }

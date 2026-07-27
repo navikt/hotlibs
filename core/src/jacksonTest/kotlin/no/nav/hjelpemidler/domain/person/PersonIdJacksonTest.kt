@@ -7,7 +7,7 @@ import no.nav.hjelpemidler.serialization.jackson.valueToJson
 import tools.jackson.databind.exc.InvalidFormatException
 import kotlin.test.Test
 
-class PersonIdentJacksonTest {
+class PersonIdJacksonTest {
     @Test
     fun `Serialiser til JSON med Jackson`() {
         valueToJson(aktørId) shouldBe aktørIdJson
@@ -16,10 +16,10 @@ class PersonIdentJacksonTest {
 
     @Test
     fun `Deserialiser til Kotlin med Jackson`() {
-        jsonToValue<PersonIdent?>("""null""") shouldBe null
-        jsonToValue<PersonIdent>(aktørIdJson) shouldBe aktørId
-        jsonToValue<PersonIdent>(fnrJson) shouldBe fnr
-        shouldThrow<InvalidFormatException> { jsonToValue<PersonIdent>(""""foobar"""") }
+        jsonToValue<PersonId?>("""null""") shouldBe null
+        jsonToValue<PersonId>(aktørIdJson) shouldBe aktørId
+        jsonToValue<PersonId>(fnrJson) shouldBe fnr
+        shouldThrow<InvalidFormatException> { jsonToValue<PersonId>(""""foobar"""") }
 
         jsonToValue<Request>("""{}""") shouldBe Request(null)
         jsonToValue<Request>("""{ "ident": null }""") shouldBe Request(null)
@@ -29,4 +29,4 @@ class PersonIdentJacksonTest {
     }
 }
 
-private data class Request(val ident: PersonIdent?)
+private data class Request(val ident: PersonId?)

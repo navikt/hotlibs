@@ -16,7 +16,7 @@ import java.util.Date
  * @see [Fodselsnummer]
  * @see [TILLAT_SYNTETISKE_FØDSELSNUMRE]
  */
-class Fødselsnummer(value: String) : PersonIdent(value) {
+class Fødselsnummer(value: String) : PersonId(value) {
     init {
         require(erGyldig(value)) { "Ugyldig fødselsnummer" }
     }
