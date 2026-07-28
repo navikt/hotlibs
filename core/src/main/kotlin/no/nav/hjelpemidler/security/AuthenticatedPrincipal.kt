@@ -27,11 +27,23 @@ inline fun <T> AuthenticatedPrincipal.mapApplicationOrNull(block: (Authenticated
 inline fun <T> AuthenticatedPrincipal.mapUserOrNull(block: (AuthenticatedUser) -> T): T? =
     if (this is AuthenticatedUser) block(this) else null
 
-fun AuthenticatedPrincipal.requireApplication(): AuthenticatedApplication =
-    this as? AuthenticatedApplication ?: error("Expected AuthenticatedApplication, got ${this::class.qualifiedName}")
+@OptIn(ExperimentalContracts::class)
+fun AuthenticatedPrincipal.requireApplication(): AuthenticatedApplication {
+    contract {
+        returns() implies (this@requireApplication is AuthenticatedApplication)
+    }
+    return this as? AuthenticatedApplication
+        ?: error("Expected AuthenticatedApplication, got ${this::class.qualifiedName}")
+}
 
-fun AuthenticatedPrincipal.requireUser(): AuthenticatedUser =
-    this as? AuthenticatedUser ?: error("Expected AuthenticatedUser, got ${this::class.qualifiedName}")
+@OptIn(ExperimentalContracts::class)
+fun AuthenticatedPrincipal.requireUser(): AuthenticatedUser {
+    contract {
+        returns() implies (this@requireUser is AuthenticatedUser)
+    }
+    return this as? AuthenticatedUser
+        ?: error("Expected AuthenticatedUser, got ${this::class.qualifiedName}")
+}
 
 @OptIn(ExperimentalContracts::class)
 val AuthenticatedPrincipal.isApplication: Boolean
