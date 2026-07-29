@@ -162,6 +162,8 @@ data class Levering(
         val stilling: String,
         val telefon: String,
         val ansvarFor: String,
+        val epost: String? = null,
+        val erGjortOppmerksomPåOpplæringsansvar: Boolean? = null,
     ) : HarPersonnavn
 
     data class AnnenKontaktperson(
