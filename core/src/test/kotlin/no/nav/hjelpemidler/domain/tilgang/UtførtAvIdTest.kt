@@ -6,7 +6,7 @@ import kotlin.test.Test
 class UtførtAvIdTest {
     @Test
     fun `Konverter String til UtførtAvId`() {
-        utførtAvIdOf("A123456").shouldBeInstanceOf<NavIdent>()
-        utførtAvIdOf("hm-saksbehandling").shouldBeInstanceOf<Applikasjonsnavn>()
+        UtførtAvId.from("A123456").shouldBeInstanceOf<NavIdent>()
+        UtførtAvId.from("hm-saksbehandling").shouldBeInstanceOf<Applikasjonsnavn>()
     }
 }

@@ -1,16 +1,16 @@
 package no.nav.hjelpemidler.domain.person
 
+import com.fasterxml.jackson.annotation.JsonCreator
 import no.nav.hjelpemidler.domain.id.StringId
-import tools.jackson.databind.annotation.JsonDeserialize
 
-@JsonDeserialize(using = PersonIdDeserializer::class)
-sealed class PersonId(value: String) : StringId(value)
-
-fun personIdOf(value: String): PersonId =
-    personIdOrNullOf(value) ?: throw IllegalArgumentException("Ugyldig PersonId")
-
-fun personIdOrNullOf(value: String): PersonId? = when {
-    AktørId.erGyldig(value) -> AktørId(value)
-    Fødselsnummer.erGyldig(value) -> Fødselsnummer(value)
-    else -> null
+sealed class PersonId(value: String) : StringId(value) {
+    companion object {
+        @JvmStatic
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        fun from(value: String): PersonId = when {
+            AktørId.erGyldig(value) -> AktørId(value)
+            Fødselsnummer.erGyldig(value) -> Fødselsnummer(value)
+            else -> throw IllegalArgumentException("Ugyldig PersonId")
+        }
+    }
 }

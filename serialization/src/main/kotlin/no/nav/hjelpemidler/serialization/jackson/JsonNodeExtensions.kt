@@ -4,6 +4,7 @@ import no.nav.hjelpemidler.domain.enhet.Enhetsnummer
 import no.nav.hjelpemidler.domain.organisasjon.Organisasjonsnummer
 import no.nav.hjelpemidler.domain.person.AktørId
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
+import no.nav.hjelpemidler.domain.person.PersonId
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.NumericIntNode
 import tools.jackson.databind.node.StringNode
@@ -49,6 +50,9 @@ fun JsonNode?.aktørIdValueOrNull(): AktørId? = ifStringNode(::AktørId)
 
 fun JsonNode.fødselsnummerValue(): Fødselsnummer = Fødselsnummer(stringValue())
 fun JsonNode?.fødselsnummerValueOrNull(): Fødselsnummer? = ifStringNode(::Fødselsnummer)
+
+fun JsonNode.personIdValue(): PersonId = PersonId.from(stringValue())
+fun JsonNode?.personIdValueOrNull(): PersonId? = ifStringNode(PersonId::from)
 
 fun JsonNode.organisasjonsnummerValue(): Organisasjonsnummer = Organisasjonsnummer(stringValue())
 fun JsonNode?.organisasjonsnummerValueOrNull(): Organisasjonsnummer? = ifStringNode(::Organisasjonsnummer)
