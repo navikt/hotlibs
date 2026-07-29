@@ -242,11 +242,29 @@ data class Produktkategori(
     val delkontrakttittel: String,
     val bruksarenaer: List<BruksarenaV2>,
     val opplysninger: List<Opplysning>,
+    val vedlegg: List<Vedlegg> = emptyList(),
+    val komponenter: List<ProduktkategoriKomponent> = emptyList(),
 )
 
 enum class ProduktkategoriType {
     LYDOVERFØRINGSANLEGG
 }
+
+enum class ProduktkategoriKomponentType {
+    DØR
+}
+
+/**
+ * Brukes dersom produktkategorien består av flere komponenter. F.eks. på dørautomatikk legger
+ * formidler til en eller flere dører (komponenter) hvor det er behov for dørautomatikk.
+ */
+data class ProduktkategoriKomponent(
+    val id: String,
+    val type: ProduktkategoriKomponentType,
+    val navn: String,
+    val opplysninger: List<Opplysning>,
+    val vedlegg: List<Vedlegg>,
+)
 
 data class Bytte(
     val erTilsvarende: Boolean,
