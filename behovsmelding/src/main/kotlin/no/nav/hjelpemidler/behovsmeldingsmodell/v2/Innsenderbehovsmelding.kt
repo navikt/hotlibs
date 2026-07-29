@@ -163,7 +163,7 @@ data class Levering(
         val telefon: String,
         val ansvarFor: String,
         val epost: String? = null,
-        val oppmerksom: Boolean? = null,
+        val erGjortOppmerksomPåOpplæringsansvar: Boolean? = null,
     ) : HarPersonnavn
 
     data class AnnenKontaktperson(
