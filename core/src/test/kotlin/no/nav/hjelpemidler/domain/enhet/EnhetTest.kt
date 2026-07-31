@@ -6,6 +6,8 @@ import io.kotest.inspectors.forAll
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import no.nav.hjelpemidler.test.testFactory
+import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestFactory
 import java.net.URI
 import java.net.http.HttpClient
@@ -13,8 +15,6 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.declaredMemberProperties
-import kotlin.test.Ignore
-import kotlin.test.Test
 
 class EnhetTest {
     @Test
@@ -54,7 +54,7 @@ class EnhetTest {
     }
 
     @Test
-    @Ignore("Brukes til å sjekke at alle definerte enheter har riktig navn og nummer")
+    @Disabled("Brukes til å sjekke at alle definerte enheter har riktig navn og nummer")
     fun `Valider enheter`() {
         val enheter = Enhet.Companion::class.declaredMemberProperties
             .filter { it.visibility == KVisibility.PUBLIC }
