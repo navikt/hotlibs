@@ -22,7 +22,7 @@ abstract class Id<T : Comparable<T>>(override val value: T) : Comparable<Id<T>>,
         return value == other.value
     }
 
-    override fun hashCode(): Int = value.hashCode()
+    override fun hashCode(): Int = 31 * javaClass.hashCode() + value.hashCode()
 
     /**
      * Dette blir verdien i JSON.
