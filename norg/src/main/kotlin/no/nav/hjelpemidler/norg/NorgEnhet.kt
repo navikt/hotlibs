@@ -2,6 +2,7 @@ package no.nav.hjelpemidler.norg
 
 import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonIgnore
+import no.nav.hjelpemidler.domain.enhet.AbstractEnhet
 import no.nav.hjelpemidler.domain.enhet.Enhet
 import no.nav.hjelpemidler.domain.enhet.Enhetsnummer
 import no.nav.hjelpemidler.domain.enhet.TilknyttetEnhet
@@ -9,11 +10,11 @@ import no.nav.hjelpemidler.domain.kodeverk.Kodeverk
 
 class NorgEnhet(
     @JsonAlias("enhetNr")
-    val nummer: Enhetsnummer,
-    val navn: String,
+    override val nummer: Enhetsnummer,
+    override val navn: String,
     val status: Kodeverk<Status>,
     val type: Kodeverk<Type>,
-) : TilknyttetEnhet, Comparable<NorgEnhet> {
+) : AbstractEnhet<Enhetsnummer>(), TilknyttetEnhet {
     override val enhet: Enhet
         @JsonIgnore
         get() = Enhet(nummer, navn)
@@ -41,17 +42,6 @@ class NorgEnhet(
     val isOppgavebehandler: Boolean
         @JsonIgnore
         get() = isStatusAktiv && (isTypeHjelpemiddelsentral || isTypeIT || isVikafossen)
-
-    override fun compareTo(other: NorgEnhet): Int = nummer.compareTo(other.nummer)
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-        other as NorgEnhet
-        return nummer == other.nummer
-    }
-
-    override fun hashCode(): Int = nummer.hashCode()
 
     override fun toString(): String = "${enhet.navn} (nummer: '${enhet.nummer}', status: $status, type: $type)"
 
