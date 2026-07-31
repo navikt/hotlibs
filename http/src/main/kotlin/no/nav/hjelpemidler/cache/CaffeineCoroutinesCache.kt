@@ -36,5 +36,7 @@ internal class CaffeineCoroutinesCache<K : Any, V>(private val wrapped: AsyncCac
 
     override fun put(key: K, value: V) = wrapped.put(key, CompletableFuture.completedFuture(value))
 
+    override fun putAll(map: Map<K, V & Any>): Unit = wrapped.synchronous().putAll(map)
+
     override fun invalidate(key: K) = wrapped.synchronous().invalidate(key)
 }
