@@ -12,4 +12,6 @@ interface ConfigurationMap : Map<String, String> {
 
     fun getOrDefault(key: EnvironmentVariableKey, defaultValue: String): String =
         getOrDefault(key.toString(), defaultValue)
+
+    fun get(vararg keys: String): String? = get(keys.joinToString("_", transform = String::uppercase))
 }
