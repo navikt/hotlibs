@@ -10,33 +10,35 @@ import java.util.concurrent.CompletableFuture
 
 internal class CaffeineCoroutinesCache<K : Any, V>(private val wrapped: AsyncCache<K, V>) :
     CoroutinesCache<K, V> {
-    override suspend fun getIfPresent(key: K): V? = wrapped.getIfPresent(key)?.await()
+    override suspend fun get(key: K): V? = wrapped.getIfPresent(key)?.await()
 
-    override suspend fun get(
+    override suspend fun getOrLoad(
         key: K,
-        loader: suspend CoroutineScope.(K) -> V,
+        block: suspend CoroutineScope.(K) -> V,
     ): V = coroutineScope {
         wrapped
             .get(key) { key, executor ->
-                future(executor.asCoroutineDispatcher()) { loader(key) }
+                future(executor.asCoroutineDispatcher()) { block(key) }
             }
             .await()
     }
 
-    override suspend fun getAll(
+    override suspend fun getOrLoadAll(
         keys: Iterable<K>,
-        loader: suspend CoroutineScope.(Set<K>) -> Map<K, V & Any>,
+        block: suspend CoroutineScope.(Set<K>) -> Map<K, V & Any>,
     ): Map<K, V & Any> = coroutineScope {
         wrapped
             .getAll(keys) { keys, executor ->
-                future(executor.asCoroutineDispatcher()) { loader(keys) }
+                future(executor.asCoroutineDispatcher()) { block(keys) }
             }
             .await()
     }
 
-    override fun put(key: K, value: V) = wrapped.put(key, CompletableFuture.completedFuture(value))
+    override suspend fun put(key: K, value: V) = wrapped.put(key, CompletableFuture.completedFuture(value))
 
-    override fun putAll(map: Map<K, V & Any>): Unit = wrapped.synchronous().putAll(map)
+    override suspend fun putAll(from: Map<K, V & Any>): Unit = wrapped.synchronous().putAll(from)
 
-    override fun invalidate(key: K) = wrapped.synchronous().invalidate(key)
+    override suspend fun invalidate(key: K) = wrapped.synchronous().invalidate(key)
+
+    override suspend fun invalidateAll(keys: Iterable<K>) = wrapped.synchronous().invalidateAll(keys)
 }

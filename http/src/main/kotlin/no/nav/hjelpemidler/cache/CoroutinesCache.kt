@@ -4,12 +4,22 @@ import com.github.benmanes.caffeine.cache.AsyncCache
 import kotlinx.coroutines.CoroutineScope
 
 interface CoroutinesCache<K : Any, V> {
-    suspend fun getIfPresent(key: K): V?
-    suspend fun get(key: K, loader: suspend CoroutineScope.(K) -> V): V
-    suspend fun getAll(keys: Iterable<K>, loader: suspend CoroutineScope.(Set<K>) -> Map<K, V & Any>): Map<K, V & Any>
-    fun put(key: K, value: V)
-    fun putAll(map: Map<K, V & Any>)
-    fun invalidate(key: K)
+    suspend operator fun get(key: K): V?
+
+    suspend fun getOrLoad(key: K, block: suspend CoroutineScope.(K) -> V): V
+
+    suspend fun getOrLoadAll(
+        keys: Iterable<K>,
+        block: suspend CoroutineScope.(Set<K>) -> Map<K, V & Any>,
+    ): Map<K, V & Any>
+
+    suspend fun put(key: K, value: V)
+
+    suspend fun putAll(from: Map<K, V & Any>)
+
+    suspend fun invalidate(key: K)
+
+    suspend fun invalidateAll(keys: Iterable<K>)
 }
 
-fun <K : Any, V> AsyncCache<K, V>.coroutines(): CoroutinesCache<K, V> = CaffeineCoroutinesCache(this)
+fun <K : Any, V : Any> AsyncCache<K, V>.coroutines(): CoroutinesCache<K, V> = CaffeineCoroutinesCache(this)
