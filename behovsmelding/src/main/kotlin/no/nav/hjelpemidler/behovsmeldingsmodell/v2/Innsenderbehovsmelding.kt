@@ -2,6 +2,9 @@ package no.nav.hjelpemidler.behovsmeldingsmodell.v2
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import io.github.oshai.kotlinlogging.KotlinLogging
+import java.time.Instant
+import java.time.LocalDate
+import java.util.UUID
 import no.nav.hjelpemidler.behovsmeldingsmodell.BehovsmeldingType
 import no.nav.hjelpemidler.behovsmeldingsmodell.Brukerkilde
 import no.nav.hjelpemidler.behovsmeldingsmodell.BrukersituasjonVilkårtype
@@ -20,7 +23,6 @@ import no.nav.hjelpemidler.behovsmeldingsmodell.Prioritet
 import no.nav.hjelpemidler.behovsmeldingsmodell.Signaturtype
 import no.nav.hjelpemidler.behovsmeldingsmodell.UtleveringsmåteV2
 import no.nav.hjelpemidler.behovsmeldingsmodell.UtlevertTypeV2
-import no.nav.hjelpemidler.configuration.Environment
 import no.nav.hjelpemidler.domain.artikkel.Artikkellinje
 import no.nav.hjelpemidler.domain.geografi.Bydel
 import no.nav.hjelpemidler.domain.geografi.Kommune
@@ -30,43 +32,41 @@ import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.HarPersonnavn
 import no.nav.hjelpemidler.domain.person.Personnavn
 import no.nav.hjelpemidler.domain.person.TilknyttetPerson
-import no.nav.hjelpemidler.domain.kodeverk.UkjentKode
 import org.owasp.html.HtmlPolicyBuilder
-import java.time.Instant
-import java.time.LocalDate
-import java.util.UUID
 
 private val log = KotlinLogging.logger {}
 
 data class Innsenderbehovsmelding(
-    val bruker: Bruker,
-    val brukersituasjon: Brukersituasjon,
-    // Denne burde hete f.eks. "produkter" eller "artikler", siden den inneholder både hjelpemidler og tilbehør.
-    val hjelpemidler: Hjelpemidler,
-    val levering: Levering,
-    val innsender: Innsender,
-    val vedlegg: List<Vedlegg> = emptyList(),
-
-    val metadata: InnsenderbehovsmeldingMetadata,
-    val saksbehandlingvarsel: List<Varsel> = emptyList(),
-
-    override val id: UUID,
-    override val type: BehovsmeldingType,
-    override val innsendingsdato: LocalDate,
-    override val innsendingstidspunkt: Instant? = null,
-    override val skjemaversjon: Int = 2,
-    override val hjmBrukersFnr: Fødselsnummer = bruker.fnr,
-    override val prioritet: Prioritet = tilPrioritet(levering.hast),
+        val bruker: Bruker,
+        val brukersituasjon: Brukersituasjon,
+        // Denne burde hete f.eks. "produkter" eller "artikler", siden den inneholder både
+        // hjelpemidler og tilbehør.
+        val hjelpemidler: Hjelpemidler,
+        val levering: Levering,
+        val innsender: Innsender,
+        val vedlegg: List<Vedlegg> = emptyList(),
+        val metadata: InnsenderbehovsmeldingMetadata,
+        val saksbehandlingvarsel: List<Varsel> = emptyList(),
+        override val id: UUID,
+        override val type: BehovsmeldingType,
+        override val innsendingsdato: LocalDate,
+        override val innsendingstidspunkt: Instant? = null,
+        override val skjemaversjon: Int = 2,
+        override val hjmBrukersFnr: Fødselsnummer = bruker.fnr,
+        override val prioritet: Prioritet = tilPrioritet(levering.hast),
 ) : BehovsmeldingBase {
-    val behovsmeldingGjelder: String @JsonIgnore get() {
-        val sammendrag = lagTittel(this)
-        return sammendrag
-    }
+    val behovsmeldingGjelder: String
+        @JsonIgnore
+        get() {
+            val sammendrag = lagTittel(this)
+            return sammendrag
+        }
 }
+
 data class Vedlegg(
-    val id: UUID,
-    val navn: String,
-    val type: VedleggType,
+        val id: UUID,
+        val navn: String,
+        val type: VedleggType,
 )
 
 enum class VedleggType {
@@ -74,176 +74,179 @@ enum class VedleggType {
 }
 
 data class InnsenderbehovsmeldingMetadata(
-    val bestillingsordningsjekk: Bestillingsordningsjekk?,
+        val bestillingsordningsjekk: Bestillingsordningsjekk?,
 )
 
 data class Bruker(
-    override val fnr: Fødselsnummer,
-    val navn: Personnavn,
-    val signaturtype: Signaturtype,
-    val telefon: String?, // Inputfelt for innbyggers tlf fjernet: https://trello.com/c/FV6XBtrC/377-brukers-telefonnummer-i-digital-behovsmelding-hva-brukes-det-til
-    val veiadresse: Veiadresse?,
-    val kommunenummer: String?,
-    val brukernummer: String?,
-    val kilde: Brukerkilde?,
-    val legacyopplysninger: List<EnkelOpplysning>, // for visning av opplysninger som bare finnes i eldre behovsmeldinger
+        override val fnr: Fødselsnummer,
+        val navn: Personnavn,
+        val signaturtype: Signaturtype,
+        val telefon: String?, // Inputfelt for innbyggers tlf fjernet:
+        // https://trello.com/c/FV6XBtrC/377-brukers-telefonnummer-i-digital-behovsmelding-hva-brukes-det-til
+        val veiadresse: Veiadresse?,
+        val kommunenummer: String?,
+        val brukernummer: String?,
+        val kilde: Brukerkilde?,
+        val legacyopplysninger:
+                List<EnkelOpplysning>, // for visning av opplysninger som bare finnes i eldre
+// behovsmeldinger
 ) : TilknyttetPerson {
-    val kildeErPdl: Boolean @JsonIgnore get() = kilde == Brukerkilde.PDL
+    val kildeErPdl: Boolean
+        @JsonIgnore get() = kilde == Brukerkilde.PDL
 }
 
 data class Brukersituasjon(
-    val vilkår: Set<BrukersituasjonVilkårV2>,
-    val funksjonsnedsettelser: Set<Funksjonsnedsettelser>,
-    val funksjonsbeskrivelse: Funksjonsbeskrivelse?,
+        val vilkår: Set<BrukersituasjonVilkårV2>,
+        val funksjonsnedsettelser: Set<Funksjonsnedsettelser>,
+        val funksjonsbeskrivelse: Funksjonsbeskrivelse?,
 )
 
 data class BrukersituasjonVilkårV2(
-    val vilkårtype: BrukersituasjonVilkårtype,
-    val tekst: LokalisertTekst,
+        val vilkårtype: BrukersituasjonVilkårtype,
+        val tekst: LokalisertTekst,
 )
 
 data class Levering(
-    val hjelpemiddelformidler: Hjelpemiddelformidler,
+        val hjelpemiddelformidler: Hjelpemiddelformidler,
+        val oppfølgingsansvarlig: OppfølgingsansvarligV2,
+        val annenOppfølgingsansvarlig: AnnenOppfølgingsansvarlig?,
 
-    val oppfølgingsansvarlig: OppfølgingsansvarligV2,
-    val annenOppfølgingsansvarlig: AnnenOppfølgingsansvarlig?,
+        /**
+         * utleveringsmåte == null -> formidler har ikke fått spm om utlevering fordi det ikke er
+         * behov for denne infoen. Skjer når hvert hjm. er markert som utlevert eller ikke trenger
+         * info om utlevering (feks for apper hvor lisens sendes til MinSide på nav.no, eller til
+         * folkereg. adresse for barn under 18 år).
+         */
+        val utleveringsmåte: UtleveringsmåteV2?,
+        val annenUtleveringsadresse: Veiadresse?,
+        val annenUtleveringskommune: Kommune? = null,
+        val annenUtleveringsbydel: Bydel? = null,
+        val annenUtleveringMottaker: String? = null,
 
-    /**
-     * utleveringsmåte == null -> formidler har ikke fått spm om utlevering fordi det ikke er behov for denne infoen.
-     * Skjer når hvert hjm. er markert som utlevert eller ikke trenger info om utlevering (feks for apper hvor lisens
-     * sendes til MinSide på nav.no, eller til folkereg. adresse for barn under 18 år).
-     */
-    val utleveringsmåte: UtleveringsmåteV2?,
-    val annenUtleveringsadresse: Veiadresse?,
-    val annenUtleveringskommune: Kommune? = null,
-    val annenUtleveringsbydel: Bydel? = null,
-    val annenUtleveringMottaker: String? = null,
+        // utleveringKontaktperson == null => alle hjm. er allerede utlevert
+        val utleveringKontaktperson: KontaktpersonV2?,
+        val annenKontaktperson: AnnenKontaktperson?,
+        val utleveringMerknad: String,
+        val hast: Hast?,
 
-    // utleveringKontaktperson == null => alle hjm. er allerede utlevert
-    val utleveringKontaktperson: KontaktpersonV2?,
-    val annenKontaktperson: AnnenKontaktperson?,
-
-    val utleveringMerknad: String,
-
-    val hast: Hast?,
-
-    /**
-     * Inneholder ekstra informasjon som automatisk er utledet. Dvs. det er ikke noe formidler har svart på (direkte).
-     */
-    val automatiskUtledetTilleggsinfo: Set<LeveringTilleggsinfo> = emptySet(),
+        /**
+         * Inneholder ekstra informasjon som automatisk er utledet. Dvs. det er ikke noe formidler
+         * har svart på (direkte).
+         */
+        val automatiskUtledetTilleggsinfo: Set<LeveringTilleggsinfo> = emptySet(),
 ) {
     val harFritekstUnderOppfølgingsansvarlig: Boolean
-        @JsonIgnore
-        get() = !annenOppfølgingsansvarlig?.ansvarFor.isNullOrBlank()
+        @JsonIgnore get() = !annenOppfølgingsansvarlig?.ansvarFor.isNullOrBlank()
 
     val harFritekstUnderLevering: Boolean
-        @JsonIgnore
-        get() = utleveringMerknad.isNotBlank()
+        @JsonIgnore get() = utleveringMerknad.isNotBlank()
 
     val alleHjelpemidlerErAlleredeUtlevert: Boolean
         @JsonIgnore
-        get() = utleveringsmåte == null || utleveringsmåte == UtleveringsmåteV2.ALLEREDE_UTLEVERT_AV_NAV
+        get() =
+                utleveringsmåte == null ||
+                        utleveringsmåte == UtleveringsmåteV2.ALLEREDE_UTLEVERT_AV_NAV
 
     data class Hjelpemiddelformidler(
-        override val navn: Personnavn,
-        val arbeidssted: String,
-        val stilling: String,
-        val telefon: String,
-        val adresse: Veiadresse,
-        val epost: String,
-        val treffesEnklest: String,
-        val kommunenavn: String?,
-        val kommunenummer: String? = null,
+            override val navn: Personnavn,
+            val arbeidssted: String,
+            val stilling: String,
+            val telefon: String,
+            val adresse: Veiadresse,
+            val epost: String,
+            val treffesEnklest: String,
+            val kommunenavn: String?,
+            val kommunenummer: String? = null,
     ) : HarPersonnavn
 
     data class AnnenOppfølgingsansvarlig(
-        override val navn: Personnavn,
-        val arbeidssted: String,
-        val stilling: String,
-        val telefon: String,
-        val ansvarFor: String,
-        val epost: String? = null,
-        val erGjortOppmerksomPåOpplæringsansvar: Boolean? = null,
+            override val navn: Personnavn,
+            val arbeidssted: String,
+            val stilling: String,
+            val telefon: String,
+            val ansvarFor: String,
+            val epost: String? = null,
+            val erGjortOppmerksomPåOpplæringsansvar: Boolean? = null,
+            val godkjenningskursResultat: List<GodkjenningskursSjekk>? = null,
     ) : HarPersonnavn
 
+    data class GodkjenningskursSjekk(
+            val kursId: Int,
+            val tittel: String,
+            val gjennomført: Boolean,
+    )
+
     data class AnnenKontaktperson(
-        override val navn: Personnavn,
-        val telefon: String,
+            override val navn: Personnavn,
+            val telefon: String,
     ) : HarPersonnavn
 }
 
 data class Hast(
-    val hasteårsaker: Set<Hasteårsak>,
-    val hastBegrunnelse: String?,
+        val hasteårsaker: Set<Hasteårsak>,
+        val hastBegrunnelse: String?,
 )
 
 data class Innsender(
-    val rolle: InnsenderRolle,
-    val erKommunaltAnsatt: Boolean?,
-    val kurs: List<Godkjenningskurs>,
-    val sjekketUtlånsoversiktForKategorier: Set<Iso6>?,
+        val rolle: InnsenderRolle,
+        val erKommunaltAnsatt: Boolean?,
+        val kurs: List<Godkjenningskurs>,
+        val sjekketUtlånsoversiktForKategorier: Set<Iso6>?,
 )
 
 data class Hjelpemidler(
-    val hjelpemidler: List<Hjelpemiddel>,
-    val tilbehør: List<Tilbehør> = emptyList(),
-    val produktkategorier: List<Produktkategori> = emptyList(),
-    val totaltAntall: Int,
+        val hjelpemidler: List<Hjelpemiddel>,
+        val tilbehør: List<Tilbehør> = emptyList(),
+        val produktkategorier: List<Produktkategori> = emptyList(),
+        val totaltAntall: Int,
 ) : Iterable<Hjelpemiddel> by hjelpemidler {
-    /**
-     * Sett av alle [ArtikkelBase.hmsArtNr] fra alle hjelpemidler og tilbehør.
-     */
+    /** Sett av alle [ArtikkelBase.hmsArtNr] fra alle hjelpemidler og tilbehør. */
     val hmsArtNrs: Set<String>
-        @JsonIgnore
-        get() = artikler.mapTo(sortedSetOf(), Artikkellinje::hmsArtNr)
+        @JsonIgnore get() = artikler.mapTo(sortedSetOf(), Artikkellinje::hmsArtNr)
 
     /**
      * Liste av alle artikler, både hjelpemidler med tilhørende tilbehør og frittstående tilbehør.
      */
     val artikler: List<Artikkellinje>
-        @JsonIgnore
-        get() = hjelpemidler.flatMap { listOf(it) + it.tilbehør } + tilbehør
+        @JsonIgnore get() = hjelpemidler.flatMap { listOf(it) + it.tilbehør } + tilbehør
 }
 
 data class Hjelpemiddel(
-    /**
-     * Tilfeldig generert id for å kunne unikt identifisere hjelpemidler,
-     * f.eks. dersom det er lagt til flere innslag med samme hmsArtNr.
-     * For gamle saker: `hjelpemiddelId = hjelpemiddel.produkt.stockid + new Date().getTime()`.
-     * For nye saker (etter ca. 2024-11-05): `hjelpemiddelId = UUID()`.
-     */
-    val hjelpemiddelId: String,
-    override val antall: Int,
-    val produkt: HjelpemiddelProdukt,
-    val tilbehør: List<Tilbehør>,
-    val bytter: List<Bytte>,
-    val bruksarenaer: Set<BruksarenaV2>,
-    val utlevertinfo: Utlevertinfo,
-    val opplysninger: List<Opplysning>,
-    val varsler: List<Varsel>,
-    val saksbehandlingvarsel: List<Varsel> = emptyList(),
+        /**
+         * Tilfeldig generert id for å kunne unikt identifisere hjelpemidler, f.eks. dersom det er
+         * lagt til flere innslag med samme hmsArtNr. For gamle saker: `hjelpemiddelId =
+         * hjelpemiddel.produkt.stockid + new Date().getTime()`. For nye saker (etter ca.
+         * 2024-11-05): `hjelpemiddelId = UUID()`.
+         */
+        val hjelpemiddelId: String,
+        override val antall: Int,
+        val produkt: HjelpemiddelProdukt,
+        val tilbehør: List<Tilbehør>,
+        val bytter: List<Bytte>,
+        val bruksarenaer: Set<BruksarenaV2>,
+        val utlevertinfo: Utlevertinfo,
+        val opplysninger: List<Opplysning>,
+        val varsler: List<Varsel>,
+        val saksbehandlingvarsel: List<Varsel> = emptyList(),
 ) : Artikkellinje {
     override val id: String
-        @JsonIgnore
-        get() = hjelpemiddelId
+        @JsonIgnore get() = hjelpemiddelId
 
     override val hmsArtNr: String
-        @JsonIgnore
-        get() = produkt.hmsArtNr
+        @JsonIgnore get() = produkt.hmsArtNr
 
     override val artikkelnavn: String
-        @JsonIgnore
-        get() = produkt.artikkelnavn
+        @JsonIgnore get() = produkt.artikkelnavn
 }
 
 data class Produktkategori(
-    val id: UUID,
-    val type: ProduktkategoriType,
-    val navn: String,
-    val antall: Int,
-    val delkontrakttittel: String,
-    val bruksarenaer: List<BruksarenaV2>,
-    val opplysninger: List<Opplysning>,
+        val id: UUID,
+        val type: ProduktkategoriType,
+        val navn: String,
+        val antall: Int,
+        val delkontrakttittel: String,
+        val bruksarenaer: List<BruksarenaV2>,
+        val opplysninger: List<Opplysning>,
 )
 
 enum class ProduktkategoriType {
@@ -251,83 +254,77 @@ enum class ProduktkategoriType {
 }
 
 data class Bytte(
-    val erTilsvarende: Boolean,
-    val hmsnr: String,
-    val serienr: String? = null,
-    val hjmNavn: String,
-    val hjmKategori: String,
-    val årsak: BytteÅrsak? = null,
-    val versjon: String = "v1",
+        val erTilsvarende: Boolean,
+        val hmsnr: String,
+        val serienr: String? = null,
+        val hjmNavn: String,
+        val hjmKategori: String,
+        val årsak: BytteÅrsak? = null,
+        val versjon: String = "v1",
 )
 
 data class HjelpemiddelProdukt(
-    val hmsArtNr: String,
-    val artikkelnavn: String,
-    val iso8: Iso8,
-    val iso8Tittel: String,
-    /**
-     * Brukes blant annet til generering av dokumenttittel.
-     * Defaulter til tom string for gamle saker sendt inn før feltet ble lagt til (ca 2026-01-09).
-     */
-    val iso8KortTittel: String = "",
-    val delkontrakttittel: String,
-    /**
-     * Fra digihot-sortiment.
-     */
-    val sortimentkategori: String,
-    /**
-     * Brukt av hm-saksfordeling for å sortere til Gosys.
-     */
-    val delkontraktId: String?,
-    /**
-     * null -> ikke på rammeavtale
-     * Har i sjeldne tilfeller skjedd at formidler får søkt om produkt som ikke lenger er på rammeavtale, antageligvis pga.
-     * endring i produkter på rammeavtale etter lansering av rammeavtalen.
-     */
-    val rangering: Int?,
+        val hmsArtNr: String,
+        val artikkelnavn: String,
+        val iso8: Iso8,
+        val iso8Tittel: String,
+        /**
+         * Brukes blant annet til generering av dokumenttittel. Defaulter til tom string for gamle
+         * saker sendt inn før feltet ble lagt til (ca 2026-01-09).
+         */
+        val iso8KortTittel: String = "",
+        val delkontrakttittel: String,
+        /** Fra digihot-sortiment. */
+        val sortimentkategori: String,
+        /** Brukt av hm-saksfordeling for å sortere til Gosys. */
+        val delkontraktId: String?,
+        /**
+         * null -> ikke på rammeavtale Har i sjeldne tilfeller skjedd at formidler får søkt om
+         * produkt som ikke lenger er på rammeavtale, antageligvis pga. endring i produkter på
+         * rammeavtale etter lansering av rammeavtalen.
+         */
+        val rangering: Int?,
 )
 
 data class Tilbehør(
-    val tilbehørId: UUID? = null,
-    override val hmsArtNr: String,
-    val navn: String,
-    /**
-     * Brukes blant annet til generering av dokumenttittel.
-     * Defaulter til null for gamle saker sendt inn før feltet ble lagt til (ca 2026-01-13).
-     */
-    val iso6: Iso6? = null,
-    override val antall: Int,
-    val begrunnelse: String?,
-    val fritakFraBegrunnelseÅrsak: FritakFraBegrunnelseÅrsak?,
-    val opplysninger: List<Opplysning> = emptyList(),
-    val saksbehandlingvarsel: List<Varsel> = emptyList(),
+        val tilbehørId: UUID? = null,
+        override val hmsArtNr: String,
+        val navn: String,
+        /**
+         * Brukes blant annet til generering av dokumenttittel. Defaulter til null for gamle saker
+         * sendt inn før feltet ble lagt til (ca 2026-01-13).
+         */
+        val iso6: Iso6? = null,
+        override val antall: Int,
+        val begrunnelse: String?,
+        val fritakFraBegrunnelseÅrsak: FritakFraBegrunnelseÅrsak?,
+        val opplysninger: List<Opplysning> = emptyList(),
+        val saksbehandlingvarsel: List<Varsel> = emptyList(),
 ) : Artikkellinje {
     override val id: String
-        @JsonIgnore
-        get() = tilbehørId?.toString() ?: ""
+        @JsonIgnore get() = tilbehørId?.toString() ?: ""
 
     override val artikkelnavn: String
-        @JsonIgnore
-        get() = navn
+        @JsonIgnore get() = navn
 }
 
 data class Utlevertinfo(
-    val alleredeUtlevertFraHjelpemiddelsentralen: Boolean,
-    val utleverttype: UtlevertTypeV2?,
-    val overførtFraBruker: Brukernummer?,
-    val annenKommentar: String?,
+        val alleredeUtlevertFraHjelpemiddelsentralen: Boolean,
+        val utleverttype: UtlevertTypeV2?,
+        val overførtFraBruker: Brukernummer?,
+        val annenKommentar: String?,
 )
 
 data class Godkjenningskurs(
-    val id: Int,
-    val title: String,
-    val kilde: String,
+        val id: Int,
+        val title: String,
+        val kilde: String,
 )
 
 data class Funksjonsbeskrivelse(
-    val innbyggersVarigeFunksjonsnedsettelse: InnbyggersVarigeFunksjonsnedsettelse,
-    val diagnose: String?,
-    val beskrivelse: String,
+        val innbyggersVarigeFunksjonsnedsettelse: InnbyggersVarigeFunksjonsnedsettelse,
+        val diagnose: String?,
+        val beskrivelse: String,
 )
 
 enum class InnbyggersVarigeFunksjonsnedsettelse {
@@ -341,12 +338,15 @@ enum class InnbyggersVarigeFunksjonsnedsettelse {
 typealias Brukernummer = String
 
 /**
- * Nøkkel som gir mulighet for å identifisere opplysninger som tilhører spesifikke spørsmål.
- * Finnes ikke for eldre saker (pre ca 2026-01-15).
- * - id: En stabil identifikator for et spørsmål/konsept i behovsmeldingen. Skal ikke endre seg selv om ordlyden i spørsmålet justeres.
- * - versjon: Representerer versjonen av spørsmålet/konseptet. Gjør det mulig å skille mellom justeringer på ordlyd osv.
+ * Nøkkel som gir mulighet for å identifisere opplysninger som tilhører spesifikke spørsmål. Finnes
+ * ikke for eldre saker (pre ca 2026-01-15).
+ * - id: En stabil identifikator for et spørsmål/konsept i behovsmeldingen. Skal ikke endre seg selv
+ * om ordlyden i spørsmålet justeres.
+ * - versjon: Representerer versjonen av spørsmålet/konseptet. Gjør det mulig å skille mellom
+ * justeringer på ordlyd osv.
  *
  * Eksempel på bruk:
+ * ```
  *     val begrunnelseLavereRangering = opplysninger.find {
  *         it.key?.id == OpplysningId.BEGRUNNELSE_LAVERE_RANGERING
  *     }?.innhold?.first()?.fritekst
@@ -356,29 +356,37 @@ typealias Brukernummer = String
  *             println("Ukjent kode: ${it.key.id.name}")
  *         }
  *     }
+ * ```
  */
-data class OpplysningKey(
-    val id: Kodeverk<OpplysningId>,
-    val versjon: Int
-)
+data class OpplysningKey(val id: Kodeverk<OpplysningId>, val versjon: Int)
 
 /**
- * innholdstype lagt til i ettertid. Den har derfor default verdi som gjenspeiler de
- * gamle måtene å vise frem innholdet på.
+ * innholdstype lagt til i ettertid. Den har derfor default verdi som gjenspeiler de gamle måtene å
+ * vise frem innholdet på.
  */
 data class Opplysning(
-    val key: OpplysningKey? = null,
-    val ledetekst: LokalisertTekst,
-    val innhold: List<Tekst>,
-    val innholdstype: OpplysningInnholdstype = if (innhold.size>1) OpplysningInnholdstype.LISTE else OpplysningInnholdstype.TEKST
+        val key: OpplysningKey? = null,
+        val ledetekst: LokalisertTekst,
+        val innhold: List<Tekst>,
+        val innholdstype: OpplysningInnholdstype =
+                if (innhold.size > 1) OpplysningInnholdstype.LISTE else OpplysningInnholdstype.TEKST
 ) {
-    constructor(ledetekst: LokalisertTekst, innhold: Tekst) : this(ledetekst = ledetekst, innhold = listOf(innhold))
+    constructor(
+            ledetekst: LokalisertTekst,
+            innhold: Tekst
+    ) : this(ledetekst = ledetekst, innhold = listOf(innhold))
 
-    constructor(ledetekst: LokalisertTekst, innhold: String) : this(ledetekst = ledetekst, innhold = Tekst(innhold))
+    constructor(
+            ledetekst: LokalisertTekst,
+            innhold: String
+    ) : this(ledetekst = ledetekst, innhold = Tekst(innhold))
 
-    constructor(ledetekst: LokalisertTekst, innhold: LokalisertTekst) : this(
-        ledetekst = ledetekst,
-        innhold = Tekst(innhold),
+    constructor(
+            ledetekst: LokalisertTekst,
+            innhold: LokalisertTekst
+    ) : this(
+            ledetekst = ledetekst,
+            innhold = Tekst(innhold),
     )
 
     init {
@@ -387,37 +395,33 @@ data class Opplysning(
 }
 
 enum class OpplysningInnholdstype {
-    /**
-     * Vises som en enkel tekst.
-     */
+    /** Vises som en enkel tekst. */
     TEKST,
 
-    /**
-     * Vises som en punktliste
-     */
+    /** Vises som en punktliste */
     LISTE,
 
-    /**
-     * Vises med `ledetekst` + fritekst/forhåndsdefinertTekst.
-     * En linje per tekst.
-     */
+    /** Vises med `ledetekst` + fritekst/forhåndsdefinertTekst. En linje per tekst. */
     NØKKEL_VERDI,
 }
 
 data class EnkelOpplysning(
-    val ledetekst: LokalisertTekst,
-    val innhold: LokalisertTekst,
+        val ledetekst: LokalisertTekst,
+        val innhold: LokalisertTekst,
 )
 
 data class Tekst(
-    val fritekst: String? = null,
-    val forhåndsdefinertTekst: LokalisertTekst? = null,
-    val begrepsforklaring: LokalisertTekst? = null, // feks forklaring av "avlastningsbolig". Ikke relevant for fritekst.
-    val ledetekst: LokalisertTekst? = null, // Brukes kun ved innholdstype NØKKEL_VERDI
+        val fritekst: String? = null,
+        val forhåndsdefinertTekst: LokalisertTekst? = null,
+        val begrepsforklaring: LokalisertTekst? =
+                null, // feks forklaring av "avlastningsbolig". Ikke relevant for fritekst.
+        val ledetekst: LokalisertTekst? = null, // Brukes kun ved innholdstype NØKKEL_VERDI
 ) {
-    constructor(forhåndsdefinertTekst: LokalisertTekst) : this(
-        forhåndsdefinertTekst = forhåndsdefinertTekst,
-        fritekst = null,
+    constructor(
+            forhåndsdefinertTekst: LokalisertTekst
+    ) : this(
+            forhåndsdefinertTekst = forhåndsdefinertTekst,
+            fritekst = null,
     )
 
     constructor(fritekst: String) : this(forhåndsdefinertTekst = null, fritekst = fritekst)
@@ -425,9 +429,11 @@ data class Tekst(
 
     init {
         require(
-            (forhåndsdefinertTekst != null && fritekst == null) ||
-                    (forhåndsdefinertTekst == null && fritekst != null),
-        ) { "Én, og bare én, av forhåndsdefinertTekst eller fritekst må ha verdi. Mottok forhåndsdefinertTekst <$forhåndsdefinertTekst> og fritekst <$fritekst>" }
+                (forhåndsdefinertTekst != null && fritekst == null) ||
+                        (forhåndsdefinertTekst == null && fritekst != null),
+        ) {
+            "Én, og bare én, av forhåndsdefinertTekst eller fritekst må ha verdi. Mottok forhåndsdefinertTekst <$forhåndsdefinertTekst> og fritekst <$fritekst>"
+        }
 
         sanitize(begrepsforklaring)
         sanitize(forhåndsdefinertTekst)
@@ -435,15 +441,17 @@ data class Tekst(
 }
 
 data class LokalisertTekst(
-    val nb: String,
-    val nn: String,
+        val nb: String,
+        val nn: String,
 ) {
-    constructor(norsk: String) : this(nb = norsk, nn = norsk) // For enkle tekster som er like på begge målformer
+    constructor(
+            norsk: String
+    ) : this(nb = norsk, nn = norsk) // For enkle tekster som er like på begge målformer
 }
 
 data class Varsel(
-    val tekst: LokalisertTekst,
-    val type: Varseltype,
+        val tekst: LokalisertTekst,
+        val type: Varseltype,
 )
 
 enum class Varseltype {
@@ -451,7 +459,8 @@ enum class Varseltype {
     WARNING,
 }
 
-private fun tilPrioritet(hast: Hast?): Prioritet = if (hast != null) Prioritet.HAST else Prioritet.NORMAL
+private fun tilPrioritet(hast: Hast?): Prioritet =
+        if (hast != null) Prioritet.HAST else Prioritet.NORMAL
 
 private val htmlPolicy = HtmlPolicyBuilder().allowElements("em", "strong").toFactory()
 
@@ -461,46 +470,64 @@ private fun sanitize(tekst: LokalisertTekst?) {
     require(tekst.nn == htmlPolicy.sanitize(tekst.nn)) { "Ugyldig HTML i nn" }
 }
 
-private fun lagTittel(behovsmelding : Innsenderbehovsmelding) : String{
+private fun lagTittel(behovsmelding: Innsenderbehovsmelding): String {
     val behovsmeldingType = behovsmelding.type
 
-    val titlerForHjelpemidler = behovsmelding.hjelpemidler.hjelpemidler
-        .filter { it.produkt.iso8KortTittel.isNotEmpty() }
-        .sortedWith(
-            compareBy<Hjelpemiddel>(
-                { it.produkt.rangering == 1 },
-                { it.produkt.iso8KortTittel.lowercase() }
-            )
-        ).distinctBy { it.produkt.iso8KortTittel.lowercase() }
-        .joinToString(separator = ", ") { it.produkt.iso8KortTittel }
-        .lowercase()
+    val titlerForHjelpemidler =
+            behovsmelding
+                    .hjelpemidler
+                    .hjelpemidler
+                    .filter { it.produkt.iso8KortTittel.isNotEmpty() }
+                    .sortedWith(
+                            compareBy<Hjelpemiddel>(
+                                    { it.produkt.rangering == 1 },
+                                    { it.produkt.iso8KortTittel.lowercase() }
+                            )
+                    )
+                    .distinctBy { it.produkt.iso8KortTittel.lowercase() }
+                    .joinToString(separator = ", ") { it.produkt.iso8KortTittel }
+                    .lowercase()
 
-    val titlerForTilbehør = behovsmelding.hjelpemidler.tilbehør
-        .mapNotNull {
-            val iso6 = it.iso6 ?: run {
-                log.error { "Mangler iso6 for hmsnr ${it.hmsArtNr}, kan ikke slå opp tittel" }
-                return@mapNotNull null
-            }
+    val titlerForTilbehør =
+            behovsmelding
+                    .hjelpemidler
+                    .tilbehør
+                    .mapNotNull {
+                        val iso6 =
+                                it.iso6
+                                        ?: run {
+                                            log.error {
+                                                "Mangler iso6 for hmsnr ${it.hmsArtNr}, kan ikke slå opp tittel"
+                                            }
+                                            return@mapNotNull null
+                                        }
 
-            val iso4 = iso6.toString().take(4)
-            val tilbehørTittel = ISO4_TITLER[iso4]
+                        val iso4 = iso6.toString().take(4)
+                        val tilbehørTittel = ISO4_TITLER[iso4]
 
-            if (tilbehørTittel.isNullOrBlank()) {
-                log.error { "Mangler 4-sifret mapping for isokode $iso6 for hmsnr ${it.hmsArtNr}, den bør legges til" }
-                null
-            } else {
-                tilbehørTittel
-            }
-        }
-        .map { "tilbehør ${it}" }
-        .toSortedSet(String.CASE_INSENSITIVE_ORDER)
-        .joinToString(separator = ", ")
-        .lowercase()
+                        if (tilbehørTittel.isNullOrBlank()) {
+                            log.error {
+                                "Mangler 4-sifret mapping for isokode $iso6 for hmsnr ${it.hmsArtNr}, den bør legges til"
+                            }
+                            null
+                        } else {
+                            tilbehørTittel
+                        }
+                    }
+                    .map { "tilbehør ${it}" }
+                    .toSortedSet(String.CASE_INSENSITIVE_ORDER)
+                    .joinToString(separator = ", ")
+                    .lowercase()
 
-    val title = listOf(titlerForHjelpemidler, titlerForTilbehør).filter { it.isNotEmpty() }.joinToString(", ")
+    val title =
+            listOf(titlerForHjelpemidler, titlerForTilbehør)
+                    .filter { it.isNotEmpty() }
+                    .joinToString(", ")
 
     if (title.isEmpty()) {
-        log.warn { "Kunne ikke utlede tittel for hmsnrs: ${behovsmelding.hjelpemidler.hmsArtNrs}, behovsmeldingType: $behovsmeldingType" }
+        log.warn {
+            "Kunne ikke utlede tittel for hmsnrs: ${behovsmelding.hjelpemidler.hmsArtNrs}, behovsmeldingType: $behovsmeldingType"
+        }
         return defaultTitle(behovsmeldingType)
     }
 
@@ -512,8 +539,8 @@ private fun lagTittel(behovsmelding : Innsenderbehovsmelding) : String{
 }
 
 private fun defaultTitle(behovsmeldingType: BehovsmeldingType) =
-    when (behovsmeldingType) {
-        BehovsmeldingType.BESTILLING -> "Bestilling av hjelpemidler"
-        BehovsmeldingType.SØKNAD -> "Søknad om hjelpemidler"
-        BehovsmeldingType.BYTTE, BehovsmeldingType.BRUKERPASSBYTTE -> "Bytte av hjelpemidler"
-}
+        when (behovsmeldingType) {
+            BehovsmeldingType.BESTILLING -> "Bestilling av hjelpemidler"
+            BehovsmeldingType.SØKNAD -> "Søknad om hjelpemidler"
+            BehovsmeldingType.BYTTE, BehovsmeldingType.BRUKERPASSBYTTE -> "Bytte av hjelpemidler"
+        }
