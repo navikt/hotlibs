@@ -22,4 +22,5 @@ interface CoroutinesCache<K : Any, V> {
     suspend fun invalidateAll(keys: Iterable<K>)
 }
 
-fun <K : Any, V : Any> AsyncCache<K, V>.coroutines(): CoroutinesCache<K, V> = CaffeineCoroutinesCache(this)
+fun <K : Any, V> AsyncCache<K, V>.coroutines(scope: CoroutineScope): CoroutinesCache<K, V> =
+    CaffeineCoroutinesCache(scope, this)
