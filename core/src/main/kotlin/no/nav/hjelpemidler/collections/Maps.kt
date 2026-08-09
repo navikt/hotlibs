@@ -32,3 +32,5 @@ fun Map<String, List<String>>.toQueryString(): String {
         }
     }
 }
+
+fun <K, V> Map<K, V>.inverse(): Map<V, K> = entries.associate { (key, value) -> value to key }
