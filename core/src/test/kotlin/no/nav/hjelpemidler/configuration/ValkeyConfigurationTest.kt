@@ -8,7 +8,7 @@ import kotlin.test.Test
 class ValkeyConfigurationTest {
     @Test
     fun `Skal opprette Valkey-konfigurasjon fra miljøvariabler`() {
-        val configuration = ValkeyConfiguration("test", Provider.VALKEY)
+        val configuration = ValkeyConfiguration("test-instance", Provider.VALKEY)
 
         configuration.uri shouldBe "valkeys://10.0.0.1:26483".toURI()
         configuration.uri.host shouldBe "10.0.0.1"
