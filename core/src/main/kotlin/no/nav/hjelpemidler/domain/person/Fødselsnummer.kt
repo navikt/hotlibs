@@ -23,12 +23,15 @@ class Fødselsnummer(value: String) : PersonId(value) {
 
     private val internal: Fodselsnummer get() = FodselsnummerValidator.getFodselsnummer(value)
 
+    @Suppress("DEPRECATION")
     @Deprecated("Kjønn kan ikke sikkert utledes fra fødselsnummer, hent informasjonen fra PDL.")
     val erKvinne: Boolean get() = internal.isFemale
 
+    @Suppress("DEPRECATION")
     @Deprecated("Kjønn kan ikke sikkert utledes fra fødselsnummer, hent informasjonen fra PDL.")
     val erMann: Boolean get() = internal.isMale
 
+    @Suppress("DEPRECATION")
     @Deprecated("Fødselsdato kan ikke sikkert utledes fra fødselsnummer, hent informasjonen fra PDL.")
     val fødselsdato: Fødselsdato
         get() = internal.let {
@@ -70,6 +73,7 @@ fun String?.toFødselsnummer(): Fødselsnummer? = this?.toFødselsnummer()
  *
  * @see [FodselsnummerValidator.ALLOW_SYNTHETIC_NUMBERS]
  */
+@Suppress("ObjectPropertyName")
 var TILLAT_SYNTETISKE_FØDSELSNUMRE: Boolean
     get() = FodselsnummerValidator.ALLOW_SYNTHETIC_NUMBERS
     set(value) {
