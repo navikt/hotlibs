@@ -1,6 +1,8 @@
 package no.nav.hjelpemidler.collections
 
 import java.util.EnumSet
+import java.util.NavigableSet
+import java.util.TreeSet
 
 inline fun <reified E : Enum<E>> enumSet(): Set<E> = EnumSet.allOf(E::class.java)
 
@@ -29,3 +31,15 @@ inline fun <reified E : Enum<E>> Collection<E>.toEnumSet(): Set<E> {
 }
 
 fun <E : Enum<E>> E.toSet(): EnumSet<E> = EnumSet.of(this)
+
+inline fun <T, R> Iterable<T>.mapToSet(transform: (T) -> R): Set<R> =
+    mapTo(LinkedHashSet(), transform)
+
+inline fun <T, R : Comparable<R>> Iterable<T>.mapToSortedSet(transform: (T) -> R): NavigableSet<R> =
+    mapTo(TreeSet(), transform)
+
+inline fun <T, R> Iterable<T>.mapNotNullToSet(transform: (T) -> R?): Set<R> =
+    mapNotNullTo(LinkedHashSet(), transform)
+
+inline fun <T, R : Comparable<R>> Iterable<T>.mapNotNullToSortedSet(transform: (T) -> R?): NavigableSet<R> =
+    mapNotNullTo(TreeSet(), transform)
