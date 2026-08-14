@@ -15,6 +15,7 @@ dependencies {
     api(libs.junit.jupiter.api)
     api(libs.kotlinx.coroutines.test)
     api(libs.mockk)
+    api(libs.mockk.context.parameters)
 
     // kotest
     api(libs.kotest.assertions.core)
