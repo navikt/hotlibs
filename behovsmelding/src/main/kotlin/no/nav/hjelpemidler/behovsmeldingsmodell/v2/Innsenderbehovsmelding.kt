@@ -247,6 +247,15 @@ data class Produktkategori(
         val delkontrakttittel: String,
         val bruksarenaer: List<BruksarenaV2>,
         val opplysninger: List<Opplysning>,
+        val hjelpemidler: List<ProduktlisteItem>? = null,
+        val tilbehør: List<ProduktlisteItem>? = null,
+)
+
+data class ProduktlisteItem(
+        val hmsArtNr: String,
+        val navn: String,
+        val antall: Int,
+        val opplysninger: List<Opplysning> = emptyList(),
 )
 
 enum class ProduktkategoriType {
