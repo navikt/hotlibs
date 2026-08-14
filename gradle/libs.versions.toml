@@ -266,6 +266,7 @@ tokenx-validation = { module = "no.nav.tms.token.support:tokenx-validation", ver
 tokenx-validation-mock = { module = "no.nav.tms.token.support:tokenx-validation-mock", version.ref = "tmsKtorTokenSupport" }
 ucp11 = { module = "com.oracle.database.jdbc:ucp11", version.ref = "oracle" }
 unleash-client = { module = "io.getunleash:unleash-client-java", version.ref = "unleash" }
+urn = "de.slub-dresden:urnlib:3.0.0"
 valkey = { module = "io.valkey:valkey-java", version.ref = "valkey" }
 varsel-kotlin-builder = { module = "no.nav.tms.varsel:kotlin-builder", version.ref = "tmsVarsel" }
 wiremock = { module = "org.wiremock:wiremock", version.ref = "wiremock" }
