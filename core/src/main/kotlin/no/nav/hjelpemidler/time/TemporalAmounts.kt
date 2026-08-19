@@ -7,6 +7,7 @@ import org.threeten.extra.Months
 import org.threeten.extra.Seconds
 import org.threeten.extra.Weeks
 import org.threeten.extra.Years
+import java.time.OffsetDateTime
 
 val Int.sekunder: Seconds get() = Seconds.of(this)
 val Int.minutter: Minutes get() = Minutes.of(this)
@@ -17,3 +18,13 @@ val Int.måneder: Months get() = Months.of(this)
 val Int.år: Years get() = Years.of(this)
 
 val Int.arbeidsdager: Arbeidsdager get() = Arbeidsdager.of(this)
+
+/**
+ * Plusser på `1` arbeidsdag hvis gjeldende klokkeslett er 12:00 eller senere.
+ */
+val Int.heleArbeidsdager: Arbeidsdager
+    get() = if (OffsetDateTime.now(ZONE_ID_EUROPE_OSLO).hour < 12) {
+        this.arbeidsdager
+    } else {
+        (this + 1).arbeidsdager
+    }

@@ -61,15 +61,6 @@ class Arbeidsdager private constructor(private val arbeidsdager: Int) : Temporal
     override fun toString(): String = arbeidsdager.toString()
 
     companion object {
-        val ZERO = Arbeidsdager(0)
-        val ONE = Arbeidsdager(1)
-        val THIRTY = Arbeidsdager(30)
-
-        internal fun of(arbeidsdager: Int) = when (arbeidsdager) {
-            0 -> ZERO
-            1 -> ONE
-            30 -> THIRTY
-            else -> Arbeidsdager(arbeidsdager)
-        }
+        internal fun of(arbeidsdager: Int): Arbeidsdager = Arbeidsdager(arbeidsdager)
     }
 }
