@@ -14,6 +14,9 @@ class Enhet(
     override val navn: String,
 ) : AbstractEnhet<Enhetsnummer>() {
     @JsonIgnore
+    constructor(nummer: Enhetsnummer) : this(nummer, nummer.toString())
+
+    @JsonIgnore
     constructor(nummer: String, navn: String) : this(Enhetsnummer(nummer), navn)
 
     /**
@@ -27,6 +30,14 @@ class Enhet(
          */
         val NAV_VIKAFOSSEN =
             Enhet(nummer = "2103", navn = "Nav Vikafossen")
+
+        /**
+         * Også kjent som 'Nav Fagpost'.
+         *
+         * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/2950">NORG2</a>
+         */
+        val NAV_DRIFT_OG_UTVIKLING_ADMINISTRATIVE_TJENESTER =
+            Enhet(nummer = "2950", navn = "Nav drift og utvikling - administrative tjenester")
 
         /**
          * @see <a href="https://norg2.intern.nav.no/norg2/api/v1/enhet/2970">NORG2</a>
