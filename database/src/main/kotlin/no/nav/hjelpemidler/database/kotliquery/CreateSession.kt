@@ -4,13 +4,13 @@ import javax.sql.DataSource
 
 internal fun createSession(
     dataSource: DataSource,
-    properties: SessionProperties,
+    sessionProperties: SessionProperties,
 ): kotliquery.Session {
-    val connection = dataSource.connection.apply { isReadOnly = properties.readOnly }
+    val connection = dataSource.connection.apply { isReadOnly = sessionProperties.readOnly }
     return kotliquery.Session(
         connection = kotliquery.Connection(connection),
-        returnGeneratedKeys = properties.returnGeneratedKeys,
-        strict = properties.strict,
-        queryTimeout = properties.queryTimeout,
+        returnGeneratedKeys = sessionProperties.returnGeneratedKeys,
+        strict = sessionProperties.strict,
+        queryTimeout = sessionProperties.queryTimeout,
     )
 }

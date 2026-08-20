@@ -1,11 +1,9 @@
-package no.nav.hjelpemidler.database.postgresql
+package no.nav.hjelpemidler.database
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.coroutines.test.runTest
-import no.nav.hjelpemidler.database.single
 import no.nav.hjelpemidler.database.test.testDataSource
-import no.nav.hjelpemidler.database.transaction
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.time.Instant
@@ -18,7 +16,7 @@ import java.time.ZonedDateTime
 import java.util.UUID
 import kotlin.test.Test
 
-class PostgreSQLAdapterTest {
+class PostgreSQLTest {
     @Test
     fun `Henter alle value types`() = runTest {
         transaction(testDataSource) {

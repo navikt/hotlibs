@@ -13,23 +13,50 @@ import kotlin.coroutines.CoroutineContext
 
 private val log = KotlinLogging.logger {}
 
-interface Transaction<T : Any> {
-    suspend operator fun <R> invoke(block: suspend T.() -> R): R
+interface Transaction {
+    suspend operator fun <T> invoke(block: suspend context(TransactionContext) () -> T): T
 }
 
 /**
- * Opprett [JdbcOperations] og start transaksjon eller gjenbruk eksisterende [JdbcOperations].
+ * Opprett [TransactionContext] og start transaksjon eller gjenbruk eksisterende [TransactionContext].
  *
  * Tilsvarer `PROPAGATION_REQUIRED` i Spring.
  *
  * Tillater suspending functions i transaksjonen for nettverkskall etc.
  *
- * NB! Ikke gjør parallelle kall med samme [JdbcOperations] i [block] som f.eks.:
+ * Funksjonen kan også brukes med Kotlin context parameters (tilgjengelig fra Kotlin 2.4.0):
+ * [Context parameters | Kotlin Documentation](https://kotlinlang.org/docs/context-parameters.html)
+ *
+ * Eksempel på bruk:
  * ```kotlin
- * transaction { operations ->
+ * object SakRepository : Repository {
+ *     context(ctx: TransactionContext)
+ *     fun opprettSak(): Long {
+ *         return ctx.single<Long>("INSERT INTO sak (sakstype) VALUES ('SØKNAD') RETURNING id")
+ *     }
+ * }
+ *
+ * class SakService(private val dataSource: DataSource) {
+ *     suspend fun opprettSak() {
+ *         transaction(dataSource) {
+ *             val sakId = SakRepository.opprettSak()
+ *             annenOperasjon(sakId) // denne kjøres i samme transaksjon
+ *         }
+ *     }
+ *
+ *     context(ctx: TransactionContext)
+ *     private suspend fun annenOperasjon(sakId: Long) {
+ *         ctx.execute("UPDATE saksgrunnlag SET sak_id = :sakId WHERE sak_id IS NULL", mapOf("sakId" to sakId))
+ *     }
+ * }
+ * ```
+ *
+ * NB! Ikke gjør parallelle kall med samme [TransactionContext] i [block] som f.eks.:
+ * ```kotlin
+ * transaction { ctx ->
  *     coroutineScope {
- *         launch { operations... }
- *         val deferred = async { operations... }
+ *         launch { ctx... }
+ *         val deferred = async { ctx... }
  *     }
  * }
  * ```
@@ -37,7 +64,6 @@ interface Transaction<T : Any> {
  * NB! Parametre som [readOnly] etc. kan ikke endres i nestede transaksjoner siden transaksjonen gjenbrukes.
  * Eventuelle endringer vil bli ignorert.
  *
- * @see [TransactionJdbcOperations]
  * @see <a href="https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/tx-propagation.html#tx-propagation-required">Understanding PROPAGATION_REQUIRED</a>
  */
 suspend fun <T> transaction(
@@ -46,35 +72,36 @@ suspend fun <T> transaction(
     returnGeneratedKeys: Boolean = false,
     strict: Boolean = true,
     queryTimeout: Int? = null,
-    block: suspend (JdbcOperations) -> T,
+    block: suspend context(TransactionContext) (TransactionContext) -> T,
 ): T {
-    val properties = SessionProperties(
+    val sessionProperties = SessionProperties(
         readOnly = readOnly,
         returnGeneratedKeys = returnGeneratedKeys,
         strict = strict,
         queryTimeout = queryTimeout,
     )
-    val outer = currentCoroutineContext()[TransactionJdbcOperations] ?: return withContext(Dispatchers.IO) {
-        log.trace { "Oppretter ny databasetransaksjon, $properties" }
-        createSession(dataSource, properties).use { session ->
+    val outerContext = currentCoroutineContext()[CoroutineTransactionContext] ?: return withContext(Dispatchers.IO) {
+        log.trace { "Oppretter ny databasetransaksjon, $sessionProperties" }
+        createSession(dataSource, sessionProperties).use { session ->
             session.transaction { transactionalSession ->
-                val operations = SessionJdbcOperations(transactionalSession)
-                withContext(TransactionJdbcOperations(properties, operations)) {
-                    block(operations)
+                val jdbcOperations = SessionJdbcOperations(transactionalSession)
+                val innerContext = CoroutineTransactionContext(sessionProperties, jdbcOperations)
+                withContext(innerContext) {
+                    block(innerContext, innerContext)
                 }
             }
         }
     }
-    log.trace { "Gjenbruker eksisterende databasetransaksjon, ${outer.properties}" }
-    if (properties != outer.properties) {
-        log.debug { "Transaksjonen ble forsøkt endret, men endringene ignoreres siden transaksjonen gjenbrukes, ytre: (${outer.properties}), indre: ($properties)" }
+    log.trace { "Gjenbruker eksisterende databasetransaksjon, ${outerContext.sessionProperties}" }
+    if (sessionProperties != outerContext.sessionProperties) {
+        log.debug { "Transaksjonen ble forsøkt endret, men endringene ignoreres siden transaksjonen gjenbrukes, ytre: (${outerContext.sessionProperties}), indre: ($sessionProperties)" }
     }
-    return block(outer.operations)
+    return block(outerContext, outerContext)
 }
 
-internal class TransactionJdbcOperations(
-    val properties: SessionProperties,
-    val operations: JdbcOperations,
-) : AbstractCoroutineContextElement(TransactionJdbcOperations) {
-    companion object Key : CoroutineContext.Key<TransactionJdbcOperations>
+internal class CoroutineTransactionContext(
+    val sessionProperties: SessionProperties,
+    val jdbcOperations: JdbcOperations,
+) : AbstractCoroutineContextElement(CoroutineTransactionContext), TransactionContext, JdbcOperations by jdbcOperations {
+    companion object Key : CoroutineContext.Key<CoroutineTransactionContext>
 }

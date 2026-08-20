@@ -7,6 +7,6 @@ import javax.sql.DataSource
 
 val testDataSource: DataSource by lazy {
     createDataSource(Testcontainers) {
-        tag = "15-alpine"
+        tag = "18-alpine"
     }.also { it.migrate() }
 }
