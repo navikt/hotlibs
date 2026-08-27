@@ -6,12 +6,8 @@ dependencies {
     api(project(":core"))
     api(project(":serialization"))
 
-    // Logging
-    runtimeOnly(libs.slf4j.jdk.platform.logging)
-
     // Kotlinx
     api(libs.kotlinx.coroutines.core)
-    implementation(libs.kotlinx.coroutines.slf4j)
 
     // Ktor
     api(libs.ktor.client.cio)
@@ -21,13 +17,11 @@ dependencies {
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.jackson3)
 
-    // JWT
-    implementation(libs.java.jwt)
-    implementation(libs.nimbus.jose.jwt)
-
     // Cache
     api(libs.caffeine)
+    runtimeOnly(libs.slf4j.jdk.platform.logging) // Caffeine uses JDK Platform Logging
 
     // Testing
     testImplementation(testFixtures(project(":core")))
+    testImplementation(libs.java.jwt)
 }

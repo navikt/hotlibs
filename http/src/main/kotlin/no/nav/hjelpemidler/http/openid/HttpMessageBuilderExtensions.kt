@@ -1,6 +1,5 @@
 package no.nav.hjelpemidler.http.openid
 
-import com.auth0.jwt.interfaces.DecodedJWT
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.bearerAuth
 import io.ktor.http.HttpMessageBuilder
@@ -36,13 +35,6 @@ fun HttpRequestBuilder.asApplication() {
 fun HttpRequestBuilder.onBehalfOf(userToken: String) {
     attributes[UserTokenValue.KEY] = UserTokenValue(userToken)
 }
-
-/**
- * Gjør request på vegne av bruker.
- *
- * @see [HttpRequestBuilder.asApplication]
- */
-fun HttpRequestBuilder.onBehalfOf(userToken: DecodedJWT) = onBehalfOf(userToken.token)
 
 /**
  * Gjør request på vegne av bruker.
