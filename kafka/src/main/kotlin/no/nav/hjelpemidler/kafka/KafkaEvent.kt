@@ -1,8 +1,6 @@
 package no.nav.hjelpemidler.kafka
 
-import java.util.concurrent.ConcurrentHashMap
-import kotlin.reflect.KClass
-import kotlin.reflect.full.findAnnotation
+import no.nav.hjelpemidler.annotation.annotationClassValue
 
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
@@ -20,10 +18,7 @@ annotation class KafkaEvent(
     companion object {
         const val NAME_KEY: String = "eventName"
 
-        fun <T : KafkaMessage> of(messageClass: KClass<T>): KafkaEvent = eventByClass.computeIfAbsent(messageClass) {
-            it.findAnnotation<KafkaEvent>() ?: error("'$it' mangler KafkaEvent-annotasjon")
-        }
-
-        private val eventByClass: MutableMap<KClass<*>, KafkaEvent> = ConcurrentHashMap()
+        private val classValue = annotationClassValue<KafkaEvent>()
+        fun <T : KafkaMessage> of(type: Class<T>): KafkaEvent = classValue.getOrThrow(type)
     }
 }

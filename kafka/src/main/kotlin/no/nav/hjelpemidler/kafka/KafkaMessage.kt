@@ -7,7 +7,7 @@ import java.util.UUID
  */
 interface KafkaMessage {
     val eventId: UUID
-    val eventName: String get() = KafkaEvent.of(this::class).name
+    val eventName: String get() = KafkaEvent.of(javaClass).name
 
     companion object {
         const val EVENT_ID_KEY: String = "eventId"
