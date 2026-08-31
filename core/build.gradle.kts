@@ -17,10 +17,6 @@ dependencies {
     // kotlinx-serialization
     compileOnly(libs.kotlinx.serialization.core)
     compileOnly(libs.kotlinx.serialization.json)
-
-    // Fixtures
-    testFixturesCompileOnly(libs.jackson.annotations)
-    testFixturesCompileOnly(libs.kotlinx.serialization.core)
 }
 
 @Suppress("UnstableApiUsage")
