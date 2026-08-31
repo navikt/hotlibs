@@ -9,7 +9,7 @@ on:
       - "CODEOWNERS"
     branches:
       - main
-      - produktkategorikomponent
+      - produktkategorikomponent-2
 
 jobs:
   publish-jar:
