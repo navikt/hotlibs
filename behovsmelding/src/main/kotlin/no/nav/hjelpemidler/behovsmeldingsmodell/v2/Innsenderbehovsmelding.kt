@@ -61,6 +61,16 @@ data class Innsenderbehovsmelding(
             val sammendrag = lagTittel(this)
             return sammendrag
         }
+
+    /**
+     * Alle vedlegg for behovsmeldingen, både de som ligger på toppnivå og de som ligger nøstet under
+     * produktkategorier og komponenter på produktkategorier (f.eks. dørautomatikk).
+     */
+    val alleVedlegg: List<Vedlegg>
+        @JsonIgnore
+        get() = vedlegg + hjelpemidler.produktkategorier.flatMap { produktkategori ->
+            produktkategori.vedlegg + produktkategori.komponenter.flatMap { it.vedlegg }
+        }
 }
 
 data class Vedlegg(
