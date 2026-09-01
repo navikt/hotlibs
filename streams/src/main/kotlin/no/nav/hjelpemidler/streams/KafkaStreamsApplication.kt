@@ -31,9 +31,10 @@ fun kafkaStreamsApplication(
 }
 
 internal fun Application.main(applicationId: String, builder: KafkaStreamsApplicationBuilder) {
-    kafkaStreams(applicationId, builder.streamsBuilder)
     health()
     metrics()
+
+    kafkaStreams(applicationId, builder.streamsBuilder)
 }
 
 internal fun Application.kafkaStreams(applicationId: String, builder: StreamsBuilder) {
