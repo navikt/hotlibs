@@ -71,6 +71,11 @@ data class Vedlegg(
 
 enum class VedleggType {
     LEGEERKLÆRING_FOR_VARMEHJELPEMIDDEL,
+    DØRAUTOMATIKK_DØR_BILDE,
+    DØRAUTOMATIKK_DØR_PRODUSENT_DOKUMENTASJON,
+    DØRAUTOMATIKK_EKSISTERENDE_DØRAUTOMATIKK_BILDE,
+    DØRAUTOMATIKK_MÅLSATT_TEGNING,
+    DØRAUTOMATIKK_GODKJENNING_MONTERING,
 }
 
 data class InnsenderbehovsmeldingMetadata(
@@ -249,6 +254,8 @@ data class Produktkategori(
         val opplysninger: List<Opplysning>,
         val hjelpemidler: List<ProduktlisteItem>? = null,
         val tilbehør: List<ProduktlisteItem>? = null,
+        val vedlegg: List<Vedlegg> = emptyList(),
+        val komponenter: List<ProduktkategoriKomponent> = emptyList(),
 )
 
 data class ProduktlisteItem(
@@ -259,8 +266,24 @@ data class ProduktlisteItem(
 )
 
 enum class ProduktkategoriType {
-    LYDOVERFØRINGSANLEGG
+    LYDOVERFØRINGSANLEGG, DØRAUTOMATIKK
 }
+
+enum class ProduktkategoriKomponentType {
+    DØR
+}
+
+/**
+ * Brukes dersom produktkategorien består av flere komponenter. F.eks. på dørautomatikk legger
+ * formidler til en eller flere dører (komponenter) hvor det er behov for dørautomatikk.
+ */
+data class ProduktkategoriKomponent(
+    val id: String,
+    val type: ProduktkategoriKomponentType,
+    val navn: String,
+    val opplysninger: List<Opplysning>,
+    val vedlegg: List<Vedlegg>,
+)
 
 data class Bytte(
         val erTilsvarende: Boolean,
