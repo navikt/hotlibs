@@ -25,4 +25,7 @@ dependencies {
     // Metrics
     api(libs.micrometer.core)
     implementation(libs.micrometer.registry.prometheus)
+
+    // Testing
+    testImplementation(libs.ktor.server.test.host)
 }
