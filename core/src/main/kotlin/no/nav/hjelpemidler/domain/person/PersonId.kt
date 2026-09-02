@@ -2,9 +2,10 @@ package no.nav.hjelpemidler.domain.person
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import no.nav.hjelpemidler.domain.id.StringId
+import no.nav.hjelpemidler.validation.Validator
 
 sealed class PersonId(value: String) : StringId(value) {
-    companion object {
+    companion object : Validator<String> {
         @JvmStatic
         @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
         fun from(value: String): PersonId = when {
@@ -12,5 +13,7 @@ sealed class PersonId(value: String) : StringId(value) {
             Fødselsnummer.erGyldig(value) -> Fødselsnummer(value)
             else -> throw IllegalArgumentException("Ugyldig PersonId")
         }
+
+        override fun erGyldig(value: String): Boolean = AktørId.erGyldig(value) || Fødselsnummer.erGyldig(value)
     }
 }
