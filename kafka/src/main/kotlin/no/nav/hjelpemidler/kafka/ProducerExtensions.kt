@@ -21,12 +21,11 @@ suspend fun <K : Any, V : Any> Producer<K, V>.sendAsync(
     continuation.invokeOnCancellation {
         log.trace { "sendAsync cancelled, but message may still be delivered" }
     }
-    val callback = Callback { metadata: RecordMetadata, exception: Exception? ->
+    send(record) { metadata: RecordMetadata, exception: Exception? ->
         if (exception == null) {
             continuation.resume(metadata)
         } else {
             continuation.resumeWithException(exception)
         }
     }
-    send(record, callback)
 }
