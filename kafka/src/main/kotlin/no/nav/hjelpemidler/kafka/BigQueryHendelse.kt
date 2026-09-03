@@ -4,7 +4,7 @@ import java.util.UUID
 
 data class BigQueryHendelse(
     val schemaId: String,
-    val payload: Map<String, Any?>,
+    val payload: Any,
     override val eventId: UUID = UUID.randomUUID(),
 ) : KafkaMessage {
     override val eventName: String = EVENT_NAME
