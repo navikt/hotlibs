@@ -42,6 +42,7 @@ include(
     "nare",
     "norg",
     "oppgave",
+    "pip-clients",
     "platform",
     "rapids-and-rivers",
     "serialization",
