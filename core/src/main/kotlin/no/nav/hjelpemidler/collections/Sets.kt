@@ -43,3 +43,12 @@ inline fun <T, R> Iterable<T>.mapNotNullToSet(transform: (T) -> R?): Set<R> =
 
 inline fun <T, R : Comparable<R>> Iterable<T>.mapNotNullToSortedSet(transform: (T) -> R?): NavigableSet<R> =
     mapNotNullTo(TreeSet(), transform)
+
+inline fun <T, R> Iterable<T>.filterToSet(predicate: (T) -> Boolean): Set<T> =
+    filterTo(LinkedHashSet(), predicate)
+
+inline fun <T, R> Iterable<T>.filterNotToSet(predicate: (T) -> Boolean): Set<T> =
+    filterNotTo(LinkedHashSet(), predicate)
+
+inline fun <reified R> Iterable<*>.filterIsInstanceToSet(): Set<R> =
+    filterIsInstanceTo(LinkedHashSet())
