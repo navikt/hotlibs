@@ -8,8 +8,6 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
 import kotlinx.coroutines.test.runTest
-import no.nav.hjelpemidler.domain.person.AdressebeskyttelseGradering
-import no.nav.hjelpemidler.domain.person.AktørId
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.år
 import no.nav.hjelpemidler.http.openid.TokenSet
@@ -54,27 +52,4 @@ class PdlPipApiClientTest {
         val personer = client.hentPersoner(ider)
         personer.keys shouldBe ider
     }
-}
-
-private fun lagPipPersonResponse(fnr: Fødselsnummer): PipPersonResponse {
-    val aktørId = AktørId("1234567891011")
-    return PipPersonResponse(
-        aktørId = aktørId,
-        person = PipPerson(
-            adressebeskyttelse = listOf(PipAdressebeskyttelse(AdressebeskyttelseGradering.UGRADERT)),
-        ),
-        identer = PipIdenter(
-            listOf(
-                PipIdent(ident = aktørId.value, historisk = false, gruppe = PipIdentGruppe.AKTORID),
-                PipIdent(ident = fnr.value, historisk = false, gruppe = PipIdentGruppe.FOLKEREGISTERIDENT),
-            )
-        ),
-        geografiskTilknytning = PipGeografiskTilknytning(
-            type = PipGeografiskTilknytning.Type.KOMMUNE,
-            kommune = "0301",
-            bydel = "030105",
-            land = null,
-            regel = null,
-        )
-    )
 }

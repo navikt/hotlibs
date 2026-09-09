@@ -2,6 +2,7 @@ package no.nav.hjelpemidler.pip
 
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import no.nav.hjelpemidler.domain.geografi.GeografiskOmråde
 import no.nav.hjelpemidler.domain.person.AdressebeskyttelseGradering
 import no.nav.hjelpemidler.domain.person.AktørId
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
@@ -54,6 +55,7 @@ data class PipResponse(
     val gjeldendeIdenter: Set<PersonId>,
     val fødselsdato: LocalDate?,
     val dødsdato: LocalDate?,
+    val geografiskOmråde: GeografiskOmråde?,
     val gradering: AdressebeskyttelseGradering,
     val isSkjermet: Boolean,
 ) {
@@ -63,6 +65,7 @@ data class PipResponse(
         gjeldendeIdenter = pipPersonResponse.gjeldendeIdenter,
         fødselsdato = pipPersonResponse.person.fødselsdato.firstOrNull()?.fødselsdato,
         dødsdato = pipPersonResponse.person.dødsfall.firstOrNull()?.dødsdato,
+        geografiskOmråde = pipPersonResponse.geografiskOmråde,
         gradering = pipPersonResponse.gradering,
         isSkjermet = isSkjermet,
     )
