@@ -44,7 +44,7 @@ internal class KodeverkDeserializer : StdScalarDeserializer<Kodeverk<*>> {
         return try {
             val value = deserializer.deserialize(parser, context)
             if (value !is Kodeverk<*>) {
-                context.error("${value::class.qualifiedName} does not implement ${Kodeverk::class.qualifiedName}")
+                context.error("${value.javaClass.name} does not implement Kodeverk")
             }
             value
         } catch (e: InvalidFormatException) {
