@@ -18,13 +18,13 @@ import no.nav.hjelpemidler.domain.kodeverk.Fagsaktype
 sealed interface JournalpostSak {
     val sakstype: Fagsaktype
 
+    val isFagsaksystemHotsak: Boolean @JsonIgnore get() = this is Fagsak && fagsaksystem == Fagsaksystem.HJELPEMIDLER
+
     data class Fagsak(
         val fagsakId: String,
         val fagsaksystem: Fagsaksystem,
     ) : JournalpostSak {
         override val sakstype = Fagsaktype.FAGSAK
-
-        val isFagsaksystemHotsak: Boolean @JsonIgnore get() = fagsaksystem == Fagsaksystem.HJELPEMIDLER
 
         override fun toString(): String = "fagsakId: $fagsakId, fagsaksystem: $fagsaksystem"
     }
