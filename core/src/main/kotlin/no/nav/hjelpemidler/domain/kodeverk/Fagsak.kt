@@ -1,5 +1,7 @@
 package no.nav.hjelpemidler.domain.kodeverk
 
+import com.fasterxml.jackson.annotation.JsonAlias
+
 /**
  * @see <a href="https://confluence.adeo.no/x/FUutEg">Opprett Journalpost</a>
  */
@@ -18,7 +20,10 @@ enum class Fagsaksystem(override val beskrivelse: String) : Kodeverk<Fagsaksyste
     FS36(beskrivelse = "Foreldrepengeløsningen"),
     FS38(beskrivelse = "Melosys"),
     HELT(beskrivelse = "Helsetjenester"),
+
+    @JsonAlias(HOTSAK)
     HJELPEMIDLER(beskrivelse = "Hotsak"),
+
     IT01(beskrivelse = "Infotrygd"),
     K9(beskrivelse = "Sykdom i familien"),
     KELVIN(beskrivelse = "Arbeidsavklaringspenger"),
@@ -40,16 +45,26 @@ enum class Fagsaksystem(override val beskrivelse: String) : Kodeverk<Fagsaksyste
     UNG_SAK(beskrivelse = "Fagsystem for å saksbehandling av ungdomsprogramytelsen"),
     WATSON(beskrivelse = "Fagsystem for Nav Kontroll"),
     ;
+
+    companion object {
+        /**
+         * Alias brukt noen steder, som f.eks. "behandlende system" i Oppgave.
+         */
+        const val HOTSAK = "HOTSAK"
+
+        private val hotsakValues = setOf(HOTSAK, HJELPEMIDLER.name)
+        fun isHotsak(value: String): Boolean = value in hotsakValues
+    }
 }
 
 /**
  * @see <a href="https://confluence.adeo.no/x/FUutEg">Opprett Journalpost</a>
  */
-enum class Fagsaktype(val value: String) : Kodeverk<Fagsaktype> {
-    FAGSAK("FAGSAK"),
-    GENERELL_SAK("GENERELL_SAK"),
+enum class Fagsaktype(override val beskrivelse: String) : Kodeverk<Fagsaktype> {
+    FAGSAK(beskrivelse = "Fagsak"),
+    GENERELL_SAK(beskrivelse = "Generell sak"),
 
     @Deprecated("Skal ikke brukes av konsumenter")
-    ARKIVSAK("ARKIVSAK"),
+    ARKIVSAK(beskrivelse = "Arkivsak"),
     ;
 }

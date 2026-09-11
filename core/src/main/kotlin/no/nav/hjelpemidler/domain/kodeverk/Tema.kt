@@ -1,6 +1,6 @@
 package no.nav.hjelpemidler.domain.kodeverk
 
-enum class Tema(val beskrivelse: String) {
+enum class Tema(override val beskrivelse: String) : Kodeverk<Tema> {
     AAP(beskrivelse = "Arbeidsavklaringspenger"),
     AAR(beskrivelse = "Aa-registeret"),
     AGR(beskrivelse = "Ajourhold - grunnopplysninger"),
