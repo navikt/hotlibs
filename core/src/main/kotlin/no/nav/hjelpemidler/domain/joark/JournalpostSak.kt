@@ -1,5 +1,6 @@
 package no.nav.hjelpemidler.domain.joark
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import no.nav.hjelpemidler.domain.kodeverk.Fagsaksystem
@@ -22,6 +23,8 @@ sealed interface JournalpostSak {
         val fagsaksystem: Fagsaksystem,
     ) : JournalpostSak {
         override val sakstype = Fagsaktype.FAGSAK
+
+        val isFagsaksystemHotsak: Boolean @JsonIgnore get() = fagsaksystem == Fagsaksystem.HJELPEMIDLER
 
         override fun toString(): String = "fagsakId: $fagsakId, fagsaksystem: $fagsaksystem"
     }
