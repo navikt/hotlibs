@@ -1,10 +1,12 @@
 package no.nav.hjelpemidler.domain.joark
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
+import no.nav.hjelpemidler.domain.joark.JournalpostSak.Fagsak
 import no.nav.hjelpemidler.domain.kodeverk.Fagsaksystem
 import no.nav.hjelpemidler.domain.kodeverk.Fagsaktype
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
@@ -17,8 +19,6 @@ import no.nav.hjelpemidler.domain.kodeverk.Fagsaktype
 )
 sealed interface JournalpostSak {
     val sakstype: Fagsaktype
-
-    val isFagsaksystemHotsak: Boolean @JsonIgnore get() = this is Fagsak && fagsaksystem == Fagsaksystem.HJELPEMIDLER
 
     data class Fagsak(
         val fagsakId: String,
@@ -33,3 +33,12 @@ sealed interface JournalpostSak {
         override val sakstype = Fagsaktype.GENERELL_SAK
     }
 }
+
+@OptIn(ExperimentalContracts::class)
+val JournalpostSak.isFagsaksystemHotsak: Boolean
+    get() {
+        contract {
+            returns(true) implies (this@isFagsaksystemHotsak is Fagsak)
+        }
+        return this is Fagsak && fagsaksystem == Fagsaksystem.HJELPEMIDLER
+    }
