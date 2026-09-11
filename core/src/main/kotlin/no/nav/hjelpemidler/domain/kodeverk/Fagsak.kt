@@ -63,8 +63,4 @@ enum class Fagsaksystem(override val beskrivelse: String) : Kodeverk<Fagsaksyste
 enum class Fagsaktype(override val beskrivelse: String) : Kodeverk<Fagsaktype> {
     FAGSAK(beskrivelse = "Fagsak"),
     GENERELL_SAK(beskrivelse = "Generell sak"),
-
-    @Deprecated("Skal ikke brukes av konsumenter")
-    ARKIVSAK(beskrivelse = "Arkivsak"),
-    ;
 }
