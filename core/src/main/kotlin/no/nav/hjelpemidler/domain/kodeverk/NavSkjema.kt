@@ -175,6 +175,8 @@ enum class NavSkjema(override val kode: String, override val beskrivelse: String
     val isEttersendelse: Boolean get() = kode.startsWith(PREFIX_ETTERSENDELSE)
     val isStatisk: Boolean get() = kode.startsWith(PREFIX_STATISK)
 
+    override fun toString(): String = "$kode ('$beskrivelse')"
+
     companion object {
         const val PREFIX = "NAV"
         const val PREFIX_ETTERSENDELSE = "NAVe"
@@ -215,3 +217,7 @@ val Brevkode.isUkjentNavSkjema: Boolean
         }
         return this is UkjentNavSkjema
     }
+
+fun main() {
+    println(NavSkjema.NAV_10_07_03)
+}
