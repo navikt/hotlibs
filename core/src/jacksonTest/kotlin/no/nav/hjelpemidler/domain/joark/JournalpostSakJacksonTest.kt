@@ -6,7 +6,7 @@ import no.nav.hjelpemidler.domain.kodeverk.Fagsaksystem
 import no.nav.hjelpemidler.serialization.jackson.jsonToValue
 import org.junit.jupiter.api.Test
 
-class JournalpostSakTest {
+class JournalpostSakJacksonTest {
     @Test
     fun `JSON til GenerellSak`() {
         val sak = jsonToValue<JournalpostSak>("""{ "sakstype": "GENERELL_SAK" }""")

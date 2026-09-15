@@ -2,6 +2,7 @@ package no.nav.hjelpemidler.database
 
 import no.nav.hjelpemidler.core.Maybe
 import no.nav.hjelpemidler.core.ValueType
+import no.nav.hjelpemidler.domain.kodeverk.Brevkode
 import no.nav.hjelpemidler.domain.kodeverk.Kodeverk
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -40,6 +41,7 @@ internal fun QueryParameters.prepare(): QueryParameters = mapValues { (_, value)
         is Optional<*> -> value.getOrNull()
         is QueryParameter<*> -> value.queryParameter
         is ValueType<*> -> value.value
+        is Brevkode -> value.kode
         is Kodeverk<*> -> value.name
         is Enum<*> -> value.name
         else -> value
