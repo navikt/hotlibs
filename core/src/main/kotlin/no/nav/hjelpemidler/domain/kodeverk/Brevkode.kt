@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonValue
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
-sealed interface Brevkode {
+interface Brevkode {
     @get:JsonValue
     val kode: String
     val beskrivelse: String get() = kode

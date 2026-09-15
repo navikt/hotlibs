@@ -217,7 +217,3 @@ val Brevkode.isUkjentNavSkjema: Boolean
         }
         return this is UkjentNavSkjema
     }
-
-fun main() {
-    println(NavSkjema.NAV_10_07_03)
-}
