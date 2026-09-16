@@ -3,6 +3,7 @@ package no.nav.hjelpemidler.domain.joark
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import no.nav.hjelpemidler.domain.joark.JournalpostSak.Fagsak
+import no.nav.hjelpemidler.domain.joark.JournalpostSak.GenerellSak
 import no.nav.hjelpemidler.domain.kodeverk.Fagsaksystem
 import no.nav.hjelpemidler.domain.kodeverk.Fagsaktype
 import kotlin.contracts.ExperimentalContracts
@@ -14,8 +15,8 @@ import kotlin.contracts.contract
     property = "sakstype",
 )
 @JsonSubTypes(
-    JsonSubTypes.Type(JournalpostSak.Fagsak::class, name = "FAGSAK"),
-    JsonSubTypes.Type(JournalpostSak.GenerellSak::class, name = "GENERELL_SAK"),
+    JsonSubTypes.Type(Fagsak::class, name = "FAGSAK"),
+    JsonSubTypes.Type(GenerellSak::class, name = "GENERELL_SAK"),
 )
 sealed interface JournalpostSak {
     val sakstype: Fagsaktype
