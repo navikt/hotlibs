@@ -31,6 +31,8 @@ sealed interface JournalpostSak {
 
     data object GenerellSak : JournalpostSak {
         override val sakstype = Fagsaktype.GENERELL_SAK
+
+        override fun toString(): String = "sak: GenerellSak"
     }
 }
 
