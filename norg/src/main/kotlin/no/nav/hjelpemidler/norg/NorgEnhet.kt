@@ -43,7 +43,7 @@ class NorgEnhet(
         @JsonIgnore
         get() = isStatusAktiv && (isTypeHjelpemiddelsentral || isTypeIT || isVikafossen)
 
-    override fun toString(): String = "${enhet.navn} (nummer: '${enhet.nummer}', status: $status, type: $type)"
+    override fun toString(): String = "'$navn' (nummer: $nummer, status: $status, type: $type)"
 
     enum class Status : Kodeverk<Status> {
         UNDER_ETABLERING,

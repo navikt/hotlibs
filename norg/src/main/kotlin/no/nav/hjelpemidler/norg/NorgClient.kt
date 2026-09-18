@@ -14,7 +14,7 @@ import io.ktor.http.contentType
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import no.nav.hjelpemidler.configuration.Configuration
+import no.nav.hjelpemidler.configuration.EnvironmentVariable
 import no.nav.hjelpemidler.domain.enhet.Enhet
 import no.nav.hjelpemidler.domain.enhet.Enhetsnummer
 import no.nav.hjelpemidler.domain.enhet.TilknyttetEnhet
@@ -24,7 +24,7 @@ private val log = KotlinLogging.logger {}
 
 class NorgClient(
     engine: HttpClientEngine = CIO.create(),
-    private val baseUrl: String = Configuration["NORG_API_URL"] ?: "https://norg2.prod-fss-pub.nais.io/norg2/api/v1",
+    private val baseUrl: String = NORG_API_URL,
 ) {
     private val client = createHttpClient(engine) {
         expectSuccess = true
@@ -33,20 +33,20 @@ class NorgClient(
         }
     }
 
-    suspend fun hentArbeidsfordeling(geografiskOmråde: String): List<Enhet> {
+    suspend fun hentArbeidsfordeling(request: NorgArbeidsfordelingRequest): List<Enhet> {
         val url = "$baseUrl/arbeidsfordeling/enheter/bestmatch"
-        log.debug { "Henter arbeidsfordeling med url: '$url', geografiskOmråde: $geografiskOmråde" }
+        log.debug { "Henter arbeidsfordeling med url: '$url', $request" }
         return client
             .post(url) {
                 contentType(ContentType.Application.Json)
-                setBody(NorgArbeidsfordelingRequest(geografiskOmråde))
+                setBody(request)
             }
             .body()
     }
 
     suspend fun hentArbeidsfordelinger(geografiskeOmråder: Set<String>): Map<String, List<Enhet>> = coroutineScope {
         geografiskeOmråder
-            .map { async { it to hentArbeidsfordeling(it) } }
+            .map { async { it to hentArbeidsfordeling(NorgArbeidsfordelingRequest(geografiskOmråde = it)) } }
             .awaitAll()
             .toMap()
     }
@@ -72,3 +72,5 @@ class NorgClient(
 
     suspend fun hentEnhet(id: String): Enhet = hentEnhet(Enhetsnummer(id))
 }
+
+internal val NORG_API_URL by EnvironmentVariable(defaultValue = "http://norg2.org.svc.cluster.local/norg2/api/v1")
