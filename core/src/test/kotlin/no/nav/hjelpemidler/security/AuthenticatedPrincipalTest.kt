@@ -7,10 +7,11 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldNotBeBlank
 import io.kotest.matchers.types.shouldBeInstanceOf
 import no.nav.hjelpemidler.domain.tilgang.Applikasjonsnavn
-import no.nav.hjelpemidler.domain.tilgang.applikasjonsnavn
 import kotlin.test.Test
 
 class AuthenticatedPrincipalTest {
+    private val applikasjonsnavn = Applikasjonsnavn("testApplication")
+
     @Test
     fun `AuthenticatedPrincipal er applikasjon`() {
         val principal: AuthenticatedPrincipal = AuthenticatedApplication(applikasjonsnavn)

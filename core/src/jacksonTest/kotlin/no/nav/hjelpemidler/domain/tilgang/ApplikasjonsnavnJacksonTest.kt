@@ -6,13 +6,15 @@ import no.nav.hjelpemidler.serialization.jackson.valueToJson
 import kotlin.test.Test
 
 class ApplikasjonsnavnJacksonTest {
+    private val applikasjonsnavn = Applikasjonsnavn("testApplication")
+
     @Test
     fun `Serialiser til JSON med Jackson`() {
-        valueToJson(applikasjonsnavn) shouldBe applikasjonsnavnJson
+        valueToJson(applikasjonsnavn) shouldBe applikasjonsnavn.toJson()
     }
 
     @Test
     fun `Deserialiser til Kotlin med Jackson`() {
-        jsonToValue<Applikasjonsnavn>(applikasjonsnavnJson) shouldBe applikasjonsnavn
+        jsonToValue<Applikasjonsnavn>(applikasjonsnavn.toJson()) shouldBe applikasjonsnavn
     }
 }

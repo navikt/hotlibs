@@ -8,6 +8,11 @@ import tools.jackson.databind.exc.ValueInstantiationException
 import kotlin.test.Test
 
 class PersonIdJacksonTest {
+    private val aktørId = lagTilfeldigAktørId()
+    private val aktørIdJson = aktørId.toJson()
+    private val fnr = lagTilfeldigFødselsnummer()
+    private val fnrJson = fnr.toJson()
+
     @Test
     fun `Serialiser til JSON med Jackson`() {
         valueToJson(aktørId) shouldBe aktørIdJson

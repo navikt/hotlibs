@@ -13,7 +13,9 @@ import java.util.Date
  *
  * Støtter også syntetiske verdier hvis [TILLAT_SYNTETISKE_FØDSELSNUMRE] settes til `true`.
  *
- * @see [Fodselsnummer]
+ * @see [no.bekk.bekkopen.person.Fodselsnummer]
+ * @see [no.bekk.bekkopen.person.FodselsnummerCalculator]
+ * @see [no.bekk.bekkopen.person.FodselsnummerValidator]
  * @see [TILLAT_SYNTETISKE_FØDSELSNUMRE]
  */
 class Fødselsnummer(value: String) : PersonId(value) {
@@ -25,11 +27,11 @@ class Fødselsnummer(value: String) : PersonId(value) {
 
     @Suppress("DEPRECATION")
     @Deprecated("Kjønn kan ikke sikkert utledes fra fødselsnummer, hent informasjonen fra PDL.")
-    val erKvinne: Boolean get() = internal.isFemale
+    val isKvinne: Boolean get() = internal.isFemale
 
     @Suppress("DEPRECATION")
     @Deprecated("Kjønn kan ikke sikkert utledes fra fødselsnummer, hent informasjonen fra PDL.")
-    val erMann: Boolean get() = internal.isMale
+    val isMann: Boolean get() = internal.isMale
 
     @Suppress("DEPRECATION")
     @Deprecated("Fødselsdato kan ikke sikkert utledes fra fødselsnummer, hent informasjonen fra PDL.")
@@ -43,7 +45,7 @@ class Fødselsnummer(value: String) : PersonId(value) {
         }
 
     /**
-     * Lag et tilfeldig fødselsnummer for [fødselsdato].
+     * Lag et tilfeldig fødselsnummer for [fødselsdato] for test.
      */
     @JsonIgnore
     constructor(fødselsdato: Fødselsdato) : this(

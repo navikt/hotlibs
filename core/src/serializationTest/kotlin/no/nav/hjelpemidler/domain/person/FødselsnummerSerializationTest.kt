@@ -5,6 +5,9 @@ import kotlinx.serialization.json.Json
 import kotlin.test.Test
 
 class FødselsnummerSerializationTest {
+    private val fnr = lagTilfeldigFødselsnummer()
+    private val fnrJson = fnr.toJson()
+
     @Test
     fun `Serialiser til JSON med kotlinx-serialization-json`() {
         Json.encodeToString(FødselsnummerSerializer, fnr) shouldBe fnrJson

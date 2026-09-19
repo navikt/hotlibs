@@ -6,6 +6,13 @@ import no.nav.hjelpemidler.serialization.jackson.valueToJson
 import kotlin.test.Test
 
 class FødselsnummerJacksonTest {
+    private val fnr = lagTilfeldigFødselsnummer()
+    private val fnrJson = fnr.toJson()
+    private val fnrAsArrayElementJson = "[$fnrJson]"
+    private val fnrAsMapKeyJson = """{$fnrJson:true}"""
+    private val person1Json = """{"fnr":$fnrJson}"""
+    private val person2Json = """{"fnr":null}"""
+
     @Test
     fun `Serialiser til JSON med Jackson`() {
         valueToJson(fnr) shouldBe """"$fnr""""
@@ -23,4 +30,8 @@ class FødselsnummerJacksonTest {
         jsonToValue<List<Fødselsnummer>>(fnrAsArrayElementJson) shouldBe listOf(fnr)
         jsonToValue<Map<Fødselsnummer, Boolean>>(fnrAsMapKeyJson) shouldBe mapOf(fnr to true)
     }
+
+    data class Person1(val fnr: Fødselsnummer)
+
+    data class Person2(val fnr: Fødselsnummer?)
 }

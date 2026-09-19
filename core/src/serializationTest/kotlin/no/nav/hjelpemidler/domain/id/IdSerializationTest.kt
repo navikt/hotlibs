@@ -4,22 +4,27 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.json.Json
+import java.util.UUID
 import kotlin.test.Test
 
 class IdSerializationTest {
+    private val numberId = TestLongId(1000)
+    private val stringId = TestStringId("2000")
+    private val uuidId = TestUuidId(UUID.randomUUID())
+
     @Test
     fun `Serialiser til JSON med kotlinx-serialization-json`() {
-        Json.encodeToString(TestNumberIdSerializer, numberId) shouldBe numberIdJsonString
-        Json.encodeToString(TestStringIdSerializer, stringId) shouldBe stringIdJsonString
-        Json.encodeToString(TestUuidIdSerializer, uuidId) shouldBe uuidIdJsonString
+        Json.encodeToString(TestNumberIdSerializer, numberId) shouldBe numberId.toJson()
+        Json.encodeToString(TestStringIdSerializer, stringId) shouldBe stringId.toJson()
+        Json.encodeToString(TestUuidIdSerializer, uuidId) shouldBe uuidId.toJson()
     }
 
     @Test
     fun `Deserialiser til Kotlin med kotlinx-serialization-json`() {
-        Json.decodeFromString(TestNumberIdSerializer, numberIdJsonNumber) shouldBe numberId
-        Json.decodeFromString(TestNumberIdSerializer, numberIdJsonString) shouldBe numberId
-        Json.decodeFromString(TestStringIdSerializer, stringIdJsonString) shouldBe stringId
-        Json.decodeFromString(TestUuidIdSerializer, uuidIdJsonString) shouldBe uuidId
+        Json.decodeFromString(TestNumberIdSerializer, numberId.toJson()) shouldBe numberId
+        Json.decodeFromString(TestNumberIdSerializer, numberId.toJson()) shouldBe numberId
+        Json.decodeFromString(TestStringIdSerializer, stringId.toJson()) shouldBe stringId
+        Json.decodeFromString(TestUuidIdSerializer, uuidId.toJson()) shouldBe uuidId
 
         shouldThrow<NumberFormatException> { Json.decodeFromString(TestNumberIdSerializer, """true""") }
         shouldThrow<NumberFormatException> { Json.decodeFromString(TestNumberIdSerializer, """false""") }

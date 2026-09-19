@@ -7,7 +7,7 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
-import no.nav.hjelpemidler.domain.tilgang.applikasjonsnavn
+import no.nav.hjelpemidler.domain.tilgang.Applikasjonsnavn
 import no.nav.hjelpemidler.security.AuthenticatedApplication
 import no.nav.hjelpemidler.security.AuthenticationContext
 import no.nav.hjelpemidler.security.TestAuthenticatedUser
@@ -15,6 +15,8 @@ import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
 class TokenSetProviderFactoryTest {
+    private val applikasjonsnavn = Applikasjonsnavn("testApplication")
+
     private val client = mockk<TexasClient>(relaxed = true)
     private val identityProvider = IdentityProvider.ENTRA_ID
     private val defaultTarget = "test1"

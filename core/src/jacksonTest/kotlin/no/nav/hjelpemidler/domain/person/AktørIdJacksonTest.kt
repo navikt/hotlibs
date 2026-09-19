@@ -6,13 +6,15 @@ import no.nav.hjelpemidler.serialization.jackson.valueToJson
 import kotlin.test.Test
 
 class AktørIdJacksonTest {
+    private val aktørId = lagTilfeldigAktørId()
+
     @Test
     fun `Serialiser til JSON med Jackson`() {
-        valueToJson(aktørId) shouldBe aktørIdJson
+        valueToJson(aktørId) shouldBe aktørId.toJson()
     }
 
     @Test
     fun `Deserialiser til Kotlin med Jackson`() {
-        jsonToValue<AktørId>(aktørIdJson) shouldBe aktørId
+        jsonToValue<AktørId>(aktørId.toJson()) shouldBe aktørId
     }
 }

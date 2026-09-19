@@ -13,12 +13,3 @@ class TestStringId(value: String) : StringId(value) {
 class TestUuidId(value: UUID) : Id<UUID>(value) {
     constructor(value: String) : this(UUID.fromString(value))
 }
-
-val numberId = TestLongId(12345)
-val stringId = TestStringId("54321")
-val uuidId = TestUuidId(UUID.randomUUID())
-
-val numberIdJsonNumber = "$numberId"
-val numberIdJsonString = """"$numberId""""
-val stringIdJsonString = """"$stringId""""
-val uuidIdJsonString = """"$uuidId""""

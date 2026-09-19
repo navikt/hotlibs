@@ -13,10 +13,10 @@ class NavIdent(value: String) : UtførtAvId(value.uppercase()) {
 
     companion object : Validator<String> {
         private const val LENGTH = 7
-        private val RANGE: CharRange = 'A'..'Z'
+        internal val FIRST_CHARACTER_RANGE: CharRange = 'A'..'Z'
 
         override fun erGyldig(value: String): Boolean =
-            value.length == LENGTH && value[0].uppercaseChar() in RANGE && value.drop(1).isInteger()
+            value.length == LENGTH && value[0].uppercaseChar() in FIRST_CHARACTER_RANGE && value.drop(1).isInteger()
 
         val UKJENT = NavIdent("Z999999")
     }

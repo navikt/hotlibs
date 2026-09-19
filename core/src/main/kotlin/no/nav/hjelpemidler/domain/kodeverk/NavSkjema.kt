@@ -6,6 +6,9 @@ import kotlin.contracts.contract
 /**
  * Alle Nav-skjema som inneholder `'10-07'` fra felles kodeverk.
  *
+ * NB! Dette kodeverket endrer seg over tid, så verdiene her er tiltenkt tilfeller hvor vi har logikk
+ * knyttet til spesifikke skjema.
+ *
  * @see <a href="https://kodeverk.ansatt.nav.no/kodeverk/NAVSkjema">Felles kodeverk - NAVSkjema</a>
  */
 @Suppress("EnumEntryName")

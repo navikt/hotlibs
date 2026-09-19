@@ -7,6 +7,6 @@ sealed class UtførtAvId(value: String) : StringId(value) {
     companion object {
         @JvmStatic
         @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
-        fun from(value: String): UtførtAvId = if (NavIdent.erGyldig(value)) NavIdent(value) else Applikasjonsnavn(value)
+        fun of(value: String): UtførtAvId = if (NavIdent.erGyldig(value)) NavIdent(value) else Applikasjonsnavn(value)
     }
 }

@@ -1,5 +1,8 @@
 package no.nav.hjelpemidler.domain.kodeverk
 
+/**
+ * @see <a href="https://kodeverk.ansatt.nav.no/kodeverk/Tema">Felles kodeverk - Tema</a>
+ */
 enum class Tema(override val beskrivelse: String) : Kodeverk<Tema> {
     AAP(beskrivelse = "Arbeidsavklaringspenger"),
     AAR(beskrivelse = "Aa-registeret"),

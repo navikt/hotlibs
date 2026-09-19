@@ -13,7 +13,7 @@ interface Brevkode {
     companion object {
         @JvmStatic
         @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
-        operator fun invoke(kode: String): Brevkode {
+        fun of(kode: String): Brevkode {
             val navSkjema = NavSkjema[kode]
             return when {
                 navSkjema != null -> navSkjema

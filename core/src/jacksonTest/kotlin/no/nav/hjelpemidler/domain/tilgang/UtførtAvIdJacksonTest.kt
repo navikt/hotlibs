@@ -6,6 +6,11 @@ import no.nav.hjelpemidler.serialization.jackson.valueToJson
 import kotlin.test.Test
 
 class UtførtAvIdJacksonTest {
+    private val navIdent = lagTilfeldigNavIdent()
+    private val navIdentJson = navIdent.toJson()
+    private val applikasjonsnavn = Applikasjonsnavn("testApplication")
+    private val applikasjonsnavnJson = applikasjonsnavn.toJson()
+
     @Test
     fun `Serialiser til JSON med Jackson`() {
         valueToJson(navIdent) shouldBe navIdentJson

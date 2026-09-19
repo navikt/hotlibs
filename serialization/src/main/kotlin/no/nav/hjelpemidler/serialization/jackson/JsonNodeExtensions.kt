@@ -1,6 +1,7 @@
 package no.nav.hjelpemidler.serialization.jackson
 
 import no.nav.hjelpemidler.domain.enhet.Enhetsnummer
+import no.nav.hjelpemidler.domain.id.BrukerId
 import no.nav.hjelpemidler.domain.organisasjon.Organisasjonsnummer
 import no.nav.hjelpemidler.domain.person.AktørId
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
@@ -51,11 +52,14 @@ fun JsonNode?.aktørIdValueOrNull(): AktørId? = ifStringNode(::AktørId)
 fun JsonNode.fødselsnummerValue(): Fødselsnummer = Fødselsnummer(stringValue())
 fun JsonNode?.fødselsnummerValueOrNull(): Fødselsnummer? = ifStringNode(::Fødselsnummer)
 
-fun JsonNode.personIdValue(): PersonId = PersonId.from(stringValue())
-fun JsonNode?.personIdValueOrNull(): PersonId? = ifStringNode(PersonId::from)
+fun JsonNode.personIdValue(): PersonId = PersonId.of(stringValue())
+fun JsonNode?.personIdValueOrNull(): PersonId? = ifStringNode(PersonId::of)
 
 fun JsonNode.organisasjonsnummerValue(): Organisasjonsnummer = Organisasjonsnummer(stringValue())
 fun JsonNode?.organisasjonsnummerValueOrNull(): Organisasjonsnummer? = ifStringNode(::Organisasjonsnummer)
+
+fun JsonNode.brukerIdValue(): BrukerId = BrukerId.of(stringValue())
+fun JsonNode?.brukerIdValueOrNull(): BrukerId? = ifStringNode(BrukerId::of)
 
 fun JsonNode.enhetsnummerValue(): Enhetsnummer = Enhetsnummer(stringValue())
 fun JsonNode?.enhetsnummerValueOrNull(): Enhetsnummer? = ifStringNode(::Enhetsnummer)

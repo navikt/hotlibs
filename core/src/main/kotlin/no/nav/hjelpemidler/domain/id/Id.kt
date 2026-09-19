@@ -10,6 +10,8 @@ import java.nio.charset.Charset
 abstract class Id<T : Comparable<T>>(override val value: T) : Comparable<Id<T>>, ValueType<T> {
     fun toByteArray(charset: Charset = Charsets.UTF_8): ByteArray = toString().toByteArray(charset)
 
+    fun toJson(): String = "\"$value\""
+
     override fun compareTo(other: Id<T>): Int {
         val valueComparison = value.compareTo(other.value)
         return if (valueComparison == 0) javaClass.name.compareTo(other.javaClass.name) else valueComparison

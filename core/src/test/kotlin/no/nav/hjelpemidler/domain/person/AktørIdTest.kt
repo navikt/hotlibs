@@ -11,7 +11,7 @@ class AktørIdTest {
     @Test
     fun `AktørId som består av tretten siffer er gyldig`() {
         shouldNotThrowAny { "1234567891011".toAktørId() }
-        PersonId.from("1234567891011").shouldBeInstanceOf<AktørId>()
+        PersonId.of("1234567891011").shouldBeInstanceOf<AktørId>()
     }
 
     @TestFactory
