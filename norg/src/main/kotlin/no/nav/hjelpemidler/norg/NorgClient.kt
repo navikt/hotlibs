@@ -22,6 +22,8 @@ import no.nav.hjelpemidler.http.createHttpClient
 
 private val log = KotlinLogging.logger {}
 
+internal val NORG_API_URL by EnvironmentVariable(defaultValue = "http://norg2.org.svc.cluster.local/norg2/api/v1")
+
 class NorgClient(
     engine: HttpClientEngine = CIO.create(),
     private val baseUrl: String = NORG_API_URL,
@@ -72,5 +74,3 @@ class NorgClient(
 
     suspend fun hentEnhet(id: String): Enhet = hentEnhet(Enhetsnummer(id))
 }
-
-internal val NORG_API_URL by EnvironmentVariable(defaultValue = "http://norg2.org.svc.cluster.local/norg2/api/v1")

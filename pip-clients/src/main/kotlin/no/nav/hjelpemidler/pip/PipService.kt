@@ -1,26 +1,24 @@
 package no.nav.hjelpemidler.pip
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import no.nav.hjelpemidler.domain.geografi.GeografiskOmråde
-import no.nav.hjelpemidler.domain.person.AdressebeskyttelseGradering
+import no.nav.hjelpemidler.collections.filterIsInstanceToSet
 import no.nav.hjelpemidler.domain.person.AktørId
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.NPID
 import no.nav.hjelpemidler.domain.person.PersonId
 import no.nav.hjelpemidler.pip.pdl.PdlPipApiClient
-import no.nav.hjelpemidler.pip.pdl.PipPersonResponse
+import no.nav.hjelpemidler.pip.pdl.PdlPipPersonResponse
 import no.nav.hjelpemidler.pip.skjerming.SkjermedePersonerPipClient
-import org.slf4j.LoggerFactory
-import java.time.LocalDate
 
-val log = LoggerFactory.getLogger("PipService")
+private val log = KotlinLogging.logger {}
 
 class PipService(
     private val pdlPipApiClient: PdlPipApiClient,
     private val skjermedePersonerPipClient: SkjermedePersonerPipClient,
 ) {
-    suspend fun hentPerson(id: PersonId): PipResponse {
+    suspend fun hentPerson(id: PersonId): PipPerson {
         val (pipPersonResponse, isSkjermet) = when (id) {
             is Fødselsnummer -> coroutineScope {
                 val pipPersonResponse = async { pdlPipApiClient.hentPerson(id) }
@@ -33,7 +31,7 @@ class PipService(
                 val pipPersonResponse = pdlPipApiClient.hentPerson(id)
                 val fnr = pipPersonResponse.fnr
                 val isSkjermet = if (fnr == null) {
-                    log.warn("Kan ikke utlede skjerming for person uten fødselsnummer")
+                    log.warn { "Kan ikke utlede skjerming for person uten fødselsnummer" }
                     false
                 } else {
                     skjermedePersonerPipClient.hentErSkjermetPerson(fnr)
@@ -41,32 +39,32 @@ class PipService(
                 pipPersonResponse to isSkjermet
             }
         }
-        return PipResponse(pipPersonResponse, isSkjermet)
+        return PipPerson(pipPersonResponse, isSkjermet)
     }
 
-    suspend fun hentPersoner(ider: Set<PersonId>): Map<PersonId, PipResponse> {
-        TODO()
+    suspend fun hentPersoner(ider: Set<PersonId>): Map<PersonId, PipPerson> {
+        if (ider.isEmpty()) return emptyMap()
+        if (ider.size == 1) return ider.associateWith { hentPerson(it) }
+
+        val fnr = ider.filterIsInstanceToSet<Fødselsnummer>()
+        val (pipPersonResponseById, isSkjermetById) = if (fnr.containsAll(ider)) {
+            coroutineScope {
+                val pipPersonResponseById = async { pdlPipApiClient.hentPersoner(fnr) }
+                val isSkjermetById = async { skjermedePersonerPipClient.hentErSkjermedePersoner(fnr) }
+                pipPersonResponseById.await() to isSkjermetById.await()
+            }
+        } else {
+            val pipPersonResponseById = pdlPipApiClient.hentPersoner(ider)
+            val isSkjermetById = skjermedePersonerPipClient.hentErSkjermedePersoner(
+                pipPersonResponseById.mapNotNullTo(mutableSetOf()) { it.fnr },
+            )
+            pipPersonResponseById to isSkjermetById
+        }
+
+        return pipPersonResponseById.mapValues {
+            PipPerson(it.value, isSkjermetById.getOrDefault(it.fnr, false))
+        }
     }
 }
 
-data class PipResponse(
-    val aktørId: AktørId,
-    val fnr: Fødselsnummer?,
-    val gjeldendeIdenter: Set<PersonId>,
-    val fødselsdato: LocalDate?,
-    val dødsdato: LocalDate?,
-    val geografiskOmråde: GeografiskOmråde?,
-    val gradering: AdressebeskyttelseGradering,
-    val isSkjermet: Boolean,
-) {
-    constructor(pipPersonResponse: PipPersonResponse, isSkjermet: Boolean) : this(
-        aktørId = pipPersonResponse.aktørId,
-        fnr = pipPersonResponse.fnr,
-        gjeldendeIdenter = pipPersonResponse.gjeldendeIdenter,
-        fødselsdato = pipPersonResponse.person.fødselsdato.firstOrNull()?.fødselsdato,
-        dødsdato = pipPersonResponse.person.dødsfall.firstOrNull()?.dødsdato,
-        geografiskOmråde = pipPersonResponse.geografiskOmråde,
-        gradering = pipPersonResponse.gradering,
-        isSkjermet = isSkjermet,
-    )
-}
+private val Map.Entry<PersonId, PdlPipPersonResponse>.fnr: Fødselsnummer? get() = key as? Fødselsnummer ?: value.fnr

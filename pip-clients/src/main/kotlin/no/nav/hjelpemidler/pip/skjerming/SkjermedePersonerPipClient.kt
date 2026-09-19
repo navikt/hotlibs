@@ -43,9 +43,10 @@ class SkjermedePersonerPipClient(
     }
 
     suspend fun hentErSkjermedePersoner(fnr: Set<Fødselsnummer>): Map<Fødselsnummer, Boolean> {
+        if (fnr.isEmpty()) return emptyMap()
+        if (fnr.size == 1) return fnr.associateWith { hentErSkjermetPerson(it) }
         val url = "$baseUrl/skjermetBulk"
         log.debug { "Henter informasjon om personer er skjermet fra url: '$url', antall: ${fnr.size}" }
-        if (fnr.isEmpty()) return emptyMap()
         return client
             .post(url) { setBody(ErSkjermedePersonerRequest(fnr)) }
             .body()

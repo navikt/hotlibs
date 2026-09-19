@@ -2,7 +2,7 @@ package no.nav.hjelpemidler.pip.pdl
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class PipGeografiskTilknytning(
+data class PdlPipGeografiskTilknytning(
     @JsonProperty("gtType") val type: Type?,
     @JsonProperty("gtKommune") val kommune: String?,
     @JsonProperty("gtBydel") val bydel: String?,

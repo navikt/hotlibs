@@ -35,7 +35,7 @@ class PdlPipApiClient(
         }
     }
 
-    suspend fun hentPerson(id: PersonId): PipPersonResponse {
+    suspend fun hentPerson(id: PersonId): PdlPipPersonResponse {
         val url = "$baseUrl/person"
         log.debug { "Henter person fra pdl-pip-api med url: '$url'" }
         return client
@@ -43,10 +43,11 @@ class PdlPipApiClient(
             .body()
     }
 
-    suspend fun hentPersoner(ider: Set<PersonId>): Map<PersonId, PipPersonResponse> {
+    suspend fun hentPersoner(ider: Set<PersonId>): Map<PersonId, PdlPipPersonResponse> {
+        if (ider.isEmpty()) return emptyMap()
+        if (ider.size == 1) return ider.associateWith { hentPerson(it) }
         val url = "$baseUrl/personBolk"
         log.debug { "Henter personer fra pdl-pip-api med url: '$url', antall: ${ider.size}" }
-        if (ider.isEmpty()) return emptyMap()
         return client
             .post(url) {
                 contentType(ContentType.Application.Json)

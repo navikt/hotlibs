@@ -6,28 +6,28 @@ import no.nav.hjelpemidler.domain.person.Fødselsnummer
 
 fun lagPipPersonResponse(
     fnr: Fødselsnummer,
-    geografiskTilknytning: PipGeografiskTilknytning = PipGeografiskTilknytning(
-        type = PipGeografiskTilknytning.Type.KOMMUNE,
+    geografiskTilknytning: PdlPipGeografiskTilknytning = PdlPipGeografiskTilknytning(
+        type = PdlPipGeografiskTilknytning.Type.KOMMUNE,
         kommune = "0301",
         bydel = "030105",
         land = null,
         regel = null,
     ),
-): PipPersonResponse {
+): PdlPipPersonResponse {
     val aktørId = AktørId("1234567891011")
-    return PipPersonResponse(
+    return PdlPipPersonResponse(
         aktørId = aktørId,
-        person = PipPerson(
-            adressebeskyttelse = listOf(PipAdressebeskyttelse(AdressebeskyttelseGradering.UGRADERT)),
+        person = PdlPipPerson(
+            adressebeskyttelse = listOf(PdlPipAdressebeskyttelse(AdressebeskyttelseGradering.UGRADERT)),
             fødselsdato = emptyList(),
             dødsfall = emptyList(),
             familierelasjoner = emptyList(),
             rettsligHandleevne = emptyList(),
         ),
-        identer = PipIdenter(
+        identer = PdlPipIdenter(
             listOf(
-                PipIdent(ident = aktørId.value, gruppe = PipIdent.Gruppe.AKTORID, isHistorisk = false),
-                PipIdent(ident = fnr.value, gruppe = PipIdent.Gruppe.FOLKEREGISTERIDENT, isHistorisk = false),
+                PdlPipIdent(ident = aktørId.value, gruppe = PdlPipIdent.Gruppe.AKTORID, isHistorisk = false),
+                PdlPipIdent(ident = fnr.value, gruppe = PdlPipIdent.Gruppe.FOLKEREGISTERIDENT, isHistorisk = false),
             )
         ),
         geografiskTilknytning = geografiskTilknytning,

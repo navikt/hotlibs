@@ -7,13 +7,13 @@ import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.år
 import org.junit.jupiter.api.Test
 
-class PipPersonResponseTest {
+class PdlPipPersonResponseTest {
     @Test
     fun `geografiskOmråde er kommune`() {
         val fnr = Fødselsnummer(50.år)
         val response = lagPipPersonResponse(
-            fnr, geografiskTilknytning = PipGeografiskTilknytning(
-                type = PipGeografiskTilknytning.Type.KOMMUNE,
+            fnr, geografiskTilknytning = PdlPipGeografiskTilknytning(
+                type = PdlPipGeografiskTilknytning.Type.KOMMUNE,
                 kommune = "0301",
                 bydel = "030105",
                 land = null,
@@ -28,8 +28,8 @@ class PipPersonResponseTest {
     fun `geografiskOmråde er bydel`() {
         val fnr = Fødselsnummer(40.år)
         val response = lagPipPersonResponse(
-            fnr, geografiskTilknytning = PipGeografiskTilknytning(
-                type = PipGeografiskTilknytning.Type.BYDEL,
+            fnr, geografiskTilknytning = PdlPipGeografiskTilknytning(
+                type = PdlPipGeografiskTilknytning.Type.BYDEL,
                 kommune = "0301",
                 bydel = "030105",
                 land = null,
@@ -44,8 +44,8 @@ class PipPersonResponseTest {
     fun `geografiskOmråde er land`() {
         val fnr = Fødselsnummer(30.år)
         val response = lagPipPersonResponse(
-            fnr, geografiskTilknytning = PipGeografiskTilknytning(
-                type = PipGeografiskTilknytning.Type.UTLAND,
+            fnr, geografiskTilknytning = PdlPipGeografiskTilknytning(
+                type = PdlPipGeografiskTilknytning.Type.UTLAND,
                 kommune = null,
                 bydel = null,
                 land = "SWE",

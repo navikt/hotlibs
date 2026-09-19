@@ -10,18 +10,18 @@ import no.nav.hjelpemidler.domain.person.AktørId
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.PersonId
 import no.nav.hjelpemidler.domain.person.gjeldende
-import no.nav.hjelpemidler.pip.pdl.PipGeografiskTilknytning.Type
+import no.nav.hjelpemidler.pip.pdl.PdlPipGeografiskTilknytning.Type
 
-data class PipPersonResponse(
+data class PdlPipPersonResponse(
     @JsonProperty("aktoerId") val aktørId: AktørId,
-    @JsonProperty("person") val person: PipPerson,
-    @JsonProperty("identer") val identer: PipIdenter,
-    @JsonProperty("geografiskTilknytning") val geografiskTilknytning: PipGeografiskTilknytning,
+    @JsonProperty("person") val person: PdlPipPerson,
+    @JsonProperty("identer") val identer: PdlPipIdenter,
+    @JsonProperty("geografiskTilknytning") val geografiskTilknytning: PdlPipGeografiskTilknytning,
 ) {
     @JsonIgnore
     val gjeldendeIdenter: Set<PersonId> = identer
-        .filter(PipIdent::isGjeldende)
-        .mapToSet(PipIdent::asPersonId)
+        .filter(PdlPipIdent::isGjeldende)
+        .mapToSet(PdlPipIdent::asPersonId)
 
     val fnr: Fødselsnummer?
         @JsonIgnore
@@ -32,7 +32,7 @@ data class PipPersonResponse(
     val gradering: AdressebeskyttelseGradering
         @JsonIgnore
         get() = person.adressebeskyttelse
-            .mapNotNullToSet(PipAdressebeskyttelse::gradering)
+            .mapNotNullToSet(PdlPipAdressebeskyttelse::gradering)
             .gjeldende
 
     val geografiskOmråde: GeografiskOmråde?
