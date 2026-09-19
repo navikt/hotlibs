@@ -15,9 +15,11 @@ data class PipPerson(
     val fødselsdato: LocalDate?,
     val dødsdato: LocalDate?,
     val geografiskOmråde: GeografiskOmråde?,
-    val gradering: AdressebeskyttelseGradering,
+    val adressebeskyttelseGradering: AdressebeskyttelseGradering,
     val isSkjermet: Boolean,
 ) {
+    val isAdressebeskyttelseGradert: Boolean get() = adressebeskyttelseGradering.isGradert
+
     constructor(pipPersonResponse: PdlPipPersonResponse, isSkjermet: Boolean) : this(
         aktørId = pipPersonResponse.aktørId,
         fnr = pipPersonResponse.fnr,
@@ -25,7 +27,7 @@ data class PipPerson(
         fødselsdato = pipPersonResponse.person.fødselsdato.firstOrNull()?.fødselsdato,
         dødsdato = pipPersonResponse.person.dødsfall.firstOrNull()?.dødsdato,
         geografiskOmråde = pipPersonResponse.geografiskOmråde,
-        gradering = pipPersonResponse.gradering,
+        adressebeskyttelseGradering = pipPersonResponse.adressebeskyttelseGradering,
         isSkjermet = isSkjermet,
     )
 }

@@ -1,23 +1,25 @@
 package no.nav.hjelpemidler.norg
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import no.nav.hjelpemidler.domain.geografi.GeografiskOmråde
 import no.nav.hjelpemidler.domain.kodeverk.Tema
 import no.nav.hjelpemidler.domain.person.AdressebeskyttelseGradering
-import no.nav.hjelpemidler.norg.NorgArbeidsfordelingRequest.Diskresjonskode
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 data class NorgArbeidsfordelingRequest(
     val oppgavetype: String? = null,
     val behandlingstema: String? = null,
     val behandlingstype: String? = null,
-    @JsonProperty("geografiskOmraade")
+    @get:JsonProperty("geografiskOmraade")
     val geografiskOmråde: String? = null,
     val diskresjonskode: Diskresjonskode? = null,
-    val skjermet: Boolean = false,
+    @get:JsonProperty("skjermet")
+    val isSkjermet: Boolean = false,
 ) {
-    val tema = Tema.HJE
-    val temagruppe = "HJLPM" // fixme -> trenger vi denne, hva gjør den egentlig?
+    val tema: Tema = Tema.HJE
+    val temagruppe: String = "HJLPM" // fixme -> trenger vi denne, hva gjør den egentlig?
 
     // @JsonProperty("enhetNummer")
     // val enhet: Enhetsnummer? = null
@@ -28,15 +30,24 @@ data class NorgArbeidsfordelingRequest(
         behandlingstema: String? = null,
         behandlingstype: String? = null,
         geografiskOmråde: GeografiskOmråde? = null,
-        gradering: AdressebeskyttelseGradering? = null,
-        skjermet: Boolean = false,
+        adressebeskyttelseGradering: AdressebeskyttelseGradering? = null,
+        isSkjermet: Boolean = false,
     ) : this(
         oppgavetype = oppgavetype,
         behandlingstema = behandlingstema,
         behandlingstype = behandlingstype,
         geografiskOmråde = geografiskOmråde?.id,
-        diskresjonskode = gradering?.diskresjonskode,
-        skjermet = skjermet
+        diskresjonskode = when (adressebeskyttelseGradering) {
+            AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND,
+            AdressebeskyttelseGradering.STRENGT_FORTROLIG,
+                -> Diskresjonskode.SPSF
+
+            AdressebeskyttelseGradering.FORTROLIG,
+                -> Diskresjonskode.SPFO
+
+            else -> null
+        },
+        isSkjermet = isSkjermet
     )
 
     override fun toString(): String =
@@ -44,15 +55,3 @@ data class NorgArbeidsfordelingRequest(
 
     enum class Diskresjonskode { SPSF, SPFO }
 }
-
-val AdressebeskyttelseGradering.diskresjonskode: Diskresjonskode?
-    get() = when (this) {
-        AdressebeskyttelseGradering.STRENGT_FORTROLIG_UTLAND,
-        AdressebeskyttelseGradering.STRENGT_FORTROLIG,
-            -> Diskresjonskode.SPSF
-
-        AdressebeskyttelseGradering.FORTROLIG,
-            -> Diskresjonskode.SPFO
-
-        else -> null
-    }

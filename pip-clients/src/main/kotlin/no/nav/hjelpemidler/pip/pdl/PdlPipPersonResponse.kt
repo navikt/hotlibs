@@ -29,7 +29,7 @@ data class PdlPipPersonResponse(
             .filterIsInstance<Fødselsnummer>()
             .firstOrNull()
 
-    val gradering: AdressebeskyttelseGradering
+    val adressebeskyttelseGradering: AdressebeskyttelseGradering
         @JsonIgnore
         get() = person.adressebeskyttelse
             .mapNotNullToSet(PdlPipAdressebeskyttelse::gradering)
