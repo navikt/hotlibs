@@ -10,7 +10,7 @@ commons-lang = "3.20.0"
 commons-text = "1.15.0"
 confluent = "8.2.4"
 # Nyeste versjon finner du her: https://github.com/navikt/hm-contract-pdl-avro/packages
-contractPdlAvro = "1.0.3"
+contractPdlAvro = "1.0.4"
 cyclonedx = "3.4.1"
 dbScheduler = "16.12.0"
 dbSchedulerUi = "0.5.3"
