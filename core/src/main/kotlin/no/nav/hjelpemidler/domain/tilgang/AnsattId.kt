@@ -1,16 +1,15 @@
 package no.nav.hjelpemidler.domain.tilgang
 
 import com.fasterxml.jackson.annotation.JsonCreator
-import no.nav.hjelpemidler.domain.id.StringId
 
-sealed class UtførtAvId(value: String) : StringId(value) {
+sealed interface AnsattId {
     companion object {
         @JvmStatic
         @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
-        fun of(value: String): UtførtAvId = when {
+        fun of(value: String): AnsattId = when {
             NavIdent.erGyldig(value) -> NavIdent(value)
             TrygdeIdent.erGyldig(value) -> TrygdeIdent(value)
-            else -> Applikasjonsnavn(value)
+            else -> throw IllegalArgumentException("Ukjent ansattId: '$value'")
         }
     }
 }
