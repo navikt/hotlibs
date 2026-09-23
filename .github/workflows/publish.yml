@@ -9,7 +9,7 @@ on:
       - "CODEOWNERS"
     branches:
       - main
-      - produktkategorikomponent-2
+      - fjern-gammel-behovsmeldingmodell
 
 jobs:
   publish-jar:

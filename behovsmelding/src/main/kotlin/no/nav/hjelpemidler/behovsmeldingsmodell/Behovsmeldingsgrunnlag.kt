@@ -32,12 +32,9 @@ sealed interface Behovsmeldingsgrunnlag : TilknyttetSøknad {
         override val fnrBruker: String,
         override val navnBruker: String,
         val fnrInnsender: String?,
-        @JsonAlias("soknad")
-        val behovsmelding: Map<String, Any?>, // JsonNode
         @JsonAlias("soknadGjelder")
         val behovsmeldingGjelder: String?,
         /**
-         * I overgangsfase vil vi kunne motta både behovsmelding og behvosmeldingV2.
          * Løs typing her, slik at vi slipper å oppdatere hm-soknadsbehandling hver gang
          * behovsmeldingsmodellen oppdaterer seg. hm-soknadsbehandling skal uansett bare videre sende data.
          * Typing av data i hm-soknad-api og hm-soknadsbehandling-db.
