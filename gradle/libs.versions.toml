@@ -1,8 +1,8 @@
 [versions]
-bigquery = "2.71.0"
+bigquery = "2.72.0"
 cacheApi = "1.1.1"
 caffeine = "3.3.0"
-classgraph = "4.8.195"
+classgraph = "4.8.196"
 commons-compress = "1.28.0"
 commons-csv = "1.14.1"
 commons-io = "2.22.0"
@@ -21,7 +21,7 @@ graphql-java = "26.1"
 h2 = "2.5.250"
 handlebars = "4.5.5"
 hikaricp = "7.1.0"
-htmlSanitizer = "20260921.1"
+htmlSanitizer = "20260922.1"
 jackson = "3.1.7"
 jackson2 = "2.22.3"
 java = "21"
@@ -62,7 +62,7 @@ protobuf = "4.36.2"
 rapidsAndRivers = "2026091610031789545782"
 redisson = "4.7.0"
 shadow = "8.1.1"
-slf4j = "2.0.19"
+slf4j = "2.0.20"
 spotless = "8.10.2"
 swagger = "2.2.55"
 swaggerParser = "2.1.48"
@@ -252,6 +252,7 @@ tbdLibs-kafka = { module = "com.github.navikt.tbd-libs:kafka", version.ref = "tb
 tbdLibs-rapidsAndRivers = { module = "com.github.navikt.tbd-libs:rapids-and-rivers", version.ref = "tbdLibs" }
 tbdLibs-rapidsAndRivers-api = { module = "com.github.navikt.tbd-libs:rapids-and-rivers-api", version.ref = "tbdLibs" }
 tbdLibs-rapidsAndRivers-test = { module = "com.github.navikt.tbd-libs:rapids-and-rivers-test", version.ref = "tbdLibs" }
+teamdokumenthandteringAvroSchemas = "no.nav.teamdokumenthandtering:teamdokumenthandtering-avro-schemas:2.0.0"
 testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
 testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version.ref = "testcontainers" }
 testcontainers-jdbc = { module = "org.testcontainers:testcontainers-jdbc", version.ref = "testcontainers" }
