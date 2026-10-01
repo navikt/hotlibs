@@ -15,14 +15,8 @@ import io.ktor.http.contentType
 import no.nav.hjelpemidler.collections.filterNotNull
 import no.nav.hjelpemidler.collections.mapOfNotNull
 import no.nav.hjelpemidler.configuration.Environment
-import tools.jackson.core.JsonGenerator
-import tools.jackson.core.JsonParser
-import tools.jackson.databind.DeserializationContext
-import tools.jackson.databind.SerializationContext
 import tools.jackson.databind.annotation.JsonDeserialize
 import tools.jackson.databind.annotation.JsonSerialize
-import tools.jackson.databind.deser.std.StdScalarDeserializer
-import tools.jackson.databind.ser.std.StdScalarSerializer
 import java.net.URI
 
 /**
@@ -92,17 +86,6 @@ suspend inline fun <reified T : ProblemDetails> HttpResponse.problemDetails(): T
 
 @JvmName("defaultProblemDetails")
 suspend fun HttpResponse.problemDetails() = problemDetails<DefaultProblemDetails>()
-
-private class HttpStatusCodeSerializer : StdScalarSerializer<HttpStatusCode>(HttpStatusCode::class.java) {
-    override fun serialize(value: HttpStatusCode, generator: JsonGenerator, context: SerializationContext) {
-        generator.writeNumber(value.value)
-    }
-}
-
-private class HttpStatusCodeDeserializer : StdScalarDeserializer<HttpStatusCode>(HttpStatusCode::class.java) {
-    override fun deserialize(parser: JsonParser, context: DeserializationContext): HttpStatusCode =
-        HttpStatusCode.fromValue(parser.intValue)
-}
 
 fun Throwable.asProblemDetailsExtensions(): Map<String, Any?> = mapOf(
     "cause" to cause?.toString(),
