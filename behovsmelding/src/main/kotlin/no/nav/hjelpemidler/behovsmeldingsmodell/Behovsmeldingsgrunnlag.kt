@@ -77,6 +77,7 @@ sealed interface Behovsmeldingsgrunnlag : TilknyttetSøknad {
         val journalpostId: String,
         val sakstilknytning: Sakstilknytning? = null,
         val kanal: Kanal? = null,
+        val søknadGjelder: String? = null,
     ) : Behovsmeldingsgrunnlag {
         override val kilde: Kilde = Kilde.JOURNALPOST
         override val digital: Boolean = false
