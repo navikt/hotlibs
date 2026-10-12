@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import no.nav.hjelpemidler.behovsmeldingsmodell.TilknyttetSøknad
+import no.nav.hjelpemidler.core.ValueType
 import java.time.Instant
 
 @JsonTypeInfo(
@@ -24,7 +25,7 @@ sealed interface Fagsak : TilknyttetSøknad {
     /**
      * FagsakId i SAF/Joark.
      */
-    sealed interface Id : CharSequence
+    sealed interface Id : ValueType<String>
 
     /**
      * Fagsaksystem i SAF/Joark.

@@ -7,9 +7,7 @@ import com.fasterxml.jackson.annotation.JsonValue
 import no.nav.hjelpemidler.text.isInteger
 import no.nav.hjelpemidler.validation.Validator
 
-data class HotsakSakId @JsonCreator constructor(@JsonValue val value: String) :
-    Fagsak.Id,
-    CharSequence by value {
+data class HotsakSakId @JsonCreator constructor(@JsonValue override val value: String) : Fagsak.Id {
     init {
         require(erGyldig(value)) { "'$value' er ikke en gyldig HotsakSakId" }
     }
@@ -24,9 +22,7 @@ data class HotsakSakId @JsonCreator constructor(@JsonValue val value: String) :
 /**
  * NB! Saker fra Infotrygd kan ikke entydig identifiseres med denne ID-en.
  */
-data class InfotrygdSakId @JsonCreator constructor(@JsonValue val value: String) :
-    Fagsak.Id,
-    CharSequence by value {
+data class InfotrygdSakId @JsonCreator constructor(@JsonValue override val value: String) : Fagsak.Id {
     init {
         require(erGyldig(value)) { "'$value' er ikke en gyldig InfotrygdSakId" }
     }
