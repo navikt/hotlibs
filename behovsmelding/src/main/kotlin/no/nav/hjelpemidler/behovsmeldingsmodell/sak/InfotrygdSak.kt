@@ -1,11 +1,11 @@
 package no.nav.hjelpemidler.behovsmeldingsmodell.sak
 
-import no.nav.hjelpemidler.behovsmeldingsmodell.BehovsmeldingId
 import java.time.Instant
+import java.util.UUID
 
 data class InfotrygdSak(
     override val sakId: InfotrygdSakId,
-    override val søknadId: BehovsmeldingId,
+    override val søknadId: UUID,
     override val opprettet: Instant,
     override val vedtak: Vedtak?,
     val fnrBruker: String,

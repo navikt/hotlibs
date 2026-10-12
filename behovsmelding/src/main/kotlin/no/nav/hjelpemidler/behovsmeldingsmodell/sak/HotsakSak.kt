@@ -1,11 +1,11 @@
 package no.nav.hjelpemidler.behovsmeldingsmodell.sak
 
-import no.nav.hjelpemidler.behovsmeldingsmodell.BehovsmeldingId
 import java.time.Instant
+import java.util.UUID
 
 data class HotsakSak(
     override val sakId: HotsakSakId,
-    override val søknadId: BehovsmeldingId,
+    override val søknadId: UUID,
     override val opprettet: Instant,
     override val vedtak: Vedtak? = null,
 ) : Fagsak {
