@@ -36,6 +36,7 @@ include(
     "core",
     "database",
     "http",
+    "joark",
     "kafka",
     "katalog",
     "logging",

@@ -21,6 +21,7 @@ catalog {
             "core",
             "database",
             "http",
+            "joark",
             "kafka",
             "logging",
             "nare",
