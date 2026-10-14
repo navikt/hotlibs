@@ -6,6 +6,7 @@ import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainOnly
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.år
+import java.time.Instant
 import java.util.UUID
 import kotlin.test.Ignore
 import kotlin.test.Test
@@ -22,6 +23,7 @@ class JsonMessageExtensionsTest {
             "søknadId" to søknadId,
             "fnrBruker" to fnr,
             "eventName" to TestMessage.EVENT_NAME,
+            "opprettet" to Instant.now(),
         )
 
         message.require<TestMessage>()
@@ -37,6 +39,7 @@ class JsonMessageExtensionsTest {
             "søknadId" to søknadId,
             "fnrBruker" to fnr,
             "eventId" to UUID.randomUUID(),
+            "opprettet" to Instant.now(),
         )
 
         message.require<TestMessage>()
@@ -52,6 +55,7 @@ class JsonMessageExtensionsTest {
             "fnrBruker" to fnr,
             "eventId" to UUID.randomUUID(),
             "eventName" to TestMessage.EVENT_NAME,
+            "opprettet" to Instant.now(),
         )
 
         message.require<TestMessage>()
@@ -68,6 +72,7 @@ class JsonMessageExtensionsTest {
             "fnrBruker" to fnr,
             "eventId" to UUID.randomUUID(),
             "eventName" to TestMessage.EVENT_NAME,
+            "opprettet" to Instant.now(),
         )
 
         message.require<TestMessage>()
@@ -84,6 +89,7 @@ class JsonMessageExtensionsTest {
             "fnrBruker" to fnr,
             "eventId" to UUID.randomUUID(),
             "eventName" to TestMessage.EVENT_NAME,
+            "opprettet" to Instant.now(),
         )
 
         message.require<TestMessage>()
@@ -100,6 +106,7 @@ class JsonMessageExtensionsTest {
             "brukerFnr" to fnr,
             "eventId" to UUID.randomUUID(),
             "eventName" to TestMessage.EVENT_NAME,
+            "opprettet" to Instant.now(),
         )
 
         message.require<TestMessage>()
@@ -115,6 +122,7 @@ class JsonMessageExtensionsTest {
             "fnrBruker" to fnr,
             "eventId" to UUID.randomUUID(),
             "eventName" to TestMessage.EVENT_NAME,
+            "opprettet" to Instant.now(),
         )
 
         message.require<TestMessage>()

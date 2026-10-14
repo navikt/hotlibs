@@ -12,6 +12,7 @@ import io.micrometer.core.instrument.MeterRegistry
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.år
 import no.nav.hjelpemidler.serialization.jackson.valueToJson
+import java.time.Instant
 import java.util.UUID
 import kotlin.test.Test
 
@@ -30,6 +31,7 @@ class KafkaMessageListenerTest {
             "fnrBruker" to fnrBruker,
             "eventId" to UUID.randomUUID(),
             "eventName" to TestMessage.EVENT_NAME,
+            "opprettet" to Instant.now(),
         )
 
         listener.preconditionErrors.shouldBeEmpty()
@@ -52,6 +54,7 @@ class KafkaMessageListenerTest {
             "fnrBruker" to fnrBruker,
             "eventId" to UUID.randomUUID(),
             "eventName" to TestMessage.ALTERNATIVE_EVENT_NAME,
+            "opprettet" to Instant.now(),
         )
 
         listener.preconditionErrors.shouldBeEmpty()
@@ -73,6 +76,7 @@ class KafkaMessageListenerTest {
             "fnrBruker" to fnrBruker,
             "eventId" to UUID.randomUUID(),
             "eventName" to TestMessage.EVENT_NAME,
+            "opprettet" to Instant.now(),
         )
 
         listener.preconditionErrors.shouldBeEmpty()
@@ -90,6 +94,7 @@ class KafkaMessageListenerTest {
         sendTestMessage(
             "eventId" to UUID.randomUUID(),
             "eventName" to "hm-some-other-event",
+            "opprettet" to Instant.now(),
         )
 
         listener.preconditionErrors.shouldBeSingleton {
@@ -108,6 +113,7 @@ class KafkaMessageListenerTest {
             "fnrBruker" to fnrBruker,
             "eventId" to UUID.randomUUID(),
             "eventName" to TestMessage.EVENT_NAME,
+            "opprettet" to Instant.now(),
         )
 
         listener.preconditionErrors.shouldBeEmpty()
