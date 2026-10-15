@@ -38,7 +38,7 @@ fun lagInnsenderbehovsmelding(
             arbeidssted = "Arbeidssted",
             stilling = "Stilling",
             telefon = "12345678",
-            adresse = Veiadresse("Gate 1", "0001", "Oslo"),
+            adresse = Veiadresse(adresselinje1 = "Gate 1", postnummer = "0001", poststed = "Oslo"),
             epost = "formidler@nav.no",
             treffesEnklest = "På dagtid",
             kommunenavn = "Oslo",

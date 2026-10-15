@@ -39,5 +39,5 @@ fun lagLevering(
     hast = null,
 )
 
-private fun veiadresse() = Veiadresse("adresse", "1234", "poststed")
+private fun veiadresse() = Veiadresse(adresselinje1 = "adresse", postnummer = "1234", poststed = "poststed")
 private fun navn() = Personnavn(fornavn = "Egon", etternavn = "Olsen")
