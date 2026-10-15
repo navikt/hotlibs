@@ -1,8 +1,10 @@
 package no.nav.hjelpemidler.domain.geografi
 
+import com.fasterxml.jackson.annotation.JsonAlias
 import no.nav.hjelpemidler.text.isInteger
 
 data class Veiadresse(
+    @JsonAlias("adresse")
     val adresselinje1: String,
     val adresselinje2: String? = null,
     val adresselinje3: String? = null,
