@@ -29,6 +29,7 @@ testing {
         withType<JvmTestSuite> {
             dependencies {
                 implementation(project())
+                implementation(project(":serialization"))
                 implementation(testFixtures(project()))
             }
             targets {
