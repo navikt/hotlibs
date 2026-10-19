@@ -2,7 +2,6 @@ package no.nav.hjelpemidler.pip.pdl
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import no.nav.hjelpemidler.domain.person.AdressebeskyttelseGradering
-import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import java.time.LocalDate
 
 data class PdlPipPerson(
@@ -20,7 +19,7 @@ data class PdlPipFødselsdato(@JsonProperty("foedselsdato") val fødselsdato: Lo
 data class PdlPipDødsfall(@JsonProperty("doedsdato") val dødsdato: LocalDate)
 
 data class PdlPipFamilierelasjon(
-    @JsonProperty("relatertPersonsIdent") val relatertPersonsIdent: Fødselsnummer?,
+    @JsonProperty("relatertPersonsIdent") val relatertPersonsIdent: String?,
     @JsonProperty("relatertPersonsRolle") val relatertPersonsRolle: String?,
     @JsonProperty("minRolleForPerson") val minRolleForPerson: String?,
 )
