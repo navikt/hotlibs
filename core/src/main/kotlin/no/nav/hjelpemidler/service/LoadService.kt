@@ -1,29 +1,24 @@
 package no.nav.hjelpemidler.service
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import java.util.ServiceConfigurationError
 import java.util.ServiceLoader
-import kotlin.reflect.KClass
 import kotlin.reflect.full.findAnnotation
-
-private val log = KotlinLogging.logger {}
 
 /**
  * Last tjeneste med [ServiceLoader]. Ved flere implementasjoner på classpath, vil den med laveste [LoadOrder] ha presedens.
  */
-fun <S : Any> loadService(kClass: KClass<S>): Lazy<S> = lazy {
-    val serviceName = kClass.qualifiedName ?: ""
+inline fun <reified S : Any> loadService(): Lazy<S> = lazy {
+    val type = S::class.java
     try {
         val service = ServiceLoader
-            .load(kClass.java)
+            .load(type, type.classLoader)
+            .iterator()
+            .asSequence()
             .minByOrNull { service ->
                 service::class.findAnnotation<LoadOrder>()?.value ?: Integer.MAX_VALUE
-            } ?: throw NoSuchElementException("Kunne ikke opprette tjeneste: $serviceName")
-        log.info { "Lastet tjeneste: $serviceName, implementasjon: ${service::class.qualifiedName}" }
+            } ?: throw IllegalStateException("Kunne ikke opprette tjeneste: ${type.name}")
         service
     } catch (e: ServiceConfigurationError) {
-        throw RuntimeException("Kunne ikke opprette tjeneste: $serviceName", e)
+        throw IllegalStateException("Kunne ikke opprette tjeneste: ${type.name}", e)
     }
 }
-
-inline fun <reified S : Any> loadService(): Lazy<S> = loadService(S::class)

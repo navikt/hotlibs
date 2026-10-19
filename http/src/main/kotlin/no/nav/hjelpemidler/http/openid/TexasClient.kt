@@ -4,12 +4,12 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngine
-import io.ktor.client.engine.cio.CIO
 import io.ktor.client.request.forms.submitForm
 import io.ktor.http.ParametersBuilder
 import io.ktor.http.parameters
 import no.nav.hjelpemidler.configuration.TexasEnvironmentVariable
 import no.nav.hjelpemidler.http.createHttpClient
+import java.io.Closeable
 
 private val log = KotlinLogging.logger {}
 
@@ -17,25 +17,23 @@ private val log = KotlinLogging.logger {}
  * @see <a href="https://docs.nais.io/auth/explanations/#texas">Texas</a>
  */
 class TexasClient(
-    engine: HttpClientEngine = CIO.create(),
+    engine: HttpClientEngine,
     private val tokenUrl: String = TexasEnvironmentVariable.NAIS_TOKEN_ENDPOINT,
     private val tokenExchangeUrl: String = TexasEnvironmentVariable.NAIS_TOKEN_EXCHANGE_ENDPOINT,
     private val tokenIntrospectionUrl: String = TexasEnvironmentVariable.NAIS_TOKEN_INTROSPECTION_ENDPOINT,
-) {
+) : Texas, Closeable {
     private val client: HttpClient = createHttpClient(engine) {
         expectSuccess = true
     }
 
-    internal val factory = TokenSetProviderFactory(this)
-
     /**
      * Hent Machine-To-Machine-token (M2M-token) for [target].
      */
-    suspend fun token(
+    override suspend fun token(
         identityProvider: IdentityProvider,
         target: String,
-        resource: String? = null,
-        skipCache: Boolean? = null,
+        resource: String?,
+        skipCache: Boolean?,
     ): TokenSet {
         log.debug { "Henter token, url: '$tokenUrl', identityProvider: '$identityProvider', target: '$target', resource: '$resource', skipCache: $skipCache" }
         return execute(tokenUrl) {
@@ -49,11 +47,11 @@ class TexasClient(
     /**
      * Hent On-Behalf-Of-token (OBO-token) for [target] (token exchange).
      */
-    suspend fun exchange(
+    override suspend fun exchange(
         identityProvider: IdentityProvider,
         target: String,
         userToken: String,
-        skipCache: Boolean? = null,
+        skipCache: Boolean?,
     ): TokenSet {
         log.debug { "Gjør token exchange, url: '$tokenExchangeUrl', identityProvider: '$identityProvider', target: '$target', skipCache: $skipCache" }
         return execute(tokenExchangeUrl) {
@@ -67,7 +65,7 @@ class TexasClient(
     /**
      * Valider [token].
      */
-    suspend fun introspection(identityProvider: IdentityProvider, token: String): TokenIntrospection {
+    override suspend fun introspection(identityProvider: IdentityProvider, token: String): TokenIntrospection {
         log.debug { "Gjør introspection, url: '$tokenIntrospectionUrl', identityProvider: '$identityProvider'" }
         return execute(tokenIntrospectionUrl) {
             identityProvider(identityProvider)
@@ -80,35 +78,7 @@ class TexasClient(
         noinline builder: ParametersBuilder.() -> Unit,
     ): T = client.submitForm(url = url, formParameters = parameters(builder)).body<T>()
 
-    /**
-     * [TokenSetProvider] for [IdentityProvider.ENTRA_ID].
-     */
-    fun entraId(defaultTarget: String): TokenSetProvider =
-        factory.delegateProvider(IdentityProvider.ENTRA_ID, defaultTarget)
-
-    /**
-     * [TokenSetProvider] for [IdentityProvider.ENTRA_ID].
-     */
-    fun entraIdApplication(defaultTarget: String): TokenSetProvider =
-        factory.applicationProvider(IdentityProvider.ENTRA_ID, defaultTarget)
-
-    /**
-     * [TokenSetProvider] for [IdentityProvider.ENTRA_ID].
-     */
-    fun entraIdUser(defaultTarget: String): TokenSetProvider =
-        factory.userProvider(IdentityProvider.ENTRA_ID, defaultTarget)
-
-    /**
-     * [TokenSetProvider] for [IdentityProvider.MASKINPORTEN].
-     */
-    fun maskinporten(defaultTarget: String): TokenSetProvider =
-        factory.applicationProvider(IdentityProvider.MASKINPORTEN, defaultTarget)
-
-    /**
-     * [TokenSetProvider] for [IdentityProvider.TOKEN_X].
-     */
-    fun tokenX(defaultTarget: String): TokenSetProvider =
-        factory.userProvider(IdentityProvider.TOKEN_X, defaultTarget)
+    override fun close() = client.close()
 }
 
 private fun ParametersBuilder.identityProvider(value: IdentityProvider) = append("identity_provider", value.toString())
