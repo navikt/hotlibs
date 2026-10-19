@@ -1,5 +1,6 @@
 package no.nav.hjelpemidler.http.openid
 
+import io.ktor.client.plugins.DefaultRequest.DefaultRequestBuilder
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.bearerAuth
 import io.ktor.http.HttpMessageBuilder
@@ -18,12 +19,29 @@ fun HttpRequestBuilder.target(target: String) {
 }
 
 /**
+ * Sett `target` for request.
+ */
+fun DefaultRequestBuilder.target(target: String) {
+    attributes[TargetValue.KEY] = TargetValue(target)
+}
+
+/**
  * Gjør request som applikasjon, uansett kontekst.
  *
  * @see [HttpRequestBuilder.onBehalfOf]
  * @see [no.nav.hjelpemidler.security.AuthenticationContext]
  */
 fun HttpRequestBuilder.asApplication() {
+    attributes[AsApplicationValue.KEY] = AsApplicationValue
+}
+
+/**
+ * Gjør request som applikasjon, uansett kontekst.
+ *
+ * @see [DefaultRequestBuilder.onBehalfOf]
+ * @see [no.nav.hjelpemidler.security.AuthenticationContext]
+ */
+fun DefaultRequestBuilder.asApplication() {
     attributes[AsApplicationValue.KEY] = AsApplicationValue
 }
 
@@ -39,10 +57,30 @@ fun HttpRequestBuilder.onBehalfOf(userToken: String) {
 /**
  * Gjør request på vegne av bruker.
  *
+ * @see [DefaultRequestBuilder.asApplication]
+ */
+fun DefaultRequestBuilder.onBehalfOf(userToken: String) {
+    attributes[UserTokenValue.KEY] = UserTokenValue(userToken)
+}
+
+/**
+ * Gjør request på vegne av [AuthenticatedPrincipal].
+ *
  * @see [HttpRequestBuilder.asApplication]
  * @see [HttpRequestBuilder.onBehalfOf]
  */
 fun HttpRequestBuilder.asPrincipal(principal: AuthenticatedPrincipal) = when (principal) {
+    is AuthenticatedApplication -> asApplication()
+    is AuthenticatedUser -> onBehalfOf(principal.userToken)
+}
+
+/**
+ * Gjør request på vegne av [AuthenticatedPrincipal].
+ *
+ * @see [DefaultRequestBuilder.asApplication]
+ * @see [DefaultRequestBuilder.onBehalfOf]
+ */
+fun DefaultRequestBuilder.asPrincipal(principal: AuthenticatedPrincipal) = when (principal) {
     is AuthenticatedApplication -> asApplication()
     is AuthenticatedUser -> onBehalfOf(principal.userToken)
 }
