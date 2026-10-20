@@ -1,5 +1,6 @@
 package no.nav.hjelpemidler.http.slack
 
+import io.ktor.client.engine.cio.CIO
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Ignore
 import kotlin.test.Test
@@ -10,7 +11,7 @@ class SlackTest {
 
     @Test
     fun `Send testmelding til slack`() = runTest {
-        val client = slack(configuration = DefaultSlackConfiguration(slackWebHook))
+        val client = slack(engine = CIO.create(), configuration = DefaultSlackConfiguration(slackWebHook))
 
         client.sendMessage(
             username = "hm-http",

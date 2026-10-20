@@ -9,15 +9,13 @@ import io.ktor.server.routing.routing
 import kotlinx.coroutines.test.runTest
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.år
-import no.nav.hjelpemidler.http.openid.TokenSet
 import no.nav.hjelpemidler.test.ktor.StubEngine
 import no.nav.hjelpemidler.test.ktor.baseUrl
 import org.junit.jupiter.api.Test
-import kotlin.time.Duration.Companion.hours
 
 class SkjermedePersonerPipClientTest {
     private val engine = StubEngine {
-        baseUrl(SKJERMEDE_PERSONER_PIP_API_URL) {
+        baseUrl(SkjermedePersonerPipClient.SKJERMEDE_PERSONER_PIP_API_BASE_URL) {
             routing {
                 post("/skjermet") {
                     call.respond(true)
@@ -29,10 +27,7 @@ class SkjermedePersonerPipClientTest {
             }
         }
     }
-    private val client = SkjermedePersonerPipClient(
-        engine = engine,
-        tokenSetProvider = TokenSet("token", 1.hours).asTokenSetProvider(),
-    )
+    private val client = SkjermedePersonerPipClient(engine)
 
     @Test
     fun `Skal hente person fra skjermede-personer-pip-api`() = runTest {

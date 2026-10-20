@@ -10,15 +10,13 @@ import io.ktor.server.routing.routing
 import kotlinx.coroutines.test.runTest
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.år
-import no.nav.hjelpemidler.http.openid.TokenSet
 import no.nav.hjelpemidler.test.ktor.StubEngine
 import no.nav.hjelpemidler.test.ktor.baseUrl
 import org.junit.jupiter.api.Test
-import kotlin.time.Duration.Companion.hours
 
 class PdlPipApiClientTest {
     private val engine = StubEngine {
-        baseUrl(PDL_PIP_API_URL) {
+        baseUrl(PdlPipApiClient.PDL_PIP_API_BASE_URL) {
             routing {
                 get("/person") {
                     val fnr = call.requireHeader("ident").let(::Fødselsnummer)
@@ -31,10 +29,7 @@ class PdlPipApiClientTest {
             }
         }
     }
-    private val client = PdlPipApiClient(
-        engine = engine,
-        tokenSetProvider = TokenSet("token", 1.hours).asTokenSetProvider(),
-    )
+    private val client = PdlPipApiClient(engine)
 
     @Test
     fun `Skal hente person fra pdl-pip-api`() = runTest {

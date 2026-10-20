@@ -2,17 +2,17 @@ package no.nav.hjelpemidler.http.slack
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
-import io.ktor.client.engine.cio.CIO
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import no.nav.hjelpemidler.http.createHttpClient
+import java.io.Closeable
 
 internal class DefaultSlackClient(
+    engine: HttpClientEngine,
     private val configuration: SlackConfiguration,
-    engine: HttpClientEngine = CIO.create(),
-) : SlackClient {
+) : SlackClient, Closeable {
     private val client: HttpClient = createHttpClient(engine) {
         expectSuccess = true
     }
@@ -44,4 +44,6 @@ internal class DefaultSlackClient(
 
     override val history: Collection<SlackMessage>
         get() = throw UnsupportedOperationException("DefaultSlackClient tar ikke vare på meldinger")
+
+    override fun close() = client.close()
 }

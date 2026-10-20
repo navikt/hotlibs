@@ -3,7 +3,6 @@ package no.nav.hjelpemidler.norg
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngine
-import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.accept
 import io.ktor.client.request.get
@@ -19,15 +18,14 @@ import no.nav.hjelpemidler.domain.enhet.Enhet
 import no.nav.hjelpemidler.domain.enhet.Enhetsnummer
 import no.nav.hjelpemidler.domain.enhet.TilknyttetEnhet
 import no.nav.hjelpemidler.http.createHttpClient
+import java.io.Closeable
 
 private val log = KotlinLogging.logger {}
 
-internal val NORG_API_URL by EnvironmentVariable(defaultValue = "http://norg2.org.svc.cluster.local/norg2/api/v1")
-
 class NorgClient(
-    engine: HttpClientEngine = CIO.create(),
-    private val baseUrl: String = NORG_API_URL,
-) {
+    engine: HttpClientEngine,
+    private val baseUrl: String = NORG_API_BASE_URL,
+) : Closeable {
     private val client = createHttpClient(engine) {
         expectSuccess = true
         defaultRequest {
@@ -73,4 +71,10 @@ class NorgClient(
     suspend fun hentEnhet(id: Enhetsnummer): Enhet = hentNorgEnhet(id).enhet
 
     suspend fun hentEnhet(id: String): Enhet = hentEnhet(Enhetsnummer(id))
+
+    override fun close() = client.close()
+
+    companion object {
+        val NORG_API_BASE_URL by EnvironmentVariable(defaultValue = "http://norg2.org.svc.cluster.local/norg2/api/v1")
+    }
 }

@@ -3,7 +3,6 @@ package no.nav.hjelpemidler.pip.skjerming
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngine
-import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.accept
 import io.ktor.client.request.post
@@ -12,25 +11,27 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import no.nav.hjelpemidler.configuration.EnvironmentVariable
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
+import no.nav.hjelpemidler.http.correlationId
 import no.nav.hjelpemidler.http.createHttpClient
-import no.nav.hjelpemidler.http.openid.TokenSetProvider
-import no.nav.hjelpemidler.http.openid.openID
+import no.nav.hjelpemidler.http.openid.asApplication
+import no.nav.hjelpemidler.http.openid.entraID
+import java.io.Closeable
 
 private val log = KotlinLogging.logger {}
 
-internal val SKJERMEDE_PERSONER_PIP_API_URL by EnvironmentVariable
-
 class SkjermedePersonerPipClient(
-    engine: HttpClientEngine = CIO.create(),
-    tokenSetProvider: TokenSetProvider,
-    private val baseUrl: String = SKJERMEDE_PERSONER_PIP_API_URL,
-) {
+    engine: HttpClientEngine,
+    private val baseUrl: String = SKJERMEDE_PERSONER_PIP_API_BASE_URL,
+    private val target: String = SKJERMEDE_PERSONER_PIP_API_TARGET,
+) : Closeable {
     private val client = createHttpClient(engine) {
         expectSuccess = true
-        openID(tokenSetProvider)
+        entraID(target)
         defaultRequest {
             accept(ContentType.Application.Json)
             contentType(ContentType.Application.Json)
+            correlationId()
+            asApplication()
         }
     }
 
@@ -50,5 +51,12 @@ class SkjermedePersonerPipClient(
         return client
             .post(url) { setBody(ErSkjermedePersonerRequest(fnr)) }
             .body()
+    }
+
+    override fun close() = client.close()
+
+    companion object {
+        val SKJERMEDE_PERSONER_PIP_API_BASE_URL by EnvironmentVariable
+        val SKJERMEDE_PERSONER_PIP_API_TARGET by EnvironmentVariable
     }
 }
