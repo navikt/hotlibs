@@ -2,6 +2,7 @@ package no.nav.hjelpemidler.domain.id
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.json.Json
 import java.util.UUID
@@ -26,8 +27,8 @@ class IdSerializationTest {
         Json.decodeFromString(TestStringIdSerializer, stringId.toJson()) shouldBe stringId
         Json.decodeFromString(TestUuidIdSerializer, uuidId.toJson()) shouldBe uuidId
 
-        shouldThrow<NumberFormatException> { Json.decodeFromString(TestNumberIdSerializer, """true""") }
-        shouldThrow<NumberFormatException> { Json.decodeFromString(TestNumberIdSerializer, """false""") }
+        shouldThrow<SerializationException> { Json.decodeFromString(TestNumberIdSerializer, """true""") }
+        shouldThrow<SerializationException> { Json.decodeFromString(TestNumberIdSerializer, """false""") }
         shouldThrow<IllegalArgumentException> { Json.decodeFromString(TestNumberIdSerializer, """null""") }
 
         Json.decodeFromString(TestNumberIdSerializer.nullable, """null""") shouldBe null
