@@ -1,24 +1,9 @@
 package no.nav.hjelpemidler.http.openid
 
 interface Texas {
-    suspend fun token(
-        identityProvider: IdentityProvider,
-        target: String,
-        resource: String? = null,
-        skipCache: Boolean? = null,
-    ): TokenSet
-
-    suspend fun exchange(
-        identityProvider: IdentityProvider,
-        target: String,
-        userToken: String,
-        skipCache: Boolean? = null,
-    ): TokenSet
-
-    suspend fun introspection(
-        identityProvider: IdentityProvider,
-        token: String,
-    ): TokenIntrospection
+    suspend fun token(identityProvider: IdentityProvider, target: String): TokenSet
+    suspend fun exchange(identityProvider: IdentityProvider, target: String, userToken: String): TokenSet
+    suspend fun introspection(identityProvider: IdentityProvider, token: String): TokenIntrospection
 
     /**
      * [TokenSetProvider] for [IdentityProvider.ENTRA_ID].

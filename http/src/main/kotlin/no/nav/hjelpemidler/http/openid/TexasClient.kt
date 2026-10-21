@@ -29,36 +29,23 @@ class TexasClient(
     /**
      * Hent Machine-To-Machine-token (M2M-token) for [target].
      */
-    override suspend fun token(
-        identityProvider: IdentityProvider,
-        target: String,
-        resource: String?,
-        skipCache: Boolean?,
-    ): TokenSet {
-        log.debug { "Henter token, url: '$tokenUrl', identityProvider: '$identityProvider', target: '$target', resource: '$resource', skipCache: $skipCache" }
+    override suspend fun token(identityProvider: IdentityProvider, target: String): TokenSet {
+        log.debug { "Henter token, url: '$tokenUrl', identityProvider: '$identityProvider', target: '$target'" }
         return execute(tokenUrl) {
             identityProvider(identityProvider)
             target(target)
-            if (resource != null) resource(resource)
-            if (skipCache != null) skipCache(skipCache)
         }
     }
 
     /**
      * Hent On-Behalf-Of-token (OBO-token) for [target] (token exchange).
      */
-    override suspend fun exchange(
-        identityProvider: IdentityProvider,
-        target: String,
-        userToken: String,
-        skipCache: Boolean?,
-    ): TokenSet {
-        log.debug { "Gjør token exchange, url: '$tokenExchangeUrl', identityProvider: '$identityProvider', target: '$target', skipCache: $skipCache" }
+    override suspend fun exchange(identityProvider: IdentityProvider, target: String, userToken: String): TokenSet {
+        log.debug { "Gjør token exchange, url: '$tokenExchangeUrl', identityProvider: '$identityProvider', target: '$target'" }
         return execute(tokenExchangeUrl) {
             identityProvider(identityProvider)
             target(target)
             userToken(userToken)
-            if (skipCache != null) skipCache(skipCache)
         }
     }
 
@@ -82,8 +69,6 @@ class TexasClient(
 }
 
 private fun ParametersBuilder.identityProvider(value: IdentityProvider) = append("identity_provider", value.toString())
-private fun ParametersBuilder.resource(value: String) = append("resource", value)
-private fun ParametersBuilder.skipCache(value: Boolean) = append("skip_cache", value.toString())
 private fun ParametersBuilder.target(value: String) = append("target", value)
 private fun ParametersBuilder.token(value: String) = append("token", value)
 private fun ParametersBuilder.userToken(value: String) = append("user_token", value)
