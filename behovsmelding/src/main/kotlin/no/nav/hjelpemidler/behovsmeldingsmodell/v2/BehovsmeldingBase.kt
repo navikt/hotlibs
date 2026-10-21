@@ -2,6 +2,7 @@ package no.nav.hjelpemidler.behovsmeldingsmodell.v2
 
 import no.nav.hjelpemidler.behovsmeldingsmodell.BehovsmeldingType
 import no.nav.hjelpemidler.behovsmeldingsmodell.Prioritet
+import no.nav.hjelpemidler.domain.kodeverk.Kilde
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import java.time.Instant
 import java.time.LocalDate
@@ -17,4 +18,7 @@ interface BehovsmeldingBase {
     val prioritet: Prioritet
     val hjmBrukersFnr: Fødselsnummer
     val skjemaversjon: Int
+
+    val kilde: Kilde get() = Kilde.DIGITAL_BEHOVSMELDING
+    val isDigitalBehovsmelding: Boolean get() = kilde == Kilde.DIGITAL_BEHOVSMELDING
 }

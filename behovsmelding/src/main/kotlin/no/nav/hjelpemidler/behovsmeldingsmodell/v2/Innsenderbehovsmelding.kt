@@ -2,9 +2,6 @@ package no.nav.hjelpemidler.behovsmeldingsmodell.v2
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import io.github.oshai.kotlinlogging.KotlinLogging
-import java.time.Instant
-import java.time.LocalDate
-import java.util.UUID
 import no.nav.hjelpemidler.behovsmeldingsmodell.BehovsmeldingType
 import no.nav.hjelpemidler.behovsmeldingsmodell.Brukerkilde
 import no.nav.hjelpemidler.behovsmeldingsmodell.BrukersituasjonVilkårtype
@@ -27,12 +24,16 @@ import no.nav.hjelpemidler.domain.artikkel.Artikkellinje
 import no.nav.hjelpemidler.domain.geografi.Bydel
 import no.nav.hjelpemidler.domain.geografi.Kommune
 import no.nav.hjelpemidler.domain.geografi.Veiadresse
+import no.nav.hjelpemidler.domain.kodeverk.Kilde
 import no.nav.hjelpemidler.domain.kodeverk.Kodeverk
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.HarPersonnavn
 import no.nav.hjelpemidler.domain.person.Personnavn
 import no.nav.hjelpemidler.domain.person.TilknyttetPerson
 import org.owasp.html.HtmlPolicyBuilder
+import java.time.Instant
+import java.time.LocalDate
+import java.util.UUID
 
 private val log = KotlinLogging.logger {}
 
@@ -55,6 +56,9 @@ data class Innsenderbehovsmelding(
         override val hjmBrukersFnr: Fødselsnummer = bruker.fnr,
         override val prioritet: Prioritet = tilPrioritet(levering.hast),
 ) : BehovsmeldingBase {
+    override val kilde: Kilde = Kilde.DIGITAL_BEHOVSMELDING
+    override val isDigitalBehovsmelding: Boolean = true
+
     val behovsmeldingGjelder: String
         @JsonIgnore
         get() {

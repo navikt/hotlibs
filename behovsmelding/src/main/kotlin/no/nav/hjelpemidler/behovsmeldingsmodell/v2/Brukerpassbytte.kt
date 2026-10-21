@@ -3,6 +3,7 @@ package no.nav.hjelpemidler.behovsmeldingsmodell.v2
 import no.nav.hjelpemidler.behovsmeldingsmodell.BehovsmeldingType
 import no.nav.hjelpemidler.behovsmeldingsmodell.Prioritet
 import no.nav.hjelpemidler.domain.geografi.Veiadresse
+import no.nav.hjelpemidler.domain.kodeverk.Kilde
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.Personnavn
 import java.time.Instant
@@ -26,6 +27,9 @@ data class Brukerpassbytte(
     override val hjmBrukersFnr: Fødselsnummer,
     override val prioritet: Prioritet = Prioritet.NORMAL,
 ) : BehovsmeldingBase {
+    override val kilde: Kilde = Kilde.DIGITAL_BEHOVSMELDING
+    override val isDigitalBehovsmelding: Boolean = true
+
     data class Hjelpemiddel(
         val hmsArtNr: String,
         val artikkelnavn: String,
