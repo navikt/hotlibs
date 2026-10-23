@@ -10,6 +10,7 @@ enum class Tema(override val beskrivelse: String) : Kodeverk<Tema> {
     AKT(beskrivelse = "Aktivitetsplan med dialoger"),
     ARP(beskrivelse = "Arbeidsrådgivning - psykologtester"),
     ARS(beskrivelse = "Arbeidsrådgivning - skjermet"),
+    AVP(beskrivelse = "Aktivitetspenger"),
     BAR(beskrivelse = "Barnetrygd"),
     BBF(beskrivelse = "Barnebortføring"),
     BID(beskrivelse = "Bidrag"),
