@@ -47,6 +47,7 @@ include(
     "platform",
     "rapids-and-rivers",
     "serialization",
+    "server",
     "streams",
     "test",
 )

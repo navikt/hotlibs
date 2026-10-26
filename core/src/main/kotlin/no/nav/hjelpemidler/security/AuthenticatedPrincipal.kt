@@ -33,7 +33,7 @@ fun AuthenticatedPrincipal.requireApplication(): AuthenticatedApplication {
         returns() implies (this@requireApplication is AuthenticatedApplication)
     }
     return this as? AuthenticatedApplication
-        ?: error("Expected AuthenticatedApplication, got ${this::class.qualifiedName}")
+        ?: error("Expected AuthenticatedApplication, got ${javaClass.name}")
 }
 
 @OptIn(ExperimentalContracts::class)
@@ -42,7 +42,7 @@ fun AuthenticatedPrincipal.requireUser(): AuthenticatedUser {
         returns() implies (this@requireUser is AuthenticatedUser)
     }
     return this as? AuthenticatedUser
-        ?: error("Expected AuthenticatedUser, got ${this::class.qualifiedName}")
+        ?: error("Expected AuthenticatedUser, got ${javaClass.name}")
 }
 
 @OptIn(ExperimentalContracts::class)

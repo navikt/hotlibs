@@ -12,10 +12,10 @@ import no.nav.hjelpemidler.http.createHttpClient
 import no.nav.hjelpemidler.http.test.respondJson
 import no.nav.hjelpemidler.security.AuthenticationContext
 import no.nav.hjelpemidler.security.TestAuthenticatedUser
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 import kotlin.time.Duration.Companion.hours
 
-class OpenIDPluginTest {
+class OpenIdPluginTest {
     private val userPrincipalContext = AuthenticationContext(TestAuthenticatedUser)
 
     @Test
@@ -40,7 +40,7 @@ class OpenIDPluginTest {
             }
         }
         val client = createHttpClient(engine) {
-            openID(IdentityProvider.ENTRA_ID, "test")
+            openId(IdentityProvider.ENTRA_ID, "test")
         }
 
         val response = withContext(userPrincipalContext) {

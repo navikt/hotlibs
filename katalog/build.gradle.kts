@@ -31,6 +31,7 @@ catalog {
             "platform",
             "rapids-and-rivers",
             "serialization",
+            "server",
             "streams",
             "test",
         ).forEach { artifact ->

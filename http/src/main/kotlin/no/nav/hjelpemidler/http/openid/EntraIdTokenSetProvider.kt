@@ -16,7 +16,7 @@ private val log = KotlinLogging.logger {}
  * @see [onBehalfOf]
  * @see [no.nav.hjelpemidler.security.AuthenticationContext]
  */
-internal class EntraIDTokenSetProvider(texas: Texas, defaultTarget: String) :
+internal class EntraIdTokenSetProvider(texas: Texas, defaultTarget: String) :
     TexasTokenSetProvider(texas, IdentityProvider.ENTRA_ID, defaultTarget) {
     private val applicationProvider: TokenSetProvider =
         ApplicationTokenSetProvider(texas, identityProvider, defaultTarget)

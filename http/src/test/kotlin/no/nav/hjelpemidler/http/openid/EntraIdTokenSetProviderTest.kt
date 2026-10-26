@@ -11,7 +11,7 @@ import no.nav.hjelpemidler.security.AuthenticationContext
 import no.nav.hjelpemidler.security.TestAuthenticatedUser
 import kotlin.test.Test
 
-class EntraIDTokenSetProviderTest {
+class EntraIdTokenSetProviderTest {
     private val applikasjonsnavn = Applikasjonsnavn("testApplication")
 
     private val texas = mockk<Texas>(relaxed = true)
@@ -21,7 +21,7 @@ class EntraIDTokenSetProviderTest {
     private val applicationPrincipalContext = AuthenticationContext(AuthenticatedApplication(applikasjonsnavn))
     private val userPrincipalContext = AuthenticationContext(TestAuthenticatedUser)
 
-    private val provider = EntraIDTokenSetProvider(texas, defaultTarget)
+    private val provider = EntraIdTokenSetProvider(texas, defaultTarget)
 
     @Test
     fun `Gjør token exchange med userToken fra request`() = runTest {

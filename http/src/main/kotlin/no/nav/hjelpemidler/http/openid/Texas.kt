@@ -8,7 +8,7 @@ interface Texas {
     /**
      * [TokenSetProvider] for [IdentityProvider.ENTRA_ID].
      */
-    fun entraID(defaultTarget: String): TokenSetProvider = EntraIDTokenSetProvider(
+    fun entraId(defaultTarget: String): TokenSetProvider = EntraIdTokenSetProvider(
         texas = this,
         defaultTarget = defaultTarget,
     )

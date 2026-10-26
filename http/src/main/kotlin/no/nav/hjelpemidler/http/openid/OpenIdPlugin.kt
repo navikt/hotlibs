@@ -3,13 +3,13 @@ package no.nav.hjelpemidler.http.openid
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.plugins.api.createClientPlugin
 
-class OpenIDPluginConfiguration internal constructor() {
+class OpenIdPluginConfiguration internal constructor() {
     var tokenSetProvider: TokenSetProvider? = null
     var identityProvider: IdentityProvider? = null
     var target: String? = null
 }
 
-internal val OpenIDPlugin = createClientPlugin("OpenIDPlugin", ::OpenIDPluginConfiguration) {
+internal val OpenIdPlugin = createClientPlugin("OpenIdPlugin", ::OpenIdPluginConfiguration) {
     val tokenSetProvider = pluginConfig.tokenSetProvider ?: run {
         val identityProvider = pluginConfig.identityProvider
         val target = pluginConfig.target
@@ -25,7 +25,7 @@ internal val OpenIDPlugin = createClientPlugin("OpenIDPlugin", ::OpenIDPluginCon
             onClose(texas::close)
         }
         when (identityProvider) {
-            IdentityProvider.ENTRA_ID -> texas.entraID(target)
+            IdentityProvider.ENTRA_ID -> texas.entraId(target)
             IdentityProvider.MASKINPORTEN -> texas.maskinporten(target)
             IdentityProvider.TOKEN_X -> texas.tokenX(target)
         }
@@ -35,19 +35,19 @@ internal val OpenIDPlugin = createClientPlugin("OpenIDPlugin", ::OpenIDPluginCon
     }
 }
 
-fun HttpClientConfig<*>.openID(tokenSetProvider: TokenSetProvider) {
-    install(OpenIDPlugin) {
+fun HttpClientConfig<*>.openId(tokenSetProvider: TokenSetProvider) {
+    install(OpenIdPlugin) {
         this.tokenSetProvider = tokenSetProvider
     }
 }
 
-fun HttpClientConfig<*>.openID(identityProvider: IdentityProvider, target: String) {
-    install(OpenIDPlugin) {
+fun HttpClientConfig<*>.openId(identityProvider: IdentityProvider, target: String) {
+    install(OpenIdPlugin) {
         this.identityProvider = identityProvider
         this.target = target
     }
 }
 
-fun HttpClientConfig<*>.entraID(target: String) = openID(IdentityProvider.ENTRA_ID, target)
-fun HttpClientConfig<*>.tokenX(target: String) = openID(IdentityProvider.TOKEN_X, target)
-fun HttpClientConfig<*>.maskinporten(target: String) = openID(IdentityProvider.MASKINPORTEN, target)
+fun HttpClientConfig<*>.entraId(target: String) = openId(IdentityProvider.ENTRA_ID, target)
+fun HttpClientConfig<*>.tokenX(target: String) = openId(IdentityProvider.TOKEN_X, target)
+fun HttpClientConfig<*>.maskinporten(target: String) = openId(IdentityProvider.MASKINPORTEN, target)

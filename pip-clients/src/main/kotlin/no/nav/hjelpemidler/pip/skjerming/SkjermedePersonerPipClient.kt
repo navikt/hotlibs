@@ -14,7 +14,7 @@ import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.http.correlationId
 import no.nav.hjelpemidler.http.createHttpClient
 import no.nav.hjelpemidler.http.openid.asApplication
-import no.nav.hjelpemidler.http.openid.entraID
+import no.nav.hjelpemidler.http.openid.entraId
 import java.io.Closeable
 
 private val log = KotlinLogging.logger {}
@@ -26,7 +26,7 @@ class SkjermedePersonerPipClient(
 ) : Closeable {
     private val client = createHttpClient(engine) {
         expectSuccess = true
-        entraID(target)
+        entraId(target)
         defaultRequest {
             accept(ContentType.Application.Json)
             contentType(ContentType.Application.Json)
