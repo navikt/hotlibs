@@ -6,6 +6,9 @@ import no.nav.hjelpemidler.domain.tilgang.Applikasjonsnavn
 import no.nav.hjelpemidler.domain.tilgang.NavIdent
 import java.util.UUID
 
+/**
+ * @see <a href="https://docs.nais.io/auth/entra-id/reference/#claims">Entra ID reference - Nais</a>
+ */
 sealed class EntraIdCredential(credential: JWTCredential) : JWTPayloadHolder(credential.payload) {
     fun getClaim(name: String): String = checkNotNull(this[name]) { "'$name' claim mangler" }
 
@@ -45,6 +48,10 @@ sealed class EntraIdCredential(credential: JWTCredential) : JWTPayloadHolder(cre
     }
 
     companion object {
+        /** authorized party */
+        const val AZP_CLAIM = "azp"
+
+        /** authorized party name */
         const val AZP_NAME_CLAIM = "azp_name"
 
         /**

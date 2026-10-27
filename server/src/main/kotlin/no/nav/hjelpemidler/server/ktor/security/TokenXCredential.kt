@@ -1,10 +1,12 @@
 package no.nav.hjelpemidler.server.ktor.security
 
+import com.auth0.jwt.interfaces.Verification
 import io.ktor.server.auth.jwt.JWTCredential
 import io.ktor.server.auth.jwt.JWTPayloadHolder
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 
 /**
+ * @see <a href="https://docs.nais.io/auth/tokenx/reference/#claims">TokenX reference - Nais</a>
  * @see <a href="https://docs.digdir.no/docs/idporten/oidc/oidc_protocol_access_token#by-value--self-contained-access-token">access token from ID-porten | ID-porten</a>
  */
 class TokenXCredential(credential: JWTCredential) : JWTPayloadHolder(credential.payload) {
@@ -41,3 +43,6 @@ enum class SecurityLevelOfAssurance(private val value: String) {
         fun of(value: String): SecurityLevelOfAssurance? = entries.firstOrNull { it.value == value }
     }
 }
+
+fun Verification.withLevel(level: SecurityLevelOfAssurance): Verification =
+    withClaim(TokenXCredential.ACR_CLAIM, level.toString())
