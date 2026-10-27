@@ -12,13 +12,13 @@ import no.nav.hjelpemidler.configuration.EntraIdEnvironmentVariable
 import no.nav.hjelpemidler.configuration.Environment
 import no.nav.hjelpemidler.configuration.TokenXEnvironmentVariable
 
-object AuthenticationConfiguration {
+object AuthenticationProviderName {
     const val ENTRA_ID = "ENTRA_ID"
     const val TOKEN_X = "TOKEN_X"
 }
 
 fun AuthenticationConfig.entraId(
-    name: String = AuthenticationConfiguration.ENTRA_ID,
+    name: String = AuthenticationProviderName.ENTRA_ID,
     jwkProvider: JwkProvider = EntraIdJwkProvider(),
     authenticatedPrincipalProvider: AuthenticatedPrincipalProvider<EntraIdCredential> = DefaultEntraIdAuthenticatedPrincipalProvider(),
     block: Verification.() -> Unit = {},
@@ -39,7 +39,7 @@ fun AuthenticationConfig.entraId(
 }
 
 fun AuthenticationConfig.tokenX(
-    name: String = AuthenticationConfiguration.TOKEN_X,
+    name: String = AuthenticationProviderName.TOKEN_X,
     jwkProvider: JwkProvider = TokenXJwkProvider(),
     authenticatedPrincipalProvider: AuthenticatedPrincipalProvider<TokenXCredential> = DefaultTokenXAuthenticatedPrincipalProvider(),
     block: Verification.() -> Unit = {},

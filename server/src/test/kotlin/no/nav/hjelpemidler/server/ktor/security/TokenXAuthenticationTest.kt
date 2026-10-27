@@ -46,7 +46,7 @@ private fun runTest(block: suspend ApplicationTestBuilder.() -> Unit): TestResul
     }
 
     routing {
-        authenticate(AuthenticationConfiguration.TOKEN_X) {
+        authenticate(AuthenticationProviderName.TOKEN_X) {
             get("/api/saker/{id}") {
                 call.response.header(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                 call.respond("[]")
