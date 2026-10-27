@@ -40,9 +40,18 @@ enum class SecurityLevelOfAssurance(private val value: String) {
     override fun toString(): String = value
 
     companion object {
-        fun of(value: String): SecurityLevelOfAssurance? = entries.firstOrNull { it.value == value }
+        const val LEVEL_3 = "Level3"
+        const val LEVEL_4 = "Level4"
+
+        fun of(value: String?): SecurityLevelOfAssurance? = when (value) {
+            LEVEL_3 -> SUBSTANTIAL
+            LEVEL_4 -> HIGH
+            else -> entries.firstOrNull { it.value == value }
+        }
     }
 }
 
 fun Verification.withLevel(level: SecurityLevelOfAssurance): Verification =
-    withClaim(TokenXCredential.ACR_CLAIM, level.toString())
+    withClaim(TokenXCredential.ACR_CLAIM) { claim, _ ->
+        SecurityLevelOfAssurance.of(claim.asString()) == level
+    }

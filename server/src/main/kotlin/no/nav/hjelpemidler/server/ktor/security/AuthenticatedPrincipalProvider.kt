@@ -1,5 +1,6 @@
 package no.nav.hjelpemidler.server.ktor.security
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.http.auth.AuthScheme
 import io.ktor.http.auth.HttpAuthHeader
 import io.ktor.server.application.ApplicationCall
@@ -8,6 +9,8 @@ import io.ktor.server.auth.parseAuthorizationHeader
 import io.ktor.server.auth.principal
 import no.nav.hjelpemidler.security.AuthenticatedApplication
 import no.nav.hjelpemidler.security.AuthenticatedPrincipal
+
+private val log = KotlinLogging.logger { }
 
 fun interface AuthenticatedPrincipalProvider<T : JWTPayloadHolder> {
     suspend operator fun invoke(call: ApplicationCall, credential: T): AuthenticatedPrincipal?
@@ -29,8 +32,14 @@ class DefaultEntraIdAuthenticatedPrincipalProvider : AuthenticatedPrincipalProvi
 
 class DefaultTokenXAuthenticatedPrincipalProvider : AuthenticatedPrincipalProvider<TokenXCredential> {
     override suspend fun invoke(call: ApplicationCall, credential: TokenXCredential): AuthenticatedPrincipal? {
-        val fnr = credential.fnr ?: return null
-        val level = credential.level ?: return null
+        val fnr = credential.fnr ?: run {
+            log.warn { "TokenXCredential mangler fnr" }
+            return null
+        }
+        val level = credential.level ?: run {
+            log.warn { "TokenXCredential mangler level" }
+            return null
+        }
         return AutentisertInnbygger(
             fnr,
             level,
