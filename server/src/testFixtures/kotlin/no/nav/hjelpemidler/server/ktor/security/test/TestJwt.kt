@@ -7,11 +7,14 @@ import com.auth0.jwt.algorithms.Algorithm
 import com.nimbusds.jose.jwk.KeyUse
 import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.jwk.gen.RSAKeyGenerator
+import io.ktor.client.request.bearerAuth
+import io.ktor.http.HttpMessageBuilder
 import no.nav.hjelpemidler.configuration.EntraIdEnvironmentVariable
 import no.nav.hjelpemidler.configuration.NaisEnvironmentVariable
 import no.nav.hjelpemidler.configuration.TokenXEnvironmentVariable
 import no.nav.hjelpemidler.security.AuthenticatedApplication
 import no.nav.hjelpemidler.security.AuthenticatedPrincipal
+import no.nav.hjelpemidler.security.AuthenticatedUser
 import no.nav.hjelpemidler.server.ktor.security.AutentisertAnsatt
 import no.nav.hjelpemidler.server.ktor.security.AutentisertInnbygger
 import no.nav.hjelpemidler.server.ktor.security.EntraIdCredential
@@ -73,10 +76,13 @@ fun AuthenticatedPrincipal.asToken(block: JWTCreator.Builder.() -> Unit = {}): S
                     .withClaim(EntraIdCredential.Ansatt.PREFERRED_USERNAME_CLAIM, epost)
                     .withClaim(EntraIdCredential.Ansatt.GROUPS_CLAIM, grupper.map { it.toString() })
 
-                else -> TODO()
+                else -> TODO(javaClass.simpleName)
             }
         }
     }
 
     return builder.apply(block).sign(testAlgorithm)
 }
+
+fun HttpMessageBuilder.bearerAuth(principal: AuthenticatedPrincipal) = bearerAuth(principal.asToken())
+fun HttpMessageBuilder.bearerAuth(user: AuthenticatedUser) = bearerAuth(user.userToken)
