@@ -8,7 +8,7 @@ import no.nav.hjelpemidler.domain.tilgang.lagTilfeldigNavIdent
 import no.nav.hjelpemidler.security.AuthenticatedApplication
 import no.nav.hjelpemidler.server.ktor.security.AutentisertAnsatt
 import no.nav.hjelpemidler.server.ktor.security.AutentisertInnbygger
-import no.nav.hjelpemidler.server.ktor.security.SecurityLevelOfAssurance
+import no.nav.hjelpemidler.server.ktor.security.IdPortenSecurityLevel
 import java.util.UUID
 
 val applikasjon = AuthenticatedApplication(Applikasjonsnavn.GJELDENDE)
@@ -30,7 +30,7 @@ fun lagAutentisertAnsatt(
 
 fun lagAutentisertInnbygger(
     fnr: Fødselsnummer = lagTilfeldigFødselsnummer(),
-    level: SecurityLevelOfAssurance = SecurityLevelOfAssurance.HIGH,
+    level: IdPortenSecurityLevel = IdPortenSecurityLevel.HIGH,
 ): AutentisertInnbygger {
     val innbygger = AutentisertInnbygger(
         fnr = fnr,

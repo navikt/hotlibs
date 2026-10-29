@@ -6,7 +6,6 @@ import io.ktor.client.request.get
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.auth.authenticate
 import io.ktor.server.auth.authentication
 import io.ktor.server.response.header
 import io.ktor.server.response.respond
@@ -56,7 +55,7 @@ private fun runTest(block: suspend ApplicationTestBuilder.() -> Unit): TestResul
     }
 
     routing {
-        authenticate(AuthenticationProviderName.ENTRA_ID) {
+        authenticateEntraId {
             get("/api/saker/{id}") {
                 call.response.header(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                 call.respond("[]")

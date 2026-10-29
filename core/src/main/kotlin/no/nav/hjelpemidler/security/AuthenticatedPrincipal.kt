@@ -18,6 +18,9 @@ value class AuthenticatedApplication(override val id: Applikasjonsnavn) : Authen
 }
 
 interface AuthenticatedUser : AuthenticatedPrincipal {
+    /**
+     * User token for token exchange.
+     */
     val userToken: String
 }
 

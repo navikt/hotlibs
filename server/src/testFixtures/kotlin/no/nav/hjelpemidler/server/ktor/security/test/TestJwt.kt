@@ -4,6 +4,8 @@ import com.auth0.jwk.Jwk
 import com.auth0.jwk.JwkProvider
 import com.auth0.jwt.JWTCreator
 import com.auth0.jwt.algorithms.Algorithm
+import com.auth0.jwt.interfaces.DecodedJWT
+import com.auth0.jwt.interfaces.Verification
 import com.nimbusds.jose.jwk.KeyUse
 import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.jwk.gen.RSAKeyGenerator
@@ -35,6 +37,24 @@ private val testRSAKey: RSAKey = RSAKeyGenerator(2048)
 private val testRSAPrivateKey: RSAPrivateKey = testRSAKey.toRSAPrivateKey()
 
 private val testAlgorithm: Algorithm = Algorithm.RSA256(testRSAKey.toRSAPublicKey(), testRSAPrivateKey)
+
+fun verifyEntraIdToken(token: String, block: Verification.() -> Unit = {}): DecodedJWT {
+    val verifier = Jwt.require(testAlgorithm)
+        .withIssuer(EntraIdEnvironmentVariable.AZURE_OPENID_CONFIG_ISSUER)
+        .withAudience(EntraIdEnvironmentVariable.AZURE_APP_CLIENT_ID)
+        .apply(block)
+        .build()
+    return verifier.verify(token)
+}
+
+fun verifyTokenXToken(token: String, block: Verification.() -> Unit = {}): DecodedJWT {
+    val verifier = Jwt.require(testAlgorithm)
+        .withIssuer(TokenXEnvironmentVariable.TOKEN_X_ISSUER)
+        .withAudience(TokenXEnvironmentVariable.TOKEN_X_CLIENT_ID)
+        .apply(block)
+        .build()
+    return verifier.verify(token)
+}
 
 object TestJwkProvider : JwkProvider {
     private val jwk: Jwk = Jwk.fromValues(testRSAKey.toJSONObject())
@@ -71,10 +91,10 @@ fun AuthenticatedPrincipal.asToken(block: JWTCreator.Builder.() -> Unit = {}): S
                     .withClaim(EntraIdCredential.TOKEN_TYPE_CLAIM, EntraIdCredential.TOKEN_TYPE_APP)
 
                 is AutentisertAnsatt -> builder
-                    .withClaim(EntraIdCredential.Ansatt.NAV_IDENT_CLAIM, id.toString())
-                    .withClaim(EntraIdCredential.Ansatt.NAME_CLAIM, navn)
-                    .withClaim(EntraIdCredential.Ansatt.PREFERRED_USERNAME_CLAIM, epost)
-                    .withClaim(EntraIdCredential.Ansatt.GROUPS_CLAIM, grupper.map { it.toString() })
+                    .withClaim(EntraIdCredential.User.NAV_IDENT_CLAIM, id.toString())
+                    .withClaim(EntraIdCredential.User.NAME_CLAIM, navn)
+                    .withClaim(EntraIdCredential.User.PREFERRED_USERNAME_CLAIM, epost)
+                    .withClaim(EntraIdCredential.User.GROUPS_CLAIM, grupper.map { it.toString() })
 
                 else -> TODO(javaClass.simpleName)
             }

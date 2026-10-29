@@ -6,9 +6,13 @@ plugins {
 
 dependencies {
     api(project(":core"))
+    api(project(":http"))
+
+    // Ktor Server
     api(libs.ktor.server.core)
     api(libs.ktor.server.auth.jwt)
 
+    // Testing
     testImplementation(project(":test")) {
         capabilities {
             requireCapability("no.nav.hjelpemidler:test-ktor")

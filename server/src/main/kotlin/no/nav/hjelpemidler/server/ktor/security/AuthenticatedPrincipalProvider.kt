@@ -1,12 +1,8 @@
 package no.nav.hjelpemidler.server.ktor.security
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import io.ktor.http.auth.AuthScheme
-import io.ktor.http.auth.HttpAuthHeader
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.auth.jwt.JWTPayloadHolder
-import io.ktor.server.auth.parseAuthorizationHeader
-import io.ktor.server.auth.principal
 import no.nav.hjelpemidler.security.AuthenticatedApplication
 import no.nav.hjelpemidler.security.AuthenticatedPrincipal
 
@@ -16,11 +12,13 @@ fun interface AuthenticatedPrincipalProvider<T : JWTPayloadHolder> {
     suspend operator fun invoke(call: ApplicationCall, credential: T): AuthenticatedPrincipal?
 }
 
-class DefaultEntraIdAuthenticatedPrincipalProvider : AuthenticatedPrincipalProvider<EntraIdCredential> {
+interface EntraIdAuthenticatedPrincipalProvider : AuthenticatedPrincipalProvider<EntraIdCredential>
+
+class DefaultEntraIdAuthenticatedPrincipalProvider : EntraIdAuthenticatedPrincipalProvider {
     override suspend fun invoke(call: ApplicationCall, credential: EntraIdCredential): AuthenticatedPrincipal? =
         when (credential) {
-            is EntraIdCredential.Applikasjon -> AuthenticatedApplication(credential.id)
-            is EntraIdCredential.Ansatt -> AutentisertAnsatt(
+            is EntraIdCredential.Application -> AuthenticatedApplication(credential.id)
+            is EntraIdCredential.User -> AutentisertAnsatt(
                 credential.id,
                 credential.navn,
                 credential.epost,
@@ -30,7 +28,9 @@ class DefaultEntraIdAuthenticatedPrincipalProvider : AuthenticatedPrincipalProvi
         }
 }
 
-class DefaultTokenXAuthenticatedPrincipalProvider : AuthenticatedPrincipalProvider<TokenXCredential> {
+interface TokenXAuthenticatedPrincipalProvider : AuthenticatedPrincipalProvider<TokenXCredential>
+
+class DefaultTokenXAuthenticatedPrincipalProvider : TokenXAuthenticatedPrincipalProvider {
     override suspend fun invoke(call: ApplicationCall, credential: TokenXCredential): AuthenticatedPrincipal? {
         val fnr = credential.fnr ?: run {
             log.warn { "TokenXCredential mangler fnr" }
@@ -47,16 +47,3 @@ class DefaultTokenXAuthenticatedPrincipalProvider : AuthenticatedPrincipalProvid
         )
     }
 }
-
-internal fun ApplicationCall.bearerToken(): String {
-    val authorizationHeader = request.parseAuthorizationHeader()
-    return if (authorizationHeader is HttpAuthHeader.Single
-        && authorizationHeader.authScheme.equals(AuthScheme.Bearer, ignoreCase = true)
-    ) {
-        authorizationHeader.blob
-    } else {
-        error("ApplicationCall mangler Bearer-token")
-    }
-}
-
-fun ApplicationCall.authenticatedPrincipal(): AuthenticatedPrincipal? = principal<AuthenticatedPrincipal>()

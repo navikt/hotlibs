@@ -14,7 +14,7 @@ import kotlin.contracts.contract
  */
 data class AutentisertInnbygger(
     val fnr: Fødselsnummer,
-    val level: SecurityLevelOfAssurance,
+    val level: IdPortenSecurityLevel,
     override val userToken: String,
 ) : AuthenticatedUser {
     override val id: Fødselsnummer get() = fnr
