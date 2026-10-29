@@ -30,6 +30,16 @@ class TokenXCredentialTest {
     }
 
     @Test
+    fun `Krever level SUBSTANTIAL, men har LOW`() {
+        val innbygger = lagAutentisertInnbygger(level = IdPortenSecurityLevel.LOW)
+        assertThrows<IncorrectClaimException>(message = "The Claim 'acr' value doesn't match the required one.") {
+            verifyTokenXToken(innbygger.asToken()) {
+                withMinimumSecurityLevel(IdPortenSecurityLevel.SUBSTANTIAL)
+            }
+        }
+    }
+
+    @Test
     fun `Krever level HIGH, men har SUBSTANTIAL`() {
         val innbygger = lagAutentisertInnbygger(level = IdPortenSecurityLevel.SUBSTANTIAL)
         assertThrows<IncorrectClaimException>(message = "The Claim 'acr' value doesn't match the required one.") {

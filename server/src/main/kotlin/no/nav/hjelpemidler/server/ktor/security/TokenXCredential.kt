@@ -28,35 +28,35 @@ class TokenXCredential(credential: JWTCredential) : TexasCredential(credential) 
 /**
  * @see <a href="https://docs.digdir.no/docs/idporten/oidc/oidc_protocol_id_token#acr-values">id_token from ID-porten | ID-porten</a>
  */
-enum class IdPortenSecurityLevel(internal val value: String, internal val relativeValue: Int) {
+enum class IdPortenSecurityLevel(val acrValue: String, internal val relativeValue: Int) {
     /** Ikke i bruk pt. */
-    LOW(value = "idporten-loa-low", relativeValue = 1),
+    LOW(acrValue = "idporten-loa-low", relativeValue = 1),
 
     /** Tidligere `Level3` */
-    SUBSTANTIAL(value = "idporten-loa-substantial", relativeValue = 2),
+    SUBSTANTIAL(acrValue = "idporten-loa-substantial", relativeValue = 2),
 
     /** Tidligere `Level4` */
-    HIGH(value = "idporten-loa-high", relativeValue = 3),
+    HIGH(acrValue = "idporten-loa-high", relativeValue = 3),
     ;
 
-    override fun toString(): String = value
+    override fun toString(): String = acrValue
 
     companion object {
         internal const val LEVEL_3 = "Level3"
         internal const val LEVEL_4 = "Level4"
 
-        fun of(value: String): IdPortenSecurityLevel = when (value) {
+        fun of(acrValue: String): IdPortenSecurityLevel = when (acrValue) {
             LEVEL_3 -> SUBSTANTIAL
             LEVEL_4 -> HIGH
-            else -> entries.firstOrNull { it.value == value } ?: error("Ukjent acr-claim: '$value'")
+            else -> entries.firstOrNull { it.acrValue == acrValue }
+                ?: throw IllegalArgumentException("Ukjent acrValue: '$acrValue'")
         }
     }
 }
 
 fun Verification.withMinimumSecurityLevel(minimumLevel: IdPortenSecurityLevel): Verification =
     withClaim(TokenXCredential.ACR_CLAIM) { claim, _ ->
-        runCatching {
-            val relativeValue = IdPortenSecurityLevel.of(claim.asString()).relativeValue
-            relativeValue >= minimumLevel.relativeValue
-        }.getOrDefault(false)
+        val acrValue = claim.asString() ?: return@withClaim false
+        val relativeValue = runCatching { IdPortenSecurityLevel.of(acrValue).relativeValue }.getOrDefault(Int.MIN_VALUE)
+        relativeValue >= minimumLevel.relativeValue
     }
