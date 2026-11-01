@@ -19,7 +19,8 @@ import tools.jackson.databind.DeserializationContext
 import tools.jackson.databind.deser.std.FromStringDeserializer
 import tools.jackson.databind.module.SimpleModule
 import tools.jackson.databind.ser.std.ToStringSerializer
-import tools.jackson.module.kotlin.addDeserializer
+import java.time.Instant
+import java.time.LocalDate
 import kotlin.reflect.KClass
 
 internal class ThreeTenExtraModule : SimpleModule() {
@@ -67,17 +68,41 @@ internal class ThreeTenExtraModule : SimpleModule() {
         addDeserializer(PeriodDuration::class, PeriodDuration::parse)
 
         // Range
-        addDeserializer(LocalDateRange::class, LocalDateRange::parse)
+        addDeserializer(LocalDateRange::class, ::parseLocalDateRange)
 
         // Interval
-        addDeserializer(Interval::class, Interval::parse)
+        addDeserializer(Interval::class, ::parseInterval)
     }
 
-    private inline fun <reified T : Any> addDeserializer(type: KClass<T>, noinline creator: (rawValue: String) -> T) =
-        addDeserializer<T>(type, Deserializer(type, creator)) // fixme -> se på denne
+    private fun <T : Any> addDeserializer(type: KClass<T>, creator: (rawValue: String) -> T) =
+        addDeserializer<T>(type.java, Deserializer(type, creator))
 
-    class Deserializer<T : Any>(type: KClass<T>, private val creator: (rawValue: String) -> T) :
+    private class Deserializer<T : Any>(type: KClass<T>, private val creator: (rawValue: String) -> T) :
         FromStringDeserializer<T>(type.java) {
         override fun _deserialize(value: String, context: DeserializationContext): T = creator(value)
     }
+}
+
+private fun parseLocalDateRange(text: String): LocalDateRange = when {
+    text == "/" -> LocalDateRange.ALL
+
+    text.startsWith("/") ->
+        LocalDateRange.ofUnboundedStart(LocalDate.parse(text.substring(1)))
+
+    text.endsWith("/") ->
+        LocalDateRange.ofUnboundedEnd(LocalDate.parse(text.substringBeforeLast("/")))
+
+    else -> LocalDateRange.parse(text)
+}
+
+private fun parseInterval(text: String): Interval = when {
+    text == "/" -> Interval.ALL
+
+    text.startsWith("/") ->
+        Interval.endingAt(Instant.parse(text.substring(1)))
+
+    text.endsWith("/") ->
+        Interval.startingAt(Instant.parse(text.substringBeforeLast("/")))
+
+    else -> Interval.parse(text)
 }
