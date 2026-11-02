@@ -1,14 +1,9 @@
 package no.nav.hjelpemidler.pagination
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import kotlin.math.ceil
 
-interface Page<out T> : Iterable<T> {
+interface Page<out T> : Pageable<T> {
     val content: List<T>
-    val totalElements: Long
-    val pageNumber: Int
-    val pageSize: Int
-    val totalPages: Int
 }
 
 internal data class DefaultPage<out T>(
@@ -19,16 +14,12 @@ internal data class DefaultPage<out T>(
 ) : Page<T> {
     override val pageNumber: Int get() = pageRequest.pageNumber
     override val pageSize: Int get() = pageRequest.pageSize
-    override val totalPages: Int get() = ceil(totalElements.toDouble() / pageSize).toInt()
 
     override fun iterator(): Iterator<T> = content.iterator()
 }
 
-fun <T> pageOf(
-    content: List<T>,
-    totalElements: Long,
-    pageRequest: PageRequest,
-): Page<T> = DefaultPage(content, totalElements, pageRequest)
+fun <T> pageOf(content: List<T>, totalElements: Long, pageRequest: PageRequest): Page<T> =
+    DefaultPage(content, totalElements, pageRequest)
 
 fun <T> emptyPage(pageRequest: PageRequest = PageRequest()): Page<T> =
-    pageOf(emptyList(), 0, pageRequest)
+    pageOf(emptyList(), totalElements = 0, pageRequest)
