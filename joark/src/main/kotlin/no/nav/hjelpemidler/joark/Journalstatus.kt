@@ -1,8 +1,9 @@
 package no.nav.hjelpemidler.joark
 
 import com.fasterxml.jackson.annotation.JsonAlias
+import no.nav.hjelpemidler.domain.kodeverk.Kodeverk
 
-enum class Journalstatus {
+enum class Journalstatus : Kodeverk<Journalstatus> {
     MOTTATT,
 
     @JsonAlias("JOURNALFOERT")

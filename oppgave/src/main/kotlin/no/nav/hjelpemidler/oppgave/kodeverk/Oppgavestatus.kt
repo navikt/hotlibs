@@ -1,4 +1,4 @@
-package no.nav.hjelpemidler.saksbehandling.core.oppgave
+package no.nav.hjelpemidler.oppgave.kodeverk
 
 import com.fasterxml.jackson.annotation.JsonAlias
 import no.nav.hjelpemidler.domain.kodeverk.EksterntKodeverk
