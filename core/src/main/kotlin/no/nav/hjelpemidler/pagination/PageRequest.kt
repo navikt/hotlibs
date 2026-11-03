@@ -4,8 +4,18 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 
+/**
+ * NB! Første side hentes med [pageNumber] = `1`.
+ */
 interface PageRequest {
+    /**
+     * Må være positiv.
+     */
     val pageNumber: Int
+
+    /**
+     * Må være positiv.
+     */
     val pageSize: Int
 
     val limit: Int @JsonIgnore get() = pageSize
