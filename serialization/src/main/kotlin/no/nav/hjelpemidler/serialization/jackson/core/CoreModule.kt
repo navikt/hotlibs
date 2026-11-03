@@ -21,6 +21,7 @@ internal class CoreModule : SimpleModule() {
     override fun setupModule(context: SetupContext) {
         super.setupModule(context)
         with(context) {
+            insertAnnotationIntrospector(EksternKodeIntrospector())
             addSerializers(CoreSerializers)
             addDeserializers(CoreDeserializers)
             addTypeModifier(MaybeTypeModifier)

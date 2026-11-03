@@ -3,7 +3,7 @@ package no.nav.hjelpemidler.domain.kodeverk
 /**
  * Felles interface for kodeverk.
  *
- * For ukjente kodeverdier benyttes [UkjentKode].
+ * For ukjente kodeverdier benyttes [Tekstkode].
  *
  * @param E typen enum som inneholder "kjente" kodeverdier, dvs. kodeverdier som typisk skal benyttes i logikk.
  */
@@ -17,6 +17,11 @@ interface Kodeverk<E : Enum<E>> {
  * i logikk.
  */
 @JvmInline
-value class UkjentKode<E : Enum<E>>(override val name: String) : Kodeverk<E> {
+value class Tekstkode<E : Enum<E>>(override val name: String) : Kodeverk<E>, EksterntKodeverk {
+    init {
+        require(name.isNotBlank()) { "'$name' er ikke en gyldig kode" }
+    }
+
+    override val eksternKode: String get() = name
     override fun toString(): String = name
 }

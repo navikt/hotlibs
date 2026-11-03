@@ -1,20 +1,17 @@
 package no.nav.hjelpemidler.oppgave.kodeverk
 
-import com.fasterxml.jackson.annotation.JsonAlias
+import no.nav.hjelpemidler.domain.kodeverk.EksternKode
 import no.nav.hjelpemidler.domain.kodeverk.EksterntKodeverk
 import no.nav.hjelpemidler.domain.kodeverk.Kodeverk
 
-enum class Oppgaveprioritet(
-    override val beskrivelse: String,
-    override val eksternKode: String,
-) : Kodeverk<Oppgaveprioritet>, EksterntKodeverk {
-    KRITISK(beskrivelse = "Kritisk", eksternKode = "KRITISK"),
+enum class Oppgaveprioritet(override val beskrivelse: String) : Kodeverk<Oppgaveprioritet>, EksterntKodeverk {
+    KRITISK(beskrivelse = "Kritisk"),
 
-    @JsonAlias("HOY")
-    HØY(beskrivelse = "Høy", eksternKode = "HOY"),
+    @EksternKode("HOY")
+    HØY(beskrivelse = "Høy"),
 
-    @JsonAlias("NORM")
-    NORMAL(beskrivelse = "Normal", eksternKode = "NORM"),
+    @EksternKode("NORM")
+    NORMAL(beskrivelse = "Normal"),
 
-    LAV(beskrivelse = "Lav", eksternKode = "LAV"),
+    LAV(beskrivelse = "Lav"),
 }

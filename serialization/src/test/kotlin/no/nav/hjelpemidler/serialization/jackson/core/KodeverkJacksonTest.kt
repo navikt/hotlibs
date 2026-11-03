@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.kotest.matchers.shouldBe
 import no.nav.hjelpemidler.domain.kodeverk.Kodeverk
-import no.nav.hjelpemidler.domain.kodeverk.UkjentKode
+import no.nav.hjelpemidler.domain.kodeverk.Tekstkode
 import no.nav.hjelpemidler.serialization.jackson.coreModule
 import no.nav.hjelpemidler.test.testFactory
 import org.junit.jupiter.api.TestFactory
@@ -23,8 +23,8 @@ class KodeverkJacksonTest {
     fun tilJson() = testFactory(
         sequenceOf(
             TestEnum.OPPRETTET to "OPPRETTET",
-            UkjentKode<TestEnum>("FEILREGISTRERT") to "FEILREGISTRERT",
-            UkjentKode<TestEnum>("Feilregistrert") to "Feilregistrert",
+            Tekstkode<TestEnum>("FEILREGISTRERT") to "FEILREGISTRERT",
+            Tekstkode<TestEnum>("Feilregistrert") to "Feilregistrert",
         ),
         { (testEnum, testEnumJson) -> """$testEnum -> "$testEnumJson"""" },
     ) { (testEnum, testEnumJson) ->
@@ -41,8 +41,8 @@ class KodeverkJacksonTest {
             "Mottatt" to TestEnum.OPPRETTET,
             "BEHANDLET" to TestEnum.FERDIGSTILT,
             "Behandlet" to TestEnum.FERDIGSTILT,
-            "FEILREGISTRERT" to UkjentKode<TestEnum>("FEILREGISTRERT"),
-            "Feilregistrert" to UkjentKode<TestEnum>("Feilregistrert"),
+            "FEILREGISTRERT" to Tekstkode<TestEnum>("FEILREGISTRERT"),
+            "Feilregistrert" to Tekstkode<TestEnum>("Feilregistrert"),
         ),
         { (testEnumJson, testEnum) -> """"$testEnumJson" -> $testEnum""" },
     ) { (testEnumJson, testEnum) ->

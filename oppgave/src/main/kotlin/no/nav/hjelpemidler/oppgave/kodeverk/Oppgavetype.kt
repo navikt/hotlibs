@@ -1,79 +1,73 @@
 package no.nav.hjelpemidler.oppgave.kodeverk
 
-import com.fasterxml.jackson.annotation.JsonAlias
+import no.nav.hjelpemidler.domain.kodeverk.EksternKode
 import no.nav.hjelpemidler.domain.kodeverk.EksterntKodeverk
 import no.nav.hjelpemidler.domain.kodeverk.Kodeverk
 
-enum class Oppgavetype(
-    override val beskrivelse: String,
-    override val eksternKode: String,
-) : Kodeverk<Oppgavetype>, EksterntKodeverk {
-    @JsonAlias("RETUR")
-    BEHANDLE_RETURPOST(beskrivelse = "Behandle returpost", eksternKode = "RETUR"),
+enum class Oppgavetype(override val beskrivelse: String) : Kodeverk<Oppgavetype>, EksterntKodeverk {
+    @EksternKode("RETUR")
+    BEHANDLE_RETURPOST(beskrivelse = "Behandle returpost"),
 
-    @JsonAlias("BEH_SAK")
-    BEHANDLE_SAK(beskrivelse = "Behandle sak", eksternKode = "BEH_SAK"),
+    @EksternKode("BEH_SAK")
+    BEHANDLE_SAK(beskrivelse = "Behandle sak"),
 
-    @JsonAlias("BEH_SAK_MK")
-    BEHANDLE_SAK_MANUELT(beskrivelse = "Behandle sak (Manuell)", eksternKode = "BEH_SAK_MK"),
+    @EksternKode("BEH_SAK_MK")
+    BEHANDLE_SAK_MANUELT(beskrivelse = "Behandle sak (Manuell)"),
 
-    @JsonAlias("BEH_SED")
-    BEHANDLE_SED(beskrivelse = "Behandle SED", eksternKode = "BEH_SED"),
+    @EksternKode("BEH_SED")
+    BEHANDLE_SED(beskrivelse = "Behandle SED"),
 
-    @JsonAlias("BEH_UND_VED")
-    BEHANDLE_UNDERKJENT_VEDTAK(beskrivelse = "Behandle underkjent vedtak", eksternKode = "BEH_UND_VED"),
+    @EksternKode("BEH_UND_VED")
+    BEHANDLE_UNDERKJENT_VEDTAK(beskrivelse = "Behandle underkjent vedtak"),
 
-    @JsonAlias("FLY")
-    FLYTTESAK(beskrivelse = "Flyttesak", eksternKode = "FLY"),
+    @EksternKode("FLY")
+    FLYTTESAK(beskrivelse = "Flyttesak"),
 
-    @JsonAlias("FDR")
-    FORDELING(beskrivelse = "Fordeling", eksternKode = "FDR"),
+    @EksternKode("FDR")
+    FORDELING(beskrivelse = "Fordeling"),
 
-    @JsonAlias("GOD_VED")
-    GODKJENNE_VEDTAK(beskrivelse = "Godkjenne vedtak", eksternKode = "GOD_VED"),
+    @EksternKode("GOD_VED")
+    GODKJENNE_VEDTAK(beskrivelse = "Godkjenne vedtak"),
 
-    @JsonAlias("HJELP_UTPROV")
-    HJELP_TIL_UTPRØVING(beskrivelse = "Hjelp til utprøving", eksternKode = "HJELP_UTPROV"),
+    @EksternKode("HJELP_UTPROV")
+    HJELP_TIL_UTPRØVING(beskrivelse = "Hjelp til utprøving"),
 
-    @JsonAlias("INNH_DOK")
-    INNHENT_DOKUMENTASJON(beskrivelse = "Innhent dokumentasjon", eksternKode = "INNH_DOK"),
+    @EksternKode("INNH_DOK")
+    INNHENT_DOKUMENTASJON(beskrivelse = "Innhent dokumentasjon"),
 
-    @JsonAlias("JFR")
-    JOURNALFØRING(beskrivelse = "Journalføring", eksternKode = "JFR"),
+    @EksternKode("JFR")
+    JOURNALFØRING(beskrivelse = "Journalføring"),
 
-    @JsonAlias("KONT_BRUK")
-    KONTAKT_BRUKER(beskrivelse = "Kontakt bruker", eksternKode = "KONT_BRUK"),
+    @EksternKode("KONT_BRUK")
+    KONTAKT_BRUKER(beskrivelse = "Kontakt bruker"),
 
-    @JsonAlias("KON_UTG_SCA_DOK")
-    KONTROLLER_UTGÅENDE_SKANNET_DOKUMENT(
-        beskrivelse = "Kontroller utgående skannet dokument",
-        eksternKode = "KON_UTG_SCA_DOK",
-    ),
+    @EksternKode("KON_UTG_SCA_DOK")
+    KONTROLLER_UTGÅENDE_SKANNET_DOKUMENT(beskrivelse = "Kontroller utgående skannet dokument"),
 
-    @JsonAlias("MOTK")
-    KRAV_MOTTATT(beskrivelse = "Krav mottatt", eksternKode = "MOTK"),
+    @EksternKode("MOTK")
+    KRAV_MOTTATT(beskrivelse = "Krav mottatt"),
 
-    @JsonAlias("ROB_BEH")
-    ROBOTBEHANDLING(beskrivelse = "Robotbehandling", eksternKode = "ROB_BEH"),
+    @EksternKode("ROB_BEH")
+    ROBOTBEHANDLING(beskrivelse = "Robotbehandling"),
 
-    @JsonAlias("SVAR_IK_MOT")
-    SVAR_IKKE_MOTTATT(beskrivelse = "Svar ikke mottatt", eksternKode = "SVAR_IK_MOT"),
+    @EksternKode("SVAR_IK_MOT")
+    SVAR_IKKE_MOTTATT(beskrivelse = "Svar ikke mottatt"),
 
-    @JsonAlias("VURD_BREV")
-    VURDER_BREV(beskrivelse = "Vurder brev", eksternKode = "VURD_BREV"),
+    @EksternKode("VURD_BREV")
+    VURDER_BREV(beskrivelse = "Vurder brev"),
 
-    @JsonAlias("VUR")
-    VURDER_DOKUMENT(beskrivelse = "Vurder dokument", eksternKode = "VUR"),
+    @EksternKode("VUR")
+    VURDER_DOKUMENT(beskrivelse = "Vurder dokument"),
 
-    @JsonAlias("VURD_HENV")
-    VURDER_HENVENDELSE(beskrivelse = "Vurder henvendelse", eksternKode = "VURD_HENV"),
+    @EksternKode("VURD_HENV")
+    VURDER_HENVENDELSE(beskrivelse = "Vurder henvendelse"),
 
-    @JsonAlias("VUR_KONS_YTE")
-    VURDER_KONSEKVENS_YTELSE(beskrivelse = "Vurder konsekvens for ytelse", eksternKode = "VUR_KONS_YTE"),
+    @EksternKode("VUR_KONS_YTE")
+    VURDER_KONSEKVENS_YTELSE(beskrivelse = "Vurder konsekvens for ytelse"),
 
-    @JsonAlias("VURD_NOTAT")
-    VURDER_NOTAT(beskrivelse = "Vurder notat", eksternKode = "VURD_NOTAT"),
+    @EksternKode("VURD_NOTAT")
+    VURDER_NOTAT(beskrivelse = "Vurder notat"),
 
-    @JsonAlias("VUR_SVAR")
-    VURDER_SVAR(beskrivelse = "Vurder svar", eksternKode = "VUR_SVAR"),
+    @EksternKode("VUR_SVAR")
+    VURDER_SVAR(beskrivelse = "Vurder svar"),
 }

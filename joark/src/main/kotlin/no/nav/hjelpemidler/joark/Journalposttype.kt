@@ -1,16 +1,17 @@
 package no.nav.hjelpemidler.joark
 
-import com.fasterxml.jackson.annotation.JsonAlias
+import no.nav.hjelpemidler.domain.kodeverk.EksternKode
+import no.nav.hjelpemidler.domain.kodeverk.EksterntKodeverk
 import no.nav.hjelpemidler.domain.kodeverk.Kodeverk
 
-enum class Journalposttype(override val beskrivelse: String) : Kodeverk<Journalposttype> {
-    @JsonAlias("I")
+enum class Journalposttype(override val beskrivelse: String) : Kodeverk<Journalposttype>, EksterntKodeverk {
+    @EksternKode("I")
     INNGÅENDE(beskrivelse = "Inngående"),
 
-    @JsonAlias("U")
+    @EksternKode("U")
     UTGÅENDE(beskrivelse = "Utgående"),
 
-    @JsonAlias("N")
+    @EksternKode("N")
     NOTAT(beskrivelse = "Notat"),
     ;
 

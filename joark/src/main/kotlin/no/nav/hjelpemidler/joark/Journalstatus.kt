@@ -1,19 +1,20 @@
 package no.nav.hjelpemidler.joark
 
-import com.fasterxml.jackson.annotation.JsonAlias
+import no.nav.hjelpemidler.domain.kodeverk.EksternKode
+import no.nav.hjelpemidler.domain.kodeverk.EksterntKodeverk
 import no.nav.hjelpemidler.domain.kodeverk.Kodeverk
 
-enum class Journalstatus : Kodeverk<Journalstatus> {
+enum class Journalstatus : Kodeverk<Journalstatus>, EksterntKodeverk {
     MOTTATT,
 
-    @JsonAlias("JOURNALFOERT")
+    @EksternKode("JOURNALFOERT")
     JOURNALFØRT,
     FERDIGSTILT,
     EKSPEDERT,
     UNDER_ARBEID,
     FEILREGISTRERT,
 
-    @JsonAlias("UTGAAR")
+    @EksternKode("UTGAAR")
     UTGÅR,
     AVBRUTT,
     UKJENT_BRUKER,
