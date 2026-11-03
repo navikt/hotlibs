@@ -4,9 +4,7 @@ package no.nav.hjelpemidler.pagination
  * A page of results. [pageNumber] is 1-based.
  * An empty result is treated as a single empty page.
  */
-interface Pageable<out T> : Iterable<T> {
-    val pageNumber: Int
-    val pageSize: Int
+interface Pageable<out T> : PageRequest, Iterable<T> {
     val totalElements: Long
 
     val totalPages: Int
