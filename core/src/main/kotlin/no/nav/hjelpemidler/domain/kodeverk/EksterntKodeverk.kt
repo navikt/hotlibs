@@ -9,7 +9,7 @@ import tools.jackson.databind.annotation.JsonSerialize
 import tools.jackson.databind.ser.std.StdScalarSerializer
 
 /**
- * Tilsvarer [com.fasterxml.jackson.annotation.JsonAlias], men tenkt brukt for kodeverdier hvor vi typisk bruker
+ * Tilsvarer [com.fasterxml.jackson.annotation.JsonAlias], men tenkt brukt for kodeverk hvor vi typisk bruker
  * noe mindre kryptiske verdier.
  *
  * @see JsonSerializeEksterntKodeverk for å spesifisere at den eksterne representasjonen skal benyttes ved serialisering.
