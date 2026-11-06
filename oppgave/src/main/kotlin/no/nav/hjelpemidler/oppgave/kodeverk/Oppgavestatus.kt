@@ -8,19 +8,37 @@ enum class Oppgavestatus(
     override val beskrivelse: String,
     val statuskategori: Statuskategori,
 ) : Kodeverk<Oppgavestatus>, EksterntKodeverk {
+    /**
+     * NB! Kun i V1.
+     */
     OPPRETTET(
         beskrivelse = "Opprettet",
         statuskategori = Statuskategori.ÅPEN,
     ),
 
+    /**
+     * NB! Kun i V1.
+     */
     @EksternKode("AAPNET")
     ÅPNET(
         beskrivelse = "Åpnet",
         statuskategori = Statuskategori.ÅPEN,
     ),
 
+    /**
+     * NB! Kun i V1.
+     */
     UNDER_BEHANDLING(
         beskrivelse = "Under behandling",
+        statuskategori = Statuskategori.ÅPEN,
+    ),
+
+    /**
+     * NB! Kun i V2.
+     */
+    @EksternKode("AAPEN")
+    ÅPEN(
+        beskrivelse = "Åpen",
         statuskategori = Statuskategori.ÅPEN,
     ),
 
