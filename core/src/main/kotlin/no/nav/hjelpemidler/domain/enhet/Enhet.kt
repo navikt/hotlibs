@@ -8,14 +8,11 @@ class Enhet(
      * Alias: "enhetNr" er bla. brukt i NORG2.
      * Alias: "enhetnummer" er bla. brukt i Entra-proxy.
      */
-    @JsonAlias("enhetsnummer", "enhetNr", "enhetnummer")
+    @JsonAlias("enhetsnummer", "enhetNr", "enhetnummer", "nr")
     override val nummer: Enhetsnummer,
     @JsonAlias("enhetsnavn")
-    override val navn: String,
+    override val navn: String = nummer.toString(),
 ) : AbstractEnhet<Enhetsnummer>() {
-    @JsonIgnore
-    constructor(nummer: Enhetsnummer) : this(nummer, nummer.toString())
-
     @JsonIgnore
     constructor(nummer: String, navn: String) : this(Enhetsnummer(nummer), navn)
 
