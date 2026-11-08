@@ -8,7 +8,6 @@ dependencies {
     api(libs.threeten.extra)
 
     implementation(libs.kotlin.reflect)
-    @Suppress("AvoidDuplicateDependencies")
     implementation(libs.nocommons)
 
     // Jackson
@@ -19,7 +18,6 @@ dependencies {
     compileOnly(libs.kotlinx.serialization.core)
     compileOnly(libs.kotlinx.serialization.json)
 
-    @Suppress("AvoidDuplicateDependencies")
     testFixturesImplementation(libs.nocommons)
 }
 
@@ -46,6 +44,7 @@ testing {
                 implementation(project(":serialization"))
             }
         }
+
         val serializationTest = register<JvmTestSuite>("serializationTest") {
             dependencies {
                 implementation(libs.kotlinx.serialization.json)

@@ -5,6 +5,7 @@ import io.ktor.client.plugins.api.createClientPlugin
 
 class OpenIdPluginConfiguration internal constructor() {
     var tokenSetProvider: TokenSetProvider? = null
+    var texas: Texas? = null
     var identityProvider: IdentityProvider? = null
     var target: String? = null
 }
@@ -20,10 +21,7 @@ internal val OpenIdPlugin = createClientPlugin("OpenIdPlugin", ::OpenIdPluginCon
             "identityProvider kan ikke være $identityProvider"
         }
 
-        val texas = texasProvider(client.engine)
-        if (texas is AutoCloseable && texasProvider is DefaultTexasProvider) {
-            onClose(texas::close)
-        }
+        val texas = pluginConfig.texas ?: TexasClient(client.engine).also { onClose(it::close) }
         when (identityProvider) {
             IdentityProvider.ENTRA_ID -> texas.entraId(target)
             IdentityProvider.MASKINPORTEN -> texas.maskinporten(target)
@@ -43,6 +41,14 @@ fun HttpClientConfig<*>.openId(tokenSetProvider: TokenSetProvider) {
 
 fun HttpClientConfig<*>.openId(identityProvider: IdentityProvider, target: String) {
     install(OpenIdPlugin) {
+        this.identityProvider = identityProvider
+        this.target = target
+    }
+}
+
+fun HttpClientConfig<*>.openId(texas: Texas, identityProvider: IdentityProvider, target: String) {
+    install(OpenIdPlugin) {
+        this.texas = texas
         this.identityProvider = identityProvider
         this.target = target
     }

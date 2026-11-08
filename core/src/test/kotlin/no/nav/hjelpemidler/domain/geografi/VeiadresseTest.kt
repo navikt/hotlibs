@@ -1,12 +1,13 @@
 package no.nav.hjelpemidler.domain.geografi
+
 import io.kotest.matchers.shouldBe
 import no.nav.hjelpemidler.serialization.jackson.jsonMapper
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 import tools.jackson.module.kotlin.readValue
 
 class VeiadresseTest {
     @Test
-    fun `accepts legacy adresse`() {
+    fun `Accepts legacy adresse`() {
         val result = jsonMapper.readValue<Veiadresse>(
             """
             {
@@ -23,7 +24,7 @@ class VeiadresseTest {
     }
 
     @Test
-    fun `accepts legacy adresse with multiple lines`() {
+    fun `Accepts legacy adresse with multiple lines`() {
         val result = jsonMapper.readValue<Veiadresse>(
             """
             {
@@ -41,7 +42,7 @@ class VeiadresseTest {
     }
 
     @Test
-    fun `prefers explicit adresselinje fields over legacy adresse regardless of field order`() {
+    fun `Prefers explicit adresselinje fields over legacy adresse regardless of field order`() {
         val fields = listOf(
             """"adresselinje1": "Storgata 1"""",
             """"adresselinje2": "Bygg B"""",
@@ -66,7 +67,7 @@ class VeiadresseTest {
     }
 
     @Test
-    fun `trims whitespace in legacy adresse`() {
+    fun `Trims whitespace in legacy adresse`() {
         val result = jsonMapper.readValue<Veiadresse>(
             """
             {
@@ -83,7 +84,7 @@ class VeiadresseTest {
     }
 
     @Test
-    fun `round trip preserves lines and serializes legacy adresse`() {
+    fun `Round trip preserves lines and serializes legacy adresse`() {
         val original = Veiadresse(
             adresselinje1 = "Storgata 1",
             adresselinje2 = "Bygg B",
@@ -94,8 +95,7 @@ class VeiadresseTest {
 
         val json = jsonMapper.writeValueAsString(original)
 
-        jsonMapper.readTree(json)["adresse"].asText() shouldBe
-                "Storgata 1, Bygg B, Etasje 3"
+        jsonMapper.readTree(json)["adresse"].stringValue() shouldBe "Storgata 1, Bygg B, Etasje 3"
 
         jsonMapper.readValue<Veiadresse>(json) shouldBe original
     }

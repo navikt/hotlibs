@@ -12,10 +12,12 @@ import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.år
 import no.nav.hjelpemidler.test.ktor.StubEngine
 import no.nav.hjelpemidler.test.ktor.baseUrl
+import no.nav.hjelpemidler.test.ktor.texas
 import org.junit.jupiter.api.Test
 
 class PdlPipApiClientTest {
     private val engine = StubEngine {
+        texas()
         baseUrl(PdlPipApiClient.PDL_PIP_API_BASE_URL) {
             routing {
                 get("/person") {

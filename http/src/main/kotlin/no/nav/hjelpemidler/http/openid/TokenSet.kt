@@ -29,5 +29,11 @@ data class TokenSet(
         tokenType = TokenType.BEARER,
     )
 
+    fun asMap(): Map<String, Any?> = mapOf(
+        "access_token" to accessToken,
+        "expires_in" to expiresIn,
+        "token_type" to tokenType,
+    ) + additionalProperties
+
     fun asTokenSetProvider(): TokenSetProvider = TokenSetProvider { this }
 }

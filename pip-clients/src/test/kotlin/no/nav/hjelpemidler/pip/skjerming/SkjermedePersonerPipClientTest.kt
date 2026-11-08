@@ -11,10 +11,12 @@ import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.år
 import no.nav.hjelpemidler.test.ktor.StubEngine
 import no.nav.hjelpemidler.test.ktor.baseUrl
+import no.nav.hjelpemidler.test.ktor.texas
 import org.junit.jupiter.api.Test
 
 class SkjermedePersonerPipClientTest {
     private val engine = StubEngine {
+        texas()
         baseUrl(SkjermedePersonerPipClient.SKJERMEDE_PERSONER_PIP_API_BASE_URL) {
             routing {
                 post("/skjermet") {

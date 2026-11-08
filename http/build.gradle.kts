@@ -22,6 +22,11 @@ dependencies {
     runtimeOnly(libs.slf4j.jdk.platform.logging) // Caffeine uses JDK Platform Logging
 
     // Testing
+    testImplementation(project(":test")) {
+        capabilities {
+            requireCapability("no.nav.hjelpemidler:test-ktor")
+        }
+    }
     testImplementation(testFixtures(project(":core")))
     testImplementation(libs.java.jwt)
 }

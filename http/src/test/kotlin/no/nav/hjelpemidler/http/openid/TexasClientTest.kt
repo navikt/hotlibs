@@ -9,7 +9,9 @@ import io.ktor.http.Parameters
 import io.ktor.http.content.OutgoingContent
 import kotlinx.coroutines.test.runTest
 import no.nav.hjelpemidler.http.test.respondJson
-import kotlin.test.Test
+import no.nav.hjelpemidler.test.ktor.StubEngine
+import no.nav.hjelpemidler.test.ktor.texas
+import org.junit.jupiter.api.Test
 import kotlin.time.Duration.Companion.hours
 
 class TexasClientTest {
@@ -72,6 +74,17 @@ class TexasClientTest {
         })
 
         client.introspection(identityProvider, token).active shouldBe true
+    }
+
+    @Test
+    fun `Tester med StubEngine`() = runTest {
+        val accessToken = "accessToken"
+        val userToken = "userToken"
+
+        val client = TexasClient(StubEngine { texas(accessToken) })
+        client.token(identityProvider, target).accessToken shouldBe accessToken
+        client.exchange(identityProvider, target, userToken).accessToken shouldBe userToken
+        client.introspection(identityProvider, accessToken).active shouldBe true
     }
 }
 
