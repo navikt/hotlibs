@@ -45,11 +45,10 @@ fun HttpMessageBuilder.correlationId(value: String = currentCorrelationId()): St
     return value
 }
 
-suspend inline fun <T> withCorrelationId(
+suspend fun <T> withCorrelationId(
     vararg pair: Pair<String, String?>,
-    crossinline body: suspend () -> T,
+    body: suspend () -> T,
 ): T = withLoggingContextAsync(
-    map = mapOf(*pair, CORRELATION_ID_KEY to currentCorrelationId()),
-    restorePrevious = false,
-    body = body,
+    *pair, CORRELATION_ID_KEY to currentCorrelationId(),
+    body = body
 )
