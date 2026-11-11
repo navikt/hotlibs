@@ -12,6 +12,7 @@ import no.nav.hjelpemidler.behovsmeldingsmodell.Funksjonsnedsettelser
 import no.nav.hjelpemidler.behovsmeldingsmodell.Hasteårsak
 import no.nav.hjelpemidler.behovsmeldingsmodell.ISO4_TITLER
 import no.nav.hjelpemidler.behovsmeldingsmodell.InnsenderRolle
+import no.nav.hjelpemidler.behovsmeldingsmodell.Innsenderrolletype
 import no.nav.hjelpemidler.behovsmeldingsmodell.KontaktpersonV2
 import no.nav.hjelpemidler.behovsmeldingsmodell.LeveringTilleggsinfo
 import no.nav.hjelpemidler.behovsmeldingsmodell.OppfølgingsansvarligV2
@@ -213,7 +214,10 @@ data class Hast(
 )
 
 data class Innsender(
+        @Deprecated("Bruk roller")
         val rolle: InnsenderRolle,
+        /** null for behovsmeldinger sendt inn før roller v2. */
+        val roller: Set<Innsenderrolletype>? = null,
         val erKommunaltAnsatt: Boolean?,
         val kurs: List<Godkjenningskurs>,
         val sjekketUtlånsoversiktForKategorier: Set<Iso6>?,

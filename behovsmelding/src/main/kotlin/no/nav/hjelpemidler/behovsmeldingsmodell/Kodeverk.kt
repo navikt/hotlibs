@@ -63,9 +63,19 @@ enum class BehovsmeldingStatus {
     }
 }
 
+@Deprecated("Erstattet av Innsenderrolletype")
 enum class InnsenderRolle {
     FORMIDLER,
     BESTILLER,
+}
+
+/**
+ * Speiler `Rolletype` i hm-roller (v2).
+ */
+enum class Innsenderrolletype {
+    BESTILLER,
+    KOMMUNAL_FORMIDLER,
+    IKKE_KOMMUNAL_FORMIDLER,
 }
 
 enum class Signaturtype {
