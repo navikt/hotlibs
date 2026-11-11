@@ -131,9 +131,6 @@ enum class BrukersituasjonVilkår {
      */
     @JsonProperty("I_STAND_TIL_AA_BRUKE_HJELEPMIDLENE_V1")
     I_STAND_TIL_Å_BRUKE_HJELPEMIDLENE_V1,
-
-    @JsonProperty("I_STAND_TIL_AA_BRUKE_HJELPEMIDLENE_V2")
-    I_STAND_TIL_Å_BRUKE_HJELPEMIDLENE_V2,
 }
 
 enum class BrukersituasjonVilkårtype {
