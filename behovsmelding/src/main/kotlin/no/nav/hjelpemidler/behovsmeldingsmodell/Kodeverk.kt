@@ -147,6 +147,7 @@ enum class BrukersituasjonVilkårtype {
     VESENTLIG_OG_VARIG_NEDSATT_FUNKSJONSEVNE_V1,
     KAN_IKKE_LØSES_MED_ENKLERE_HJELPEMIDLER_V1,
     I_STAND_TIL_Å_BRUKE_HJELPEMIDLENE_V1,
+    I_STAND_TIL_Å_BRUKE_HJELPEMIDLENE_V2,
 }
 
 enum class Funksjonsnedsettelser {
