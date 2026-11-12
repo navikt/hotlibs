@@ -72,7 +72,9 @@ class NorgClient(
 
     suspend fun hentEnhet(id: String): Enhet = hentEnhet(Enhetsnummer(id))
 
-    override fun close() = client.close()
+    override fun close() {
+        client.close()
+    }
 
     companion object {
         val NORG_API_BASE_URL by EnvironmentVariable(defaultValue = "http://norg2.org.svc.cluster.local/norg2/api/v1")
