@@ -152,7 +152,7 @@ data class Levering(
         // utleveringKontaktperson == null => alle hjm. er allerede utlevert
         val utleveringKontaktperson: KontaktpersonV2?,
         val annenKontaktperson: AnnenKontaktperson?,
-        val utleveringMerknad: String,
+        val utleveringMerknad: String?,
         val hast: Hast?,
 
         /**
@@ -165,7 +165,7 @@ data class Levering(
         @JsonIgnore get() = !annenOppfølgingsansvarlig?.ansvarFor.isNullOrBlank()
 
     val harFritekstUnderLevering: Boolean
-        @JsonIgnore get() = utleveringMerknad.isNotBlank()
+        @JsonIgnore get() = !utleveringMerknad.isNullOrBlank()
 
     val alleHjelpemidlerErAlleredeUtlevert: Boolean
         @JsonIgnore

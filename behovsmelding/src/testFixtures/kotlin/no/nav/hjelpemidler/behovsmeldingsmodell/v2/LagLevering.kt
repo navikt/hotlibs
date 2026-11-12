@@ -8,7 +8,7 @@ import no.nav.hjelpemidler.domain.person.Personnavn
 fun lagLevering(
     oppfølgingsansvarligAnsvarFor: String? = null,
     utleveringsmåte: UtleveringsmåteV2? = null,
-    utleveringMerknad: String = "",
+    utleveringMerknad: String? = "",
 ): Levering = Levering(
     hjelpemiddelformidler = Levering.Hjelpemiddelformidler(
         navn = navn(),
