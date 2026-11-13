@@ -20,12 +20,16 @@ dependencies {
     api(platform(libs.slf4j.bom))
 
     constraints {
+        api(libs.commons.codec)
         api(libs.commons.compress)
         api(libs.commons.io)
         api(libs.commons.lang3)
         api(libs.commons.text)
+        api(libs.guava)
+        api(libs.java.jwt)
         api(libs.logback.classic)
         api(libs.logback.core)
+        api(libs.opentelemetry.api)
     }
 }
 

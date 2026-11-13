@@ -1,6 +1,7 @@
 package no.nav.hjelpemidler.kafka
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import no.nav.hjelpemidler.configuration.Configuration
 import java.net.InetAddress
 import java.time.Instant
 import java.util.UUID
@@ -28,8 +29,8 @@ interface KafkaMessage {
     data class ParticipatingService(
         val id: UUID,
         val time: Instant,
-        val service: String? = System.getenv("NAIS_APP_NAME"),
+        val service: String? = Configuration["NAIS_APP_NAME"],
         val instance: String? = InetAddress.getLocalHost().hostName,
-        val image: String? = System.getenv("NAIS_APP_IMAGE"),
+        val image: String? = Configuration["NAIS_APP_IMAGE"],
     )
 }
