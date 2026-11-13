@@ -41,7 +41,7 @@ testing {
 
 @Suppress("UnstableApiUsage")
 fun TestingExtension.featureTest(name: String, vararg sourceSets: SourceSet) = suites.register<JvmTestSuite>(name) {
-    useKotlinTest(libs.versions.kotlin.asProvider())
+    useKotlinTest(libs.versions.kotlin)
     val currentProject = project
     dependencies {
         implementation(project())

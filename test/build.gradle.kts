@@ -35,7 +35,7 @@ testing {
     suites {
         @Suppress("UnstableApiUsage")
         val ktorTest = register<JvmTestSuite>("ktorTest") {
-            useKotlinTest(libs.versions.kotlin.asProvider())
+            useKotlinTest(libs.versions.kotlin)
             val currentProject = project
             dependencies {
                 implementation(project())

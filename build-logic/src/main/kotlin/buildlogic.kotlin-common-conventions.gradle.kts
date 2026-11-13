@@ -23,7 +23,7 @@ testing {
     @Suppress("UnstableApiUsage")
     suites {
         withType<JvmTestSuite> {
-            useKotlinTest(libs.versions.kotlin.asProvider())
+            useKotlinTest(libs.versions.kotlin)
 
             dependencies {
                 implementation(project(":test"))
