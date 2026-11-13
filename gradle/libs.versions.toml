@@ -2,20 +2,14 @@
 bigquery = "2.76.0"
 cacheApi = "1.1.1"
 caffeine = "3.3.1"
-classgraph = "6.0.2"
-commons-compress = "1.28.0"
-commons-csv = "1.14.1"
-commons-io = "2.22.0"
-commons-lang = "3.22.0"
-commons-text = "1.15.0"
 confluent = "8.3.3"
 # Nyeste versjon finner du her: https://github.com/navikt/hm-contract-pdl-avro/packages
 contractPdlAvro = "1.0.4"
-cyclonedx = "3.5.1"
+cyclonedx = "3.6.0"
 dbScheduler = "17.0.0"
 dbSchedulerUi = "0.5.3"
 ehcache = "3.12.0"
-flyway = "13.12.1"
+flyway = "13.12.2"
 graphql = "11.0.0"
 graphql-java = "26.1"
 h2 = "2.5.252"
@@ -54,7 +48,7 @@ mustache = "0.9.14"
 netty = "4.2.20.Final"
 nocommons = "0.17.0"
 openapi = "7.27.0"
-openhtmltopdf = "1.1.112"
+openhtmltopdf = "1.1.113"
 oracle = "23.26.4.0.0"
 postgresql = "42.7.14"
 prometheus = "1.10.0"
@@ -99,12 +93,13 @@ azure-validation = { module = "no.nav.tms.token.support:azure-validation", versi
 azure-validation-mock = { module = "no.nav.tms.token.support:azure-validation-mock", version.ref = "tmsKtorTokenSupport" }
 cache-api = { module = "javax.cache:cache-api", version.ref = "cacheApi" }
 caffeine = { module = "com.github.ben-manes.caffeine:caffeine", version.ref = "caffeine" }
-classgraph = { module = "io.github.classgraph:classgraph", version.ref = "classgraph" }
-commons-compress = { module = "org.apache.commons:commons-compress", version.ref = "commons-compress" }
-commons-csv = { module = "org.apache.commons:commons-csv", version.ref = "commons-csv" }
-commons-io = { module = "commons-io:commons-io", version.ref = "commons-io" }
-commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "commons-lang" }
-commons-text = { module = "org.apache.commons:commons-text", version.ref = "commons-text" }
+classgraph = "io.github.classgraph:classgraph:6.0.2"
+commons-codec = "commons-codec:commons-codec:1.23.0"
+commons-compress = "org.apache.commons:commons-compress:1.28.0"
+commons-csv = "org.apache.commons:commons-csv:1.14.1"
+commons-io = "commons-io:commons-io:2.22.0"
+commons-lang3 = "org.apache.commons:commons-lang3:3.22.0"
+commons-text = "org.apache.commons:commons-text:1.15.0"
 dbScheduler = { module = "com.github.kagkarlsson:db-scheduler", version.ref = "dbScheduler" }
 dbSchedulerUi = { module = "io.github.osoykan:db-scheduler-ui-ktor", version.ref = "dbSchedulerUi" }
 ehcache = { module = "org.ehcache:ehcache", version.ref = "ehcache" }
@@ -117,6 +112,7 @@ graphql-client-jackson = { module = "com.expediagroup:graphql-kotlin-client-jack
 graphql-gradle-plugin = { module = "com.expediagroup:graphql-kotlin-gradle-plugin", version.ref = "graphql" }
 graphql-ktor-client = { module = "com.expediagroup:graphql-kotlin-ktor-client", version.ref = "graphql" }
 graphql-ktor-server = { module = "com.expediagroup:graphql-kotlin-ktor-server", version.ref = "graphql" }
+guava = "com.google.guava:guava:33.8.0-jre"
 h2 = { module = "com.h2database:h2", version.ref = "h2" }
 handlebars = { module = "com.github.jknack:handlebars", version.ref = "handlebars" }
 hikaricp = { module = "com.zaxxer:HikariCP", version.ref = "hikaricp" }
@@ -230,6 +226,7 @@ openhtmltopdf-core = { module = "io.github.openhtmltopdf:openhtmltopdf-core", ve
 openhtmltopdf-pdfbox = { module = "io.github.openhtmltopdf:openhtmltopdf-pdfbox", version.ref = "openhtmltopdf" }
 openhtmltopdf-slf4j = { module = "io.github.openhtmltopdf:openhtmltopdf-slf4j", version.ref = "openhtmltopdf" }
 openhtmltopdf-svg-support = { module = "io.github.openhtmltopdf:openhtmltopdf-svg-support", version.ref = "openhtmltopdf" }
+opentelemetry-api = "io.opentelemetry:opentelemetry-api:1.68.0"
 owasp-java-html-sanitizer = { module = "com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer", version.ref = "htmlSanitizer" }
 postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
 prometheus-metrics-bom = { module = "io.prometheus:prometheus-metrics-bom", version.ref = "prometheus" }
