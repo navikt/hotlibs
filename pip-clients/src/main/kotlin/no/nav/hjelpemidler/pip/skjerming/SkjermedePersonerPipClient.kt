@@ -53,7 +53,9 @@ class SkjermedePersonerPipClient(
             .body()
     }
 
-    override fun close() = client.close()
+    override fun close() {
+        client.close()
+    }
 
     companion object {
         val SKJERMEDE_PERSONER_PIP_API_BASE_URL by EnvironmentVariable

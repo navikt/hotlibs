@@ -12,7 +12,7 @@ interface OrderBy<T> {
         /**
          * `NULLS LAST` is the default.
          */
-        @JsonAlias("ASC")
+        @JsonAlias(ASC)
         ASCENDING,
 
         @JsonAlias("ASC_NULLS_FIRST")
@@ -21,7 +21,7 @@ interface OrderBy<T> {
         /**
          * `NULLS FIRST` is the default.
          */
-        @JsonAlias("DESC")
+        @JsonAlias(DESC)
         DESCENDING,
 
         @JsonAlias("DESC_NULLS_LAST")
@@ -30,6 +30,24 @@ interface OrderBy<T> {
         @JsonEnumDefaultValue
         NONE,
         ;
+
+        val keyword: String?
+            get() = when (this) {
+                ASCENDING,
+                ASCENDING_NULLS_FIRST,
+                    -> ASC
+
+                DESCENDING,
+                DESCENDING_NULLS_LAST,
+                    -> DESC
+
+                NONE -> null
+            }
+
+        companion object {
+            const val ASC = "ASC"
+            const val DESC = "DESC"
+        }
     }
 }
 

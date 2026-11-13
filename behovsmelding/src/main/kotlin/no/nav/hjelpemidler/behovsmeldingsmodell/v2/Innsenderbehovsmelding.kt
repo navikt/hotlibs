@@ -12,6 +12,7 @@ import no.nav.hjelpemidler.behovsmeldingsmodell.Funksjonsnedsettelser
 import no.nav.hjelpemidler.behovsmeldingsmodell.Hasteårsak
 import no.nav.hjelpemidler.behovsmeldingsmodell.ISO4_TITLER
 import no.nav.hjelpemidler.behovsmeldingsmodell.InnsenderRolle
+import no.nav.hjelpemidler.behovsmeldingsmodell.Innsenderrolletype
 import no.nav.hjelpemidler.behovsmeldingsmodell.KontaktpersonV2
 import no.nav.hjelpemidler.behovsmeldingsmodell.LeveringTilleggsinfo
 import no.nav.hjelpemidler.behovsmeldingsmodell.OppfølgingsansvarligV2
@@ -95,7 +96,10 @@ enum class VedleggType {
     KROPPSTØRKER_GODKJENNING_MONTERING,
     SPYL_OG_TØRKEFUNKSJON_MÅLSATT_TEGNING,
     SPYL_OG_TØRKEFUNKSJON_BILDE,
-    SPYL_OG_TØRKEFUNKSJON_GODKJENNING_MONTERING
+    SPYL_OG_TØRKEFUNKSJON_GODKJENNING_MONTERING,
+    BADEKAR_MÅLSATT_TEGNING,
+    BADEKAR_GODKJENNING_MONTERING,
+    BADEKAR_BAD_BILDER,
 }
 
 data class InnsenderbehovsmeldingMetadata(
@@ -151,7 +155,7 @@ data class Levering(
         // utleveringKontaktperson == null => alle hjm. er allerede utlevert
         val utleveringKontaktperson: KontaktpersonV2?,
         val annenKontaktperson: AnnenKontaktperson?,
-        val utleveringMerknad: String,
+        val utleveringMerknad: String?,
         val hast: Hast?,
 
         /**
@@ -164,7 +168,7 @@ data class Levering(
         @JsonIgnore get() = !annenOppfølgingsansvarlig?.ansvarFor.isNullOrBlank()
 
     val harFritekstUnderLevering: Boolean
-        @JsonIgnore get() = utleveringMerknad.isNotBlank()
+        @JsonIgnore get() = !utleveringMerknad.isNullOrBlank()
 
     val alleHjelpemidlerErAlleredeUtlevert: Boolean
         @JsonIgnore
@@ -213,7 +217,10 @@ data class Hast(
 )
 
 data class Innsender(
+        @Deprecated("Bruk roller")
         val rolle: InnsenderRolle,
+        /** null for behovsmeldinger sendt inn før roller v2. */
+        val roller: Set<Innsenderrolletype>? = null,
         val erKommunaltAnsatt: Boolean?,
         val kurs: List<Godkjenningskurs>,
         val sjekketUtlånsoversiktForKategorier: Set<Iso6>?,
@@ -286,7 +293,7 @@ data class ProduktlisteItem(
 )
 
 enum class ProduktkategoriType {
-    LYDOVERFØRINGSANLEGG, DØRAUTOMATIKK, STELLEBORD_VEGGMONTERT, KROPPSTØRKER, SPYL_OG_TØRKEFUNKSJON, TILSKUDD_RIMELIGE_HJELPEMIDLER
+    LYDOVERFØRINGSANLEGG, DØRAUTOMATIKK, STELLEBORD_VEGGMONTERT, KROPPSTØRKER, SPYL_OG_TØRKEFUNKSJON, TILSKUDD_RIMELIGE_HJELPEMIDLER, BADEKAR
 }
 
 enum class ProduktkategoriKomponentType {

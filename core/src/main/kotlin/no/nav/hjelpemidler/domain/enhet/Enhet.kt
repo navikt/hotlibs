@@ -11,7 +11,7 @@ class Enhet(
     @JsonAlias("enhetsnummer", "enhetNr", "enhetnummer", "nr")
     override val nummer: Enhetsnummer,
     @JsonAlias("enhetsnavn")
-    override val navn: String = nummer.toString(),
+    override val navn: String = Enhet[nummer]?.navn ?: "",
 ) : AbstractEnhet<Enhetsnummer>() {
     @JsonIgnore
     constructor(nummer: String, navn: String) : this(Enhetsnummer(nummer), navn)
@@ -183,5 +183,39 @@ class Enhet(
          */
         val ANDRE_EKSTERNE =
             Enhet(nummer = "9999", navn = "Andre eksterne")
+
+        @Suppress("DEPRECATION")
+        private val alle: Map<Enhetsnummer, Enhet> by lazy {
+            listOf(
+                NAV_VIKAFOSSEN,
+                NAV_DRIFT_OG_UTVIKLING_ADMINISTRATIVE_TJENESTER,
+                IT_AVDELINGEN,
+                TEKNOLOGIAVDELINGEN,
+                NAV_ID_OG_FORDELING,
+                AY_HJELPEMIDLER,
+                STYRINGSENHETEN_FOR_NAV_HJELPEMIDLER_OG_TILRETTELEGGING,
+                NAV_HJELPEMIDDELSENTRAL_ØST_VIKEN,
+                NAV_HJELPEMIDDELSENTRAL_AKERSHUS,
+                NAV_HJELPEMIDDELSENTRAL_OSLO,
+                NAV_HJELPEMIDDELSENTRAL_INNLANDET_ELVERUM,
+                NAV_HJELPEMIDDELSENTRAL_INNLANDET_GJØVIK,
+                NAV_HJELPEMIDDELSENTRAL_VEST_VIKEN,
+                NAV_HJELPEMIDDELSENTRAL_VESTFOLD_OG_TELEMARK,
+                NAV_HJELPEMIDDELSENTRAL_VESTFOLD_OG_TELEMARK_SKIEN,
+                NAV_HJELPEMIDDELSENTRAL_AGDER_ARENDAL,
+                NAV_HJELPEMIDDELSENTRAL_AGDER,
+                NAV_HJELPEMIDDELSENTRAL_ROGALAND,
+                NAV_HJELPEMIDDELSENTRAL_VESTLAND_BERGEN,
+                NAV_HJELPEMIDDELSENTRAL_VESTLAND_FØRDE,
+                NAV_HJELPEMIDDELSENTRAL_MØRE_OG_ROMSDAL,
+                NAV_HJELPEMIDDELSENTRAL_TRØNDELAG,
+                NAV_HJELPEMIDDELSENTRAL_NORDLAND,
+                NAV_HJELPEMIDDELSENTRAL_TROMS_OG_FINNMARK,
+                NAV_HJELPEMIDDELSENTRAL_TROMS_OG_FINNMARK_LAKSELV,
+                ANDRE_EKSTERNE,
+            ).associateBy(Enhet::nummer)
+        }
+
+        operator fun get(nummer: Enhetsnummer): Enhet? = alle[nummer]
     }
 }

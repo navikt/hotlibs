@@ -13,7 +13,7 @@ class ProducerExtensionsTest {
 
     @Test
     fun `Sender melding uten feil`() = runTest {
-        launch { producer.sendAsync(record) }
+        launch { producer.sendSuspending(record) }
 
         launch {
             while (!producer.completeNext()) {
@@ -30,7 +30,7 @@ class ProducerExtensionsTest {
     fun `Sender melding med feil`() = runTest {
         val message = "Noe gikk galt!"
 
-        launch { shouldThrowWithMessage<RuntimeException>(message) { producer.sendAsync(record) } }
+        launch { shouldThrowWithMessage<RuntimeException>(message) { producer.sendSuspending(record) } }
 
         launch {
             while (!producer.errorNext(RuntimeException(message))) {

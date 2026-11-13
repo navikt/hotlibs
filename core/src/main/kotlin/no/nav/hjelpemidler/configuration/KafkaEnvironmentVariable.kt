@@ -46,4 +46,6 @@ object KafkaEnvironmentVariable {
 
     @External
     val KAFKA_TRUSTSTORE_PATH by EnvironmentVariable
+
+    val USER_INFO_CONFIG: String by lazy { "$KAFKA_SCHEMA_REGISTRY_USER:$KAFKA_SCHEMA_REGISTRY_PASSWORD" }
 }

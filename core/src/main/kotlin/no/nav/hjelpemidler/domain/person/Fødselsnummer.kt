@@ -25,6 +25,8 @@ class Fødselsnummer(value: String) : PersonId(value) {
 
     private val internal: Fodselsnummer get() = FodselsnummerValidator.getFodselsnummer(value)
 
+    val isDNummer: Boolean get() = value[0] in D_NUMMER_RANGE
+
     @Suppress("DEPRECATION")
     @Deprecated("Kjønn kan ikke sikkert utledes fra fødselsnummer, hent informasjonen fra PDL.")
     val isKvinne: Boolean get() = internal.isFemale
@@ -55,6 +57,8 @@ class Fødselsnummer(value: String) : PersonId(value) {
     )
 
     companion object : Validator<String> {
+        internal val D_NUMMER_RANGE = '4'..'7'
+
         override fun erGyldig(value: String): Boolean = FodselsnummerValidator.isValid(value)
     }
 }

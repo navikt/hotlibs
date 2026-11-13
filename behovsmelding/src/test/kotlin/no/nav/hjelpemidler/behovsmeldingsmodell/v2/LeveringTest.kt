@@ -22,6 +22,7 @@ class LeveringTest {
 
     @TestFactory
     fun harFritekstUnderLevering(): List<DynamicTest> = listOf(
+        null to false,
         "" to false,
         "\t" to false,
         "utleveringMerknad" to true,

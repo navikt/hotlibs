@@ -57,7 +57,9 @@ class PdlPipApiClient(
             .body()
     }
 
-    override fun close() = client.close()
+    override fun close() {
+        client.close()
+    }
 
     companion object {
         val PDL_PIP_API_BASE_URL by EnvironmentVariable

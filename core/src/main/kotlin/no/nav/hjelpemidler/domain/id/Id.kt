@@ -32,3 +32,5 @@ abstract class Id<T : Comparable<T>>(override val value: T) : Comparable<Id<T>>,
     @JsonValue
     override fun toString(): String = value.toString()
 }
+
+inline fun <reified T : Comparable<T>> Iterable<Id<T>>.toValueArray(): Array<T> = map { it.value }.toTypedArray<T>()
