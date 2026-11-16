@@ -12,7 +12,7 @@ kotlinx-coroutines = "1.11.0"
 kotlinx-serialization = "1.13.0"
 ktfmtGradle = "0.28.0"
 ktor = "3.6.1"
-logback = "1.6.6"
+logback = "1.6.7"
 micrometer = "1.17.2"
 mockk = "1.14.12"
 openapi = "7.27.0"
@@ -27,7 +27,7 @@ testcontainers = "2.0.5"
 tmsKtorTokenSupport = "5.0.6"
 
 [plugins]
-cyclonedx = "org.cyclonedx.bom:3.6.0"
+cyclonedx = "org.cyclonedx.bom:3.6.1"
 flyway = { id = "org.flywaydb.flyway", version.ref = "flyway" }
 graphql = { id = "com.expediagroup.graphql", version.ref = "graphql" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
@@ -54,14 +54,14 @@ commons-csv = "org.apache.commons:commons-csv:1.14.1"
 commons-io = "commons-io:commons-io:2.22.0"
 commons-lang3 = "org.apache.commons:commons-lang3:3.22.0"
 commons-text = "org.apache.commons:commons-text:1.15.0"
-dbScheduler = "com.github.kagkarlsson:db-scheduler:17.0.0"
+dbScheduler = "com.github.kagkarlsson:db-scheduler:17.1.0"
 dbSchedulerUi = "io.github.osoykan:db-scheduler-ui-ktor:0.5.3"
 ehcache = "org.ehcache:ehcache:3.12.0"
 flyway-core = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }
 flyway-database-oracle = { module = "org.flywaydb:flyway-database-oracle", version.ref = "flyway" }
 flyway-database-postgresql = { module = "org.flywaydb:flyway-database-postgresql", version.ref = "flyway" }
 google-cloud-bigquery = "com.google.cloud:google-cloud-bigquery:2.76.0"
-graphql = "com.graphql-java:graphql-java:26.1"
+graphql = "com.graphql-java:graphql-java:26.2"
 graphql-client-jackson = { module = "com.expediagroup:graphql-kotlin-client-jackson", version.ref = "graphql" }
 graphql-gradle-plugin = { module = "com.expediagroup:graphql-kotlin-gradle-plugin", version.ref = "graphql" }
 graphql-ktor-client = { module = "com.expediagroup:graphql-kotlin-ktor-client", version.ref = "graphql" }
