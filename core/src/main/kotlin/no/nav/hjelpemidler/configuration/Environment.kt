@@ -1,7 +1,6 @@
 package no.nav.hjelpemidler.configuration
 
 import no.nav.hjelpemidler.configuration.Environment.Tier
-import java.util.EnumSet
 
 sealed interface Environment {
     val cluster: String
@@ -9,9 +8,12 @@ sealed interface Environment {
 
     companion object {
         private val all: Set<Environment>
-            get() = setOf(TestEnvironment, LocalEnvironment) +
-                    EnumSet.allOf(FssEnvironment::class.java) +
-                    EnumSet.allOf(GcpEnvironment::class.java)
+            get() = buildSet {
+                add(TestEnvironment)
+                add(LocalEnvironment)
+                addAll(FssEnvironment.entries)
+                addAll(GcpEnvironment.entries)
+            }
 
         val current: Environment by lazy {
             val cluster = System.getenv("NAIS_CLUSTER_NAME")

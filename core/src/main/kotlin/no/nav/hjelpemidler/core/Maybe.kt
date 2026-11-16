@@ -1,5 +1,8 @@
 package no.nav.hjelpemidler.core
 
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
+
 /**
  * Gjør det mulig å skille mellom `null` og `undefined` i f.eks. HTTP PATCH.
  *
@@ -63,3 +66,23 @@ sealed class Maybe<out T> {
         operator fun <T> invoke(value: T): Maybe<T> = Present(value)
     }
 }
+
+@OptIn(ExperimentalContracts::class)
+val <T> Maybe<T>.isPresent: Boolean
+    get() {
+        contract {
+            returns(true) implies (this@isPresent is Maybe.Present<T>)
+            returns(false) implies (this@isPresent is Maybe.Absent)
+        }
+        return this is Maybe.Present
+    }
+
+@OptIn(ExperimentalContracts::class)
+val <T> Maybe<T>.isAbsent: Boolean
+    get() {
+        contract {
+            returns(true) implies (this@isAbsent is Maybe.Absent)
+            returns(false) implies (this@isAbsent is Maybe.Present<T>)
+        }
+        return this is Maybe.Absent
+    }
