@@ -13,3 +13,8 @@ fun Route.authenticateTokenX(
     strategy: AuthenticationStrategy = AuthenticationStrategy.Required,
     build: Route.() -> Unit,
 ): Route = authenticate(AuthenticationProviderName.TOKEN_X, strategy = strategy, build = build)
+
+fun Route.authenticateTexas(
+    strategy: AuthenticationStrategy = AuthenticationStrategy.Required,
+    build: Route.() -> Unit,
+): Route = authenticate(AuthenticationProviderName.TEXAS, strategy = strategy, build = build)

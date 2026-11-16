@@ -3,12 +3,13 @@ package no.nav.hjelpemidler.server.ktor.security
 import io.ktor.server.auth.jwt.JWTCredential
 import no.nav.hjelpemidler.domain.tilgang.Applikasjonsnavn
 import no.nav.hjelpemidler.domain.tilgang.NavIdent
+import no.nav.hjelpemidler.http.openid.IdentityProvider
 import java.util.UUID
 
 /**
  * @see <a href="https://docs.nais.io/auth/entra-id/reference/#claims">Entra ID reference - Nais</a>
  */
-sealed class EntraIdCredential(credential: JWTCredential) : TexasCredential(credential) {
+sealed class EntraIdCredential(credential: JWTCredential) : TexasCredential(IdentityProvider.ENTRA_ID, credential) {
     class Application(credential: JWTCredential) : EntraIdCredential(credential) {
         val id: Applikasjonsnavn get() = Applikasjonsnavn(mustGet(AZP_NAME_CLAIM).split(":").last())
     }
