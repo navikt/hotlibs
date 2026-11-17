@@ -1,7 +1,7 @@
 package no.nav.hjelpemidler.behovsmeldingsmodell.v2
 
 import no.nav.hjelpemidler.behovsmeldingsmodell.BehovsmeldingType
-import no.nav.hjelpemidler.behovsmeldingsmodell.InnsenderRolle
+import no.nav.hjelpemidler.behovsmeldingsmodell.Innsenderrolletype
 import no.nav.hjelpemidler.behovsmeldingsmodell.OppfølgingsansvarligV2
 import no.nav.hjelpemidler.behovsmeldingsmodell.Signaturtype
 import no.nav.hjelpemidler.domain.geografi.Veiadresse
@@ -53,7 +53,7 @@ fun lagInnsenderbehovsmelding(
         hast = null,
     ),
     innsender = Innsender(
-        rolle = InnsenderRolle.FORMIDLER,
+        roller = setOf(Innsenderrolletype.KOMMUNAL_FORMIDLER),
         erKommunaltAnsatt = null,
         kurs = emptyList(),
         sjekketUtlånsoversiktForKategorier = null,

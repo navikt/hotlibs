@@ -217,8 +217,9 @@ data class Hast(
 )
 
 data class Innsender(
+        /** Sendes ikke lenger for nye behovsmeldinger, men finnes i eldre. */
         @Deprecated("Bruk roller")
-        val rolle: InnsenderRolle,
+        val rolle: InnsenderRolle? = null,
         /** null for behovsmeldinger sendt inn før roller v2. */
         val roller: Set<Innsenderrolletype>? = null,
         val erKommunaltAnsatt: Boolean?,
