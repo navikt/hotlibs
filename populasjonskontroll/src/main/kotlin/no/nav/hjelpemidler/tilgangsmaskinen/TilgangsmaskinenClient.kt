@@ -65,7 +65,7 @@ class TilgangsmaskinenClient(
         ansatt: AuthenticatedUser,
         personIder: Set<PersonId>,
     ): TilgangsmaskinenBulkResponse {
-        val ansattId = ansatt.id as? NavIdent ?: error("")
+        val ansattId = ansatt.id as? NavIdent ?: error("AuthenticatedUser ikke Ansatt")
         if (personIder.isEmpty()) return TilgangsmaskinenBulkResponse(ansattId, emptyList())
 
         return try {
@@ -103,12 +103,14 @@ class TilgangsmaskinenClient(
             )
         }
     }
+
+    companion object {
+        val TILGANGSMASKINEN_BASE_URL by EnvironmentVariable
+        val TILGANGSMASKINEN_TARGET by EnvironmentVariable
+    }
 }
 
 private suspend fun HttpResponse.error(): Nothing {
     val details = problemDetails() ?: error("Uventet svar fra Tilgangsmaskinen, status: $status")
     throw ProblemDetailsException(details)
 }
-
-val TILGANGSMASKINEN_BASE_URL by EnvironmentVariable
-val TILGANGSMASKINEN_TARGET by EnvironmentVariable
