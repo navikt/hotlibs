@@ -50,15 +50,11 @@ sealed class EntraIdCredential(credential: JWTCredential) : TexasCredential(Iden
         /** Authorized party name. */
         const val AZP_NAME_CLAIM = "azp_name"
 
-        /**
-         * Har verdien [TOKEN_TYPE_APP] hvis systembruker (maskin til maskin).
-         */
+        /** Har verdien [TOKEN_TYPE_APP] hvis systembruker (maskin til maskin). */
         const val TOKEN_TYPE_CLAIM = "idtyp"
         const val TOKEN_TYPE_APP = "app"
 
-        /**
-         * Opprett [EntraIdCredential] basert på [TOKEN_TYPE_CLAIM].
-         */
+        /** Opprett [EntraIdCredential] basert på [TOKEN_TYPE_CLAIM]. */
         operator fun invoke(credential: JWTCredential): EntraIdCredential =
             if (credential[TOKEN_TYPE_CLAIM] == TOKEN_TYPE_APP) {
                 Application(credential)

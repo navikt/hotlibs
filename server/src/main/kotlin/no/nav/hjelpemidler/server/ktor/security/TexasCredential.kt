@@ -9,4 +9,6 @@ sealed class TexasCredential(
     credential: JWTCredential,
 ) : JWTPayloadHolder(credential.payload) {
     fun mustGet(name: String): String = get(name) ?: error("'$name'-claim mangler")
+
+    override fun toString(): String = "TexasCredential(identityProvider=$identityProvider)"
 }

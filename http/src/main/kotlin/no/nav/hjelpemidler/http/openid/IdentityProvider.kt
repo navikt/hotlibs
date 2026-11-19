@@ -32,6 +32,6 @@ enum class IdentityProvider(
     override fun toString() = value
 
     companion object {
-        fun forIssuer(issuer: String) = entries.firstOrNull { it.issuer == issuer }
+        fun forIssuer(issuer: String): IdentityProvider? = entries.firstOrNull { it.issuer == issuer }
     }
 }
