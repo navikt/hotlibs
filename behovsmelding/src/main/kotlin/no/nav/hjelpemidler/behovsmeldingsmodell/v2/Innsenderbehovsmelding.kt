@@ -140,7 +140,7 @@ data class BrukersituasjonVilkårV2(
 
 data class Levering(
         val hjelpemiddelformidler: Hjelpemiddelformidler,
-        val oppfølgingsansvarlig: OppfølgingsansvarligV2,
+        val oppfølgingsansvarlig: OppfølgingsansvarligV2?,
         val annenOppfølgingsansvarlig: AnnenOppfølgingsansvarlig?,
 
         /**
