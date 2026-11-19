@@ -15,7 +15,7 @@ class NorgEnhet(
     val status: Kodeverk<Status>,
     val type: Kodeverk<Type>,
     @JsonAlias("oppgavebehandler")
-    private val isOppgavebehandler: Boolean,
+    val isOppgavebehandler: Boolean,
 ) : AbstractEnhet<Enhetsnummer>(), TilknyttetEnhet {
     override val enhet: Enhet
         @JsonIgnore
