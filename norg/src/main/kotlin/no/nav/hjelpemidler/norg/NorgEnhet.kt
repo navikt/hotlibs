@@ -14,46 +14,32 @@ class NorgEnhet(
     override val navn: String,
     val status: Kodeverk<Status>,
     val type: Kodeverk<Type>,
+    @JsonAlias("oppgavebehandler")
+    private val isOppgavebehandler: Boolean,
 ) : AbstractEnhet<Enhetsnummer>(), TilknyttetEnhet {
     override val enhet: Enhet
         @JsonIgnore
         get() = Enhet(nummer, navn)
 
-    val isStatusAktiv: Boolean
-        @JsonIgnore
-        get() = status == Status.AKTIV
-
-    val isTypeHjelpemiddelsentral: Boolean
-        @JsonIgnore
-        get() = type == Type.HMS
-
-    val isTypeIT: Boolean
-        @JsonIgnore
-        get() = type == Type.IT
-
-    val isVikafossen: Boolean
-        @JsonIgnore
-        get() = enhet == Enhet.NAV_VIKAFOSSEN
-
-    /**
-     * Er enheten en aktiv hjelpemiddelsentral (eller Nav Vikafossen som også behandler saker i Hotsak)?
-     * Inkluderer IT-avdelingen for test.
-     */
-    val isOppgavebehandler: Boolean
-        @JsonIgnore
-        get() = isStatusAktiv && (isTypeHjelpemiddelsentral || isTypeIT || isVikafossen)
-
     override fun toString(): String = "'$navn' (nummer: $nummer, status: $status, type: $type)"
 
     enum class Status : Kodeverk<Status> {
+        @JsonAlias("Under etablering")
         UNDER_ETABLERING,
+
+        @JsonAlias("Aktiv")
         AKTIV,
+
+        @JsonAlias("Under avvikling")
         UNDER_AVVIKLING,
+
+        @JsonAlias("Nedlagt")
         NEDLAGT,
     }
 
     enum class Type : Kodeverk<Type> {
         HMS,
         IT,
+        KO,
     }
 }

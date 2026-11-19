@@ -6,6 +6,7 @@ import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.accept
 import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
@@ -42,6 +43,15 @@ class NorgClient(
                 setBody(request)
             }
             .body()
+    }
+
+    suspend fun hentArbeidsfordelinger(id: Enhetsnummer, skjermet: Boolean = false): Set<NorgArbeidsfordeling> {
+        val url = "$baseUrl/enhet/$id/arbeidsfordeling"
+        log.debug { "Henter arbeidsfordelinger med url: '$url', enhetsnummer: '$id', skjermet: $skjermet" }
+        val arbeidsfordelinger: Set<NorgArbeidsfordeling> = client
+            .get(url) { parameter("skjermet", skjermet) }
+            .body()
+        return arbeidsfordelinger
     }
 
     suspend fun hentArbeidsfordelinger(geografiskeOmråder: Set<String>): Map<String, List<Enhet>> = coroutineScope {
