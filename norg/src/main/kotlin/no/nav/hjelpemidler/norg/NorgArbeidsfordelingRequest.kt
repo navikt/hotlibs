@@ -4,18 +4,23 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import no.nav.hjelpemidler.domain.geografi.GeografiskOmråde
+import no.nav.hjelpemidler.domain.kodeverk.EksterntKodeverk
+import no.nav.hjelpemidler.domain.kodeverk.JsonSerializeEksterntKodeverk
 import no.nav.hjelpemidler.domain.kodeverk.Tema
 import no.nav.hjelpemidler.domain.person.AdressebeskyttelseGradering
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class NorgArbeidsfordelingRequest(
-    val oppgavetype: String? = null,
-    val behandlingstema: String? = null,
-    val behandlingstype: String? = null,
-    @get:JsonProperty("geografiskOmraade")
+    @JsonSerializeEksterntKodeverk
+    val oppgavetype: EksterntKodeverk? = null,
+    @JsonSerializeEksterntKodeverk
+    val behandlingstema: EksterntKodeverk? = null,
+    @JsonSerializeEksterntKodeverk
+    val behandlingstype: EksterntKodeverk? = null,
+    @JsonProperty("geografiskOmraade")
     val geografiskOmråde: String? = null,
     val diskresjonskode: Diskresjonskode? = null,
-    @get:JsonProperty("skjermet")
+    @JsonProperty("skjermet")
     val isSkjermet: Boolean = false,
 ) {
     val tema: Tema = Tema.HJE
@@ -26,9 +31,9 @@ data class NorgArbeidsfordelingRequest(
 
     @JsonIgnore
     constructor(
-        oppgavetype: String? = null,
-        behandlingstema: String? = null,
-        behandlingstype: String? = null,
+        oppgavetype: EksterntKodeverk? = null,
+        behandlingstema: EksterntKodeverk? = null,
+        behandlingstype: EksterntKodeverk? = null,
         geografiskOmråde: GeografiskOmråde? = null,
         adressebeskyttelseGradering: AdressebeskyttelseGradering? = null,
         isSkjermet: Boolean = false,
