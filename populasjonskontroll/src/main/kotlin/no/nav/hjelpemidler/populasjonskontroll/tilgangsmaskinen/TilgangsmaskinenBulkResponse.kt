@@ -1,4 +1,4 @@
-package no.nav.hjelpemidler.tilgangsmaskinen
+package no.nav.hjelpemidler.populasjonskontroll.tilgangsmaskinen
 
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.isSuccess

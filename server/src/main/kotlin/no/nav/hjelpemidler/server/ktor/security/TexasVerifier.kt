@@ -21,9 +21,9 @@ internal class TexasVerifier(
     private val identityProviders: Set<IdentityProvider>,
     private val configure: Verification.(IdentityProvider) -> Unit = {},
 ) : suspend (HttpAuthHeader) -> JWTVerifier? {
-    override suspend fun invoke(token: HttpAuthHeader): JWTVerifier? {
-        val bearerToken = token.bearerToken()
-            ?: return reject { "No bearer token (scheme: '${token.authScheme}')" }
+    override suspend fun invoke(header: HttpAuthHeader): JWTVerifier? {
+        val bearerToken = header.bearerToken()
+            ?: return reject { "No bearer token (scheme: '${header.authScheme}')" }
         val decoded = runCatching { JWT.decode(bearerToken) }.getOrNull()
             ?: return reject { "Bearer token is not a valid JWT" }
         val algorithm: String = decoded.algorithm

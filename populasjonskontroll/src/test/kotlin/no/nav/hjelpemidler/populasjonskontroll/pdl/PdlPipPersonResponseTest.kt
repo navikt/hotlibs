@@ -1,4 +1,4 @@
-package no.nav.hjelpemidler.pip.pdl
+package no.nav.hjelpemidler.populasjonskontroll.pdl
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf

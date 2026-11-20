@@ -5,20 +5,22 @@ import no.nav.hjelpemidler.domain.person.lagTilfeldigFødselsnummer
 import no.nav.hjelpemidler.domain.tilgang.Applikasjonsnavn
 import no.nav.hjelpemidler.domain.tilgang.NavIdent
 import no.nav.hjelpemidler.domain.tilgang.lagTilfeldigNavIdent
-import no.nav.hjelpemidler.security.AuthenticatedApplication
-import no.nav.hjelpemidler.server.ktor.security.AutentisertAnsatt
-import no.nav.hjelpemidler.server.ktor.security.AutentisertInnbygger
-import no.nav.hjelpemidler.server.ktor.security.IdPortenSecurityLevel
+import no.nav.hjelpemidler.security.AutentisertAnsatt
+import no.nav.hjelpemidler.security.AutentisertApplikasjon
+import no.nav.hjelpemidler.security.AutentisertInnbygger
+import no.nav.hjelpemidler.security.IdPortenSecurityLevel
+import no.nav.hjelpemidler.server.ktor.security.DefaultAutentisertAnsatt
+import no.nav.hjelpemidler.server.ktor.security.DefaultAutentisertInnbygger
 import java.util.UUID
 
-val applikasjon = AuthenticatedApplication(Applikasjonsnavn.GJELDENDE)
+val applikasjon = AutentisertApplikasjon(Applikasjonsnavn.GJELDENDE)
 val applikasjonToken = applikasjon.asToken()
 
 fun lagAutentisertAnsatt(
     id: NavIdent = lagTilfeldigNavIdent(),
     grupper: Set<UUID> = setOf(UUID.randomUUID()),
 ): AutentisertAnsatt {
-    val ansatt = AutentisertAnsatt(
+    val ansatt = DefaultAutentisertAnsatt(
         id = id,
         navn = id.toString(),
         epost = "$id@trygdeetaten.no",
@@ -32,7 +34,7 @@ fun lagAutentisertInnbygger(
     fnr: Fødselsnummer = lagTilfeldigFødselsnummer(),
     level: IdPortenSecurityLevel = IdPortenSecurityLevel.HIGH,
 ): AutentisertInnbygger {
-    val innbygger = AutentisertInnbygger(
+    val innbygger = DefaultAutentisertInnbygger(
         fnr = fnr,
         level = level,
         userToken = ""

@@ -14,11 +14,11 @@ import io.ktor.http.HttpMessageBuilder
 import no.nav.hjelpemidler.configuration.EntraIdEnvironmentVariable
 import no.nav.hjelpemidler.configuration.NaisEnvironmentVariable
 import no.nav.hjelpemidler.configuration.TokenXEnvironmentVariable
-import no.nav.hjelpemidler.security.AuthenticatedApplication
+import no.nav.hjelpemidler.security.AutentisertAnsatt
+import no.nav.hjelpemidler.security.AutentisertApplikasjon
+import no.nav.hjelpemidler.security.AutentisertInnbygger
+import no.nav.hjelpemidler.security.AutentisertPerson
 import no.nav.hjelpemidler.security.AuthenticatedPrincipal
-import no.nav.hjelpemidler.security.AuthenticatedUser
-import no.nav.hjelpemidler.server.ktor.security.AutentisertAnsatt
-import no.nav.hjelpemidler.server.ktor.security.AutentisertInnbygger
 import no.nav.hjelpemidler.server.ktor.security.EntraIdCredential
 import no.nav.hjelpemidler.server.ktor.security.TokenXCredential
 import no.nav.hjelpemidler.time.minutter
@@ -78,7 +78,7 @@ fun AuthenticatedPrincipal.asToken(block: JWTCreator.Builder.() -> Unit = {}): S
             .withIssuer(TokenXEnvironmentVariable.TOKEN_X_ISSUER)
             .withAudience(TokenXEnvironmentVariable.TOKEN_X_CLIENT_ID)
             .withClaim(TokenXCredential.ACR_CLAIM, level.toString())
-            .withClaim(TokenXCredential.PID_CLAIM, fnr.toString())
+            .withClaim(TokenXCredential.PID_CLAIM, id.toString())
 
         else -> {
             builder
@@ -87,7 +87,7 @@ fun AuthenticatedPrincipal.asToken(block: JWTCreator.Builder.() -> Unit = {}): S
                 .withClaim(EntraIdCredential.AZP_NAME_CLAIM, NaisEnvironmentVariable.NAIS_APP_NAME)
 
             when (this) {
-                is AuthenticatedApplication -> builder
+                is AutentisertApplikasjon -> builder
                     .withClaim(EntraIdCredential.TOKEN_TYPE_CLAIM, EntraIdCredential.TOKEN_TYPE_APP)
 
                 is AutentisertAnsatt -> builder
@@ -95,8 +95,6 @@ fun AuthenticatedPrincipal.asToken(block: JWTCreator.Builder.() -> Unit = {}): S
                     .withClaim(EntraIdCredential.User.NAME_CLAIM, navn)
                     .withClaim(EntraIdCredential.User.PREFERRED_USERNAME_CLAIM, epost)
                     .withClaim(EntraIdCredential.User.GROUPS_CLAIM, grupper.map { it.toString() })
-
-                else -> TODO(javaClass.simpleName)
             }
         }
     }
@@ -105,4 +103,4 @@ fun AuthenticatedPrincipal.asToken(block: JWTCreator.Builder.() -> Unit = {}): S
 }
 
 fun HttpMessageBuilder.bearerAuth(principal: AuthenticatedPrincipal) = bearerAuth(principal.asToken())
-fun HttpMessageBuilder.bearerAuth(user: AuthenticatedUser) = bearerAuth(user.userToken)
+fun HttpMessageBuilder.bearerAuth(user: AutentisertPerson) = bearerAuth(user.userToken)

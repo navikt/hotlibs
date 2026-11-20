@@ -1,4 +1,4 @@
-package no.nav.hjelpemidler.pip.pdl
+package no.nav.hjelpemidler.populasjonskontroll.pdl
 
 import com.fasterxml.jackson.annotation.JsonProperty
 

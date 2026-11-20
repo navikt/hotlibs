@@ -1,4 +1,4 @@
-package no.nav.hjelpemidler.pip.pdl
+package no.nav.hjelpemidler.populasjonskontroll.pdl
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -10,7 +10,7 @@ import no.nav.hjelpemidler.domain.person.AktørId
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.PersonId
 import no.nav.hjelpemidler.domain.person.gjeldende
-import no.nav.hjelpemidler.pip.pdl.PdlPipGeografiskTilknytning.Type
+import no.nav.hjelpemidler.populasjonskontroll.pdl.PdlPipGeografiskTilknytning.Type
 
 data class PdlPipPersonResponse(
     @JsonProperty("aktoerId") val aktørId: AktørId,

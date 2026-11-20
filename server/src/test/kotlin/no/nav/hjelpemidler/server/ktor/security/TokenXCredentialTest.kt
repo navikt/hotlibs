@@ -1,6 +1,7 @@
 package no.nav.hjelpemidler.server.ktor.security
 
 import com.auth0.jwt.exceptions.IncorrectClaimException
+import no.nav.hjelpemidler.security.IdPortenSecurityLevel
 import no.nav.hjelpemidler.server.ktor.security.test.asToken
 import no.nav.hjelpemidler.server.ktor.security.test.lagAutentisertInnbygger
 import no.nav.hjelpemidler.server.ktor.security.test.verifyTokenXToken

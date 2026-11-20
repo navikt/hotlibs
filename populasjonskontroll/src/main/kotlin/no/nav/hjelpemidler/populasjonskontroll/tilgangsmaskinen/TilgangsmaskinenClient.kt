@@ -1,4 +1,4 @@
-package no.nav.hjelpemidler.tilgangsmaskinen
+package no.nav.hjelpemidler.populasjonskontroll.tilgangsmaskinen
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.call.body
@@ -16,14 +16,13 @@ import io.ktor.http.isSuccess
 import io.ktor.resources.Resource
 import no.nav.hjelpemidler.configuration.EnvironmentVariable
 import no.nav.hjelpemidler.domain.person.PersonId
-import no.nav.hjelpemidler.domain.tilgang.NavIdent
 import no.nav.hjelpemidler.http.ProblemDetailsException
 import no.nav.hjelpemidler.http.correlationId
 import no.nav.hjelpemidler.http.createHttpClient
 import no.nav.hjelpemidler.http.openid.asPrincipal
 import no.nav.hjelpemidler.http.openid.entraId
 import no.nav.hjelpemidler.http.problemDetails
-import no.nav.hjelpemidler.security.AuthenticatedUser
+import no.nav.hjelpemidler.security.AutentisertAnsatt
 import java.io.Closeable
 
 private val log = KotlinLogging.logger {}
@@ -44,8 +43,8 @@ class TilgangsmaskinenClient(
         }
     }
 
-    suspend fun evaluerKjernereglerForAnsatt(ansatt: AuthenticatedUser, personId: PersonId): TilgangsmaskinenResponse =
-        try {
+    suspend fun evaluerKjernereglerForAnsatt(ansatt: AutentisertAnsatt, personId: PersonId): TilgangsmaskinenResponse {
+        return try {
             val response = client.post(KjerneResource()) {
                 asPrincipal(ansatt)
                 contentType(ContentType.Application.Json)
@@ -60,14 +59,13 @@ class TilgangsmaskinenClient(
             log.error(e) { "Feil ved evaluering av kjerneregler for ansatt" }
             throw e
         }
+    }
 
     suspend fun evaluerKjernereglerForAnsatt(
-        ansatt: AuthenticatedUser,
+        ansatt: AutentisertAnsatt,
         personIder: Set<PersonId>,
     ): TilgangsmaskinenBulkResponse {
-        val ansattId = ansatt.id as? NavIdent ?: error("AuthenticatedUser ikke Ansatt")
-        if (personIder.isEmpty()) return TilgangsmaskinenBulkResponse(ansattId, emptyList())
-
+        if (personIder.isEmpty()) return TilgangsmaskinenBulkResponse(ansatt.id, emptyList())
         return try {
             val response = client.post(BulkResource.Obo.RegelType(Tilgangsmaskinen.RegelType.KJERNE_REGELTYPE)) {
                 asPrincipal(ansatt)
@@ -90,10 +88,10 @@ class TilgangsmaskinenClient(
     }
 
     @Resource("/kjerne")
-    private class KjerneResource
+    internal class KjerneResource
 
     @Resource("/bulk")
-    private class BulkResource {
+    internal class BulkResource {
         @Resource("/obo")
         class Obo(val parent: BulkResource = BulkResource()) {
             @Resource("/{regelType}")

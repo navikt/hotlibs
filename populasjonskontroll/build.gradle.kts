@@ -7,6 +7,8 @@ plugins {
 dependencies {
     api(project(":core"))
     api(project(":http"))
+    api(project(":logging"))
+    api(project(":norg"))
 
     implementation(libs.ktor.client.resources)
 
@@ -15,4 +17,5 @@ dependencies {
             requireCapability("no.nav.hjelpemidler:test-ktor")
         }
     }
+    testImplementation(libs.ktor.server.resources)
 }

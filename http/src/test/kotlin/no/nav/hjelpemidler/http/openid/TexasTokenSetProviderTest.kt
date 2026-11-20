@@ -8,7 +8,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
 import no.nav.hjelpemidler.security.AuthenticationContext
-import no.nav.hjelpemidler.security.TestAuthenticatedUser
+import no.nav.hjelpemidler.security.TestAutentisertAnsatt
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 
@@ -16,7 +16,7 @@ class TexasTokenSetProviderTest {
     private val texas = mockk<Texas>(relaxed = true)
     private val defaultTarget = "test1"
 
-    private val userPrincipalContext = AuthenticationContext(TestAuthenticatedUser)
+    private val userPrincipalContext = AuthenticationContext(TestAutentisertAnsatt)
 
     @Nested
     inner class Application {

@@ -2,8 +2,8 @@ package no.nav.hjelpemidler.http.openid
 
 import io.ktor.client.request.HttpRequestBuilder
 import kotlinx.coroutines.currentCoroutineContext
+import no.nav.hjelpemidler.security.AutentisertPerson
 import no.nav.hjelpemidler.security.AuthenticatedPrincipal
-import no.nav.hjelpemidler.security.AuthenticatedUser
 import no.nav.hjelpemidler.security.principal
 
 internal sealed class TexasTokenSetProvider(
@@ -50,7 +50,7 @@ internal class UserTokenSetProvider(texas: Texas, identityProvider: IdentityProv
         "UserTokenSetProvider(identityProvider: $identityProvider, defaultTarget: $defaultTarget)"
 }
 
-internal val AuthenticatedPrincipal.userToken: String? get() = (this as? AuthenticatedUser)?.userToken
+internal val AuthenticatedPrincipal.userToken: String? get() = (this as? AutentisertPerson)?.userToken
 
 internal val HttpRequestBuilder.target: String? get() = attributes.getOrNull(TargetValue.KEY)?.toString()
 internal val HttpRequestBuilder.asApplication: Boolean get() = attributes.getOrNull(AsApplicationValue.KEY) != null

@@ -1,4 +1,4 @@
-package no.nav.hjelpemidler.tilgangsmaskinen
+package no.nav.hjelpemidler.populasjonskontroll.tilgangsmaskinen
 
 import io.ktor.http.HttpStatusCode
 import no.nav.hjelpemidler.core.enumValueOfOrNull
@@ -41,5 +41,20 @@ sealed interface TilgangsmaskinenResponse {
             AVVIST_UKJENT_BOSTED,
             AVVIST_VERGEMÅL,
         }
+    }
+
+    companion object {
+        val AVVIST = Avvist(
+            type = null,
+            title = "hotlibs",
+            status = HttpStatusCode.Forbidden,
+            detail = null,
+            instance = null,
+            brukerIdent = null,
+            navIdent = null,
+            begrunnelse = null,
+            traceId = null,
+            kanOverstyres = null,
+        )
     }
 }

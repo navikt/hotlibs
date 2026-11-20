@@ -6,9 +6,9 @@ import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
 import no.nav.hjelpemidler.domain.tilgang.Applikasjonsnavn
-import no.nav.hjelpemidler.security.AuthenticatedApplication
+import no.nav.hjelpemidler.security.AutentisertApplikasjon
 import no.nav.hjelpemidler.security.AuthenticationContext
-import no.nav.hjelpemidler.security.TestAuthenticatedUser
+import no.nav.hjelpemidler.security.TestAutentisertAnsatt
 import kotlin.test.Test
 
 class EntraIdTokenSetProviderTest {
@@ -18,8 +18,8 @@ class EntraIdTokenSetProviderTest {
     private val identityProvider = IdentityProvider.ENTRA_ID
     private val defaultTarget = "test1"
 
-    private val applicationPrincipalContext = AuthenticationContext(AuthenticatedApplication(applikasjonsnavn))
-    private val userPrincipalContext = AuthenticationContext(TestAuthenticatedUser)
+    private val applicationPrincipalContext = AuthenticationContext(AutentisertApplikasjon(applikasjonsnavn))
+    private val userPrincipalContext = AuthenticationContext(TestAutentisertAnsatt)
 
     private val provider = EntraIdTokenSetProvider(texas, defaultTarget)
 

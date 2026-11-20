@@ -1,4 +1,4 @@
-package no.nav.hjelpemidler.pip.pdl
+package no.nav.hjelpemidler.populasjonskontroll.pdl
 
 import no.nav.hjelpemidler.domain.person.AdressebeskyttelseGradering
 import no.nav.hjelpemidler.domain.person.AktørId

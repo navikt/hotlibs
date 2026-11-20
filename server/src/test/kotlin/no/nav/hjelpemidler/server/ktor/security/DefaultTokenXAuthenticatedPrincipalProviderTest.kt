@@ -10,6 +10,7 @@ import io.ktor.server.auth.jwt.JWTCredential
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
+import no.nav.hjelpemidler.security.AutentisertInnbygger
 import no.nav.hjelpemidler.server.ktor.security.test.lagAutentisertInnbygger
 import org.junit.jupiter.api.Test
 

@@ -1,4 +1,4 @@
-package no.nav.hjelpemidler.pip.skjerming
+package no.nav.hjelpemidler.populasjonskontroll.skjerming
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.call.body

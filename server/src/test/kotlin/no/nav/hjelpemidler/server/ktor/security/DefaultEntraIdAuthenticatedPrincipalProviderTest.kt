@@ -11,7 +11,8 @@ import io.ktor.server.request.ApplicationRequest
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import no.nav.hjelpemidler.security.AuthenticatedApplication
+import no.nav.hjelpemidler.security.AutentisertAnsatt
+import no.nav.hjelpemidler.security.AutentisertApplikasjon
 import no.nav.hjelpemidler.server.ktor.security.test.applikasjon
 import no.nav.hjelpemidler.server.ktor.security.test.applikasjonToken
 import no.nav.hjelpemidler.server.ktor.security.test.lagAutentisertAnsatt
@@ -35,7 +36,7 @@ class DefaultEntraIdAuthenticatedPrincipalProviderTest {
 
         val principal = authenticatedPrincipalProvider(call, credential)
 
-        principal.shouldBeInstanceOf<AuthenticatedApplication>()
+        principal.shouldBeInstanceOf<AutentisertApplikasjon>()
         principal.id shouldBe applikasjon.id
     }
 

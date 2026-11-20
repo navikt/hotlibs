@@ -5,16 +5,14 @@ import io.ktor.server.application.ApplicationCallPipeline
 import io.ktor.server.application.Hook
 import io.ktor.server.application.call
 import io.ktor.server.application.createRouteScopedPlugin
-import io.ktor.server.auth.principal
 import io.ktor.server.routing.Route
 import io.ktor.util.pipeline.PipelinePhase
 import kotlinx.coroutines.withContext
-import no.nav.hjelpemidler.security.AuthenticatedPrincipal
 import no.nav.hjelpemidler.security.AuthenticationContext
 
 private val AuthenticationContextPlugin = createRouteScopedPlugin("AuthenticationContextPlugin") {
     on(AfterAuthentication) { call, proceed ->
-        val principal = call.principal<AuthenticatedPrincipal>()
+        val principal = call.authenticatedPrincipal()
         if (principal == null) {
             proceed()
         } else {

@@ -1,10 +1,9 @@
-package no.nav.hjelpemidler.pip.pdl
+package no.nav.hjelpemidler.populasjonskontroll.skjerming
 
+import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.shouldBe
 import io.ktor.server.request.receive
-import io.ktor.server.request.requireHeader
 import io.ktor.server.response.respond
-import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
 import kotlinx.coroutines.test.runTest
@@ -15,38 +14,37 @@ import no.nav.hjelpemidler.test.ktor.baseUrl
 import no.nav.hjelpemidler.test.ktor.texas
 import org.junit.jupiter.api.Test
 
-class PdlPipApiClientTest {
+class SkjermedePersonerPipClientTest {
     private val engine = StubEngine {
         texas()
-        baseUrl(PdlPipApiClient.PDL_PIP_API_BASE_URL) {
+        baseUrl(SkjermedePersonerPipClient.SKJERMEDE_PERSONER_PIP_API_BASE_URL) {
             routing {
-                get("/person") {
-                    val fnr = call.requireHeader("ident").let(::Fødselsnummer)
-                    call.respond(lagPipPersonResponse(fnr))
+                post("/skjermet") {
+                    call.respond(true)
                 }
-                post("/personBolk") {
-                    val ider = call.receive<Set<Fødselsnummer>>()
-                    call.respond(ider.associateWith(::lagPipPersonResponse))
+                post("/skjermetBulk") {
+                    val request = call.receive<ErSkjermedePersonerRequest>()
+                    call.respond(request.fnr.associateWith { true })
                 }
             }
         }
     }
-    private val client = PdlPipApiClient(engine)
+    private val client = SkjermedePersonerPipClient(engine)
 
     @Test
-    fun `Skal hente person fra pdl-pip-api`() = runTest {
+    fun `Skal hente person fra skjermede-personer-pip-api`() = runTest {
         val id = Fødselsnummer(60.år)
-        val response = client.hentPerson(id)
-        response.fnr shouldBe id
+        val response = client.hentErSkjermetPerson(id)
+        response.shouldBeTrue()
     }
 
     @Test
-    fun `Skal hente personer fra pdl-pip-api`() = runTest {
+    fun `Skal hente personer fra skjermede-personer-pip-api`() = runTest {
         val ider = setOf(
             Fødselsnummer(40.år),
             Fødselsnummer(70.år),
         )
-        val personer = client.hentPersoner(ider)
+        val personer = client.hentErSkjermedePersoner(ider)
         personer.keys shouldBe ider
     }
 }

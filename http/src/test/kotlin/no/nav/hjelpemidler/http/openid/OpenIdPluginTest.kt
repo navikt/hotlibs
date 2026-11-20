@@ -11,12 +11,12 @@ import kotlinx.coroutines.withContext
 import no.nav.hjelpemidler.http.createHttpClient
 import no.nav.hjelpemidler.http.test.respondJson
 import no.nav.hjelpemidler.security.AuthenticationContext
-import no.nav.hjelpemidler.security.TestAuthenticatedUser
+import no.nav.hjelpemidler.security.TestAutentisertAnsatt
 import org.junit.jupiter.api.Test
 import kotlin.time.Duration.Companion.hours
 
 class OpenIdPluginTest {
-    private val userPrincipalContext = AuthenticationContext(TestAuthenticatedUser)
+    private val userPrincipalContext = AuthenticationContext(TestAutentisertAnsatt)
 
     @Test
     fun `Skal hente og bruke access token fra klient`() = runTest {

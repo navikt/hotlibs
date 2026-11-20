@@ -2,8 +2,8 @@ package no.nav.hjelpemidler.http.openid
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.request.HttpRequestBuilder
-import no.nav.hjelpemidler.security.AuthenticatedApplication
-import no.nav.hjelpemidler.security.AuthenticatedUser
+import no.nav.hjelpemidler.security.AutentisertApplikasjon
+import no.nav.hjelpemidler.security.AutentisertPerson
 
 private val log = KotlinLogging.logger {}
 
@@ -28,8 +28,8 @@ internal class EntraIdTokenSetProvider(texas: Texas, defaultTarget: String) :
         val (provider, reason) = when {
             request.asApplication -> applicationProvider to "request.asApplication er satt"
             !request.userToken.isNullOrBlank() -> userProvider to "request.userToken er satt"
-            principal is AuthenticatedApplication -> applicationProvider to "principal er AuthenticatedApplication"
-            principal is AuthenticatedUser -> userProvider to "principal er AuthenticatedUser"
+            principal is AutentisertApplikasjon -> applicationProvider to "principal er AutentisertApplikasjon"
+            principal is AutentisertPerson -> userProvider to "principal er AutentisertPerson"
             else -> applicationProvider to "fallback til applicationProvider"
         }
         log.debug { "$provider -> '$reason'" }

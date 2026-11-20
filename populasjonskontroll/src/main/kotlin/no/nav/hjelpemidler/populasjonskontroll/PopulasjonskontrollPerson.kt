@@ -1,14 +1,14 @@
-package no.nav.hjelpemidler.pip
+package no.nav.hjelpemidler.populasjonskontroll
 
 import no.nav.hjelpemidler.domain.geografi.GeografiskOmråde
 import no.nav.hjelpemidler.domain.person.AdressebeskyttelseGradering
 import no.nav.hjelpemidler.domain.person.AktørId
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.PersonId
-import no.nav.hjelpemidler.pip.pdl.PdlPipPersonResponse
+import no.nav.hjelpemidler.populasjonskontroll.pdl.PdlPipPersonResponse
 import java.time.LocalDate
 
-data class PipPerson(
+data class PopulasjonskontrollPerson(
     val aktørId: AktørId,
     val fnr: Fødselsnummer?,
     val gjeldendeIdenter: Set<PersonId>,

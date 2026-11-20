@@ -5,9 +5,9 @@ import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.bearerAuth
 import io.ktor.http.HttpMessageBuilder
 import io.ktor.util.AttributeKey
-import no.nav.hjelpemidler.security.AuthenticatedApplication
+import no.nav.hjelpemidler.security.AutentisertApplikasjon
+import no.nav.hjelpemidler.security.AutentisertPerson
 import no.nav.hjelpemidler.security.AuthenticatedPrincipal
-import no.nav.hjelpemidler.security.AuthenticatedUser
 
 fun HttpMessageBuilder.bearerAuth(tokenSet: TokenSet) = bearerAuth(tokenSet.accessToken)
 
@@ -46,7 +46,7 @@ fun DefaultRequestBuilder.asApplication() {
 }
 
 /**
- * Gjør request på vegne av bruker.
+ * Gjør request på vegne av person.
  *
  * @see [HttpRequestBuilder.asApplication]
  */
@@ -55,7 +55,7 @@ fun HttpRequestBuilder.onBehalfOf(userToken: String) {
 }
 
 /**
- * Gjør request på vegne av bruker.
+ * Gjør request på vegne av person.
  *
  * @see [DefaultRequestBuilder.asApplication]
  */
@@ -70,8 +70,8 @@ fun DefaultRequestBuilder.onBehalfOf(userToken: String) {
  * @see [HttpRequestBuilder.onBehalfOf]
  */
 fun HttpRequestBuilder.asPrincipal(principal: AuthenticatedPrincipal) = when (principal) {
-    is AuthenticatedApplication -> asApplication()
-    is AuthenticatedUser -> onBehalfOf(principal.userToken)
+    is AutentisertApplikasjon -> asApplication()
+    is AutentisertPerson -> onBehalfOf(principal.userToken)
 }
 
 /**
@@ -81,8 +81,8 @@ fun HttpRequestBuilder.asPrincipal(principal: AuthenticatedPrincipal) = when (pr
  * @see [DefaultRequestBuilder.onBehalfOf]
  */
 fun DefaultRequestBuilder.asPrincipal(principal: AuthenticatedPrincipal) = when (principal) {
-    is AuthenticatedApplication -> asApplication()
-    is AuthenticatedUser -> onBehalfOf(principal.userToken)
+    is AutentisertApplikasjon -> asApplication()
+    is AutentisertPerson -> onBehalfOf(principal.userToken)
 }
 
 @JvmInline

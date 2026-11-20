@@ -14,39 +14,39 @@ class AuthenticatedPrincipalTest {
 
     @Test
     fun `AuthenticatedPrincipal er applikasjon`() {
-        val principal: AuthenticatedPrincipal = AuthenticatedApplication(applikasjonsnavn)
+        val principal: AuthenticatedPrincipal = AutentisertApplikasjon(applikasjonsnavn)
 
-        principal.isApplication.shouldBeTrue()
-        principal.isUser.shouldBeFalse()
+        principal.isApplikasjon.shouldBeTrue()
+        principal.isPerson.shouldBeFalse()
 
         // smart cast
-        if (principal.isApplication) {
+        if (principal.isApplikasjon) {
             principal.id.shouldBeInstanceOf<Applikasjonsnavn>()
         }
 
-        principal.requireApplication() shouldBe principal
-        shouldThrow<IllegalStateException> { principal.requireUser() }
+        principal.requireApplikasjon() shouldBe principal
+        shouldThrow<IllegalStateException> { principal.requirePerson() }
 
-        principal.mapApplicationOrNull { it.id } shouldBe principal.id
-        principal.mapUserOrNull { it.userToken } shouldBe null
+        principal.mapApplikasjonOrNull { it.id } shouldBe principal.id
+        principal.mapPersonOrNull { it.userToken } shouldBe null
     }
 
     @Test
-    fun `AuthenticatedPrincipal er bruker`() {
-        val principal: AuthenticatedPrincipal = TestAuthenticatedUser
+    fun `AuthenticatedPrincipal er person`() {
+        val principal: AuthenticatedPrincipal = TestAutentisertAnsatt
 
-        principal.isUser.shouldBeTrue()
-        principal.isApplication.shouldBeFalse()
+        principal.isPerson.shouldBeTrue()
+        principal.isApplikasjon.shouldBeFalse()
 
         // smart cast
-        if (principal.isUser) {
+        if (principal.isPerson) {
             principal.userToken.shouldNotBeBlank()
         }
 
-        principal.requireUser() shouldBe principal
-        shouldThrow<IllegalStateException> { principal.requireApplication() }
+        principal.requirePerson() shouldBe principal
+        shouldThrow<IllegalStateException> { principal.requireApplikasjon() }
 
-        principal.mapUserOrNull { it.userToken } shouldBe TestAuthenticatedUser.userToken
-        principal.mapApplicationOrNull { it.id } shouldBe null
+        principal.mapPersonOrNull { it.userToken } shouldBe TestAutentisertAnsatt.userToken
+        principal.mapApplikasjonOrNull { it.id } shouldBe null
     }
 }

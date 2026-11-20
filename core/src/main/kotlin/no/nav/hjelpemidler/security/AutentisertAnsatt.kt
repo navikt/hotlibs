@@ -1,24 +1,15 @@
-package no.nav.hjelpemidler.server.ktor.security
+package no.nav.hjelpemidler.security
 
-import io.ktor.server.application.ApplicationCall
 import no.nav.hjelpemidler.domain.tilgang.NavIdent
-import no.nav.hjelpemidler.security.AuthenticatedPrincipal
-import no.nav.hjelpemidler.security.AuthenticatedUser
 import java.util.UUID
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
-/**
- * En Nav-ansatt autentisert med Entra ID.
- */
-data class AutentisertAnsatt(
-    override val id: NavIdent,
-    val navn: String,
-    val epost: String,
-    val grupper: Set<UUID>,
-    override val userToken: String,
-) : AuthenticatedUser {
-    override fun toString(): String = "AutentisertAnsatt(id: $id)"
+interface AutentisertAnsatt : AutentisertPerson {
+    override val id: NavIdent
+    val navn: String
+    val epost: String
+    val grupper: Set<UUID>
 }
 
 inline fun <T> AuthenticatedPrincipal.mapAnsattOrNull(block: (AutentisertAnsatt) -> T): T? =
@@ -29,7 +20,7 @@ fun AuthenticatedPrincipal.requireAnsatt(): AutentisertAnsatt {
     contract {
         returns() implies (this@requireAnsatt is AutentisertAnsatt)
     }
-    return this as? AutentisertAnsatt ?: error("Expected AutentisertAnsatt, got ${javaClass.name}")
+    return this as? AutentisertAnsatt ?: error("Forventet AutentisertAnsatt, var ${javaClass.name}")
 }
 
 @OptIn(ExperimentalContracts::class)
@@ -40,5 +31,3 @@ val AuthenticatedPrincipal.isAnsatt: Boolean
         }
         return this is AutentisertAnsatt
     }
-
-fun ApplicationCall.autentisertAnsatt(): AutentisertAnsatt? = authenticatedPrincipal()?.requireAnsatt()
