@@ -1,5 +1,6 @@
 package no.nav.hjelpemidler.server.ktor.security.test
 
+import no.nav.hjelpemidler.collections.mapToSet
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.lagTilfeldigFødselsnummer
 import no.nav.hjelpemidler.domain.tilgang.Applikasjonsnavn
@@ -24,7 +25,7 @@ fun lagAutentisertAnsatt(
         id = id,
         navn = id.toString(),
         epost = "$id@trygdeetaten.no",
-        grupper = grupper,
+        grupper = grupper.mapToSet(DefaultAutentisertAnsatt::Gruppe),
         userToken = "",
     )
     return ansatt.copy(userToken = ansatt.asToken())

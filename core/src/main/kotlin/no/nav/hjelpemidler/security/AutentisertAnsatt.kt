@@ -9,7 +9,11 @@ interface AutentisertAnsatt : AutentisertPerson {
     override val id: NavIdent
     val navn: String
     val epost: String
-    val grupper: Set<UUID>
+    val grupper: Set<Gruppe>
+
+    interface Gruppe {
+        val id: UUID
+    }
 }
 
 inline fun <T> AuthenticatedPrincipal.mapAnsattOrNull(block: (AutentisertAnsatt) -> T): T? =

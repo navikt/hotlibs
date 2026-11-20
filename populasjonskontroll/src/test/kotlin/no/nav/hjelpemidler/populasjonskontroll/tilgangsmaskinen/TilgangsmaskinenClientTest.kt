@@ -30,13 +30,7 @@ class TilgangsmaskinenClientTest {
     private val personUgradert = lagPipPersonResponse(Fødselsnummer(50.år))
     private val personStrengtFortrolig = lagPipPersonResponse(Fødselsnummer(60.år))
 
-    private val ansatt = object : AutentisertAnsatt {
-        override val id: NavIdent = NavIdent.UKJENT
-        override val navn: String = ""
-        override val epost: String = ""
-        override val grupper: Set<UUID> = emptySet()
-        override val userToken: String = "userToken"
-    }
+    private val ansatt = TestAutentisertAnsatt
 
     private val client = TilgangsmaskinenClient(
         engine = StubEngine {
@@ -114,4 +108,15 @@ class TilgangsmaskinenClientTest {
             it.brukerId shouldBe personStrengtFortrolig.fnr
         }
     }
+}
+
+private object TestAutentisertAnsatt : AutentisertAnsatt {
+    override val id: NavIdent = NavIdent.UKJENT
+    override val navn: String = ""
+    override val epost: String = ""
+    override val grupper: Set<Gruppe> = emptySet()
+    override val userToken: String = "userToken"
+
+    @JvmInline
+    value class Gruppe(override val id: UUID) : AutentisertAnsatt.Gruppe
 }

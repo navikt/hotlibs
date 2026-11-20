@@ -94,7 +94,7 @@ fun AuthenticatedPrincipal.asToken(block: JWTCreator.Builder.() -> Unit = {}): S
                     .withClaim(EntraIdCredential.User.NAV_IDENT_CLAIM, id.toString())
                     .withClaim(EntraIdCredential.User.NAME_CLAIM, navn)
                     .withClaim(EntraIdCredential.User.PREFERRED_USERNAME_CLAIM, epost)
-                    .withClaim(EntraIdCredential.User.GROUPS_CLAIM, grupper.map { it.toString() })
+                    .withClaim(EntraIdCredential.User.GROUPS_CLAIM, grupper.map { it.id.toString() })
             }
         }
     }
