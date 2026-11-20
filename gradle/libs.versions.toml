@@ -1,6 +1,6 @@
 [versions]
 confluent = "8.4.1"
-flyway = "13.12.2"
+flyway = "13.13.0"
 graphql = "11.0.0"
 jackson = "3.3.0"
 java = "25"
@@ -12,14 +12,14 @@ kotlinx-coroutines = "1.11.0"
 kotlinx-serialization = "1.13.0"
 ktfmtGradle = "0.28.0"
 ktor = "3.6.1"
-logback = "1.6.7"
-micrometer = "1.17.2"
+logback = "1.6.8"
+micrometer = "1.18.0"
 mockk = "1.14.12"
 openapi = "7.27.0"
 openhtmltopdf = "1.1.114"
 oracle = "23.26.4.0.0"
 prometheus = "1.10.0"
-rapidsAndRivers = "2026110308421793691732"
+rapidsAndRivers = "2026111908531795074794"
 slf4j = "2.0.20"
 spotless = "8.11.0"
 tbdLibs = "20261029.1843"
@@ -135,6 +135,7 @@ ktor-client-logging = { module = "io.ktor:ktor-client-logging-jvm", version.ref 
 ktor-client-mock = { module = "io.ktor:ktor-client-mock-jvm", version.ref = "ktor" }
 ktor-client-resources = { module = "io.ktor:ktor-client-resources-jvm", version.ref = "ktor" }
 ktor-gradle-plugin = { module = "io.ktor.plugin:plugin", version.ref = "ktor" }
+ktor-http = { module = "io.ktor:ktor-http-jvm", version.ref = "ktor" }
 ktor-resources = { module = "io.ktor:ktor-resources-jvm", version.ref = "ktor" }
 ktor-serialization-jackson3 = { module = "io.ktor:ktor-serialization-jackson3-jvm", version.ref = "ktor" }
 ktor-server-auth = { module = "io.ktor:ktor-server-auth-jvm", version.ref = "ktor" }
