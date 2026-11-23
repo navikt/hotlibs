@@ -22,14 +22,14 @@ prometheus = "1.10.0"
 rapidsAndRivers = "2026111908531795074794"
 slf4j = "2.0.20"
 spotless = "8.12.0"
-tbdLibs = "20261029.1843"
+tbdLibs = "20261123.1112"
 testcontainers = "2.0.5"
 tmsKtorTokenSupport = "5.0.6"
 
 [plugins]
 cyclonedx = "org.cyclonedx.bom:3.6.1"
 flyway = { id = "org.flywaydb.flyway", version.ref = "flyway" }
-graphql = "com.expediagroup.graphql:11.1.0"
+graphql = { id = "com.expediagroup.graphql", version.ref = "graphql" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
