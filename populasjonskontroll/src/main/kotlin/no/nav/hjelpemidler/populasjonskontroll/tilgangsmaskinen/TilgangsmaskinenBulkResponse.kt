@@ -25,13 +25,13 @@ data class TilgangsmaskinenBulkResponse(
 
         data class Godkjent(
             override val brukerId: PersonId,
-            override val status: HttpStatusCode,
+            override val status: HttpStatusCode = HttpStatusCode.NoContent,
         ) : Resultat
 
         data class Avvist(
             override val brukerId: PersonId,
-            override val status: HttpStatusCode,
-            val detaljer: TilgangsmaskinenResponse.Avvist,
+            override val status: HttpStatusCode = HttpStatusCode.Forbidden,
+            val detaljer: TilgangsmaskinenResponse.Avvist = TilgangsmaskinenResponse.AVVIST,
         ) : Resultat
     }
 
@@ -54,5 +54,17 @@ data class TilgangsmaskinenBulkResponse(
                 )
             }
         }
+    }
+
+    companion object {
+        fun godkjent(personIder: Set<PersonId>): TilgangsmaskinenBulkResponse = TilgangsmaskinenBulkResponse(
+            ansattId = NavIdent.UKJENT,
+            resultater = personIder.map(Resultat::Godkjent)
+        )
+
+        fun avvist(personIder: Set<PersonId>): TilgangsmaskinenBulkResponse = TilgangsmaskinenBulkResponse(
+            ansattId = NavIdent.UKJENT,
+            resultater = personIder.map(Resultat::Avvist)
+        )
     }
 }

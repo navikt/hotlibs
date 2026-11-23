@@ -31,7 +31,7 @@ class TilgangsmaskinenClient(
     engine: HttpClientEngine,
     private val baseUrl: String = TILGANGSMASKINEN_BASE_URL,
     private val target: String = TILGANGSMASKINEN_TARGET,
-) : Closeable {
+) : Tilgangsmaskinen, Closeable {
     private val client = createHttpClient(engine) {
         expectSuccess = false
         entraId(target)
@@ -43,7 +43,10 @@ class TilgangsmaskinenClient(
         }
     }
 
-    suspend fun evaluerKjernereglerForAnsatt(ansatt: AutentisertAnsatt, personId: PersonId): TilgangsmaskinenResponse {
+    override suspend fun evaluerKjernereglerForAnsatt(
+        ansatt: AutentisertAnsatt,
+        personId: PersonId,
+    ): TilgangsmaskinenResponse {
         return try {
             val response = client.post(KjerneResource()) {
                 asPrincipal(ansatt)
@@ -61,7 +64,7 @@ class TilgangsmaskinenClient(
         }
     }
 
-    suspend fun evaluerKjernereglerForAnsatt(
+    override suspend fun evaluerKjernereglerForAnsatt(
         ansatt: AutentisertAnsatt,
         personIder: Set<PersonId>,
     ): TilgangsmaskinenBulkResponse {

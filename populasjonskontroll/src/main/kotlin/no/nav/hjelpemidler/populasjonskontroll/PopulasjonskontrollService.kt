@@ -9,14 +9,16 @@ import no.nav.hjelpemidler.domain.person.AktørId
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.NPID
 import no.nav.hjelpemidler.domain.person.PersonId
+import no.nav.hjelpemidler.domain.tilgang.NavIdent
 import no.nav.hjelpemidler.logging.teamWarn
 import no.nav.hjelpemidler.norg.NorgArbeidsfordelingRequest
 import no.nav.hjelpemidler.norg.NorgClient
 import no.nav.hjelpemidler.populasjonskontroll.pdl.PdlPipApiClient
 import no.nav.hjelpemidler.populasjonskontroll.pdl.PdlPipPersonResponse
 import no.nav.hjelpemidler.populasjonskontroll.skjerming.SkjermedePersonerPipClient
+import no.nav.hjelpemidler.populasjonskontroll.tilgangsmaskinen.Tilgangsmaskinen
 import no.nav.hjelpemidler.populasjonskontroll.tilgangsmaskinen.TilgangsmaskinenBulkResponse
-import no.nav.hjelpemidler.populasjonskontroll.tilgangsmaskinen.TilgangsmaskinenClient
+import no.nav.hjelpemidler.populasjonskontroll.tilgangsmaskinen.TilgangsmaskinenBulkResponse.Resultat
 import no.nav.hjelpemidler.populasjonskontroll.tilgangsmaskinen.TilgangsmaskinenResponse
 import no.nav.hjelpemidler.security.AutentisertAnsatt
 import no.nav.hjelpemidler.security.AutentisertApplikasjon
@@ -29,7 +31,7 @@ class PopulasjonskontrollService(
     private val norgClient: NorgClient,
     private val pdlPipApiClient: PdlPipApiClient,
     private val skjermedePersonerPipClient: SkjermedePersonerPipClient,
-    private val tilgangsmaskinenClient: TilgangsmaskinenClient,
+    private val tilgangsmaskinen: Tilgangsmaskinen,
 ) {
     suspend fun hentPerson(id: PersonId): PopulasjonskontrollPerson {
         val (pipPersonResponse, isSkjermet) = when (id) {
@@ -106,7 +108,7 @@ class PopulasjonskontrollService(
         personId: PersonId,
     ): TilgangsmaskinenResponse = when (principal) {
         is AutentisertApplikasjon -> TilgangsmaskinenResponse.Godkjent
-        is AutentisertAnsatt -> tilgangsmaskinenClient.evaluerKjernereglerForAnsatt(principal, personId)
+        is AutentisertAnsatt -> tilgangsmaskinen.evaluerKjernereglerForAnsatt(principal, personId)
         is AutentisertInnbygger -> if (principal.id == personId) {
             TilgangsmaskinenResponse.Godkjent
         } else {
@@ -118,9 +120,18 @@ class PopulasjonskontrollService(
         principal: AuthenticatedPrincipal,
         personIder: Set<PersonId>,
     ): TilgangsmaskinenBulkResponse = when (principal) {
-        is AutentisertApplikasjon -> TODO()
-        is AutentisertAnsatt -> tilgangsmaskinenClient.evaluerKjernereglerForAnsatt(principal, personIder)
-        is AutentisertInnbygger -> TODO()
+        is AutentisertApplikasjon -> TilgangsmaskinenBulkResponse.godkjent(personIder)
+        is AutentisertAnsatt -> tilgangsmaskinen.evaluerKjernereglerForAnsatt(principal, personIder)
+        is AutentisertInnbygger -> TilgangsmaskinenBulkResponse(
+            ansattId = NavIdent.UKJENT,
+            resultater = personIder.map { personId ->
+                if (principal.id == personId) {
+                    Resultat.Godkjent(personId)
+                } else {
+                    Resultat.Avvist(personId)
+                }
+            }
+        )
     }
 }
 

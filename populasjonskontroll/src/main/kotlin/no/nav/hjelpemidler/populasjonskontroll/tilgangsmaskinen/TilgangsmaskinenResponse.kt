@@ -7,10 +7,6 @@ import no.nav.hjelpemidler.domain.tilgang.NavIdent
 import no.nav.hjelpemidler.http.ProblemDetails
 import java.net.URI
 
-interface Tilgangsmaskinen {
-    enum class RegelType { KJERNE_REGELTYPE, KOMPLETT_REGELTYPE, OVERSTYRBAR_REGELTYPE }
-}
-
 sealed interface TilgangsmaskinenResponse {
     data object Godkjent : TilgangsmaskinenResponse
 
@@ -46,7 +42,7 @@ sealed interface TilgangsmaskinenResponse {
     companion object {
         val AVVIST = Avvist(
             type = null,
-            title = "hotlibs",
+            title = null,
             status = HttpStatusCode.Forbidden,
             detail = null,
             instance = null,
