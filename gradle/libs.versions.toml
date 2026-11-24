@@ -16,7 +16,7 @@ logback = "1.6.8"
 micrometer = "1.18.0"
 mockk = "1.14.12"
 openapi = "7.27.0"
-openhtmltopdf = "1.1.114"
+openhtmltopdf = "1.1.117"
 oracle = "23.26.4.0.0"
 prometheus = "1.10.0"
 rapidsAndRivers = "2026111908531795074794"
@@ -184,7 +184,7 @@ openhtmltopdf-slf4j = { module = "io.github.openhtmltopdf:openhtmltopdf-slf4j", 
 openhtmltopdf-svg-support = { module = "io.github.openhtmltopdf:openhtmltopdf-svg-support", version.ref = "openhtmltopdf" }
 opentelemetry-api = "io.opentelemetry:opentelemetry-api:1.68.0"
 owasp-java-html-sanitizer = "com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20261110.1"
-postgresql = "org.postgresql:postgresql:42.7.14"
+postgresql = "org.postgresql:postgresql:42.7.15"
 prometheus-metrics-bom = { module = "io.prometheus:prometheus-metrics-bom", version.ref = "prometheus" }
 prometheus-metrics-core = { module = "io.prometheus:prometheus-metrics-core", version.ref = "prometheus" }
 prometheus-metrics-simpleclient-bridge = { module = "io.prometheus:prometheus-metrics-simpleclient-bridge", version.ref = "prometheus" }
