@@ -6,6 +6,9 @@ import no.nav.hjelpemidler.domain.organisasjon.Organisasjonsnummer
 import no.nav.hjelpemidler.domain.person.AktørId
 import no.nav.hjelpemidler.domain.person.Fødselsnummer
 import no.nav.hjelpemidler.domain.person.PersonId
+import no.nav.hjelpemidler.domain.tilgang.Applikasjonsnavn
+import no.nav.hjelpemidler.domain.tilgang.NavIdent
+import no.nav.hjelpemidler.domain.tilgang.UtførtAvId
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.NumericIntNode
 import tools.jackson.databind.node.StringNode
@@ -63,6 +66,15 @@ fun JsonNode?.brukerIdValueOrNull(): BrukerId? = ifStringNode(BrukerId::of)
 
 fun JsonNode.enhetsnummerValue(): Enhetsnummer = Enhetsnummer(stringValue())
 fun JsonNode?.enhetsnummerValueOrNull(): Enhetsnummer? = ifStringNode(::Enhetsnummer)
+
+fun JsonNode.navIdentValue(): NavIdent = NavIdent(stringValue())
+fun JsonNode?.navIdentValueOrNull(): NavIdent? = ifStringNode(::NavIdent)
+
+fun JsonNode.applikasjonsnavnValue(): Applikasjonsnavn = Applikasjonsnavn(stringValue())
+fun JsonNode?.applikasjonsnavnOrNull(): Applikasjonsnavn? = ifStringNode(::Applikasjonsnavn)
+
+fun JsonNode.utførtAvIdValue(): UtførtAvId = UtførtAvId.of(stringValue())
+fun JsonNode?.utførtAvIdValueOrNull(): UtførtAvId? = ifStringNode(UtførtAvId::of)
 
 inline fun <reified T : Any> JsonNode.value(): T = treeToValue<T>(this)
 inline fun <reified T : Any> JsonNode?.valueOrNull(): T? = treeToValueOrNull<T>(this)
