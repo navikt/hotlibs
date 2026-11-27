@@ -13,4 +13,6 @@ sealed class UtførtAvId(value: String) : StringId(value) {
             else -> Applikasjonsnavn(value)
         }
     }
+
+    data object Ukjent : UtførtAvId("Ukjent")
 }
