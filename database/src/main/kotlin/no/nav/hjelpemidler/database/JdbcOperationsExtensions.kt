@@ -1,6 +1,7 @@
 package no.nav.hjelpemidler.database
 
 import no.nav.hjelpemidler.collections.toEnumSet
+import no.nav.hjelpemidler.core.QueryParameters
 import org.intellij.lang.annotations.Language
 
 inline fun <reified T : Any> JdbcOperations.single(

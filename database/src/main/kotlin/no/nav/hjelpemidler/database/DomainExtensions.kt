@@ -1,5 +1,6 @@
 package no.nav.hjelpemidler.database
 
+import no.nav.hjelpemidler.core.QueryParameters
 import no.nav.hjelpemidler.domain.enhet.Enhet
 import no.nav.hjelpemidler.domain.geografi.Bydel
 import no.nav.hjelpemidler.domain.geografi.Kommune

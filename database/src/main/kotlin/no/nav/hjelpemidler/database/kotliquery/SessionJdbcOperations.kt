@@ -1,7 +1,7 @@
 package no.nav.hjelpemidler.database.kotliquery
 
+import no.nav.hjelpemidler.core.QueryParameters
 import no.nav.hjelpemidler.database.JdbcOperations
-import no.nav.hjelpemidler.database.QueryParameters
 import no.nav.hjelpemidler.database.Row
 import no.nav.hjelpemidler.database.UpdateResult
 import no.nav.hjelpemidler.database.prepare

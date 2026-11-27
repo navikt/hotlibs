@@ -1,6 +1,7 @@
 package no.nav.hjelpemidler.database
 
 import no.nav.hjelpemidler.core.Maybe
+import no.nav.hjelpemidler.core.QueryParameters
 import no.nav.hjelpemidler.core.ValueType
 import no.nav.hjelpemidler.domain.kodeverk.Brevkode
 import no.nav.hjelpemidler.domain.kodeverk.Kodeverk
@@ -9,12 +10,6 @@ import kotlin.jvm.optionals.getOrNull
 
 interface QueryParameter<out T> {
     val queryParameter: T
-}
-
-typealias QueryParameters = Map<String, Any?>
-
-interface QueryParametersProvider {
-    fun toQueryParameters(): QueryParameters
 }
 
 fun Boolean?.toQueryParameters(key: String): QueryParameters = mapOf(key to this)

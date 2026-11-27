@@ -1,7 +1,7 @@
 package no.nav.hjelpemidler.database.test
 
-import no.nav.hjelpemidler.database.QueryParameters
-import no.nav.hjelpemidler.database.QueryParametersProvider
+import no.nav.hjelpemidler.core.QueryParameters
+import no.nav.hjelpemidler.core.QueryParametersProvider
 import no.nav.hjelpemidler.database.Row
 import no.nav.hjelpemidler.database.toQueryParameters
 import no.nav.hjelpemidler.domain.person.AktørId
