@@ -69,7 +69,7 @@ internal class TexasVerifier(
  *
  * The [name] must match the token's `alg`, otherwise `java-jwt` throws [com.auth0.jwt.exceptions.AlgorithmMismatchException].
  */
-private class IntrospectedTokenAlgorithm(name: String) : Algorithm(name, "Signature verified by Texas") {
+internal class IntrospectedTokenAlgorithm(name: String) : Algorithm(name, "Signature verified by Texas") {
     override fun verify(jwt: DecodedJWT) = Unit
 
     override fun sign(headerBytes: ByteArray?, payloadBytes: ByteArray?): ByteArray =
@@ -79,7 +79,7 @@ private class IntrospectedTokenAlgorithm(name: String) : Algorithm(name, "Signat
         throw UnsupportedOperationException("Verification only")
 }
 
-private class IntrospectedTokenVerifier(
+internal class IntrospectedTokenVerifier(
     private val decoded: DecodedJWT,
     private val delegate: JWTVerifier,
 ) : JWTVerifier {
